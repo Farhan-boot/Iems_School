@@ -1,0 +1,29 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+
+
+@{
+    ViewBag.Title = "Particular Wise Waiver Details Report";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccountsReport.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/Report/Shared/_ParticularWiseWaiverDetailsReport.js?v=3"></script>
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+
+@Html.Partial("~/Areas/Accounts/Views/Report/Shared/_ParticularWiseWaiverDetailsReport.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

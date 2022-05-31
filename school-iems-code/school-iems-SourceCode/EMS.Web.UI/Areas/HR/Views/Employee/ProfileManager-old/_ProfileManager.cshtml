@@ -1,0 +1,41 @@
+﻿    
+
+@{
+    var saveEmployee = "saveEmployee";
+}
+
+<div class="tabbable">
+     <ul class="nav nav-tabs" id="tabProfile">
+        <li class="active">
+            <a data-toggle="tab" href="#Details" aria-expanded="false">
+                Details
+            </a>
+        </li>
+        <li class="tab-red">
+            <a data-toggle="tab" href="#Contact" aria-expanded="false">
+                Contact
+            </a>
+        </li>
+        <li class="tab-red">
+            <a data-toggle="tab" href="#Appointments" aria-expanded="false">
+                Appointments
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content radius-bordered">
+        <div id="Details" class="tab-pane in active">
+            @Html.Partial("~/Areas/HR/Views/Employee/ProfileManager/_ProfileDetails.cshtml")
+        </div>
+
+        <div id="Contact" class="tab-pane">
+            @Html.Partial("~/Areas/HR/Views/Employee/ProfileManager/_ProfileContact.cshtml")
+        </div>
+        <div id="Appointments" class="tab-pane">
+            @Html.Partial("~/Areas/HR/Views/Employee/ProfileManager/_ProfilePositionAppoinments.cshtml")
+        </div>
+    </div>
+</div>
+<div class="widget-footer text-center">
+    <button ng-click="@(saveEmployee)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+</div>

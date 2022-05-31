@@ -1,0 +1,103 @@
+﻿@using EMS.DataAccess.Data
+@{
+    var getSuppleApplyUrl = Url.Action("Apply", "SuppleManager", new { area = "ExamSection" });
+    var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+    var gradeDetailReportBySemesterUrl = Url.Action("GradeDetailReportBySemester", "TranscriptAndCertificate", new { area = "Academic" });
+}
+<div class="widget">
+    <div class="widget-header bordered-bottom bordered-green">
+        <i class="widget-icon fa fa-users"></i>
+        <span class="widget-caption">Applicants</span>
+        <div class="widget-buttons buttons-bordered no-padding-right">
+            <span class="widget-caption form-inline">
+                <span>Status: </span>
+                <select ng-model="SelectedRegistrationStatusId"
+                        ng-options="option.Id as option.Name for option in RegistrationStatusEnumList " ng-init="" class="form-control input-xs" style="width: 115px;">
+                    <option value="" label="" class="">All Applicant</option>
+                </select>
+            </span>
+        </div>
+
+        <div class="widget-buttons buttons-bordered">
+            <a href="@(getSuppleApplyUrl)"
+               class="btn btn-xs btn-success" target="_blank">
+                <i class="fa fa-plus"></i> Add New Applicant
+            </a>
+        </div>
+    </div>
+    <div class="widget-body">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="bordered-blue">
+            <tr>
+                <th class="text-center" style="width: 45px;">Ser</th>
+                <th class="text-center" style="width: 90px;">Class Roll</th>
+                <th class="text-center" >Name</th>
+                @*<th class="text-center" style="width: 115px;">Reg. Semester</th>*@
+                <th class="text-center" style="width: 95px;">Enroll Type</th>
+                <th class="text-center" style="width: 110px;">Exam Fee(Tk)</th>
+                <th class="text-center" style="max-width: 175px;">Cause of Absence</th>
+                <th class="text-center" style="width: 100px;">Status</th>
+                <th class="text-center hide-on-print" style="width: 90px;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in SuppleCourse.ApplicantList|filter: (SelectedRegistrationStatusId > 0 ? {@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId:SelectedRegistrationStatusId}:'')" ng-class="{@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied):'bg-white'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved):'bg-green'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending):'bg-yellow'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved):'bg-red'}
+                                                [row.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId]">
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">
+                    <a ng-href="@(gradeDetailReportBySemesterUrl)?stdId={{row.@Aca_SuppleTakenByStudent.Property_StudentId}}#classId-{{row.@Aca_SuppleTakenByStudent.Property_ClassId}}"
+                       target="_blank" title="click to view Grade Detail Report">
+                        {{row.StudentUserName}}
+                    </a>
+                    
+                </td>
+                <td>
+                    <a target="_blank"
+                       href="@(editStudentByIdAcademicPageUrl)/?id={{row.@Aca_SuppleTakenByStudent.Property_StudentId}}&stdId={{row.@Aca_SuppleTakenByStudent.Property_StudentId}}&un={{row.StudentUserName}}"
+                       class="text-bold" title="click to view profile">
+                        {{row.StudentFullName}}
+                    </a>
+                    <br/>
+                    <em style="font-size: 11px;">Reg. Sem.: {{row.RegSemesterName}} [{{row.ClassSection}}], Bath:{{row.StudentDeptBatchNo}}th</em>
+                </td>
+                @*<td class="text-center">{{row.RegSemesterName}}</td>*@
+                <td class="text-center">{{row.@Aca_SuppleTakenByStudent.Property_EnrollType}}</td>
+                <td class="text-center">{{row.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount}}</td>
+                <td class="text-center" style="max-width: 175px;">
+                    {{row.@Aca_SuppleTakenByStudent.Property_CauseOfAbsence}}
+                    <div style="font-size: 11px; color: #2f2b2b; font-style: italic;">
+                        {{row.@Aca_SuppleTakenByStudent.Property_Remark}}
+                    </div>
+                </td>
+                <td class="text-center padding-2">
+                    {{row.@Aca_SuppleTakenByStudent.Property_RegistrationStatus}}
+                </td>
+                <td class="text-center hide-on-print">
+                    <a href="@(getSuppleApplyUrl)?un={{row.StudentUserName}}&examId={{SelectedExamId}}"
+                       target="_blank"
+                       class="btn btn-xs btn-success">
+                        Process
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="widget-footer">
+        <button ng-show="ClassStudentList.length>0" ng-click="saveAllClassStudents()" class="btn btn-success"><i class="fa fa-save"></i> Save All Regular Students</button>
+    </div>
+</div>
+<style>
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+</style>

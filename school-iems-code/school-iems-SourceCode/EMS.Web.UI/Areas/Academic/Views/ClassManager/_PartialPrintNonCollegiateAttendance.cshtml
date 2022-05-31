@@ -1,0 +1,125 @@
+﻿@using EMS.Framework.Utils
+@model EMS.Web.UI.Areas.Academic.Models.ClassAttendanceViewModel
+
+@{
+   
+    var index = 0;
+    var lectureNo = 0;
+}
+
+@if (Model.ClassAttendanceSettingList == null)
+{
+    <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <i class="fa-fw fa fa-times"></i>
+        <strong>Not Found!</strong> There is no class attendance in this Course. Or you don't have sufficient permission.
+    </div>
+}
+else
+{
+    var totalDays = Model.ClassAttendanceSettingList.Count;
+    <h4 class="text-center text-uppercase">Department of @Model.Course.HR_Department.Name (@Model.Course.HR_Department.ShortName)</h4>
+    <h4 class="text-center text-uppercase">@Model.Course.Aca_Semester.Name</h4>
+    <h3 class="text-center text-uppercase margin-10"><u>STUDENT'S ATTENDANCE (Non-Collegiate)</u>
+    </h3>
+    <h4 class="text-center text-uppercase">Course: @Model.Course.Code @Model.Course.Name</h4>
+    <h6 class="text-center">
+        Cr.Hr: @Model.Course.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr: @Model.Course.Aca_CurriculumCourse.CreditHour.ToString("F"), @Model.Course.Aca_CurriculumCourse.CourseCategory, @Model.Course.Aca_CurriculumCourse.CourseType, @Model.Course.Aca_CurriculumCourse.Aca_Curriculum.ShortName
+    </h6>
+    <h5 class="text-center text-uppercase">
+        Faculty:
+        @if (Model.ClassFacultyList.Count == 0)
+        {
+            <span  class="badge badge-danger graded">Not Available</span>
+        }
+        else
+        {
+            <ul class="no-margin list-unstyled list-inline" style="display:inline;">
+                @foreach (var classTakenByEmployee in Model.ClassFacultyList)
+                {
+                    <li>@classTakenByEmployee.User_Employee.User_Account.FullName [@classTakenByEmployee.User_Employee.User_Account.UserName]</li>
+                }
+            </ul>
+        }
+    </h5>
+
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th colspan="3" class="text-right" style="vertical-align: middle;">Lecture No</th>
+            @foreach (var attendanceSetting in Model.ClassAttendanceSettingList)
+            {
+                lectureNo++;
+                <th class="text-center" style="width: 33px;">@lectureNo</th>
+            }
+            <th rowspan="2" class="text-center" style="vertical-align: middle;">Total Present</th>
+            <th rowspan="2" class="text-center" style="vertical-align: middle;">Percentage</th>
+        </tr>
+        <tr>
+            <th rowspan="2" class="text-center" style="width: 35px; vertical-align: bottom;">SL</th>
+            <th rowspan="2" class="text-center" style="width: 80px; vertical-align: bottom;">Class Roll</th>
+            <th rowspan="2" class="text-center" style="vertical-align: bottom;">Student Name</th>
+            <th colspan="@Model.ClassAttendanceSettingList.Count" class="text-center" style="letter-spacing: 10px;">DATE</th>
+        </tr>
+        <tr>
+            @foreach (var attendanceSetting in Model.ClassAttendanceSettingList)
+            {
+                <th class="text-center" style="width: 33px;">@attendanceSetting.StartTime.ToString("dd MM yy")</th>
+            }
+            <th class="text-center" style="vertical-align: middle;">@totalDays</th>
+            <th class="text-center" style="vertical-align: middle;">100%</th>
+        </tr>
+
+        @foreach (var student in Model.ClassStudentList)
+        {
+            var totalPresent = Model.ClassAttendanceList.Count(x => x.IsAbsent == false && x.StudentId == student.StudentId);
+            var totalPercentage = Convert.ToDouble(totalPresent) / Convert.ToDouble(totalDays);
+            totalPercentage = totalPercentage * 100;
+            if (!(totalPercentage >= 60 && totalPercentage <= 74.99))
+            {
+                continue;
+            }
+            index++;
+            <tr>
+                <td class="text-center" style="vertical-align: middle;">@index</td>
+                <td class="text-center" style="vertical-align: middle;">@student.User_Student.ClassRollNo</td>
+                <td class="text-left" style="vertical-align: middle;">@student.User_Student.FullName</td>
+                @foreach (var attendanceSetting in Model.ClassAttendanceSettingList)
+                {
+                    var attendance = Model.ClassAttendanceList
+                        .SingleOrDefault(
+                            x => x.SettingId == attendanceSetting.Id
+                                 && x.StudentId == student.StudentId
+                        );
+                    if (attendance != null)
+                    {
+                        if (attendance.IsAbsent)
+                        {
+                            <td class="text-center danger" style="vertical-align: middle;">A</td>
+                        }
+                        else
+                        {
+                            <td class="text-center" style="vertical-align: middle;">P</td>
+                        }
+                    }
+                    else
+                    {
+                        <td class="text-center danger" style="vertical-align: middle;">A</td>
+                    }
+                }
+                <th class="text-center" style="vertical-align: middle;">@totalPresent</th>
+                <th class="text-center" style="vertical-align: middle;">@totalPercentage.ToString("F")</th>
+            </tr>
+        }
+        <tr style="height: 80px;">
+            <th colspan="3" class="text-left" style="vertical-align: middle;">Total Students: @Model.ClassStudentList.Count </th>
+            @foreach (var attendanceSetting in Model.ClassAttendanceSettingList)
+            {
+                <th class="text-center" style="width: 33px;">&nbsp;</th>
+            }
+            <th colspan="3" class="text-center" style="vertical-align: bottom;">
+                ______________________<br/>
+                Date & Signature
+            </th>
+        </tr>
+    </table>
+}
+@Html.Partial("~/Views/Shared/_PartialCopyright.cshtml")

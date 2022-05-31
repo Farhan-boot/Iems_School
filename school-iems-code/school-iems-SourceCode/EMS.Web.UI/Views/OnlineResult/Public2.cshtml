@@ -1,0 +1,235 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Web.UI.Controllers.WebApi
+
+@{
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    ViewBag.Title = "Online Result | "+ SiteSettings.Instance.InstituteShortName;
+
+    var sid = Request.QueryString["sid"];
+    var StudentUserName = (string)sid == null ? "" : (string)sid;
+
+    var termId = Request.QueryString["termid"];//ViewContext.RouteData.Values["id"];
+    var TermId = (string)termId == null ? "0" : (string)termId;
+
+
+    var getSemesterResultByStudentUserNameUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineResult2Api", action = "GetSemesterResult2ByStudentUserName", area = "Academic" });
+
+
+    string getSemesterResultByStudentUserName = "getSemesterResultByStudentUserName";
+
+
+
+    // if is false then open final term Result.
+    bool isOpenMidtermResult = false;
+
+    /*if (Convert.ToInt32(TermId) == 2)
+    {
+        isOpenMidtermResult = false;
+    }*/
+
+
+}
+@section ScriptSection
+{
+    <script src="~/Views/OnlineResult/Index.js?v=1"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109610136-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-109610136-4');
+    </script>
+}
+
+<div ng-controller="PublicResultPublishPanelCtrl"  class="widget result-publishing-panel"
+     ng-init="Init(
+        '@StudentUserName'
+        ,'@TermId'
+       ,'@getSemesterResultByStudentUserNameUrl'
+
+     )"
+     >
+    <div class="well with-header" style="padding-top: 0px !important; ">
+        <div class="row result-box-size">
+            <div class="col-md-12 widget-body  bordered-blue bordered-green no-padding padding-bottom-10" style="float: none; margin: 0 auto">
+                <div>
+                    <div style="text-align: center">
+
+                        <div class="widget-header  bordered-blue bordered-top" style="text-align: center !important; padding: 10px;">
+                            <a href="@SiteSettings.Instance.InstituteWebsite">
+                                <img class="img-responsive" style="margin: 0 auto;" src="@SiteSettings.Instance.InstituteLogoColorFull" />
+                            </a>
+                            
+                        </div>
+                        <div class="exam-type text-center">
+                            @if (isOpenMidtermResult)
+                            {
+                                <span>Midterm Result</span>
+                            }
+                            else
+                            {
+                                <span>Final Term Result</span>
+                            }
+
+                        </div>
+                        <div class="semester text-center">Winter 2020</div>
+                        <hr style="margin-top: 5px;"/>
+                        <h5 class="text-success"><b>Please Type Student ID:</b></h5>
+                        <p style="text-align: center">
+                            <div class="" style="width: 200px; margin: 0 auto;margin-bottom: 20px">
+
+                                <input type="text" ng-model="StudentUserName" ng-Enter="@(getSemesterResultByStudentUserName)()" class="form-control input-lg " placeholder="Type Student ID" style="">
+                            </div>
+                            <button ng-disabled="StudentUserName.length<5" ng-click="@(getSemesterResultByStudentUserName)()"  class="btn btn-sky">View Result</button>
+                        </p>
+                        
+                        <div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                            <i class="fa-fw fa fa-warning"></i>
+                            <strong>Sorry!</strong> {{ErrorMsg}}
+                        </div>
+                        
+                        <div ng-show="Student!=null">
+                            <div><span class="bold">Name:</span><span style="color: #d65050;"> {{Student.Name}} ({{Student.UserName}})</span></div>
+                            <div><span class="bold">Department:</span> {{Student.Department}}</div>
+                            <div><span class="bold">Program:</span> {{Student.Program}}</div>
+                            <hr />
+                           
+                            <h2 class="text-center "
+                                ng-class="(Student.ResultStatusEnumId==@((byte) OnlineResult2ApiController.ResultStatusEnum.Passed) )?'success':'danger'">
+                                <span ng-if="Student.ResultStatusEnumId==@((byte) OnlineResult2ApiController.ResultStatusEnum.Passed)">
+                                    Congratulations:
+                                </span>
+                                {{Student.ResultStatus}}
+                            </h2>
+                            <div ng-hide="Student.ResultStatusEnumId==@((byte) OnlineResult2ApiController.ResultStatusEnum.Passed)"
+                                ng-class="(Student.ResultStatusEnumId==@((byte) OnlineResult2ApiController.ResultStatusEnum.Passed))?'success':'danger'"
+                                >
+                                <strong>Remarks:</strong>
+                                <em>
+                                    {{Student.Message}}
+                                </em>
+                            </div>
+
+                            <hr />
+
+                            @*<div class="exam-type text-center" ng-hide="DueAmount==null">Current Due: {{DueAmount}} BDT</div>*@
+                            <div ng-show="SemesterResult!=null" style="overflow: auto;">
+                                @if (isOpenMidtermResult) //Midterm Result
+                                {
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Course Code</th>
+                                            <th class="text-center">Course Title</th>
+                                            <th class="text-center">Mark</th>
+                                            @*<th class="text-center">Grade</th>
+                                            <th class="text-center">Grade Point</th>*@
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="row in SemesterResult">
+                                            <td>{{row.CourseCode}}</td>
+                                            <td class="text-left">{{row.CourseName}}</td>
+                                            <td class="text-center">{{row.MidtermMark}}</td>
+                                            @*<td class="text-center">{{row.@Aca_ResultClass.Property_Grade}}</td>
+                                            <td class="text-center">{{row.@Aca_ResultClass.Property_GradePoint}}</td>*@
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                                else //Final Term Result
+                                {
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Course Code</th>
+                                            <th class="text-center">Course Title</th>
+                                            <th class="text-center">Credit Hours</th>
+                                            <th class="text-center">Grade</th>
+                                            <th class="text-center">Grade Point</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="row in SemesterResult">
+                                            <td>{{row.CourseCode}}</td>
+                                            <td class="text-left">{{row.CourseName}}</td>
+                                            <td class="text-center">{{row.CreditLoad}}</td>
+                                            <td class="text-center">{{row.@Aca_ResultClass.Property_Grade}}</td>
+                                            <td class="text-center">{{row.@Aca_ResultClass.Property_GradePoint}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div style="margin-top: 20px; font-weight: bold; font-size: 15px;">
+                                        Total Credit: {{TotalCredit}} | Earned Credit: {{EarnedCredit}} | SGPA: {{SGPA}}
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                        
+                        
+                        <hr />
+                        <div>
+                            <table style="width: 100%;">
+                                <tbody>
+                                <tr>
+                                    <td style="text-align: left; padding-left: 10px;">
+                                        Developed By:
+                                        <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                                            <strong class="menu-text">@SiteSettings.PoweredBy</strong>
+                                        </a>
+                                    </td>
+                                    <td style="text-align: right; padding-right: 10px;">
+                                       @SiteSettings.Instance.InstituteCreditPrefix 
+                                        <a target="_blank" href="@SiteSettings.Instance.InstituteItSupportLink" class="green">
+                                            <strong class="menu-text">@SiteSettings.Instance.InstituteCredit</strong>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                       
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .result-box-size {
+        width: 70%; 
+        margin: 0 auto;
+    }
+    .result-publishing-panel input {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .exam-type {
+        font-size: 30px;
+        font-weight: bold;
+        color: #d65050;
+    }
+    .semester {
+        font-size: 20px;
+    }
+
+    @@media (max-width: 700px) {
+        .result-box-size {
+            width: 100%; 
+            margin: 0 auto;
+        }
+    }
+</style>

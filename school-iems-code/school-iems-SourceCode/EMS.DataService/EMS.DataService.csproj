@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{79B042A7-73B0-4EC8-A528-E540380B5508}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.DataService</RootNamespace>
+    <AssemblyName>EMS.DataService</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Aca_ClassAttendanceDataService.cs" />
+    <Compile Include="Aca_ClassAttendanceSettingDataService.cs" />
+    <Compile Include="Aca_ClassAttendanceSmsLogDataService.cs" />
+    <Compile Include="Aca_ClassDataService.cs" />
+    <Compile Include="Aca_ClassMaterialFileMapDataService.cs" />
+    <Compile Include="Aca_ClassNoticeDataService.cs" />
+    <Compile Include="Aca_ClassRoutineDataService.cs" />
+    <Compile Include="Aca_ClassSectionDataService.cs" />
+    <Compile Include="Aca_ClassTakenByEmployeeDataService.cs" />
+    <Compile Include="Aca_ClassTakenByStudentDataService.cs" />
+    <Compile Include="Aca_ClassWaiverStudentDataService.cs" />
+    <Compile Include="Aca_CourseDataService.cs" />
+    <Compile Include="Aca_CurriculumCourseDataService.cs" />
+    <Compile Include="Aca_CurriculumDataService.cs" />
+    <Compile Include="Aca_CurriculumElectiveGroupDataService.cs" />
+    <Compile Include="Aca_ExamDataService.cs" />
+    <Compile Include="Aca_ExamRollDataService.cs" />
+    <Compile Include="Aca_ExamSuppleDataService.cs" />
+    <Compile Include="Aca_HomeWorkSubmissionDataService.cs" />
+    <Compile Include="Aca_OnlineClassDataService.cs" />
+    <Compile Include="Aca_StudentRegistrationDataService.cs" />
+    <Compile Include="Aca_StudyLevelDataService.cs" />
+    <Compile Include="Aca_StudyTermDataService.cs" />
+    <Compile Include="Aca_GradingPolicyDataService.cs" />
+    <Compile Include="Aca_GradingPolicyOptionDataService.cs" />
+    <Compile Include="Aca_MarkDistributionPolicyBreakdownDataService.cs" />
+    <Compile Include="Aca_MarkDistributionPolicyComponentDataService.cs" />
+    <Compile Include="Aca_MarkDistributionPolicyDataService.cs" />
+    <Compile Include="Aca_ProgramDataService.cs" />
+    <Compile Include="Aca_SemesterDataService.cs" />
+    <Compile Include="Aca_StudyLevelTermDataService.cs" />
+    <Compile Include="Adm_AdmissionExamDataService.cs" />
+    <Compile Include="Adm_DegreeCategoryDataService.cs" />
+    <Compile Include="Adm_EducationBoardDataService.cs" />
+    <Compile Include="Adm_ParentsPrimaryJobTypeDataService.cs" />
+    <Compile Include="Adm_StudentQuotaNameDataService.cs" />
+    <Compile Include="BAcnt_BranchDataService.cs" />
+    <Compile Include="BAcnt_CompanyAccountDataService.cs" />
+    <Compile Include="BAcnt_LedgerDataService.cs" />
+    <Compile Include="BAcnt_VoucherDataService.cs" />
+    <Compile Include="BAcnt_VoucherDetailDataService.cs" />
+    <Compile Include="BAcnt_VoucherTypeDataService.cs" />
+    <Compile Include="BaseDataService.cs" />
+    <Compile Include="Bases\Aca_ClassAttendanceDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassAttendanceSettingDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassAttendanceSmsLogDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassMaterialFileMapDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassNoticeDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassRoutineDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassSectionDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassTakenByEmployeeDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassTakenByStudentDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ClassWaiverStudentDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CourseDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CoursePrerequisiteMapDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CreditTransferCoursesDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CreditTransferDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CreditTransferInstituteDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CurriculumCourseDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CurriculumDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CurriculumElectiveGroupDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_CurriculumStudentMapDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_DeptBatchDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ExamDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ExamRollDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ExamSuppleDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_HomeWorkSubmissionDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_OnlineClassDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_StudentRegistrationDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_GradingPolicyDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_GradingPolicyOptionDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_MarkDistributionPolicyBreakdownDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_MarkDistributionPolicyComponentDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_MarkDistributionPolicyDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_ProgramDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_SemesterDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_StudyLevelDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_StudyLevelTermDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_StudyTermDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_TPEQuestionAnswer2DataServiceBase.cs" />
+    <Compile Include="Bases\Aca_TPEQuestionAnswerDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_TPEQuestionCategoryDataServiceBase.cs" />
+    <Compile Include="Bases\Aca_TPEQuestionDataServiceBase.cs" />
+    <Compile Include="Bases\Adm_AdmissionExamDataServiceBase.cs" />
+    <Compile Include="Bases\Adm_DegreeCategoryDataServiceBase.cs" />
+    <Compile Include="Bases\Adm_EducationBoardDataServiceBase.cs" />
+    <Compile Include="Bases\Adm_ParentsPrimaryJobTypeDataServiceBase.cs" />
+    <Compile Include="Bases\Adm_StudentQuotaNameDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_BranchDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_CompanyAccountDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_LedgerDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_VoucherDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_VoucherDetailDataServiceBase.cs" />
+    <Compile Include="Bases\BAcnt_VoucherTypeDataServiceBase.cs" />
+    <Compile Include="Bases\General_BankDataServiceBase.cs" />
+    <Compile Include="Bases\General_BuildingDataServiceBase.cs" />
+    <Compile Include="Bases\General_CampusDataServiceBase.cs" />
+    <Compile Include="Bases\General_CountryDataServiceBase.cs" />
+    <Compile Include="Bases\General_DistrictDataServiceBase.cs" />
+    <Compile Include="Bases\General_DivisionDataServiceBase.cs" />
+    <Compile Include="Bases\General_FileDataServiceBase.cs" />
+    <Compile Include="Bases\General_FloorDataServiceBase.cs" />
+    <Compile Include="Bases\General_LanguageDataServiceBase.cs" />
+    <Compile Include="Bases\General_NoticeDataServiceBase.cs" />
+    <Compile Include="Bases\General_PoliceStationDataServiceBase.cs" />
+    <Compile Include="Bases\General_PostOfficeDataServiceBase.cs" />
+    <Compile Include="Bases\General_RoomDataServiceBase.cs" />
+    <Compile Include="Bases\HR_AppointmentHistoryDataServiceBase.cs" />
+    <Compile Include="Bases\HR_AttendanceDataServiceBase.cs" />
+    <Compile Include="Bases\HR_CalendarYearDataServiceBase.cs" />
+    <Compile Include="Bases\HR_DepartmentDataServiceBase.cs" />
+    <Compile Include="Bases\HR_EmpLeaveAllocationSettingsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_EmpLeaveAllocationSettingsDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_EmpLeaveApplicationDataServiceBase.cs" />
+    <Compile Include="Bases\HR_EmployementHistoryDataServiceBase.cs" />
+    <Compile Include="Bases\HR_HolidaySettingsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_LeaveAllocationTemplateDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_MonthlyPayslipDataServiceBase.cs" />
+    <Compile Include="Bases\HR_MonthlyPayslipDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_OrganizationDataServiceBase.cs" />
+    <Compile Include="Bases\HR_PayrollDataServiceBase.cs" />
+    <Compile Include="Bases\HR_PositionDataServiceBase.cs" />
+    <Compile Include="Bases\HR_SalarySettingsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_SalarySettingsDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_SalaryTemplateDataServiceBase.cs" />
+    <Compile Include="Bases\HR_SalaryTemplateDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\HR_WorkWeekDataServiceBase.cs" />
+    <Compile Include="Bases\Invt_EquipmentDetailITDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_InventoryDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_InventoryDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemAllocationDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemDescriptionDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemMaintainanceDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemReturnDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ItemWarrentyDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_ProductCategoryDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_PurchaseRequisitionDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_PurchaseRequisitionDetailDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_RequisitionDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_RequisitionDetailsDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_StoreDataServiceBase.cs" />
+    <Compile Include="Bases\Inv_SupplierDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookActivityLogDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookAuthorDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookAuthorMapDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookCopyDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookCopyTransactionDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookDeptMapDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookSubjectDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BookSubjectMapDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BorrowerActivityLogDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BorrowerDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_BranchDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_FineDataServiceBase.cs" />
+    <Compile Include="Bases\Lib_SupplierDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_LoginAuditDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_PassResetDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_RoleDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_RolePremissionMapDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_RoleUserMapDataServiceBase.cs" />
+    <Compile Include="Bases\UAC_VerificationAuditDataServiceBase.cs" />
+    <Compile Include="Bases\User_AccountDataServiceBase.cs" />
+    <Compile Include="Bases\User_ContactAddressDataServiceBase.cs" />
+    <Compile Include="Bases\User_ContactEmailDataServiceBase.cs" />
+    <Compile Include="Bases\User_ContactNumberDataServiceBase.cs" />
+    <Compile Include="Bases\User_EducationDataServiceBase.cs" />
+    <Compile Include="Bases\User_EmployeeDataServiceBase.cs" />
+    <Compile Include="Bases\User_ExperienceDataServiceBase.cs" />
+    <Compile Include="Bases\User_ImageDataServiceBase.cs" />
+    <Compile Include="Bases\User_ProfileChangeAuditDataServiceBase.cs" />
+    <Compile Include="Bases\User_RankDataServiceBase.cs" />
+    <Compile Include="Bases\User_RankHistoryDataServiceBase.cs" />
+    <Compile Include="Bases\User_RelationshipDataServiceBase.cs" />
+    <Compile Include="Bases\User_StudentDataServiceBase.cs" />
+    <Compile Include="Bases\User_UserNameChangeAuditDataServiceBase.cs" />
+    <Compile Include="General_BankDataService.cs" />
+    <Compile Include="General_BuildingDataService.cs" />
+    <Compile Include="General_CampusDataService.cs" />
+    <Compile Include="General_CountryDataService.cs" />
+    <Compile Include="General_DistrictDataService.cs" />
+    <Compile Include="General_DivisionDataService.cs" />
+    <Compile Include="General_FileDataService.cs" />
+    <Compile Include="General_FloorDataService.cs" />
+    <Compile Include="General_NoticeDataService.cs" />
+    <Compile Include="General_PoliceStationDataService.cs" />
+    <Compile Include="General_PostOfficeDataService.cs" />
+    <Compile Include="General_RoomDataService.cs" />
+    <Compile Include="HR_AppointmentHistoryDataService.cs" />
+    <Compile Include="HR_AttendanceDataService.cs" />
+    <Compile Include="HR_CalendarYearDataService.cs" />
+    <Compile Include="HR_DepartmentDataService.cs" />
+    <Compile Include="HR_EmpLeaveAllocationSettingsDataService.cs" />
+    <Compile Include="HR_EmpLeaveAllocationSettingsDetailsDataService.cs" />
+    <Compile Include="HR_EmpLeaveApplicationDataService.cs" />
+    <Compile Include="HR_EmployementHistoryDataService.cs" />
+    <Compile Include="HR_HolidaySettingsDataService.cs" />
+    <Compile Include="HR_LeaveAllocationTemplateDetailsDataService.cs" />
+    <Compile Include="HR_MonthlyPayslipDataService.cs" />
+    <Compile Include="HR_MonthlyPayslipDetailsDataService.cs" />
+    <Compile Include="HR_OrganizationDataService.cs" />
+    <Compile Include="HR_PayrollDataService.cs" />
+    <Compile Include="HR_PositionDataService.cs" />
+    <Compile Include="HR_SalarySettingsDataService.cs" />
+    <Compile Include="HR_SalarySettingsDetailsDataService.cs" />
+    <Compile Include="HR_SalaryTemplateDataService.cs" />
+    <Compile Include="HR_SalaryTemplateDetailsDataService.cs" />
+    <Compile Include="HR_WorkWeekDataService.cs" />
+    <Compile Include="Invt_EquipmentDetailITDataService.cs" />
+    <Compile Include="Inv_InventoryDataService.cs" />
+    <Compile Include="Inv_InventoryDetailsDataService.cs" />
+    <Compile Include="Inv_ItemAllocationDataService.cs" />
+    <Compile Include="Inv_ItemDataService.cs" />
+    <Compile Include="Inv_ItemDescriptionDataService.cs" />
+    <Compile Include="Inv_ItemMaintainanceDataService.cs" />
+    <Compile Include="Inv_ItemReturnDataService.cs" />
+    <Compile Include="Inv_ItemWarrentyDetailsDataService.cs" />
+    <Compile Include="Inv_ProductCategoryDataService.cs" />
+    <Compile Include="Inv_PurchaseRequisitionDataService.cs" />
+    <Compile Include="Inv_PurchaseRequisitionDetailDataService.cs" />
+    <Compile Include="Inv_RequisitionDataService.cs" />
+    <Compile Include="Inv_RequisitionDetailsDataService.cs" />
+    <Compile Include="Inv_StoreDataService.cs" />
+    <Compile Include="Inv_SupplierDataService.cs" />
+    <Compile Include="Lib_BookAuthorDataService.cs" />
+    <Compile Include="Lib_BookCopyDataService.cs" />
+    <Compile Include="Lib_BookCopyTransactionDataService.cs" />
+    <Compile Include="Lib_BookDataService.cs" />
+    <Compile Include="Lib_BookSubjectDataService.cs" />
+    <Compile Include="Lib_BorrowerDataService.cs" />
+    <Compile Include="Lib_BranchDataService.cs" />
+    <Compile Include="Lib_FineDataService.cs" />
+    <Compile Include="Lib_SupplierDataService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UAC_LoginAuditDataService.cs" />
+    <Compile Include="UAC_PassResetDataService.cs" />
+    <Compile Include="UAC_VerificationAuditDataService.cs" />
+    <Compile Include="User_AccountDataService.cs" />
+    <Compile Include="User_ContactAddressDataService.cs" />
+    <Compile Include="User_ContactEmailDataService.cs" />
+    <Compile Include="User_ContactNumberDataService.cs" />
+    <Compile Include="User_EducationDataService.cs" />
+    <Compile Include="User_EmployeeDataService.cs" />
+    <Compile Include="User_ImageDataService.cs" />
+    <Compile Include="User_ProfileChangeAuditDataService.cs" />
+    <Compile Include="User_RankDataService.cs" />
+    <Compile Include="User_RelationshipDataService.cs" />
+    <Compile Include="User_StudentDataService.cs" />
+    <Compile Include="User_UserNameChangeAuditDataService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{C943AC10-D3E5-4BF4-9519-E3083DCD5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Project>{772BF7CE-F2A1-466D-883D-CD3D19AF8AE4}</Project>
+      <Name>EMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Project>{ab834801-ee9a-44a7-873a-9c9f123c02ce}</Project>
+      <Name>EMS.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

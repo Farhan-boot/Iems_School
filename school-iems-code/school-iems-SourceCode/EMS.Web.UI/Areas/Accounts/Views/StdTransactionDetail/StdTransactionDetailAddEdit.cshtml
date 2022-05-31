@@ -1,0 +1,232 @@
+﻿
+<!--File:Acnt_StdTransactionDetail Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Std Transaction Detail";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StdTransactionDetailId = (string) id == null?"0":(string)id;
+    
+    //Acnt_StdTransactionDetail WebApi Single Row link   
+    var getStdTransactionDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "GetStdTransactionDetailById", area = "Accounts" });
+    var getStdTransactionDetailDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "GetStdTransactionDetailDataExtra", area = "Accounts" });
+    var saveStdTransactionDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "SaveStdTransactionDetail", area = "Accounts" });
+    var deleteStdTransactionDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "GetDeleteStdTransactionDetailById", area = "Accounts" });
+
+    //Acnt_StdTransactionDetail WebApi List link 
+    var getPagedStdTransactionDetailUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StdTransactionDetailApi", action = "GetPagedStdTransactionDetail", area = "Accounts"});
+    var getAllStdTransactionDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "GetAllStdTransactionDetail", area = "Accounts" });
+    var saveStdTransactionDetailListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "SaveStdTransactionDetailList", area = "Accounts" });
+    var getStdTransactionDetailListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionDetailApi", action = "GetStdTransactionDetailListDataExtra", area = "Accounts" });
+
+    var editStdTransactionDetailByIdPageUrl = Url.Action("StdTransactionDetailAddEdit", "StdTransactionDetail", new { area = "Accounts" });
+    var listStdTransactionDetailPageUrl = Url.Action("StdTransactionDetailList", "StdTransactionDetail", new { area = "Accounts" });
+    
+    //Acnt_StdTransactionDetail Angular Functions
+    string getStdTransactionDetailById="getStdTransactionDetailById";
+    var saveStdTransactionDetail = "saveStdTransactionDetail";
+    var getNewStdTransactionDetail = "getNewStdTransactionDetail";
+    var refreshPage = "loadPage()";
+    string deleteStdTransactionDetailById="deleteStdTransactionDetailById";
+    string loadStdTransactionDetailExtraData="loadStdTransactionDetailExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/StdTransactionDetail/StdTransactionDetailAddEdit.js"></script>
+}
+
+<div id="StdTransactionDetailAddEdit" class="row" ng-controller="StdTransactionDetailAddEditCtrl" ng-init="Init(
+      '@StdTransactionDetailId'
+      ,'@getStdTransactionDetailByIdUrl'
+      ,'@getStdTransactionDetailDataExtraUrl'
+      ,'@saveStdTransactionDetailUrl'
+      ,'@deleteStdTransactionDetailByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_Name!=''">{{(StdTransactionDetail.@Acnt_StdTransactionDetail.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="StdTransactionDetailId" ng-Enter="@(getStdTransactionDetailById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewStdTransactionDetail)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listStdTransactionDetailPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_Name" class="form-control" placeholder="Enter Name"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Particular Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_ParticularId" class="form-control" placeholder="Enter Particular Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Particular Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Particular Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_ParticularTypeEnumId" ng-options="option.Id as option.Name for option in ParticularTypeEnumList" title="Select Particular Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_Amount" class="form-control" placeholder="Enter Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Debited </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_IsDebited"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Debited if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Auto Entry </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_IsAutoEntry"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Auto Entry if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Package Payment </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_IsPackagePayment"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Package Payment if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Debit Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_DebitId" class="form-control" placeholder="Enter Debit Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Debit Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea type="text" ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_Remark" class="form-control" placeholder="Enter Remark"   />
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Semester </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_SemesterId"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Std Transaction </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_TrasectionId"
+                                        ng-options="option.Id as option.Name for option in StdTransactionList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Std Transaction." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Student </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdTransactionDetail.@Acnt_StdTransactionDetail.Property_StudentId"
+                                        ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Student." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveStdTransactionDetail)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

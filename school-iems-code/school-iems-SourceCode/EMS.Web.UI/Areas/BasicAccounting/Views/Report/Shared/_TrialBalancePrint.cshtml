@@ -1,0 +1,205 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+@model EMS.Framework.Objects.MvcModelListResult<ReportController.TrialBalanceModel>
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+    var trialBalanceLedgerList = Model.Data.ToList();
+    var totalDebitAmount = Model.DataBag.TotalDebitAmount;
+    var totalCreditAmount = Model.DataBag.TotalCreditAmount;
+    var startDate = Model.DataBag.StartDate;
+    var endDate = Model.DataBag.EndDate;
+
+    <div class="main-body" style="background-color: white !important;">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 15px;">
+            <div style="font-size: 20px;">Trial Balance</div>
+            <div> @startDate.ToString("dd/MM/yyyy") to @endDate.ToString("dd/MM/yyyy")</div>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <table class="table-bordered table-border voucher-table trial-balance-tbl" width="100%">
+                <thead>
+                <tr>
+                    <th rowspan="2" class="text-center">Code</th>
+                    <th rowspan="2">Head of Accounts</th>
+                    <th colspan="3">
+                        Balance As On @endDate.ToString("dd-MMM-yyyy")
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center">Debit(in Tk.)</th>
+                    <th class="text-center">Credit(in Tk.)</th>
+                    <th class="text-center" style="width: 100px;">Balance(in Tk.)</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var ledger in trialBalanceLedgerList)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @ledger.LedgerCode
+                        </td>
+                        <td>@ledger.LedgerName</td>
+                        <td style="text-align: right;">
+                            @if (ledger.LedgerTotalDebit != 0)
+                            {
+                                <span>@ledger.LedgerTotalDebit.ToString("##.00")</span>
+                            }
+                           
+                        </td>
+                        <td style="text-align: right;">
+                            @if (ledger.LedgerTotalCredit != 0)
+                            {
+                                <span>@ledger.LedgerTotalCredit.ToString("##.00")</span>
+                            }
+                        </td>
+                        <td style="text-align: right;">
+                            @if (ledger.LedgerBalance != 0)
+                            {
+                                <span>@ledger.LedgerBalance.ToString("##.00")</span> <span>@ledger.BalanceType</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="text-right text-bold">Total (in Tk.):</td>
+                    <td class="text-right text-bold">@totalDebitAmount.ToString("##.00")</td>
+                    <td class="text-right text-bold">@totalCreditAmount.ToString("##.00")</td>
+                    <td class="text-right text-bold"></td>
+                </tr>
+                </tbody>
+            </table>
+            
+            <table style="margin-top: 40px;">
+                <tr style="text-align: center;">
+                    <td>Manager (Finance & Accounts)</td>
+                    <td>GM (Finance & Accounts)</td>
+                    <td>Chairman & CE</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+
+    .voucher-dlt-table thead > tr > th {
+        line-height: normal;
+        padding: 0px;
+    }
+
+    .voucher-dlt-table thead > tr > th, .voucher-dlt-table tbody > tr > td {
+        font-size: 11px !important;
+    }
+
+    .voucher-table-thead > th {
+        line-height: normal;
+        border: 1px solid black !important;
+    }
+
+
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #a09f9f;
+    }
+
+    .trial-balance-tbl thead tr th {
+        padding: 0px !important;
+        font-size: 11px !important;
+    }
+
+    @@media print {
+
+        .main-body table {
+            border: none !important;
+        }
+
+        .voucher-dlt-table thead > tr > th {
+            line-height: normal;
+            padding: 1px;
+        }
+
+        .voucher-dlt-table thead > tr > th, .voucher-dlt-table tbody > tr > td {
+            font-size: 11px !important;
+        }
+
+        .voucher-table-thead > th {
+            line-height: normal;
+            border: 1px solid black !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: none !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 0.5px solid #a09f9f !important;
+        }
+        .print-no-border {
+            border: none !important;
+        }
+    }
+</style>

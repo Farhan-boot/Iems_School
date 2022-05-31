@@ -1,0 +1,741 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@using EMS.Web.Jsons.Models
+@model dynamic
+
+@{
+    ViewBag.Title = "Offered Course (Class)";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassById", area = "Academic" });
+    var getClassHistoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassHistoryById", area = "Academic" });
+    var getClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassDataExtra", area = "Academic" });
+    var saveClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClass", area = "Academic" });
+    var deleteClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetDeleteClassById", area = "Academic" });
+
+    //WebApi link for List
+    var getListClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassList", area = "Academic" });
+    var getAllClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetAllClass", area = "Academic" });
+    var saveClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClassList", area = "Academic" });
+    var getClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassListDataExtra", area = "Academic" });
+
+    var getMarkDistributionPolicyListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetMarkDistributionPolicyList", area = "Academic" }); ;
+
+
+    var editClassByIdPageUrl = Url.Action("ClassAddEdit", "ClassManager", new { area = "Academic" });
+    var listClassPageUrl = Url.Action("ClassList", "ClassManager", new { area = "Academic" });
+
+    var getPagedCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetCurriculumCourse", area = "Academic" });
+    var getCurriculumCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetCurriculumCourseById", area = "Academic" });
+
+    var editCurriculumCourseByIdPageUrl = Url.Action("CurriculumCourseAddEdit", "CurriculumCourse", new { area = "Academic" });
+
+    // Angular Functions
+    string getClassById = "getClassById";
+    var saveClass = "saveClass";
+    var getNewClass = "getNewClass";
+    var refreshPage = "loadPage()";
+    string deleteClassById = "deleteClassById";
+    string loadClassExtraData = "loadClassExtraData";
+    string openHistoryModal = "openHistoryModal";
+    var searchCurriculumCourseList = "searchCurriculumCourseList";
+
+    //Class Routine
+    var getPagedClassRoutineUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassRoutineApi", action = "GetPagedClassRoutine", area = "Academic" });
+    var getClassRoutineByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassRoutineApi", action = "GetClassRoutineById", area = "Academic" });
+    var getClassRoutineDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassRoutineApi", action = "GetClassRoutineDataExtra", area = "Academic" });
+    var saveClassRoutineUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassRoutineApi", action = "SaveClassRoutine", area = "Academic" });
+    var deleteClassRoutineByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassRoutineApi", action = "GetDeleteClassRoutineById", area = "Academic" });
+
+    var printAllAttendanceByClassIdPageUrl = Url.Action("PrintAllAttendance", "ClassManager", new { area = "Academic" });
+    var classTestMarksByClassIdPageUrl = Url.Action("ClassTestMarks", "ClassManager", new { area = "Academic" });
+
+    var trashOrUnTrashTeacherByIdUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "TrashOrUnTrashClassTeacherById", area = "Academic"});
+
+    var getDropUnDropCourseByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDropUnDropCourseByClassId", area = "Academic" });
+    var getTrashUntrashCourseByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDeleteUnDeleteCourseByClassId", area = "Academic" });
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ClassManager/ClassAddEdit.js?v=16.5"></script>
+    <script src="~/Areas/Academic/Views/ClassResultManager/MarksEditDashboard/_MarksEditDashboard.js?v=10"></script>
+    <script src="~/Areas/Academic/Views/ClassManager/ReferredBacklogManager/_ReferredBacklogManager.js?v=4"></script>
+}
+<div ng-controller="ClassManagerCtrl"
+     ng-init="Init(
+     '@ClassId'
+     ,'@getClassByIdUrl'
+     ,'@getListClassUrl'
+     ,'@getClassDataExtraUrl'
+     ,'@saveClassUrl'
+     ,'@getPagedCurriculumCourseUrl'
+     ,'@getCurriculumCourseByIdUrl'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetClassStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetClassWaiverStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveClassStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveClassWaiverStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveBulkClassWaiverStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "DeleteClassStudent", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "DeleteClassAllStudent", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "DeleteClassWaiverStudent", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetClassTeacherList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetTeacherList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveClassTeacherList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "DeleteClassTeacher", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveClassTakenByStudentList", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "SaveClassTakenByEmployeeList", area = "Academic"})'
+     ,'@getPagedClassRoutineUrl'
+     ,'@getClassRoutineByIdUrl'
+     ,'@getClassRoutineDataExtraUrl'
+     ,'@saveClassRoutineUrl'
+     ,'@deleteClassRoutineByIdUrl'
+     ,'@getMarkDistributionPolicyListUrl'
+     ,'@getClassHistoryByIdUrl'
+     ,'@trashOrUnTrashTeacherByIdUrl'
+     ,'@getDropUnDropCourseByClassIdUrl'
+      ,'@getTrashUntrashCourseByClassIdUrl'
+     );">
+<h5 class="row-title no-margin-top before-success" ng-show="Class.Name!=''" style="display: block;">
+    <i class="fa fa-institution success"></i> {{Class.@Aca_Class.Property_Code}} {{Class.@Aca_Class.Property_Name}}
+    <span  class="pull-right">
+        <ul class="list-inline">
+            <li>{{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategory}}</li>
+            <li>Cr.Hr: {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditLoad |number:2}}</li>
+            <li>Co.Hr: {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditHour |number:2}}</li>
+            <li>
+                <select ng-model="Class.@Aca_Class.Property_SemesterId"
+                        ng-options="option.Id as option.Name for option in SemesterLevelTermList " disabled="disabled" style="cursor: text !important; border: none !important; box-shadow: none !important;"></select>
+            </li>
+            <li>
+                <a href="@editClassByIdPageUrl?id=0&SemesterId={{Class.SemesterId}}&ProgramId={{Class.ProgramId}}&LevelTermId={{Class.StudyLevelTermId}}&BatchId={{Class.StudentBatchId}}&CurriculumId={{SelectedCurriculumId}}" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+            </li>
+        </ul>
+        @*$scope.Class.SemesterId = getQueryString("SemesterId");
+            $scope.Class.ProgramId = parseInt(getQueryString("ProgramId"));
+            $scope.SelectedProgramId = $scope.Class.ProgramId;
+            $scope.Class.StudyLevelTermId = parseInt(getQueryString("LevelTermId"));
+            $scope.Class.StudentBatchId = parseInt(getQueryString("BatchId"));
+            $scope.SelectedCurriculumId = getQueryString("CurriculumId");*@           
+               
+               
+
+          
+    </span>
+</h5>
+
+<div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> {{ErrorMsg}}
+</div>
+
+<div class="tabbable">
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active">
+        <a data-toggle="tab" href="#ClassDetails" aria-expanded="false">
+            Details
+        </a>
+    </li>
+    <li class="tab-blue" ng-hide="Class.@Aca_Class.Property_Id<=0">
+        <a data-toggle="tab" href="#ClassStudents" aria-expanded="true">
+            <span  class="badge badge-success">{{ClassStudentList.length+ClassWaiverStudentList.length}}</span> Students
+        </a>
+    </li>
+    <li class="tab-blue" ng-hide="Class.@Aca_Class.Property_Id<=0">
+        <a data-toggle="tab" href="#ClassTeachers" aria-expanded="true">
+            <span  class="badge badge-success">{{ClassTeacherList.length}}</span> Teachers
+        </a>
+    </li>
+    <li class="tab-blue" ng-hide="Class.@Aca_Class.Property_Id<=0">
+        <a data-toggle="tab" href="#ClassAttendance" aria-expanded="true">
+            Attendance
+        </a>
+    </li>
+    <li class="tab-blue" ng-hide="Class.@Aca_Class.Property_Id<=0">
+        <a data-toggle="tab" href="#ClassMarks" aria-expanded="true">
+            Class Marks
+        </a>
+    </li>
+</ul>
+<div class="tab-content no-padding">
+<div id="ClassDetails" class="tab-pane active">
+<div class="widget">
+<div class="widget-body">
+<div class="row">
+<div class="col-sm-12">
+<div class="widget no-margin-bottom">
+<div class="widget-header bg-blueberry">
+    <i class="widget-icon fa fa-info-circle"></i>
+    <span  class="widget-caption">Basic Information</span>
+    <div class="widget-buttons">
+        <a href="#" data-toggle="maximize">
+            <i class="fa fa-expand"></i>
+        </a>
+        <a href="#" data-toggle="collapse">
+            <i class="fa fa-minus"></i>
+        </a>
+    </div>
+</div>
+<div class="widget-body">
+<table class="table table-no-bordered">
+<tr>
+    <td><label class="control-label">Semester (Academic Session)<span class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_SemesterId"
+                ng-change="changeSemester()"
+                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+            <option value="" label="" class="">---Select Semester---</option>
+        </select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Semester ">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+@*<tr>
+                                        <td style="width: 300px;">
+                                            <label class="control-label">Department <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                        </td>
+                                        <td style="width: 14px;"><label class="control-label">:</label></td>
+                                        <td style="width: 50%;">
+                                            <select ng-model="Class.@Aca_Class.Property_DepartmentId" ng-change="changeDepartment()"
+                                                    ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control"></select>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                    title="Class Department">
+                                                <i class="fa fa-question-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>*@
+<tr>
+    <td style="width: 300px;">
+        <label class="control-label">Program <span class="red glyphicon glyphicon-asterisk"></span></label>
+    </td>
+    <td style="width: 14px;"><label class="control-label">:</label></td>
+    <td style="width: 50%;">
+        <select ng-model="Class.@Aca_Class.Property_ProgramId" 
+                ng-change="changeProgram()"
+                ng-options="option.Id as option.ShortName for option in ProgramList | filter:SemeserDurationFilter" ng-init="" class="form-control">
+            <option value="" label="" class="">---Select Program---</option>
+        </select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Department">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Level Term <span class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_StudyLevelTermId" ng-change="changeLevelTerm()"
+                ng-options="option.Id as option.Name for option in StudyLevelTermList | filter:SemeserDurationFilter" ng-init="" class="form-control">
+            <option value="" label="" class="">---Select One---</option>
+        </select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Semester Level Term">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="control-label">
+        <label class="control-label">Select Student Continuing Batch </label>
+    </td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_StudentBatchId"
+                ng-change="changeBatch()"
+                ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+            <option style="color: red" value="" label="" class="">---Undefined---</option>
+        </select>
+    </td>
+    <td class="">
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Select Which Bach Can Attain This Class.">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Program Type <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList " ng-init="" class="form-control"></select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Program Type">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Curriculum Course <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <label class="control-label">
+            <a target="_blank" href="@(editCurriculumCourseByIdPageUrl)/?id={{SelectedCurriculumCourse.Id}}">{{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_Code}} {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_Name}}</a>
+
+            <button ng-click="@(searchCurriculumCourseList)()" data-toggle="modal" data-target="#selectCurriculumCourseModal" type="button" class="btn btn-primary btn-xs">
+                <i class="fa fa-pencil-square-o"></i>
+                <span  ng-show="SelectedCurriculumCourse==null"> Select </span>
+                <span  ng-hide="SelectedCurriculumCourse==null"> Change </span>
+                Curriculum Course
+            </button>
+        </label>
+        <ul class="list-inline">
+            <li>Category: {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategory}}</li>
+            <li>Credit Hour: {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditLoad |number:2}}</li>
+            <li>Contact Hour: {{SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditHour |number:2}}</li>
+        </ul>
+        <!-- Modal -->
+        <div class="modal fade" id="selectCurriculumCourseModal" tabindex="-1" role="dialog" aria-labelledby="selectCurriculumCourseModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="selectCurriculumCourseModalLabel">Add Curriculum Course in this Class</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group form-inline">
+                            <span  class="text-info">Select : </span>
+                            @*<span >Program </span>
+                                                                <select ng-change="changeProgram()" ng-model="SelectedProgramId"
+                                                                        ng-options="option.Id as option.ShortTitle for option in FilterProgramList" class="form-control input-xs" required></select>*@
+                            <span >Curriculum </span>
+                            <select ng-change="@(searchCurriculumCourseList)()" ng-model="SelectedCurriculumId"
+                                    ng-options="option.Id as option.ShortName for option in FilterCurriculumList" class="form-control input-xs" required>
+                            </select>
+                            <span >Level Term </span>
+                            <select ng-change="@(searchCurriculumCourseList)()" ng-model="SelectedStudyLevelTermId"
+                                    ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control input-xs ">
+                                <option value="" label="" class="">All Level Term</option>
+                            </select>
+                            <button ng-click="@(searchCurriculumCourseList)()">Load Course</button>
+                                                                
+                        </div>
+                        <div class="form-group no-margin">
+                            <div class="input-icon icon-right input-group-xs">
+                                <input ng-model="searchCurriculumCourse" class="form-control input-xs" id="searchCurriculumCourse" type="text" placeholder="type to search from below list" autocomplete="on">
+                                <i class="white fa fa-times bg-purple" ng-click="searchCurriculumCourse='';"></i>
+                            </div>
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center">SN</th>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Credit Hour</th>
+                                <th class="text-center">Contact Hour</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center">Level Term</th>
+                                <th class="text-center">Select</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="row in CurriculumCourseList |filter:searchCurriculumCourse"
+                                ng-class="{ 'active': Class.@Aca_Class.Property_CurriculumCourseId==row.@Aca_CurriculumCourse.Property_Id }">
+                                <td class="text-center">{{$index+1}}</td>
+                                <td class="text-center" style="width: 110px;">{{row.@Aca_CurriculumCourse.Property_Code}}</td>
+                                <td class="">{{row.@Aca_CurriculumCourse.Property_Name}}</td>
+                                <td class="text-center" style="width: 56px;">{{row.@Aca_CurriculumCourse.Property_CreditLoad}}</td>
+                                <td class="text-center" style="width: 66px;">{{row.@Aca_CurriculumCourse.Property_CreditHour}}</td>
+                                <td class="text-center">{{row.@Aca_CurriculumCourse.Property_CourseCategory}}</td>
+                                <td class="text-center" style="width: 110px;">{{row.LevelTermName}}</td>
+                                <td class="text-center">
+                                    <button ng-click="changeSelectedCurriculumCourse(row)"
+                                            ng-disabled="Class.@Aca_Class.Property_CurriculumCourseId==row.@Aca_CurriculumCourse.Property_Id"
+                                            type="button" class="btn btn-xs btn-primary">
+                                        <i class="fa fa-hand-o-up"></i> Select
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal End -->
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Curriculum Course">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Code</label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <input type="text" ng-model="Class.@Aca_Class.Property_Code" class="form-control" placeholder="Enter Code" maxlength="128" required="" disabled="disabled"/>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Code">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Class Section <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        @*<input type="text" ng-change="generateName()" ng-model="Class.@Aca_Class.Property_Section" class="form-control" placeholder="Enter Section" maxlength="50" required="" />*@
+        <select ng-model="Class.@Aca_Class.Property_ClassSectionId" ng-change="generateName()"
+                ng-options="option.Id as option.Name for option in ClassSectionList " ng-init="" class="form-control">
+        </select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Section">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Name</label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <input type="text" ng-model="Class.@Aca_Class.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" disabled="disabled"/>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Name">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Class No </label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <input type="number" ng-model="Class.@Aca_Class.Property_ClassNo" class="form-control" placeholder="Enter Class No" disabled="disabled"/>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Number">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label class="control-label">Student Capacity </label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <input type="number" ng-model="Class.@Aca_Class.Property_RegularCapacity" class="form-control" placeholder="Enter Regular Capacity"/>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Regular Capacity">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td><label>Status <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Status">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+
+
+
+
+                                    
+@*<tr>
+                                                <td><label class="control-label">Program Type <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+                                                <td><label class="control-label">:</label></td>
+                                                <td>
+                                                    <select ng-model="Class.@Aca_Class.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList " ng-init="" class="form-control"></select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                            title="Class Program Type">
+                                                        <i class="fa fa-question-circle"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>*@
+<tr>
+    <td><label class="control-label">Campus <span  class="red glyphicon glyphicon-asterisk"></span></label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_CampusId"
+                ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control"></select>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Campus">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td>
+                                           
+        <label class="control-label">Mark Distribution Policy <span class="red glyphicon glyphicon-asterisk"></span></label>
+    </td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <select ng-model="Class.@Aca_Class.Property_RegularExamMarkDistributionPolicyId"
+                ng-options="option.Id as option.Name for option in MarkDistributionPolicyList" ng-init="" class="form-control">
+            <option value="" label="" class="">---Select One---</option>
+        </select>
+
+        @*ExamTypeEnumId:@((byte) Aca_Exam.ExamTypeEnum.FinalTerm)
+                                           
+                                          ,CourseCategoryEnumId:SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategoryEnumId
+                                   ,IsBachelorProgram:Class.@Aca_Class.Property_ProgramTypeEnumId==@((byte) Aca_Program.ProgramTypeEnum.Undergraduate)*@
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Class Regular Exam Mark Distribution Policy">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+@*<tr>
+                                        <td><label class="control-label">Referred Exam Mark Distribution Policy </label></td>
+                                        <td><label class="control-label">:</label></td>
+                                        <td>
+                                            <select ng-model="Class.@Aca_Class.Property_ReferredExamMarkDistributionPolicyId"
+                                                    ng-options="option.Id as option.Name for option in MarkDistributionPolicyList | 
+                                                            filter: { ExamTypeEnumId:@((byte) Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)
+                                                            ,CreditHour:SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditLoad
+                                                            ,CourseCategoryEnumId:SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategoryEnumId
+                                                            ,IsBachelorProgram:Class.@Aca_Class.Property_ProgramTypeEnumId==@((byte) Aca_Program.ProgramTypeEnum.Undergraduate) 
+                                                            } :true" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                    title="Class Referred Exam Mark Distribution Policy">
+                                                <i class="fa fa-question-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>*@
+@*<tr>
+                                        <td><label class="control-label">Backlog Exam Mark Distribution Policy</label></td>
+                                        <td><label class="control-label">:</label></td>
+                                        <td>
+                                            <select ng-model="Class.@Aca_Class.Property_BacklogExamMarkDistributionPolicyId"
+                                                    ng-options="option.Id as option.Name for option in MarkDistributionPolicyList | 
+                                                            filter: { ExamTypeEnumId:@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)
+                                                            ,CreditHour:SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CreditLoad
+                                                            ,CourseCategoryEnumId:SelectedCurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategoryEnumId
+                                                            ,IsBachelorProgram:Class.@Aca_Class.Property_ProgramTypeEnumId==@((byte) Aca_Program.ProgramTypeEnum.Undergraduate)
+                                                            } :true" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                    title="Class Backlog Exam Mark Distribution Policy">
+                                                <i class="fa fa-question-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>*@
+                                    
+<tr>
+    <td><label class="control-label">Is Disable Online Registration </label></td>
+    <td><label class="control-label">:</label></td>
+    <td>
+        <div class="checkbox">
+            <label>
+                <input ng-model="Class.@Aca_Class.Property_IsDasbleOnlineRegistration" class="checkbox-slider yesno slider-icon colored-purple" name="form-field-checkbox" type="checkbox" value="true">
+                <input name="form-field-checkbox" type="hidden" value="false"><span class="text"></span>
+            </label>
+        </div>
+    </td>
+    <td>
+        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                title="Is Disable Online Registration">
+            <i class="fa fa-question-circle"></i>
+        </button>
+    </td>
+</tr>
+
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="widget-footer text-center">
+    <button ng-click="saveClass()" class="btn btn-lg btn-success"><span  class="fa fa-save"></span> Save</button>
+    <button ng-click="@(openHistoryModal)()" class="btn btn-lg btn-info"><span  class="fa fa-eye"></span> Show History </button>
+</div>
+<div class="widget-body">
+    <div class="row">
+        <div class="col-sm-12" ng-hide="Class.@Aca_Class.Property_Id<=0">
+            @Html.Partial("~/Areas/Academic/Views/ClassManager/_PartialClassRoutine.cshtml")
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<div id="ClassStudents" class="tab-pane">
+    @Html.Partial("~/Areas/Academic/Views/ClassManager/_PartialClassStudentManager.cshtml")
+</div>
+<div id="ClassTeachers" class="tab-pane">
+    @Html.Partial("~/Areas/Academic/Views/ClassManager/_PartialClassTeacherManager.cshtml")
+</div>
+<div id="ClassAttendance" class="tab-pane">
+    <div class="text-center padding-20">
+        <a target="_blank" href="@(printAllAttendanceByClassIdPageUrl)/?classId={{ClassId}}" class="btn btn-lg btn-success"><i class="fa fa-eye"></i> View Attendances</a>
+                
+    </div>
+</div>
+<div id="ClassMarks" class="tab-pane">
+    @Html.Partial("~/Areas/Academic/Views/ClassResultManager/MarksEditDashboard/_MarksEditDashboard.cshtml")
+
+</div>
+</div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="HistoryModal" tabindex="-1" role="dialog" aria-labelledby="HistoryModal" area-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"> History of <b>{{Class.@Aca_Class.Property_Code}} {{Class.@Aca_Class.Property_Name}}.</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <div class="widget">
+                                <div class="widget-header bordered-bottom bordered-sky ">
+                                    <i class="widget-icon fa fa-history bold  "></i>
+                                    <span class="widget-caption "><b class="ng-binding"> Create And Update History</b></span>
+                                </div>
+                                <div class="widget-body">
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                        <tr>
+                                            <td style="text-align: left; padding: 5px !important;">Created By : {{ClassHistory.CreateByName}}</td>
+                                            <td style="text-align: left; padding: 5px !important;">Last updated By : {{ClassHistory.LastChangedByName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left; padding: 5px !important;">Created At : {{ClassHistory.CreateAt | date:'dd-MM-yy H:s'}}</td>
+                                            <td style="text-align: left; padding: 5px !important;">Last updated At : {{ClassHistory.LastChangedAt | date:'dd-MM-yy H:s'}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="col-md-12 table-form" ng-show="ClassHistory.GeneralHistory !=null && ClassHistory.GeneralHistory!=''">
+                            <div class="widget">
+                                <div class="widget-header bordered-bottom bordered-sky ">
+                                    <i class="widget-icon fa fa-history bold  "></i>
+                                    <span class="widget-caption "><b class="ng-binding"> General History </b></span>
+                                </div>
+                                <div class="widget-body">
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" style="text-align: left; padding: 5px !important;" ng-bind-html="renderHtml(ClassHistory.GeneralHistory)"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <div class="col-md-12 table-form" ng-show="ClassHistory.LockUnlockHistory !=null && ClassHistory.LockUnlockHistory!=''">
+                            <div class="widget">
+                                <div class="widget-header bordered-bottom bordered-sky ">
+                                    <i class="widget-icon fa fa-history bold  "></i>
+                                    <span class="widget-caption "><b class="ng-binding"> Component Lock-Unlock History </b></span>
+                                </div>
+                                <div class="widget-body">
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left; padding: 5px !important;" ng-bind-html="renderHtml(ClassHistory.LockUnlockHistory)"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1" style="width: 100px;">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1" style="width: 100px;">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section StyleSection
+{
+    <style>
+        .nav > li > a {
+            padding: 5px 10px;
+        }
+    </style>
+}

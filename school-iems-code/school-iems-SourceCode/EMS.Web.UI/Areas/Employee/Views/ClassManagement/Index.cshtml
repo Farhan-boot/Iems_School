@@ -1,0 +1,188 @@
+﻿@using EMS.DataAccess.Data
+
+@{
+    ViewBag.Title = "Course Pane";
+    var id = Request.QueryString["classId"];
+    var classId = (string)id == null ? "0" : (string)id;
+    //WebApi link for single row
+    var getSemesterListByFacultyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetFacultySemesterClassList", area = "Employee" });
+    var getResultSettingsByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetResultSettingsByClassId", area = "Employee" });
+
+    var getClassStudentListByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetClassStudentListByClassId", area = "Employee" });
+
+    var getGenerateClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetGenerateClassResultByClassId", area = "Employee" });
+
+    var getDefaultMarkDistributionByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetGenerateClassDefaultMarkDistributionByClassId", area = "Employee" });
+
+    //Class Material ApiController
+    var getPagedClassMaterialFileMapUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "GetPagedClassMaterialFileMap", area = "Employee" });
+    var uploadClassMaterialUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "UploadClassMaterial", area = "Employee" });
+    var deleteClassMaterialFileMapByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "GetDeleteClassMaterialFileMapById", area = "Employee" });
+    var editClassMaterialFileMapByIdPageUrl = Url.Action("DownloadClassMaterial", "ClassManagement", new { area = "Employee" });
+
+    //Attendance Url
+    var getPagedClassAttendanceSettingByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassAttendanceApi", action = "GetPagedClassAttendanceSettingByClassId", area = "Employee" });
+    var deleteClassAttendanceSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassAttendanceApi", action = "GetDeleteClassAttendanceSettingById", area = "Employee" });
+
+    /* Class Notices Start */
+    //WebApi link for single row
+    var getClassNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeById", area = "Employee" });
+    var getClassNoticeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeDataExtra", area = "Employee" });
+    var saveClassNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "SaveClassNotice", area = "Employee" });
+    var deleteClassNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetDeleteClassNoticeById", area = "Employee" });
+
+    //WebApi link for List
+    var getPagedClassNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetPagedClassNotice", area = "Employee" });
+    var getClassNoticeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeListDataExtra", area = "Employee" });
+
+    //Angular Function Name
+    var getNewClassNotice = "getNewClassNotice";
+    var saveClassNotice = "saveClassNotice";
+    var deleteClassNoticeById = "deleteClassNoticeById";
+    var deleteClassNoticeByObj = "deleteClassNoticeByObj";
+    //for list
+    var searchClassNoticeList = "searchClassNoticeList";
+    var getPagedClassNoticeList = "getPagedClassNoticeList";
+    var getAllClassNoticeList = "getAllClassNoticeList";
+    var saveClassNoticeList = "saveClassNoticeList";
+    var getClassNoticeListExtraData = "getClassNoticeListExtraData";
+    /* Class Notices End */
+}
+<style>
+    .result-grid [class^="col-"] {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .element-result-grid [class^="col-"] {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 20px;
+    }
+</style>
+
+
+@section ScriptSection
+{
+    <script src="~/Areas/Employee/Views/ClassManagement/index.js?v=1"></script>
+}
+<div ng-controller="ClassResultManagerCtrl"
+     ng-init="Init(
+         '@classId'
+        ,'@getSemesterListByFacultyUrl'
+        ,'@getResultSettingsByClassIdUrl'
+        ,'@(getGenerateClassResultByClassIdUrl)'
+        ,'@(getDefaultMarkDistributionByClassIdUrl)'
+        ,'@(uploadClassMaterialUrl)'
+        ,'@(getPagedClassAttendanceSettingByClassIdUrl)'
+        ,'@getPagedClassNoticeUrl'
+        ,'@getClassNoticeDataExtraUrl'
+        ,'@saveClassNoticeUrl'
+        ,'@getClassNoticeByIdUrl'
+        ,'@deleteClassNoticeByIdUrl'
+        ,'@getPagedClassMaterialFileMapUrl'
+        ,'@deleteClassMaterialFileMapByIdUrl'
+     ,'@deleteClassAttendanceSettingByIdUrl'
+     ,'@getClassStudentListByClassIdUrl'
+     )">
+    <div class="widget" data-target="@(Server.MapPath("~"))">
+        <div ng-hide="SemesterList.length<=0 " class="widget-header bordered-bottom bordered-sky no-print">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "></span>
+            <div class="widget-buttons">
+                <select ng-model="SelectedSemester" ng-change="onChangeSemester()"
+                        ng-options="option.Name for option in SemesterList"
+                        ng-init="" class="form-control input-sm" style="margin-top: 3px; width: 130px" title="Select a Term..">
+                    <option value="" label="" class="">--- Change Term ---</option>
+                </select>
+            </div>
+            <div class="widget-buttons">
+                @*+' ('+option.SemesterLevel+') BatchName*@
+                <select ng-model="SelectedClass" ng-change="onChangeClass()"
+                        ng-disabled="SelectedSemester==null"
+                        ng-options="option.ProgramShortTitle +': '+option.Code+' '+option.Name for option in SelectedSemester.Aca_ClassListJson" ng-init="" class="form-control input-sm" style="margin-top: 3px; width: 400px">
+                    <option value="" label="" class="">--- Select or Change Class---</option>
+                </select>
+                @*ng-options="option.Id as option.RoomNo+' (Capacity: '+option.SeatCapacityRegular+', Dept: '+option.DeptShortName+')' group by option.BuildingName for option in RoomList "*@
+            </div>
+            @*<div class="widget-buttons no-padding-left">
+                    <button ng-click="" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>*@
+        </div>
+        <div class="widget-body no-padding" ng-hide="Data==null || ClassId=='0'">
+            <div class="margin-bottom-10" style="text-align: center">
+                <div><span class="widget-caption margin-bottom-5"><b>{{Data.DataExtra.ClassName}} </b> </span></div>
+                <div class="widget-caption " style=""> {{Data.DataExtra.ProgramName}}</div>
+                <div class="widget-caption " style="">Department of {{Data.DataExtra.Department}}</div>
+                <div class="widget-caption " style="">{{Data.DataExtra.ClassDetail}}, {{Data.DataExtra.TotalStudent}} Student(s), {{Data.DataExtra.SemesterName}} {{Data.DataExtra.BatchName}}</div>
+
+                @*<div style="font-size: 13px; font-weight: bold">
+                        Subject Teacher(s):
+                        foreach (var faculty in facultylist)
+                        {//excluding sysadmin name
+                            if (faculty.UserName != "psdeveloper")
+                            {
+                                <span  style="">@faculty.FullName;</span>
+                            }
+                        }
+                    </div>*@
+            </div>
+            <div class="tabbable  main-tabs ">
+                <ul class="nav nav-tabs no-print">
+                    <li class="tab-green"><a data-toggle="tab" href="#ClassStudentList">Student List </a></li>
+                    <li class="tab-danger"><a data-toggle="tab" href="#MarkEntry">Mark Entry </a></li>
+                    <li class="tab-gold active"><a data-toggle="tab" href="#ClassAttendance">Student Attendance</a></li>
+                    <li class="tab-info"><a data-toggle="tab" href="#ClassMaterials"> <span class="tooltips tooltip-red" data-toggle="tooltip" data-placement="bottom" data-original-title="Please Upload Some Course Materials! ">Course Materials </span><span class="badge badge-success">new</span></a></li>
+                    <li class="tab-info"><a data-toggle="tab" href="#ClassNotices">Notices</a></li>
+                    <li class="tab-info">@*<a data-toggle="tab" href="#ClassAssignment">Online Assignment</a>*@</li>
+                </ul>
+                <div class="tab-content  no-padding">
+                    <div class="tab-pane " id="ClassStudentList">
+                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/_StudentList.cshtml")
+                    </div>
+
+                    <div class="tab-pane padding-top-20" id="MarkEntry">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs no-print">
+                                <li class="active tab-danger"><a data-toggle="tab" href="#RegularExam">Regular Exam </a></li>
+                                @*<li class="tab-success"><a data-toggle="tab" href="#ReferredExam">Referred Exam </a></li>
+                                    <li class="tab-info"><a data-toggle="tab" href="#BacklogExam">Backlog Exam</a></li>*@
+                            </ul>
+                            <div class="tab-content  no-padding">
+                                <div class="tab-pane active " id="RegularExam">
+
+                                    @Html.Partial("~/Areas/Employee/Views/ClassManagement/Result/_RegularResultSettings.cshtml")
+                                </div>
+                                @*<div class="tab-pane" id="ReferredExam">
+                                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/Result/_ReferredResultSettings.cshtml")
+                                    </div>
+                                    <div class="tab-pane" id="BacklogExam">
+                                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/Result/_BacklogResultSettings.cshtml")
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="active tab-pane" id="ClassAttendance">
+                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/_AttendanceList.cshtml")
+                    </div>
+                    <div class="tab-pane padding-10" id="ClassMaterials">
+                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/_ClassMaterials.cshtml")
+                    </div>
+                    <div class="tab-pane " id="ClassNotices">
+                        @Html.Partial("~/Areas/Employee/Views/ClassManagement/_ClassNotices.cshtml")
+                    </div>
+                    @*<div class="tab-pane" id="ClassAssignment">
+                        </div>*@
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-danger" ng-show="SemesterList.length<=0">
+            @*<button type="button" class="close" data-dismiss="alert">×</button>*@ <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention: </strong> <span>No class assigned to you as Faculty/Examiner/Scrutinizer!</span>
+        </div>
+        <div class="alert alert-warning" ng-show="ClassId=='0' || (Data==null && SemesterList.length>0)">
+            @*<button type="button" class="close" data-dismiss="alert">×</button>*@ <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention: </strong> <span>Please select a Class to View!</span>
+        </div>
+    </div>
+</div>

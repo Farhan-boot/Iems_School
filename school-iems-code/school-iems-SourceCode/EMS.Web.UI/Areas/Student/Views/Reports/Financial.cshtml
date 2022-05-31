@@ -1,0 +1,231 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Settings
+
+
+@{
+    //WebApi link for single row
+    var getFinancialReportByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FinancialReportApi", action = "GetFinancialReportByStudentId", area = "Student" });
+ }
+
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Reports/Financial.js"></script>
+    <script src="~/Areas/Student/Views/Reports/Shared/_PaymentSummary.js"></script>
+    <script src="~/Areas/Student/Views/Reports/Shared/_OnlinePaymentHistory.js"></script>
+}
+
+
+<div  ng-controller="FinancialReportCollection"
+      ng-init="Init(
+     '@getFinancialReportByStudentIdUrl'
+     )"
+>
+    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+        <div class="row">
+            <!--text type-->
+            @{
+                if (SiteSettings.Instance.InstructionsForStdPaymentInfo.IsValid())
+                {
+                    <div class="col-md-12">
+                        <div class="">
+                            <div class="widget">
+                                <div class="widget-header bg-success">
+                                    <i class="widget-icon fa fa-info-circle"></i>
+                                    <span class="widget-caption">Important Notice</span>
+                                </div>
+                                <div class="widget-body" style="text-align: left;">
+                                    <kbd>Note:</kbd>
+                                    <span >@Html.Raw(SiteSettings.Instance.InstructionsForStdPaymentInfo)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+
+            <div class="col-md-12 table-form">
+                <div class="no-padding">
+                    <div class="widget-main fast-payment-collection-tabs">
+                        <div class="tabbable">
+                            @{
+                                string collectionActive = "";
+                                string billsActive = "";
+                                string summaryActive = "";
+                                string onlinePaymentHistoryActive = "";
+
+                                if (SiteSettings.Instance.Student.CreditTransactionCanView && SiteSettings.Instance.Student.DebitTransactionCanView && (SiteSettings.Instance.Student.SemesterPaymentSummaryCanView || SiteSettings.Instance.Student.OverallPaymentSummaryCanView))
+                                {
+                                    summaryActive = "active";
+                                }
+                                else if(SiteSettings.Instance.Student.CreditTransactionCanView)
+                                {
+                                    collectionActive = "active";
+                                }
+                                else if (SiteSettings.Instance.Student.DebitTransactionCanView)
+                                {
+                                    billsActive= "active";
+                                }
+                                else if (SiteSettings.Instance.Student.OnlinePaymentHistoryCanView)
+                                {
+                                    onlinePaymentHistoryActive = "active";
+                                }
+                                else if (SiteSettings.Instance.Student.SemesterPaymentSummaryCanView || SiteSettings.Instance.Student.OverallPaymentSummaryCanView)
+                                {
+                                    summaryActive = "active";
+                                }
+                            }
+                            <ul class="nav nav-tabs" id="myTab9">
+                                @if (SiteSettings.Instance.Student.SemesterPaymentSummaryCanView || SiteSettings.Instance.Student.OverallPaymentSummaryCanView)
+                                {
+                                    <li class="tab-red @summaryActive">
+                                        <a data-toggle="tab" href="#PaymentSummary" aria-expanded="true">
+                                            Payment Summary
+                                        </a>
+                                    </li>
+                                }
+                                @if (SiteSettings.Instance.Student.CreditTransactionCanView)
+                                {
+                                    <li class="tab-red @collectionActive">
+                                        <a data-toggle="tab" href="#AllCollection" aria-expanded="true">
+                                            Payment History (Credit)
+                                        </a>
+                                    </li>
+                                }
+                                @if (SiteSettings.Instance.Student.DebitTransactionCanView)
+                                {
+                                    <li class="tab-red @billsActive">
+                                        <a data-toggle="tab" href="#SemesterBills" aria-expanded="true">
+                                            All Bill (Debit)
+                                        </a>
+                                    </li>
+                                }
+                                @if (SiteSettings.Instance.Student.OnlinePaymentHistoryCanView)
+                                {
+                                    <li class="tab-red @onlinePaymentHistoryActive">
+                                        <a data-toggle="tab" href="#OnlinePaymentHistory" aria-expanded="true">
+                                            Online Payment History
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                            <div class="tab-content no-padding">
+                                
+                                @if (SiteSettings.Instance.Student.SemesterPaymentSummaryCanView || SiteSettings.Instance.Student.OverallPaymentSummaryCanView)
+                                {
+                                    <div id="PaymentSummary" class="tab-pane @summaryActive">
+                                        @Html.Partial("~/Areas/Student/Views/Reports/Shared/_PaymentSummary.cshtml")
+                                    </div>
+                                }
+
+                                @if (SiteSettings.Instance.Student.CreditTransactionCanView)
+                                {
+                                    <div id="AllCollection" class="tab-pane @collectionActive">
+                                        @Html.Partial("~/Areas/Student/Views/Reports/Shared/_SemesterBills.cshtml", false)
+                                    </div>
+                                }
+                                @if (SiteSettings.Instance.Student.DebitTransactionCanView)
+                                {
+                                    <div id="SemesterBills" class="tab-pane @billsActive">
+                                        @Html.Partial("~/Areas/Student/Views/Reports/Shared/_SemesterBills.cshtml", true)
+                                    </div>
+                                }
+                                @if (SiteSettings.Instance.Student.OnlinePaymentHistoryCanView)
+                                {
+                                    <div id="OnlinePaymentHistory" class="tab-pane @onlinePaymentHistoryActive">
+                                        @Html.Partial("~/Areas/Student/Views/Reports/Shared/_OnlinePaymentHistory.cshtml", true)
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div><!--Widget Body end-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .std-payment-collection-form .form-title {
+        padding: 3px 0;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .std-payment-collection-form input,
+    .std-payment-collection-form optgroup,
+    .std-payment-collection-form select,
+    .std-payment-collection-form textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .std-payment-collection-form td.fieldlabel {
+        font-size: 12px;
+        font-weight: 500;
+        text-align: left !important;
+    }
+
+    .std-payment-collection-form td.fieldarea {
+        text-align: left !important;
+    }
+
+    .std-payment-collection-form .glyphicon {
+        font-size: 7px !important;
+    }
+
+    .std-payment-collection-form .checkbox-inline {
+        font-size: 10px;
+    }
+
+    .std-payment-collection-form .checkbox-inline input {
+        height: 15px !important;
+    }
+
+    .std-payment-collection-form .table-form td {
+        padding: 3px 3px;
+    }
+
+    .std-payment-collection-form .form-title {
+        font-weight: 600 !important;
+        font-size: 15px;
+    }
+
+    .fieldarea .checkbox {
+        margin-top: 3px !important;
+        margin-bottom: -4px !important;
+    }
+
+    .std-info-table tr th {
+        text-align: left !important;
+    }
+
+    .padding-11 {
+        padding: 11px !important;
+    }
+
+    .fast-payment-collection tr td:first-child {
+        text-align: center !important;
+    }
+
+    .fast-payment-collection tr td:last-child {
+        padding-right: 8px !important;
+    }
+
+    .fast-payment-collection-tabs .nav > li > a {
+        padding: 5px 5px;
+    }
+    .balance-calculation-td {
+        width: auto !important;
+    }
+
+    .trem-due table > tbody > tr > td:first-child {
+        padding-left: 5px !important;
+    }
+</style>
+
+

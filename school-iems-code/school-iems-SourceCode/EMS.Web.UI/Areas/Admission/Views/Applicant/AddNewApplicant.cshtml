@@ -1,0 +1,888 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    ViewBag.Title = "Add New Applicant";
+    //Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var AccountId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for AddNewApplicant
+    var getAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetStudentById", area = "Admission" });
+    var saveAccountUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "SaveStudent", area = "Admission" });
+    var getDataExtraOnChangeProgramUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetDataExtraOnChangeProgram", area = "Admission" });
+
+    var getMaxAndSuggestUsernameUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetMaxAndSuggestUsername", area = "Admission" });
+
+    var getPreviousStudentInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetPreviousStudentInformation", area = "Admission" });
+
+    //============= Start Package & Discount ===========
+
+    var getStdScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetStdScholarshipForApplicantDataExtra", area = "Admission" });
+
+    var saveScholarshipListByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveScholarshipListByStudent", area = "Admission" });
+    var getNewScholarshipByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetNewScholarshipByStudentId", area = "Admission" });
+    var getLockOrUnlockScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetLockOrUnlockScholarshipById", area = "Admission" });
+
+    var getAllScholarshipByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetAllScholarshipByStudentId", area = "Admission" });
+    var getTrashScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetTrashScholarshipById", area = "Admission" });
+
+    //Semester Wise Scholarship ForNewApplicantDataExtra
+    var getSemWiseScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewApplicantApi", action = "GetSemWiseScholarshipForNewApplicantDataExtra", area = "Admission" });
+
+
+    // Angular Functions
+    string getAccountById = "getAccountById";
+    var saveAccount = "saveAccount";
+    var getNewAccount = "getNewAccount";
+    var refreshPage = "loadPage()";
+
+    string onChangeProgram = "onChangeProgram";
+    string onChangeExam = "onChangeAdmissionExam";
+    string onChangeFeeCode = "onChangeFeeCode";
+
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/Applicant/AddNewApplicant.js?v=8.5"></script>
+    
+
+}
+@section StyleSection
+{
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet" />
+}
+<div id="AddNewApplicant" class="row" ng-controller="AddNewApplicantCtrl" ng-init="Init(
+        '@AccountId'
+        ,'@getAccountByIdUrl'
+        ,'@saveAccountUrl'
+        ,'@getDataExtraOnChangeProgramUrl'
+        ,'@getStdScholarshipDataExtraUrl'
+        ,'@getMaxAndSuggestUsernameUrl'
+        ,'@getSemWiseScholarshipDataExtraUrl'
+        ,'@getPreviousStudentInformationUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        @*ng-show="HasViewPermission"*@
+        <div>
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        @*<strong ng-show="Account.@User_Account.Property_Name!=''">{{(Account.@User_Account.Property_Name)}}</strong>*@
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="">
+                        <span class="input-icon">
+                            <input type="text" ng-model="AccountId" ng-Enter="@(getAccountById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search by ID">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewAccount)(0)" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@Url.Action("StudentList", "Student", new {area = "Admission"})" class="btn btn-blue btn-xs" target="_blank"><i class="fa fa-arrow-left"></i> Student List</a>
+                        <button ng-click="@(refreshPage)" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-5 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+
+                                    <tr>
+                                        <td class="fieldlabel">Admission Session</td>
+                                        <td class="fieldarea">
+                                            <select ng-model="SelectedAdmissionExam"
+                                                    ng-change="@(onChangeExam)()"
+                                                    ng-options="option.Name
+                                                    @(SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerate ?
+                                                        "+' (Prefix:'+option.StudentIdPrefix+')'"
+                                                        : SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerateAsUGC ?
+                                                            "+' (UGC Prefix:'+option.UgcIdPrefix+')'":"")
+                                                    for option in  AdmissionExamList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Admission Circular" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">Program</td>
+                                        <td class="fieldarea">
+                                            <select ng-model="SelectedProgram"
+                                                    ng-change="@(onChangeProgram)()"
+                                                    ng-options="option.Name
+                                                    @(SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerate ?
+                                                        "+' (No:'+option.DepartmentCode+')'" :
+                                                        SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerateAsUGC ?
+                                                            "+' (UGC Code:'+option.UgcCode+')'":"")
+                                                    for option in  ProgramList | filter:{SemesterDurationEnumId : SelectedAdmissionExam.SemesterDurationEnumId}" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select Program---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Fee Code</td>
+                                        <td class="fieldarea">
+                                            <select ng-model="SelectedFeeCode"
+                                                    ng-change="@(onChangeFeeCode)()"
+                                                    ng-options="option.Name for option in FeeCodeList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select Fee Code---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Fee Code" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    @if (!SiteSettings.Instance.AddNewApplicantFormSettings.IsAutoAllocateSyllabus)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Syllabus / Curriculum </td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Account.@User_Student.Property_CurriculumId"
+                                                        ng-options="option.Id as option.Name for option in CurriculumList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Dept Batch." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableDeptBatchSelection)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Dept Batch </td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Account.@User_Student.Property_ContinuingBatchId"
+                                                        ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Dept Batch." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+                                    @*<tr>
+            <td class="fieldlabel">Class Section <span class="red glyphicon glyphicon-asterisk"></span></td>
+            <td class="fieldarea">
+                <select ng-model="Account.@User_Student.Property_ClassSectionId"
+                        ng-options="option.Id as option.Name for option in ClassSectionList " ng-init="" class="form-control select-inline">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select ClassSection." data-toggle="tooltip"></i></span></td>
+        </tr>*@
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableEnrollTypeSelection)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Enrollment Type</td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Account.EnrollmentTypeEnumId"
+                                                        ng-change="OnChangeInternalFreshStudent(Account.EnrollmentTypeEnumId==@((byte)User_Student.EnrollmentTypeEnum.InternalPackageStudent)
+                                                        ||Account.EnrollmentTypeEnumId==@((byte)User_Student.EnrollmentTypeEnum.TransfereeStudent)); checkEnrollmentType()"
+                                                        ng-options="option.Id as option.Name for option in  EnrollmentTypeEnumList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Enrollment Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        <tr ng-show="Account.EnrollmentTypeEnumId == @((byte)User_Student.EnrollmentTypeEnum.InternalDepartmentChange)">
+                                            <td class="fieldlabel">Previous Id <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <input ng-enter="GetPreviousStudentInformation()" ng-blur="GetPreviousStudentInformation()" ng-model="Account.PreviousStudentUserName" class="form-control" placeholder="Enter Previous Id" maxlength="128" required="" />
+                                                <em ng-show="HasPreviousUserNameError" style="color: red">{{ErrorMsg}}</em>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Previous Id" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        <tr ng-show="Account.PreviousProgramId!=null && Account.PreviousProgramId!=''">
+                                            <td class="fieldlabel">Previous Program <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <select ng-disabled="true" ng-model="Account.PreviousProgramId"
+                                                        ng-options="option.Id as option.Name for option in  ProgramList " ng-init="" class="form-control select-inline">
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Previous Program" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td class="fieldlabel">Gender</td>
+                                        <td class="fieldarea">
+                                            <label class="radio-inline">
+                                                <input ng-disabled="HasPreviousUserNameError" ng-model="Account.GenderEnumId"
+                                                       value="@((byte) User_Account.GenderEnum.Male)"
+                                                       type="radio" name="latefeeoveride" tabindex="15">Male
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input ng-disabled="HasPreviousUserNameError" ng-model="Account.GenderEnumId"
+                                                       value="@((byte) User_Account.GenderEnum.Female)"
+                                                       type="radio" name="latefeeoveride" tabindex="15"> Female
+                                            </label>
+
+
+
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Gender" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    @if (!SiteSettings.Instance.AddNewApplicantFormSettings.IsAutoClassSection)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Section</td>
+                                            <td class="fieldarea">
+                                                <select ng-disabled="HasPreviousUserNameError" ng-model="Account.ClassSectionId"
+                                                        ng-change=""
+                                                        ng-options="option.Id as option.Name for option in  ClassSectionList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Section" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                    }
+
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableCampusSelection)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Campus</td>
+                                            <td class="fieldarea">
+                                                <select ng-disabled="HasPreviousUserNameError" ng-model="Account.CampusId"
+                                                        ng-options="option.Id as option.Name for option in  CampusList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Syllabus" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                    }
+
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableMobileInput)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Mobile No <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <input ng-disabled="HasPreviousUserNameError" ng-show="Account.@User_Account.Property_Id==0" type="text" ng-model="Account.MobileNo" class="form-control" placeholder="Enter Mobile No" maxlength="128" required="" />
+                                                <span ng-show="Account.@User_Account.Property_Id!=0" class="padding-l-10 bold-text" style="font-size: 18px;">{{Account.MobileNo}}</span>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Mobile No." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableEmailInput)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Email Address <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <input ng-disabled="HasPreviousUserNameError" ng-show="Account.@User_Account.Property_Id==0" type="text" ng-model="Account.EmailAddress" class="form-control" placeholder="Enter Email Address" maxlength="128" required="" />
+                                                <span ng-show="Account.@User_Account.Property_Id!=0" class="padding-l-10 bold-text" style="font-size: 18px;">{{Account.EmailAddress}}</span>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email Address." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+
+                                    <tr>
+                                        <td class="fieldlabel">Student ID <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+
+                                            <div ng-show="Account.@User_Account.Property_Id==0" class="input-group" style="width: 100%;">
+                                                @if (SiteSettings.Instance.StudentIdGenerateType != SiteSettings.StudentIdGenerateTypeEnum.FullManual)
+                                                {
+                                                    if (SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerate
+                                                        || SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.FullAutoGenerate)
+                                                    {
+                                                        <span ng-show="!Account.IsFullManualId"
+                                                              class="input-group-addon bold-text">{{SelectedAdmissionExam.StudentIdPrefix+SelectedProgram.DepartmentCode}}</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span ng-show="!Account.IsFullManualId"
+                                                              class="input-group-addon bold-text">{{SelectedAdmissionExam.UgcIdPrefix+SelectedProgram.UgcCode}}</span>
+                                                    }
+                                                }
+
+                                                @if (SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerate || SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerateAsUGC)
+                                                {
+                                                    <input ng-disabled="HasPreviousUserNameError" type="text"
+                                                           ng-model="Account.@User_Account.Property_UserName"
+                                                           ng-show="!Account.IsFullManualId"
+                                                           class="form-control "
+                                                           placeholder="@((SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerate
+                                                               || SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.PrefixAutoGenerateAsUGC) ?
+                                                                            "Last " + SiteSettings.Instance.StudentIdSerialDigitCount + " Digit" : SiteSettings.Instance.StudentIdSerialDigitCount + " Digit Student ID")"
+                                                           maxlength="@(SiteSettings.Instance.StudentIdSerialDigitCount)" required="" />
+                                                }
+                                                @if (SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.FullAutoGenerate || SiteSettings.Instance.StudentIdGenerateType == SiteSettings.StudentIdGenerateTypeEnum.FullAutoGenerateAsUGC)
+                                                {
+                                                    <input type="text"
+                                                           disabled="disabled"
+                                                           @*ng-model="Account.@User_Account.Property_UserName"*@
+                                                           ng-show="!Account.IsFullManualId"
+                                                           class="form-control "
+                                                           placeholder="@("Last " + SiteSettings.Instance.StudentIdSerialDigitCount + " Digit Auto")" />
+                                                }
+
+                                                <input ng-disabled="HasPreviousUserNameError" type="text"
+                                                       ng-model="Account.@User_Account.Property_UserName"
+                                                       ng-show="Account.IsFullManualId"
+                                                       class="form-control "
+                                                       placeholder="Manual Student ID" />
+                                            </div>
+
+                                            <span ng-show="Account.@User_Account.Property_Id!=0" class="padding-l-10 bold-text" style="font-size: 18px;">{{Account.UserName}}</span>
+
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Please type only last @(SiteSettings.Instance.StudentIdSerialDigitCount) Digit." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel"></td>
+                                        <td class="fieldarea" style="font-size: 11px; padding: 2px 20px;">
+                                            <span ng-show="Account.MaxUserName!='' && Account.AdmissionExamId >0 && Account.ProgramId >0" class="padding-l-10">
+                                                Last Max ID: {{Account.MaxUserName}}
+                                            </span>
+                                            <span ng-show="Account.MaxUserName=='' && Account.AdmissionExamId >0 && Account.ProgramId >0" class="padding-l-10">
+                                                [No Student Admitted]
+                                            </span>
+                                            <button ng-show="Account.AdmissionExamId >0 && Account.ProgramId >0"
+                                                    ng-click="GetMaxAndSuggestUsername()"
+                                                    style="margin-left: 10px; padding: 2px 0px 0px 2px;"
+                                                    class="btn btn-default btn-sm">
+                                                <i class="fa fa-refresh"></i>
+                                            </button>
+
+                                            @if (SiteSettings.Instance.StudentIdGenerateType != SiteSettings.StudentIdGenerateTypeEnum.FullManual)
+                                            {
+                                                <span style="float: right;">
+                                                    |<input ng-model="Account.IsFullManualId" style="width: 12px; vertical-align: middle;" type="checkbox" />
+                                                    <span>Full Manual ID</span>
+                                                </span>
+
+                                            }
+
+                                        </td>
+
+                                        <td class="fieldarea-tooltip"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Full Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input ng-disabled="HasPreviousUserNameError" ng-show="Account.@User_Account.Property_Id==0" type="text" ng-model="Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" maxlength="128" required="" />
+                                            <span ng-show="Account.@User_Account.Property_Id!=0" class="padding-l-10 bold-text" style="font-size: 18px;">{{Account.@User_Account.Property_FullName}}</span>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnablePreviousEducationInput)
+                                    {
+                                        <tr ng-show="SelectedFeeCode != null">
+                                            <td colspan="3">
+                                                <table>
+                                                    <tr>
+                                                        <td class="fieldarea" colspan="4" style="text-align: center;font-size: 14px;font-weight: bold;">
+                                                            SSC/Equivalent Information
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fieldlabel" style="width: 140px;">Degree Category<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                        <td class="fieldarea" style="width: 140px;">
+                                                            <select ng-disabled="Account.@(User_Account.Property_Id)!=0 || HasPreviousUserNameError"
+                                                                    ng-model="Account.SscDegreeCategoryId"
+                                                                    ng-options="option.Id as option.Name for option in  SscEquivalentDegreeCategoryList "
+                                                                    class="form-control select-inline">
+                                                                <option value="" label="" class="">---Select One---</option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="fieldlabel" style="width: 60px;">GPA<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                        <td class="fieldarea">
+                                                            <input type="number" ng-model="Account.SscGpa"
+                                                                   ng-disabled="Account.@(User_Account.Property_Id)!=0 || HasPreviousUserNameError"
+                                                                   ng-change="onChangeSscHscGpa()"
+                                                                   class="form-control" placeholder="SSC GPA" />
+                                                            <div ng-show="Account.SscGpa==5 || Account.@(User_Account.Property_Id)!=0">
+                                                                <input ng-model="Account.SscIsGolden"
+                                                                       ng-change="onChangeSscHscIsGolden()"
+                                                                       ng-disabled="Account.SscGpa!=5 || Account.@(User_Account.Property_Id)!=0"
+                                                                       style="width: 12px; vertical-align: middle;" type="checkbox">
+                                                                <span>SSC Golden</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fieldarea" colspan="4" style="text-align: center;font-size: 14px;font-weight: bold;">
+                                                            HSC/Equivalent Information
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fieldlabel" style="width: 140px;">Degree Category</td>
+                                                        <td class="fieldarea" style="width: 140px;">
+                                                            <select ng-disabled="Account.@(User_Account.Property_Id)!=0 || HasPreviousUserNameError"
+                                                                    ng-model="Account.HscDegreeCategoryId"
+                                                                    ng-options="option.Id as option.Name for option in HscEquivalentDegreeCategoryList"
+                                                                    class="form-control select-inline">
+                                                                <option value="" label="" class="">---Select One---</option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="fieldlabel" style="width: 60px;">GPA</td>
+                                                        <td class="fieldarea">
+                                                            <input type="number" ng-model="Account.HscGpa"
+                                                                   ng-disabled="Account.@(User_Account.Property_Id)!=0 || HasPreviousUserNameError"
+                                                                   ng-change="onChangeSscHscGpa()"
+                                                                   class="form-control" placeholder="HSC GPA" max="5" />
+                                                            <div ng-show="Account.HscGpa==5 || Account.@(User_Account.Property_Id)!=0">
+                                                                <input ng-model="Account.HscIsGolden"
+                                                                       ng-change="onChangeSscHscIsGolden()"
+                                                                       ng-disabled="Account.HscGpa!=5 || Account.@(User_Account.Property_Id)!=0"
+                                                                       style="width: 12px; vertical-align: middle;" type="checkbox">
+                                                                <span>HSC Golden</span>
+                                                            </div>
+
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fieldarea" colspan="4" style="text-align: center; font-size: 16px; font-weight: bold;">
+                                                            Average GPA: {{Account.AverageGpa| number:2}} <span ng-show="Account.AverageIsGolden">(Golden)</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableRemarkInput)
+                                    {
+                                        <tr>
+                                            <td class="fieldlabel">Remark</td>
+                                            <td class="fieldarea">
+                                                <textarea class="form-control" ng-model="Account.Remark" rows="2" placeholder="Optional"></textarea>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+                                    @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableAutoRegistration)
+                                    {
+                                        <tr>
+                                            <td colspan="2">
+                                                <span style="float: right;">
+                                                    <input ng-model="Account.IsAutoRegisterCourses" ng-value="true" style="width: 15px; vertical-align: middle;" type="checkbox" />
+                                                    <span>Auto Add/Register 1st Semester Courses.</span>
+                                                </span>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter If course will be registered automatically or not.." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    <div class="col-md-7 table-form ">
+                        <div style="padding: 0px 0px 25px;">
+                            <span style="float: left">Semester: <strong>{{SelectedAdmissionExam.SemesterName}}</strong></span>
+                            <span style="float: right">Class Timing: <strong>{{SelectedProgram.ClassTimingGroup}}</strong></span>
+                        </div>
+                        <table class="table table-bordered admission-discount-table text-center">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Total Credit</th>
+                                <th>Total Semester</th>
+                                <th>Year</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @*<tr>
+                                            <td>Syllabus</td>
+                                            <td>{{TotalCredit}}</td>
+                                            <td>{{TotalSemester}}</td>
+                                            <td>{{Year}}</td>
+                                        </tr>*@
+                            <tr>
+                                <td>Package</td>
+                                <td>{{SelectedFeeCode.TotalCredit}}</td>
+                                <td>{{SelectedFeeCode.TotalSemester}}</td>
+                                <td>{{SelectedFeeCode.TotalYear}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <span>Fee Code: </span>
+                        <a href="@Url.Action("FeeCodeManager", "FeeCode", new {area = "Accounts"})/?id={{SelectedFeeCode.Id}}" target="_blank">{{SelectedFeeCode.Name}}</a>
+                        <table class="table table-bordered admission-discount-table">
+                            <thead>
+                            <tr>
+                                <th>Particular</th>
+                                <th>Unit Amount</th>
+                                <th>Unit Period</th>
+                                <th></th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="row in SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FeeCodePolicyListJson">
+                                <td>{{row.@Acnt_FeeCodePolicy.Property_ParticularTypeName}}</td>
+                                <td>{{row.@Acnt_FeeCodePolicy.Property_Amount}}</td>
+                                <td>{{row.@Acnt_FeeCodePolicy.Property_FeeGenerateTerm}}</td>
+                                <td>{{row.@Acnt_FeeCodePolicy.Property_EquationTxt}}</td>
+                                <td>{{row.@Acnt_FeeCodePolicy.Property_Total}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="bold-text">Package Total</td>
+                                <td>
+                                    <b>
+                                        {{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount}}
+                                        @*{{SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FeeCodePolicyListJson|total:'@Acnt_FeeCodePolicy.Property_Total'|number:0 }}*@
+                                    </b>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div ng-show="SelectedFeeCode != null" style="text-align: right; margin-bottom: 10px;">
+                            @if (SiteSettings.Instance.AddNewApplicantFormSettings.IsEnableSemesterWiseScholarshipInput)
+                            {
+                                <button ng-show="!IsEnableSemesterWiseScholarship" ng-click="enableSemesterWiseScholarship()" class="btn btn-xs btn-primary">Add Semester Wise Waiver</button>
+                                <button ng-show="IsEnableSemesterWiseScholarship" ng-click="cancelSemesterWiseScholarship()" class="btn btn-xs btn-warning">Cancel Semester Wise Waiver</button>
+                            }
+                            
+
+                            <button ng-show="!IsEnableScholarship" ng-click="enableScholarship()" class="btn btn-xs btn-primary">Add Scholarship/Discount</button>
+                            <button ng-show="IsEnableScholarship" ng-click="cancelScholarship()" class="btn btn-xs btn-warning">Cancel Scholarship/Discount</button>
+                        </div>
+                    </div>
+                    
+                    @*Start Semester Wise Waiver*@
+                    <div class="col-md-7" ng-show="SelectedFeeCode != null && IsEnableSemesterWiseScholarship">
+                        <div class="widget" style="margin-bottom: 5px;">
+                            <div class="widget-header bordered-bottom bordered-sky ">
+                                <i class="widget-icon fa fa-list bold"></i>
+                                <span class="widget-caption " style="font-weight: bold !important;">
+                                    Semester Wise Scholarship
+                                </span>
+                            </div>
+                            <div class="widget-body no-padding">
+                                <table class="table table-bordered admission-discount-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Scholarship</th>
+                                            <th class="text-center">Amount</th>
+                                            <th class="text-center">Auto Renew</th>
+                                            <th class="text-center">Allow Max</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in Account.SemWiseScholarshipJsonList">
+                                            <td style="min-width: 470px;">
+                                                @*<select ng-model="row.@Acnt_SemWiseScholarship.Property_NameParticularId"
+                                                        ng-change="onChangeScholarshipParticularName(row.@Acnt_SemWiseScholarship.Property_NameParticularId, $index)"
+                                                        ng-options="option.Id as option.Name for option in ScholarshipParticularNameList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select Waiver---</option>
+                                                </select>*@
+                                                
+                                                <ui-select ng-model="row.@Acnt_SemWiseScholarship.Property_NameParticularId"
+                                                           ng-change="onChangeScholarshipParticularName(row.@Acnt_SemWiseScholarship.Property_NameParticularId, $index)"
+                                                           theme="select2" style="width: 100%;">
+                                                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                                                    <ui-select-choices repeat="ledger.Id as ledger in SemWiseScholarshipListForThisApplicant| orFilter: {Name: $select.search, Code: $select.search}">
+                                                        <div ng-bind-html="ledger.Name | highlight: $select.search"></div>
+                                                        @*<small>
+                                                            Code: <span ng-bind-html="''+ledger.Code | highlight: $select.search"></span>
+                                                            | Code Name: {{ledger.CodeName}}
+                                                            | Type: {{ledger.Type}}
+                                                        </small>*@
+                                                    </ui-select-choices>
+                                                </ui-select>
+
+                                                @*<div ng-if="row.SettingsJsonObj.ScholarshipConditionTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                                                         ||row.SettingsJsonObj.ScholarshipConditionTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterWithCondition)"
+                                                     style="margin: 10px 5px;">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-bold">Semester <span class="red glyphicon glyphicon-asterisk"></span> :</td>
+                                                                <td>
+                                                                    <select ng-model="SelectedAdmissionExam.SemesterId"
+                                                                            ng-disabled="true"
+                                                                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                                                        <option value="" label="" class="">---Select One---</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td style="width:35px;">to</td>
+                                                                <td>
+                                                                    <select ng-model="row.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                                                                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                                                        <option value="" label="" class=""> Select End Semester </option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>*@
+
+                                                @*<div ng-if="row.SettingsJsonObj.ScholarshipTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipTypeEnum.Spouse)
+                                                         ||row.SettingsJsonObj.ScholarshipTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipTypeEnum.Sibling)"
+                                                        style="margin: 10px 5px;">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-bold">{{row.SettingsJsonObj.ScholarshipType}} Student ID <span class="red glyphicon glyphicon-asterisk"></span> : </td>
+                                                                    <td style="padding-left: 5px;">
+                                                                        <input type="text" style="font-size: 11px; height: 25px;" ng-model="Account.MobileNo" class="form-control" placeholder="Enter {{row.SettingsJsonObj.ScholarshipType}} Student ID">
+                                                                    </td>
+                                                                    <td style="padding-left: 30px;">
+                                                                        <span class="text-bold">{{row.SettingsJsonObj.ScholarshipType}} Student Name:</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>*@
+
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" ng-model="row.@Acnt_SemWiseScholarship.Property_Amount"
+                                                       ng-disabled="true"
+                                                       placeholder="Amount" style="width: 35px;padding-left: 5px; text-align: center;">
+                                                <span ng-if="row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> %</span>
+                                                <span ng-if="!row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> BDT</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <input ng-model="row.@Acnt_SemWiseScholarship.Property_IsAutoRenewNextSemesterOnResult"
+                                                       ng-disabled="true"
+                                                       style="width: 15px; vertical-align: middle;" type="checkbox">
+                                            </td>
+                                            <td class="text-center">
+                                                <input ng-model="row.@Acnt_SemWiseScholarship.Property_IsAllowMaxOnly"
+                                                       ng-disabled="true"
+                                                       style="width: 15px; vertical-align: middle;" type="checkbox">
+                                            </td>
+                                            <td style="text-align: center;">
+                                                @*<button ng-click="semesterWiseScholarshipViewModalOpen(row)"
+                                                            class="btn btn-xs btn-info">
+                                                        <i class="fa fa-eye"></i>
+                                                        Detail
+                                                    </button>*@
+                                                <button ng-click="removeSemesterWiseScholarship($index)"
+                                                        class="btn btn-xs btn-danger">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="widget-footer" style="text-align: left">
+                                <button ng-click="addNewSemesterWiseScholarship()" class="btn btn-md btn-primary"><i class="widget-icon fa fa-plus bold"></i>Add Scholarship</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                        @*Start Scholarship/Discount*@
+                        <div class="col-md-12" ng-show="SelectedFeeCode != null && IsEnableScholarship">
+                            <div class="widget" style="margin-bottom: 5px;">
+                                <div class="widget-header bordered-bottom bordered-sky ">
+                                    <i class="widget-icon fa fa-list bold"></i>
+                                    <span class="widget-caption " style="font-weight: bold !important;">
+                                        Scholarship/Discount
+                                    </span>
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <table class="table table-bordered admission-discount-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Scholarship/Discount Reason</th>
+                                                @*<th>Valid Period</th>*@
+                                                <th>Discount on</th>
+                                                <th class="text-center">Amount Type</th>
+                                                <th style="width: 70px;">%</th>
+                                                <th style="width: 80px;">Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="row in Account.ScholarshipJsonList">
+                                                <td>
+                                                    <select ng-model="row.@Acnt_StdScholarship.Property_ScholarshipTypeId"
+                                                            ng-options="option.Id as option.Name for option in ScholarshipTypeList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+
+                                                <td>
+                                                    <select ng-model="row.@Acnt_StdScholarship.Property_AmountTypeEnumId"
+                                                            ng-change="scholarshipCalculation(row,null)"
+                                                            ng-options="option.Id as option.Name for option in AmountTypeEnumList" title="Select Amount Type" ng-init="" class="form-control">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <select ng-model="row.@Acnt_StdScholarship.Property_IsPercentAmount"
+                                                            ng-options="option.Value as option.Name for option in  AmountInputTypeList " ng-init="" class="form-control select-inline"></select>
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" ng-model="row.@Acnt_StdScholarship.Property_PercentAmount"
+                                                           ng-disabled="row.@Acnt_StdScholarship.Property_IsPercentAmount==false"
+                                                           ng-change="scholarshipCalculation(row,'PercentAmount')"
+                                                           placeholder="%" style="width: 70px;padding-left: 5px;">
+                                                </td>
+                                                <td>
+                                                    <input type="text" ng-model="row.@Acnt_StdScholarship.Property_RealAmount"
+                                                           ng-disabled="row.@Acnt_StdScholarship.Property_IsPercentAmount==true"
+                                                           ng-change="scholarshipCalculation(row,'RealAmount')"
+                                                           placeholder="Amount" style="width: 80px;padding-left: 5px;">
+                                                </td>
+                                                <td>
+                                                    <button ng-click="removeScholarship($index)"
+                                                            class="btn btn-xs btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bold-text text-right" colspan="4">Discount on Tuition Fee @* Total Percent Amount not Show  ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false , @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                                                <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bold-text text-right" colspan="4">Discount on Fixed Cost @*Total Percent Amount not Show ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnOtherFee)})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                                                <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnOtherFee)})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bold-text text-right" colspan="4">Total Discount @* Total Percent Amount not Show ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                                                <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bold-text text-right" colspan="4">Total Payable Amount:</td>
+                                                <td class="bold-text" colspan="2">{{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount-((Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="widget-footer" style="text-align: left">
+                                    <button ng-click="addNewScholarship()" class="btn btn-md btn-primary"><i class="widget-icon fa fa-plus bold"></i>Add New Discount</button>
+                                </div>
+                            </div>
+                        </div>
+                        @*End Scholarship/Discount*@
+
+
+                        
+
+                        <div class="modal fade" id="individualStudentScholarshipViewModal" tabindex="-1" role="dialog" aria-labelledby="individualStudentScholarshipViewModal">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Scholarship:  {{ViewedScholarshipName}} </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6 table-form">
+                                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="fieldlabel">Scholarship Category </td>
+                                                            <td class="fieldarea">
+                                                                <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId"
+                                                                        ng-disabled="true"
+                                                                        ng-options="option.Id as option.Name for option in DiscountCategoryEnumList" title="Select Discount Category" ng-init="" class="form-control">
+                                                                    <option value="" label="" class="">---Select One---</option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Discount Category." data-toggle="tooltip"></i></span></td>
+                                                        </tr>
+
+                                                        <tr ng-show="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId==@((byte) Acnt_SemWiseScholarship.DiscountCategoryEnum.DiscountOnSpecificParticular)">
+                                                            <td class="fieldlabel">Specific Particular Name </td>
+                                                            <td class="fieldarea">
+                                                                <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DependOnParticularId"
+                                                                        ng-disabled="true"
+                                                                        ng-options="option.Id as option.Name for option in ParticularNameList " ng-init="" class="form-control select-inline">
+                                                                    <option value="" label="" class="">---Select One---</option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fieldlabel">Is Allow Max Only </td>
+                                                            <td class="fieldarea">
+                                                                <label class="checkbox-inline">
+                                                                    <input type="checkbox"
+                                                                           ng-disabled="true"
+                                                                           ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAllowMaxOnly" />
+                                                                </label>
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Allow Max Only if required." data-toggle="tooltip"></i></span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div><!--Col end-->
+
+                                            <div class="col-md-6 table-form">
+                                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="fieldlabel">Amount </td>
+                                                            <td class="fieldarea">
+
+                                                                {{StudentScholarship.@Acnt_SemWiseScholarship.Property_Amount}}
+                                                                <span ng-if="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> %</span>
+                                                                <span ng-if="!StudentScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> BDT</span>
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                                                        </tr>
+                                                        <!--dropdown option for EnumList-->
+
+
+                                                        <tr>
+                                                            <td class="fieldlabel">Is Auto Renew Next Semester On Result </td>
+                                                            <td class="fieldarea">
+                                                                <label class="checkbox-inline">
+                                                                    <input type="checkbox"
+                                                                           ng-disabled="true"
+                                                                           ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAutoRenewNextSemesterOnResult" />
+                                                                </label>
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Auto Renew Next Semester On Result if required." data-toggle="tooltip"></i></span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div><!--Col end-->
+                                        </div><!--Row end-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*End Semester Wise Waiver*@
+
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button ng-disabled="HasPreviousUserNameError" ng-show="Account.@User_Account.Property_Id==0" ng-click="@(saveAccount)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Create Applicant</button>
+                            <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("StudentProfile", "Student", new {area = "Admission"})/?id={{Account.@User_Account.Property_Id}}&stdId={{Account.@User_Account.Property_Id}}&un={{Account.UserName}}" class="btn btn-md btn-info" target="_blank"><span class="fa fa-external-link"></span>Go to Student Profile</a>
+                            <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("AdmissionPaymentSlip", "Applicant", new {area = "Admission"})/?id={{Account.@User_Account.Property_Id}}" class="btn btn-md btn-info" target="_blank"><span class="fa fa-print"></span>Print Admission Slip</a>
+                            <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("PrintAdmissionForm", "Student", new {area = "Admission"})/?id={{Account.@User_Account.Property_Id}}" class="btn btn-md btn-info" target="_blank"><span class="fa fa-print"></span>Print Admission Form</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

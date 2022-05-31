@@ -1,0 +1,96 @@
+﻿@using EMS.CoreLibrary
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Employee Contact Information";
+    var employees = HttpUtil.DbContext.User_Employee
+        .Include("User_Account")
+        .Include("User_Account.User_Rank")
+        .Include("User_Account.User_ContactNumber")
+        .Include("HR_Department")
+        .Include("HR_Position")
+        .Where(x => x.User_Account.UserStatusEnumId == (byte)User_Account.UserStatusEnum.Active &&
+         x.Id!=1
+        /*&& x.User_Account.IsApproved*/)
+        .OrderBy(x => x.User_Account.User_Rank.JobClassEnumId)
+        .ThenBy(x => x.User_Account.User_Rank.CategoryEnumId)
+        .ThenBy(x => x.User_Account.User_Rank.Priority)
+        .ToList();
+
+    var depts = employees.Select(x => x.HR_Department).Distinct()
+        .OrderBy(x => x.ParentDeptId)
+        .ThenBy(x => x.Priority);
+}
+@foreach (var dept in depts)
+{
+    <h2 class="text-center">@dept.Name (@dept.ShortName)</h2>
+    <table class="table table-bordered table-striped pb-after">
+        <tr>
+            <th class="text-center">Post / Position</th>
+            @*<th class="text-center">Rank / Designation </th>*@
+            <th class="text-center">Name</th>
+            <th class="text-center" style="width: 100px">Personal Mobile</th>
+            <th class="text-center" style="width: 100px">Office Mobile</th>
+            <th class="text-center" style="width: 77px">Office Intercom</th>
+        </tr>
+        @foreach (var emp in employees.Where(x => x.DepartmentId == dept.Id))
+        {
+            var personalMobile = string.Empty;
+            var userContactNumber = emp.User_Account.User_ContactNumber
+        .SingleOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.PersonalMobile);
+            if (userContactNumber!=null)
+            {
+                personalMobile = userContactNumber.ContactNumber;
+            }
+            var officeMobile = string.Empty;
+            userContactNumber = emp.User_Account.User_ContactNumber
+        .SingleOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.OfficeMobile);
+            if (userContactNumber!=null)
+            {
+                officeMobile = userContactNumber.ContactNumber;
+            }
+            var officeIntercom = string.Empty;
+            userContactNumber = emp.User_Account.User_ContactNumber
+        .SingleOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.OfficeIntercom);
+            if (userContactNumber!=null)
+            {
+                officeIntercom = userContactNumber.ContactNumber;
+            }
+            <tr>
+                <td class="text-center">
+                    @if (emp.HR_Position!=null)
+                    {
+                        <span >@emp.HR_Position.Name</span>
+                    }
+                    else
+                    {
+                        <span >&nbsp;</span>
+                    }
+                </td>
+                @*<td class="text-right">
+                    @switch (emp.User_Account.CategoryEnumId)
+                    {
+                        case (byte)EnumCollection.UserCategoryEnum.Army:
+                            <strong class="text-army">@emp.User_Account.User_Rank.Name</strong>
+                            break;
+                        case (byte)EnumCollection.UserCategoryEnum.Navy:
+                            <strong class="text-navy">@emp.User_Account.User_Rank.Name</strong>
+                            break;
+                        case (byte)EnumCollection.UserCategoryEnum.AirForce:
+                            <strong class="text-air">@emp.User_Account.User_Rank.Name</strong>
+                            break;
+                        default:
+                            <strong>@emp.User_Account.User_Rank.Name</strong>
+                            break;
+                    }
+                </td>*@
+                <td class="text-uppercase">@emp.User_Account.FullName</td>
+                <td class="text-center">@personalMobile</td>
+                <td class="text-center">@officeMobile</td>
+                <td class="text-center">@officeIntercom</td>
+            </tr>
+        }
+    </table>
+}

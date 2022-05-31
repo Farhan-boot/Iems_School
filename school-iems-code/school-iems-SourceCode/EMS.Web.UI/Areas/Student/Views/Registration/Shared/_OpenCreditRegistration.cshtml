@@ -1,0 +1,294 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    //WebApi link for single row
+    var getOnlineRegistrationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetOpenCreditRegistrationDataExtra", area = "Student" });
+    var getRegisteredClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetRegisteredClassList", area = "Student" });
+    var getEligibleCourseListForOpenCreditRegistrationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetEligibleCourseListForOpenCreditRegistration", area = "Student" });
+
+    var saveRegistrationCourseForCloseCreditUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "SaveRegistrationCourseForCloseCredit", area = "Student" });
+
+
+}
+
+<div ng-controller="OnlineCourseRegistrationCtrl"
+     ng-init="Init(
+       '@getOnlineRegistrationDataExtraUrl'
+        ,'@getRegisteredClassListUrl'
+        ,'@getEligibleCourseListForOpenCreditRegistrationUrl'
+        ,'@saveRegistrationCourseForCloseCreditUrl'
+     )" class="row">
+
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    @*{{SuppleExam.StudentName}} [{{SuppleExam.UserName}}]*@
+    <div ng-show="SuppleExam.StudentsInstructionsForApply!=''" class="col-md-12">
+        <div class="">
+            <div class="widget">
+                <div class="widget-header bg-success">
+                    <i class="widget-icon fa fa-info-circle"></i>
+                    <span class="widget-caption">Important Notice</span>
+
+                </div>
+                <div class="widget-body" style="text-align: left;">
+                    <kbd>Note:</kbd>
+                    <span ng-bind-html="renderHtml(StudentsInstructionsForRegistration)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="widget" ng-show="MaxCreditToBeTaken > TotalTakenCredit">
+            <div class="widget-header bordered-bottom bordered-sky " style="text-align: center;">
+                <span class="widget-caption" style="float: none;">
+                    <b>
+                        Course Registration for Semester: {{RegSemesterName}}
+                    </b>
+                </span>
+            </div>
+            <div class="widget-body">
+                
+                <div ng-if="Registration!=null && !Registration.IsShowRegistrationForm"
+                     style="margin-top: 10px;">
+                    <span style="color: red">
+                        <kbd style="background-color: red">Attention:</kbd>
+                        {{Registration.RegistrationMessages}}
+                    </span>
+                </div>
+
+                <div ng-show="RegFromNo==2">
+                    <table ng-show="Registration.EligibleCourseList.length>0" class="table table-hover table-responsive table-striped table-bordered">
+                        <tbody>
+                            <tr role="row" class="text-bold" style="color: #555555; background-color: #bebebe;">
+                                <td colspan="2">
+                                    <span class="text-info text-bold">Step 1<span ng-show="Registration.EligibleCourseList.length>0">.1</span>:</span>
+                                    Choose & Add Courses for Registration
+                                </td>
+
+                                <td class="text-center" style="width: 60px;">
+                                    Action
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="course-name">
+                                    <ui-select ng-model="SelectedApplyCourse"
+                                               ng-change="onApplyCourse($select.selected)"
+                                               theme="select2" style="width: 100%;">
+                                        <ui-select-match placeholder="Choose & Add Courses for Registration" class="text-bold">{{$select.selected.CourseCode}}: {{$select.selected.CourseName}}</ui-select-match>
+                                        <ui-select-choices repeat="option as option in Registration.EligibleCourseList| orFilter: {CourseName : $select.search, CourseCode: $select.search,}">
+                                            <div ng-bind-html="option.CourseCode+': '+option.CourseName | highlight: $select.search"></div>
+                                            <small>
+                                                {{option.StudyLevelTermName}}
+                                                ,Cr.Hr: <span ng-bind-html="''+option.CreditHours"></span> , {{option.CourseCategoryEnum}}, {{option.CourseTypeEnum}},Status: {{option.RegistrableCourseStatus}}
+
+                                            </small>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <div ng-show="SelectedApplyCourse!=null" class="course-detail ">
+                                        {{SelectedApplyCourse.StudyLevelTermName}}, Cr.Hr: {{SelectedApplyCourse.CreditHours}} , {{SelectedApplyCourse.CourseCategoryEnum}}, {{SelectedApplyCourse.CourseTypeEnum}},Status: {{SelectedApplyCourse.RegistrableCourseStatus}}
+                                    </div>
+                                </td>
+
+
+                                <td class="text-center vertical-middle">
+                                    <button ng-click="addApplyCourse(SelectedApplyCourse)"
+                                            class="btn btn-default btn-success btn-xs">
+                                        Add
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br ng-if="Registration.EligibleCourseList.length>0" />
+                    <table class="table table-hover table-responsive table-striped table-bordered">
+                        <tbody>
+                            <tr ng-show="ApplyCourseList.length>0" role="row" class="text-bold" style="color: #555555; background-color: #bebebe;">
+                                <td colspan="4">
+                                    <span class="text-info text-bold">Step 1<span ng-show="Registration.EligibleCourseList.length>0">.2</span> :</span>
+                                    Summery of Selected Courses for Confirm (Total New Credit : {{TotalNewAddedCredit}})
+                                </td>
+                            </tr>
+                            <tr ng-show="ApplyCourseList.length>0" role="row" class="text-bold" style="color: #555555; background-color: #bebebe;">
+                                <td class="text-center">
+                                    SN
+                                </td>
+                                <td class="text-center">
+                                    Course Name
+                                </td>
+                                <td class="text-center">
+                                    Section
+                                </td>
+                                <td class="text-center">
+                                    Action
+                                </td>
+                            </tr>
+                            <tr ng-repeat="row in ApplyCourseList">
+                                <td class="text-center vertical-middle">{{$index+1}}</td>
+                                <td class="text-bold course-name">
+                                    {{row.CourseCode}}: {{row.CourseName}}
+                                    <div class="course-detail">
+                                        {{row.StudyLevelTermName}} <em class="ng-binding"> Cr.Hr: {{row.CreditHours}} , {{row.CourseCategoryEnum}}, {{row.CourseTypeEnum}} ,Status: {{row.RegistrableCourseStatus}}</em>
+                                    </div>
+                                </td>
+                                <td class="text-center" style="width: 60px;">{{row.Section}}</td>
+                                <td class="text-center vertical-middle" style="width: 70px;">
+                                    <button ng-click="removeCourseFromApplyList($index)"
+                                            class="btn btn-default btn-danger btn-xs">
+                                        Cancel
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <div ng-if="HasRegConfirmError"
+                         style="margin-bottom: 10px;">
+                        <span style="color: red">
+                            <kbd style="background-color: red">Attention:</kbd>
+                            {{RegConfirmErrorMsg}}
+                        </span>
+                    </div>
+                    <table ng-show="Registration.EligibleCourseList.length>0||ApplyCourseList.length>0" class="table table-bordered" style="border: 1px solid black;">
+                        <tbody>
+                            <tr ng-show="ApplyCourseList.length>0 && Registration.StudentRegistrationConfirmationMessage!='' ">
+                                <td colspan="3" style="color: red; text-align: center;">
+                                    <span ng-bind-html="renderHtml(Registration.StudentRegistrationConfirmationMessage)"></span>
+                                </td>
+                            </tr>
+                            <tr ng-show="ApplyCourseList.length>0" style="background-color: #bebebe;">
+                                <td style="border: none; vertical-align: middle; width: 60px;">
+                                    <span class="text-info text-bold">Step 2:</span>
+                                </td>
+                                <td style="text-align: center; border: none;">
+                                    <button ng-click="saveRegistrationCourseForCloseCredit()" class="btn btn-default btn-success">Confirm</button>
+                                    @*@if (!SiteSettings.Instance.Student.IsAllowAutoSelectLevelTermOnOnlineRegistration)
+                                    {
+                                        <button ng-click="backRegFromNo()" class="btn btn-default btn-warning">Back</button>
+                                    }
+                                    <button ng-click="cancelRegistration()" class="btn btn-default btn-danger">Cancel Registration</button>*@
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br />
+                <br />
+            </div>
+        </div>
+        
+        <div class="widget" ng-hide="MaxCreditToBeTaken > TotalTakenCredit || RegSemesterName==null">
+            <div class="widget-header bordered-bottom bordered-sky " style="text-align: center;">
+                <span class="widget-caption" style="float: none;">
+                    <b>
+                        Course Registration for Semester: {{RegSemesterName}}
+                    </b>
+                </span>
+            </div>
+            <div class="widget-body">
+                <h1 class="text-center" style="color: green">Your registration for this semester is complete. <br />(You have already taken maximum credit.)</h1>
+                <br />
+                <br />
+            </div>
+        </div>
+
+        <div ng-show="(RegisteredClass.RegisteredClassList).length>0" class="widget">
+            <div class="widget-header bordered-bottom bordered-sky" style="text-align: center;">
+                <span class="widget-caption" style="float: none;">
+                    <b>
+                        Registered Course for {{RegSemesterName}} (Total Credit Taken : {{TotalTakenCredit}})
+                    </b>
+                </span>
+            </div>
+            <div class="widget-body">
+                <table class="table table-hover table-striped table-bordered">
+                    <tbody>
+                        <tr role="row" class="text-bold" style="color: #555555;">
+                            <td class="text-center" style="width: 40px;">
+                                SN
+                            </td>
+                            <td class="text-center">
+                                Course
+                            </td>
+                            <td class="text-center">
+                                Status
+                            </td>
+
+                        </tr>
+                        <tr ng-repeat="row in RegisteredClass.RegisteredClassList">
+                            <td class="text-center vertical-middle">{{$index+1}}</td>
+                            <td class="text-bold course-name">
+                                {{row.Code}}: {{row.Name}}
+                                <div class="course-detail">
+                                    {{row.LevelTerm}} <em class="ng-binding"> Cr.Hr: {{row.Aca_CurriculumCourseJson.CreditLoad}} , {{row.Aca_CurriculumCourseJson.CourseCategory}}, {{row.Aca_CurriculumCourseJson.CourseType}}</em>
+                                </div>
+                            </td>
+                            <td style="width: 140px;" class="text-center vertical-middle">{{row.StudentRegistrationStatus}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<style>
+    .supple-view.well {
+        padding: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .course-detail {
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+
+    .vertical-middle {
+        vertical-align: middle !important;
+    }
+
+    .exam-dropdwon {
+        height: 25px !important;
+    }
+
+    .table-bordered > tbody > tr > td {
+        border: 1px solid #0b0b0b;
+    }
+
+    @@media screen and (max-width: 600px) {
+
+        .hide-on-mobile {
+            display: none;
+        }
+
+        .course-name {
+            font-weight: normal !important;
+        }
+    }
+
+    @@media screen and (min-width: 600px) {
+
+        .pc-right {
+            float: right !important;
+        }
+    }
+</style>

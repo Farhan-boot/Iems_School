@@ -1,0 +1,164 @@
+﻿
+<!--File:BAcnt_Branch Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "BasicAccounting: Add/Edit Branch";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var BranchId = (string) id == null?"0":(string)id;
+    
+    //BAcnt_Branch WebApi Single Row link   
+    var getBranchByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "GetBranchById", area = "BasicAccounting" });
+    var getBranchDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "GetBranchDataExtra", area = "BasicAccounting" });
+    var saveBranchUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "SaveBranch", area = "BasicAccounting" });
+    var deleteBranchByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "GetDeleteBranchById", area = "BasicAccounting" });
+
+    //BAcnt_Branch WebApi List link 
+    var getPagedBranchUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "BranchApi", action = "GetPagedBranch", area = "BasicAccounting"});
+    var getAllBranchUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "GetAllBranch", area = "BasicAccounting" });
+    var saveBranchListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "SaveBranchList", area = "BasicAccounting" });
+    var getBranchListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BranchApi", action = "GetBranchListDataExtra", area = "BasicAccounting" });
+
+    var editBranchByIdPageUrl = Url.Action("BranchAddEdit", "Branch", new { area = "BasicAccounting" });
+    var listBranchPageUrl = Url.Action("BranchList", "Branch", new { area = "BasicAccounting" });
+    
+    //BAcnt_Branch Angular Functions
+    string getBranchById="getBranchById";
+    var saveBranch = "saveBranch";
+    var getNewBranch = "getNewBranch";
+    var refreshPage = "loadPage()";
+    string deleteBranchById="deleteBranchById";
+    string loadBranchExtraData="loadBranchExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Branch/BranchAddEdit.js"></script>
+}
+
+<div id="BranchAddEdit" class="row" ng-controller="BranchAddEditCtrl" ng-init="Init(
+      '@BranchId'
+      ,'@getBranchByIdUrl'
+      ,'@getBranchDataExtraUrl'
+      ,'@saveBranchUrl'
+      ,'@deleteBranchByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Branch.@BAcnt_Branch.Property_Name!=''">{{(Branch.@BAcnt_Branch.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="BranchId" ng-Enter="@(getBranchById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewBranch)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listBranchPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Branch.@BAcnt_Branch.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Branch.@BAcnt_Branch.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Code </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Branch.@BAcnt_Branch.Property_Code" class="form-control" placeholder="Enter Code" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Code." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Address <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Branch.@BAcnt_Branch.Property_Address" class="form-control" placeholder="Enter Address"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Branch.@BAcnt_Branch.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Enable </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Branch.@BAcnt_Branch.Property_IsEnable"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Enable if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Branch.@BAcnt_Branch.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Company Account </td>
+                            <td class="fieldarea">
+                                <select ng-model="Branch.@BAcnt_Branch.Property_CompanyId"
+                                        ng-options="option.Id as option.Name for option in CompanyAccountList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Company Account." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveBranch)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

@@ -1,0 +1,576 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Financial Accounts";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div id="main-content" class="">
+
+        <div class="margin5">
+            <fieldset>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Particulars</th>
+                            <th class="text-center">Debit</th>
+                            <th class="text-center">Credit</th>
+                            <th class="text-center">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                26-Jan-2010
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(733)">**Total Fees for SY 2009-2010,1- Level-1 Term-I</a>
+                            </td>
+                            <td><span  class="pull-right">80,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">80,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                26-Jan-2010
+                            </td>
+                            <td>
+                                Admission Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">15,000.00</span> </td>
+                            <td><span  class="pull-right">65,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                26-Jan-2010
+                            </td>
+                            <td>
+                                Full Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">65,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                19-May-2010
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(734)">**Total Fees for SY 2009-2010,2- Level-1 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">52,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">52,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                19-May-2010
+                            </td>
+                            <td>
+                                Admission Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">52,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                31-Aug-2010
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(735)">**Total Fees for SY 2010-2011,3- Level-2 Term-I</a>
+                            </td>
+                            <td><span  class="pull-right">54,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">54,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                31-Aug-2010
+                            </td>
+                            <td>
+                                Upon Enrolment Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">54,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                10-Jan-2011
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(736)">**Total Fees for SY 2010-2011,1- Level-2 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">74,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">74,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                10-Jan-2011
+                            </td>
+                            <td>
+                                Partial Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">46,000.00</span> </td>
+                            <td><span  class="pull-right">28,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                15-Feb-2011
+                            </td>
+                            <td>
+                                Full Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">28,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                22-May-2011
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(737)">**Total Fees for SY 2010-2011,2- Level-2 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">37,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">37,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                22-May-2011
+                            </td>
+                            <td>
+                                Partial Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">21,250.00</span> </td>
+                            <td><span  class="pull-right">15,750.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-Jun-2011
+                            </td>
+                            <td>
+                                Upon Enrolment Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">15,750.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-Aug-2011
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(738)">**Total Fees for SY 2011-2012,3- Level-3 Term-I</a>
+                            </td>
+                            <td><span  class="pull-right">58,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">58,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-Aug-2011
+                            </td>
+                            <td>
+                                Partial Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">31,750.00</span> </td>
+                            <td><span  class="pull-right">26,250.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                10-Oct-2011
+                            </td>
+                            <td>
+                                Full Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">26,250.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                09-Jan-2012
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(739)">**Total Fees for SY 2011-2012,1- Level-3 Term-I</a>
+                            </td>
+                            <td><span  class="pull-right">77,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">77,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-Feb-2012
+                            </td>
+                            <td>
+                                Partial Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">28,000.00</span> </td>
+                            <td><span  class="pull-right">49,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                09-Jan-2012
+                            </td>
+                            <td>
+                                Payment of Fees
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">49,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-May-2012
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(740)">**Total Fees for SY 2011-2012,1- Level-3 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">53,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">53,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14-May-2012
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">29,000.00</span> </td>
+                            <td><span  class="pull-right">24,500.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                11-Jun-2012
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">24,500.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                10-Sep-2012
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(741)">**Total Fees for SY 2012-2013,3- Level-3 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">67,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">67,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                30-Aug-2012
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">40,000.00</span> </td>
+                            <td><span  class="pull-right">27,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                07-Oct-2012
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">27,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                03-Jan-2013
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(742)">**Total Fees for SY 2012-2013,1- Level-4 Term-I</a>
+                            </td>
+                            <td><span  class="pull-right">78,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">78,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                07-Jan-2013
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">50,000.00</span> </td>
+                            <td><span  class="pull-right">28,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                17-Jan-2013
+                            </td>
+                            <td>
+                                Transcript and Testimonial Fee
+                            </td>
+                            <td><span  class="pull-right">400.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">28,400.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                17-Jan-2013
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">28,000.00</span> </td>
+                            <td><span  class="pull-right">400.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                17-Jan-2013
+                            </td>
+                            <td>
+                                Transcript and Testimonial Fee
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">400.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                29-Aug-2013
+                            </td>
+                            <td>
+                                <a data-toggle="modal" href="#assesmentModal" onclick="LoadAssesmentDetails(743)">**Total Fees for SY 2012-2013,2- Level-4 Term-II</a>
+                            </td>
+                            <td><span  class="pull-right">33,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">33,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                02-Sep-2013
+                            </td>
+                            <td>
+                                14 Convocation Certificate Fee
+                            </td>
+                            <td><span  class="pull-right">4,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">37,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                15-May-2013
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">15,000.00</span> </td>
+                            <td><span  class="pull-right">22,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                17-Jun-2013
+                            </td>
+                            <td>
+                                Semester Payment
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">18,000.00</span> </td>
+                            <td><span  class="pull-right">4,000.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                18-Nov-2013
+                            </td>
+                            <td>
+                                ConvocationFee
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">4,000.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                25-Sep-2014
+                            </td>
+                            <td>
+                                Medium Of Instruction Fee
+                            </td>
+                            <td><span  class="pull-right">100.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">100.00</span> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                28-Sep-2014
+                            </td>
+                            <td>
+                                Medium Of Instruction Fee
+                            </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                            <td><span  class="pull-right">100.00</span> </td>
+                            <td><span  class="pull-right">0.00</span> </td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="2">
+                                <label>Total</label>
+                            </td>
+                            <td>
+                                <label class="pull-right">669,500.00</label>
+                            </td>
+                            <td>
+                                <label class="pull-right">669,500.00</label>
+                            </td>
+                            <td>
+                                <label class="pull-right">0.00</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="assesmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Assessment Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="divAssessmentDetails">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    Admission
+                                    <span  class="badge pull-right">
+                                        15,000.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Tuition
+                                    <span  class="badge pull-right">
+                                        45,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Computer Lab
+                                    <span  class="badge pull-right">
+                                        2,000.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Science Lab
+                                    <span  class="badge pull-right">
+                                        1,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Language Lab
+                                    <span  class="badge pull-right">
+                                        2,000.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Studio
+                                    <span  class="badge pull-right">
+                                        0.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Development
+                                    <span  class="badge pull-right">
+                                        8,000.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Activity
+                                    <span  class="badge pull-right">
+                                        5,000.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Miscellaneous
+                                    <span  class="badge pull-right">
+                                        1,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong class="text-info">Total</strong>
+                                    <span  class="badge pull-right">
+                                        80,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Discount
+                                    <span  class="badge pull-right">
+                                        0.00
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <label class="text-warning">Deduction</label>
+                                    <span  class="badge pull-right">
+                                        0.00
+                                    </span>
+                                </li>
+                                <li>
+                                    Prev. Balance
+                                    <span  class="badge pull-right">
+                                        0.00
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong class="text-info">Net Total</strong>
+                                    <span  class="badge pull-right">
+                                        80,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong>Amount Paid</strong>
+                                    <span  class="badge pull-right">
+                                        80,500.00
+                                    </span>
+                                </li>
+                                <li>
+                                    <label class="text-success">Balance</label>
+
+                                    <span  class="badge pull-right">
+                                        0.00
+                                    </span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

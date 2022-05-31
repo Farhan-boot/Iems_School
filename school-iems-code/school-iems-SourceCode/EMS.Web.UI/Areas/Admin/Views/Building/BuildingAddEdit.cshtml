@@ -1,0 +1,113 @@
+﻿<!--File:General_Building Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Building";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var BuildingId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getBuildingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingById", area = "Admin" });
+    var getBuildingDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingDataExtra", area = "Admin" });
+    var saveBuildingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "SaveBuilding", area = "Admin" });
+    var deleteBuildingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetDeleteBuildingById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedBuildingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetPagedBuilding", area = "Admin" });
+    var getAllBuildingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetAllBuilding", area = "Admin" });
+    var saveBuildingListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "SaveBuildingList", area = "Admin" });
+    var getBuildingListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingListDataExtra", area = "Admin" });
+
+    var editBuildingByIdPageUrl = Url.Action("BuildingAddEdit", "Building", new { area = "Admin" });
+    var listBuildingPageUrl = Url.Action("BuildingList", "Building", new { area = "Admin" });
+
+    // Angular Functions
+    string getBuildingById = "getBuildingById";
+    var saveBuilding = "saveBuilding";
+    var getNewBuilding = "getNewBuilding";
+    var refreshPage = "loadPage()";
+    string deleteBuildingById = "deleteBuildingById";
+    string loadBuildingExtraData = "loadBuildingExtraData";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Building/BuildingAddEdit.js"></script>
+}
+<div id="BuildingAddEdit" class="row" ng-controller="BuildingAddEditCtrl" ng-init="Init(
+      '@BuildingId'
+      ,'@getBuildingByIdUrl'
+      ,'@getBuildingDataExtraUrl'
+      ,'@saveBuildingUrl'
+      ,'@deleteBuildingByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Building.@General_Building.Property_Name!=''">{{(Building.@General_Building.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="BuildingId" ng-Enter="@(getBuildingById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewBuilding)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listBuildingPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-8 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Building.@General_Building.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Building.@General_Building.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="50" required="" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Order No </label>
+                        <input type="number" ng-model="Building.@General_Building.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Number of Floor </label>
+                        <input type="number" ng-model="Building.@General_Building.Property_NumberOfFloor" class="form-control" placeholder="Enter Number Of Floor" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label"> Status  </label>
+                        <select ng-model="Building.@General_Building.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Campus </label>
+                        <select ng-model="Building.@General_Building.Property_CampusId"
+                                ng-options="option.Id as option.ShortName for option in CampusList " ng-init="" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Address <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <textarea type="text" ng-model="Building.@General_Building.Property_Address" class="form-control" placeholder="Enter Address" maxlength="256" required=""></textarea>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Map Embed Code <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <textarea type="text" ng-model="Building.@General_Building.Property_MapEmbedCode" class="form-control" placeholder="Enter Map Embed Code" required=""></textarea>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Remarks</label>
+                        <textarea type="text" ng-model="Building.@General_Building.Property_Remarks" class="form-control" placeholder="Enter Remarks" maxlength="500" required=""></textarea>
+                    </div>
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveBuilding)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

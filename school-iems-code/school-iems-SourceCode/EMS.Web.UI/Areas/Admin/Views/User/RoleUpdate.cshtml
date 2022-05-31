@@ -1,0 +1,237 @@
+﻿@using EMS.Framework.Objects
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@model EMS.DataAccess.Data.UAC_Role
+@{
+    ViewBag.Title = "User Role Update";
+    var successMessage = ViewBag.SuccessMessage ?? string.Empty;
+    var errorMessage = ViewBag.ErrorMessage ?? string.Empty;
+    var newPassword = ViewBag.NewPassword ?? string.Empty;
+    var allPermissions = PermissionUtil.Permissions;
+}
+@section StyleSection
+{
+    <style>
+        .tree {
+            min-height: 20px;
+            padding: 19px;
+            margin-bottom: 20px;
+            background-color: #fbfbfb;
+            border: 1px solid #999;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+            .tree li {
+                list-style-type: none;
+                margin: 0;
+                padding: 5px 5px 0 5px;
+                position: relative;
+            }
+
+                .tree li::before, .tree li::after {
+                    content: '';
+                    left: -35px;
+                    position: absolute;
+                    right: auto;
+                }
+
+                .tree li::before {
+                    border-left: 1px solid #999;
+                    bottom: 50px;
+                    height: 100%;
+                    top: 0;
+                    width: 1px;
+                }
+
+                .tree li::after {
+                    border-top: 1px solid #999;
+                    height: 20px;
+                    top: 20px;
+                    width: 38px;
+                }
+
+                .tree li span {
+                    display: inline-block;
+                    /*-moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border: 1px solid #999;
+                    border-radius: 5px;
+                    padding: 3px 8px;
+                    text-decoration: none;*/
+                }
+
+                .tree li.parent_li {
+                    padding-top: 10px;
+                }
+
+                    .tree li.parent_li > span {
+                        cursor: pointer;
+                    }
+
+            .tree > ul > li::before, .tree > ul > li::after {
+                border: 0;
+            }
+
+            .tree li:last-child::before {
+                height: 21px;
+            }
+
+            .tree li.parent_li > span:hover, .tree li.parent_li > span:hover + ul li span {
+                /*background: #eee;
+                border: 1px solid #94a0b4;
+                color: #000;*/
+            }
+    </style>
+}
+@section  ScriptSection{
+    <script>
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
+                }
+                e.stopPropagation();
+            });
+        });
+    </script>
+}
+@using (Html.BeginForm("RoleUpdate", "User", FormMethod.Post))
+{
+    if (EMS.CoreLibrary.Helpers.ValidationHelper.IsValid(newPassword.ToString()))
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+            Your New Password is @newPassword
+        </div>
+    }
+    else if (EMS.CoreLibrary.Helpers.ValidationHelper.IsValid(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+            @successMessage
+        </div>
+    }
+    else if (EMS.CoreLibrary.Helpers.ValidationHelper.IsValid(errorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+            @errorMessage
+        </div>
+    }
+
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#detail" aria-controls="Category" role="tab" data-toggle="tab">Details</a></li>
+            @if (Model.Id != -1)
+            {
+                <li role="presentation"><a href="#rolePermission" aria-controls="settings" role="tab" data-toggle="tab">Role Permission</a></li>
+            }
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="detail">
+                <div class="row form-group" style="margin-top: 10px">
+                    <div class="col-md-12">
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit)|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanAdd) || HttpUtil.IsSupperAdmin())
+                        {
+                            <button type="submit" name="command" value="Save" class="btn btn-success"><i class="fa fa-save"></i> Save </button>
+                        }
+
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanAdd) || HttpUtil.IsSupperAdmin())
+                        {
+
+                            if (Model.Id != -1)
+                            {
+                                <a href="@Url.Action("RoleUpdate", "User", new {area = "Admin", id = "-1"})" class="btn btn-success">
+                                    <i class="fa fa-plus"></i>&nbsp;New
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <td style="width: 10%">
+                            @Html.LabelFor(m => m.Name)
+                        </td>
+                        <td style="width: 2%">:</td>
+                        <td>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @style = "width:50%" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.Description)
+                        </td>
+                        <td>:</td>
+                        <td>
+                            @Html.TextBoxFor(m => m.Description, new { @class = "form-control", @style = "width:50%" })
+                            @Html.HiddenFor(m => m.Id)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            @if (Model.Id != -1)
+            {
+                <div role="tabpanel" class="tab-pane fade" id="rolePermission">
+                    @helper BuildPermissionTree(List<Permission> permissions)
+                    {
+                        foreach (var permission in permissions.OrderBy(x => x.No).ThenBy(x => x.ParentNo))
+                        {
+                                <ul>
+                                    <li>
+                                        @if (permission.ChildPermissions != null && permission.ChildPermissions.Count != 0)
+                                        {
+                                            <span >
+                                                <i class="fa fa-minus-square"></i> 
+                                            </span>
+                                            @*<input checked="@Model.UAC_RolePremissionMap.Any(rp => rp.PermissionNo == permission.No)" type="checkbox" name="permissions" value="@permission.No" />*@ @permission.Title
+                                                                    @BuildPermissionTree(permission.ChildPermissions)
+
+                                            
+                                        }
+                                        else
+                                        {
+                                            <input checked="@Model.UAC_RolePremissionMap.Any(rp => rp.PermissionNo == permission.No)" type="checkbox" name="permissions" value="@permission.No" /> @permission.Title
+                                        }
+                                        
+                                    </li>
+                                </ul>
+                        }
+                    }
+                    <div class="row form-group" style="margin-top: 10px">
+                        <div class="col-md-12">
+
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanChangePermissions) || HttpUtil.IsSupperAdmin())
+                            {
+                                <button type="submit" name="command" value="SavePermission" class="btn btn-success">
+                                    <i class="fa fa-save"></i> Save Permissions
+                                </button>
+                            }
+                          
+                        </div>
+                    </div>
+                    <div class="tree well">
+                        <ul>
+                            <li>
+                                <span ><i class="fa fa-minus-square"></i> <strong> EMS Permission Settings</strong></span>
+                                @BuildPermissionTree(allPermissions)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+}

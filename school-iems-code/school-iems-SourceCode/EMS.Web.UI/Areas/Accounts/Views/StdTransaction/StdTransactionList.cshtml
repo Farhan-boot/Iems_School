@@ -1,0 +1,338 @@
+﻿
+<!--File:Acnt_StdTransaction List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Accounts: Student Transaction List";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StdTransactionId = (string)id == null ? "0" : (string)id;
+
+    var vid = Request.QueryString["vid"];
+    var voucherId = (string)vid == null ? "0" : (string)vid;
+
+    //WebApi link for single row
+    var getStdTransactionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetStdTransactionById", area = "Accounts" });
+    var getStdTransactionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetStdTransactionDataExtra", area = "Accounts" });
+    var saveStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "SaveStdTransaction", area = "Accounts" });
+    var deleteStdTransactionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetDeleteStdTransactionById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetPagedStdTransaction", area = "Accounts" });
+    var getAllStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetAllStdTransaction", area = "Accounts" });
+    var saveStdTransactionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "SaveStdTransactionList", area = "Accounts" });
+    var getStdTransactionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetStdTransactionListDataExtra", area = "Accounts" });
+
+    var editStdTransactionByIdPageUrl = Url.Action("StdTransactionAddEdit", "StdTransaction", new { area = "Accounts" });
+
+    var printMoneyReceiptPageUrl = Url.Action("StudentMoneyReceipt", "Report", new{ area = "Accounts" });
+    var fastPaymentCollectionUrl = Url.Action("FastPaymentCollection", "Student", new {area = "Accounts"});
+    //Angular Function Name
+    var getNewStdTransaction = "getNewStdTransaction";
+    var saveStdTransaction = "saveStdTransaction";
+    var deleteStdTransactionById = "deleteStdTransactionById";
+    var deleteStdTransactionByObj = "deleteStdTransactionByObj";
+    //for list
+    var searchStdTransactionList = "searchStdTransactionList";
+    var getPagedStdTransactionList = "getPagedStdTransactionList";
+    var getAllStdTransactionList = "getAllStdTransactionList";
+    var saveStdTransactionList = "saveStdTransactionList";
+    var getStdTransactionListExtraData = "getStdTransactionListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/StdTransaction/StdTransactionList.js?v=2"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+            collapseSidebar();
+        });
+    </script>
+    
+}
+
+
+<div ng-controller="StdTransactionListCtrl"
+     ng-init="Init(
+     '@voucherId'
+      ,'@getPagedStdTransactionUrl'
+     ,'@deleteStdTransactionByIdUrl'
+     ,'@getStdTransactionListDataExtraUrl'
+     ,'@saveStdTransactionListUrl'
+     ,'@getStdTransactionByIdUrl'
+     ,'@getStdTransactionDataExtraUrl'
+     ,'@saveStdTransactionUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-footer bordered-bottom bordered-sky " style="height: auto !important">
+            <i class="widget-icon fa fa-list bold  "></i>
+            @*<span class="widget-caption "> </span>*@
+            <div class="widget-buttons buttons-bordered no-padding-right" style="">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Semester</span>*@
+                    <select ng-model="SelectedSemesterId" ng-change="@(searchStdTransactionList)()"
+                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Semester---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Bank</span>*@
+                    <select ng-model="SelectedBankId" ng-change="@(searchStdTransactionList)()"
+                            ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Bank---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Student</span>*@
+                    <select ng-model="SelectedStudentId" ng-change="@(searchStdTransactionList)()"
+                            ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Student---</option>
+                    </select>
+                </span>
+            </div>
+
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="VoucherName" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="" placeholder="Search Voucher Name" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="CreatedById" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="" placeholder="Search Collector ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="StudentId" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="" placeholder="Search Student ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SlipId" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="" placeholder="Search Slip ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <br/>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                Start Date:
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+               
+                <span class="input-icon">
+                    @*<input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />*@
+                    <input type="text" ng-model="StartDate" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs date-picker no-focus" id="" placeholder="Search Start Date" style="">
+                    <i class="glyphicon glyphicon-calendar blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                End Date:
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    @*<input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />*@
+                    <input type="text" ng-model="EndDate" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs date-picker no-focus" id="" placeholder="Search End Date" style="">
+                    <i class="glyphicon glyphicon-calendar blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search Particular Name" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+
+            </div>
+            @*<div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="UserName" ng-Enter="@(searchStdTransactionList)()" class="form-control input-xs " id="" placeholder="Type Voucher" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>*@
+
+
+
+            <div class="widget-buttons no-padding-left">
+                @*<a target="_blank" href="@editStdTransactionByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>*@
+                <button ng-click="@(searchStdTransactionList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Search</button>
+            </div>
+        </div>
+      
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <div class="dropdown form-group margin-right-10">
+                <button class="btn btn-xs btn-danger dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-download"></i> Download List
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <li><a href="#" onclick="$('#StdTransactionList').tableExport({ fileName: 'StdTransactionList', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel(.xls)</a></li>
+                    <li><a href="#" onclick="$('#StdTransactionList').tableExport({ fileName: 'StdTransactionList', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word(.doc)</a></li>
+                    <li><a href="#" onclick="$('#StdTransactionList').tableExport({ fileName: 'StdTransactionList', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV(.csv)</a></li>
+                </ul>
+            </div>
+            <table id="StdTransactionList" class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Perticular Name</th>
+                    <th class="text-center">Credit Amount ({{StdTransactionList|total:'@Acnt_StdTransaction.Property_CreditAmount'|number:2 }})</th>
+                   
+                    <!--th class="text-center">Semester Id</th-->
+                    @*<th class="text-center">Bank Id</th>*@
+                    <th class="text-center">Bank Name</th>
+                    <th class="text-center">Slip Id</th>
+                    <th class="text-center">Std. ID</th>
+                    @*<th class="text-center">Manual Slip No</th>*@
+                    @*<th class="text-center">Voucher Id</th>*@
+                    <th class="text-center">Voucher No</th>
+                    <th class="text-center">Action Date</th>
+                    @*<th class="text-center">Debit Amount</th>*@
+                 
+                    @*<th class="text-center">Is Debited</th>*@
+                    @*<th class="text-center">Balance</th>*@
+                    @*<th class="text-center">Remark</th>*@
+                    @*<th class="text-center">History</th>*@
+                    <!--th class="text-center">Payment Status Enum Id</th-->
+                    @*<th class="text-center">Payment Status</th>*@
+                    <!--th class="text-center">Transaction Type Enum Id</th-->
+                    @*<th class="text-center">Transaction Type</th>*@
+                    @*<th class="text-center">Is Auto Entry</th>*@
+                    @*<th class="text-center">Is Semester Fee</th>
+                    <th class="text-center">Is Package Payment</th>*@
+                    @*<th class="text-center">Order No</th>*@
+                    <th class="text-center">Collector</th>
+                    <th class="text-center">Create Date</th>
+                    <th class="text-center">Update By</th>
+                    <th class="text-center">Update Date</th>
+                    @*<th class="text-center">Deleted?</th>*@
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in StdTransactionList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Acnt_StdTransaction.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_Name}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_CreditAmount}}</td>
+                    <!--td class="">{{row.@Acnt_StdTransaction.Property_StudentId}}</td-->
+                    <!--td class="">{{row.@Acnt_StdTransaction.Property_SemesterId}}</td-->
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_BankId}}</td>*@
+                    <td class="">{{row.@Acnt_StdTransaction.Property_BankName}}</td>
+                    <td class="">
+
+                        <span >{{row.@Acnt_StdTransaction.Property_PaySlipId}}</span>  
+
+                        <span ng-show="row.@(Acnt_StdTransaction.Property_PaySlipId)==null">{{row.@Acnt_StdTransaction.Property_Id}}</span> 
+                    </td>
+                    <td class="">
+                        <a target="_blank" href="@(fastPaymentCollectionUrl)?sid={{row.ClassRollNo}}">{{row.ClassRollNo}}</a>
+                    </td>
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_ManualPaySlipNo}}</td>*@
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_VoucherId}}</td>*@
+                    <td class="">{{row.@Acnt_StdTransaction.Property_VoucherNo}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}}</td>
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_DebitAmount}}</td>*@
+                   
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_IsDebited}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_Balance}}</td>*@
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_Remark}}</td>*@
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_History}}</td>*@
+                    <!--td class="">{{row.@Acnt_StdTransaction.Property_PaymentStatusEnumId}}</td-->
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_PaymentStatus}}</td>*@
+                    <!--td class="">{{row.@Acnt_StdTransaction.Property_TransactionTypeEnumId}}</td-->
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_TransactionType}}</td>*@
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_IsAutoEntry}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_IsSemesterFee}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_IsPackagePayment}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_OrderNo}}</td>*@
+                    <td class="">{{row.@Acnt_StdTransaction.Property_CreateByName}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_CreateDate|date:'d/M/yy h:mm a'}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_LastChangedByName}}</td>
+                    <td class="">{{row.@Acnt_StdTransaction.Property_LastChanged|date:'d/M/yy h:mm a'}}</td>
+                    @*<td class="">{{row.@Acnt_StdTransaction.Property_IsDeleted}}</td>*@
+                    <td class="text-center no-print">
+                        
+                        @if (HttpUtil.IsSupperAdmin())
+                        {
+                            <a target="_blank" href="@(editStdTransactionByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                            <button ng-click="@(deleteStdTransactionById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                        }
+                        <a target="_blank" href="@(printMoneyReceiptPageUrl)/?transId={{row.Id}}&stdId={{row.@Acnt_StdTransaction.Property_StudentId}}" class="btn btn-xs btn-primary"><i class="fa fa-print"></i> Print Receipt</a>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                    <label style="margin-left: 30px;">
+                        <input ng-model="IsShowTrashedItems"
+                               ng-change="searchStdTransactionList()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                        <span style="color: #e74b37;">Show Deleted Payslip Only</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

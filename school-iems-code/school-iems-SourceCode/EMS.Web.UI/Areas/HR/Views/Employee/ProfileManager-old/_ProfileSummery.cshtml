@@ -1,0 +1,213 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@{
+    var saveApproval = "saveApproval";
+    var changePassword = "changePassword";
+}
+  <div class="widget">
+    <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+        <i class="widget-icon fa fa-check-circle"></i>
+        <span  class="widget-caption">Approval Control Panel</span>
+    </div>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-sm-8">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Full Name</td>
+                        <td>
+                            <input ng-disabled="true" type="text" ng-model="Obj.Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" maxlength="128" required="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User Name</td>
+                        <td>
+                            <input ng-disabled="true" type="text" ng-model="Obj.Account.@User_Account.Property_UserName" class="form-control" placeholder="Enter User Name" maxlength="128" required="" />
+                        </td>
+                    </tr>
+                    @*<tr>
+                        <td>Military Category</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_CategoryEnumId" ng-options="option.Id as option.Name for option in UserCategoryEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>*@
+                    @*<tr>
+                        <td>Rank/Designation</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_RankId" ng-options="option.Id as option.Name for option in RankFilterList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>*@
+                    <tr>
+                        <td>Employee Category</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_EmployeeCategoryEnumId" ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Employee Type</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_EmployeeTypeEnumId" ng-options="option.Id as option.Name for option in EmployeeTypeEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>First Joining</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_JoiningDepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Currently Working</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Account.Property_DepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Post/Position</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_PositionId" ng-options="option.Id as option.Name for option in PositionList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-4">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>User Type</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_UserTypeEnumId" ng-options="option.Id as option.Name for option in UserTypeEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User Status</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_UserStatusEnumId" ng-options="option.Id as option.Name for option in UserStatusEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Job Class</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_JobClassEnumId" ng-options="option.Id as option.Name for option in JobClassEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Job Type</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_JobTypeEnumId" ng-options="option.Id as option.Name for option in JobTypeEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Working Status</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Employee.@User_Employee.Property_WorkingStatusEnumId" ng-options="option.Id as option.Name for option in WorkingStatusEnumList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Campus</td>
+                        <td>
+                            <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_CampusId" ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Joining Date</td>
+                        <td>
+                            <input ng-disabled="true" ng-model="Obj.Employee.JoiningDateString" class="form-control " type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SiteSettings.Instance.InstituteShortName ID No.</td>
+                        <td>
+                            <input ng-disabled="true" type="text" @*ng-model="Obj.Employee.@User_Employee.Property_OldIdNo"*@ class="form-control" placeholder="Enter @SiteSettings.Instance.InstituteShortName ID Number" maxlength="128" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Is Approved</td>
+                        <td>
+                            <div class="">
+                                <span  ng-show="Obj.Account.@User_Account.Property_IsApproved" class="badge badge-success"> Yes </span>
+                                <span  ng-hide="Obj.Account.@User_Account.Property_IsApproved" class="badge badge-danger"> No </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Is Locked</td>
+                        <td>
+                            <div class="">
+                                <span  ng-show="Obj.Account.@User_Account.Property_UserStatusEnumId==0" class="badge badge-success"> Yes </span>
+                                <span  ng-hide="Obj.Account.@User_Account.Property_UserStatusEnumId!=0" class="badge badge-danger"> No </span>
+                              </div>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+      </div>
+      <div class="widget-footer">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="checkbox" ng-hide="Obj.Account.IsApproved">
+                      <input type="checkbox" ng-model="IsForceToGenerateUsername"> <strong>Forcefully generate User Name On Approve</strong>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="checkbox" ng-hide="Obj.Account.IsApproved">
+                      <input type="checkbox" ng-model="IsSendEmailOnApproval"> <strong>Send Email on Approval</strong>
+                  </div>
+              </div>
+              <div class="col-sm-4 text-right">
+                  <button ng-hide="Obj.Account.IsApproved" ng-click="@(saveApproval)()" class="btn btn-md btn-success">
+                      <span  class="fa fa-check"></span> Approve User
+                  </button>
+                  <button ng-show="Obj.Account.IsApproved" ng-click="@(saveApproval)()" class="btn btn-md btn-danger">
+                    <span  class="fa fa-ban"></span> Disapprove User
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-blue bg-blueberry bg-blueberry">
+                <i class="widget-icon glyphicon glyphicon-lock"></i>
+                <span  class="widget-caption">Reset Password Panel</span>
+            </div>
+            <div class="widget-body">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label class="control-label">
+                                New Password (at least 6 characters) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                        title="Type your desired  password for EMS account, at least 6 characters requred.">
+                                    <i class="fa fa-question-circle"></i>
+                                </button>
+                            </label>
+                            <span  class="input-icon icon-right">
+                                <input type="password" ng-model="Password" class="form-control" placeholder="Enter Password" minlength="6" maxlength="128" required="" />
+                                <i class="fa fa-lock circular"></i>
+                            </span>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label class="control-label">
+                                Confirm Password <span  class="red glyphicon glyphicon-asterisk"></span>
+                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                        title="Please retype your password again">
+                                    <i class="fa fa-question-circle"></i>
+                                </button>
+                            </label>
+                            <span  class="input-icon icon-right">
+                                <input type="password" ng-model="ConfirmPassword" class="form-control" placeholder="Enter Password" minlength="7" maxlength="128" required="" />
+                                <i class="fa fa-lock circular"></i>
+                            </span>
+                        </div>
+                        <div class="col-sm-12 form-group text-center">
+                            <button ng-click="@(changePassword)()" class="btn btn-md btn-success">
+                                <span  class="fa fa-save"></span> Change Password
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,916 @@
+
+<!--File:Aca_Exam Add/Edit View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Academic: Add/Edit Exam";
+    Layout = "~/Areas/ExamSection/Views/Shared/_LayoutExamSection.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ExamId = (string) id == null?"0":(string)id;
+
+    //Aca_Exam WebApi Single Row link   
+    var getExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamById", area = "ExamSection" });
+    var getExamDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamDataExtra", area = "ExamSection" });
+    var saveExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExam", area = "ExamSection" });
+    var deleteExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetDeleteExamById", area = "ExamSection" });
+
+    //Aca_Exam WebApi List link 
+    var getPagedExamUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ExamApi", action = "GetPagedExam", area = "ExamSection" });
+    var getAllExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetAllExam", area = "ExamSection" });
+    var saveExamListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExamList", area = "ExamSection" });
+    var getExamListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamListDataExtra", area = "ExamSection" });
+
+    var editExamByIdPageUrl = Url.Action("ExamAddEdit", "Exam", new { area = "ExamSection" });
+    var listExamPageUrl = Url.Action("ExamList", "Exam", new { area = "ExamSection" });
+
+    var canEditResultPublishingSettings = PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanEditResultPublishingSettings);
+
+    //Aca_Exam Angular Functions
+            string getExamById="getExamById";
+    var saveExam = "saveExam";
+    var getNewExam = "getNewExam";
+    var refreshPage = "loadPage()";
+    string deleteExamById="deleteExamById";
+    string loadExamExtraData="loadExamExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Exam/ExamAddEdit.js"></script>
+    
+}
+
+<div id="ExamAddEdit" class="row" ng-controller="ExamAddEditCtrl" ng-init="Init(
+      '@ExamId'
+      ,'@getExamByIdUrl'
+      ,'@getExamDataExtraUrl'
+      ,'@saveExamUrl'
+      ,'@deleteExamByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget admission-form" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Exam.@Aca_Exam.Property_Name!=''">{{(Exam.@Aca_Exam.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ExamId" ng-Enter="@(getExamById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewExam)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listExamPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                      <div class="form-title">
+                          General Settings
+                      </div>
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Official Exam Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_OfficialExamName" class="form-control" placeholder="Enter Official Exam Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Official Exam Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <tr>
+                            <td class="fieldlabel">Semester </td>
+                            <td class="fieldarea">
+                                <select ng-model="Exam.@Aca_Exam.Property_SemesterId"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <!--dropdown option for EnumList-->
+                        <tr>
+                            <td class="fieldlabel">Exam Type </td>
+                            <td class="fieldarea">
+                                <select ng-model="Exam.@Aca_Exam.Property_ExamTypeEnumId" ng-options="option.Id as option.Name for option in ExamTypeEnumList" title="Select Exam Type" ng-init="" class="form-control" >
+                                    <option value="" label="" class="">---Select One---</option>   
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Exam Type." data-toggle="tooltip"></i></span></td> 
+                        </tr>
+                             <tr>
+                                <td class="fieldlabel">Academic Session <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_AcademicSession" class="form-control" placeholder="Enter Academic Session" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Academic Session." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Program Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="Exam.@Aca_Exam.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList" title="Select Program Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                       
+                        
+                        <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                            <td class="fieldlabel">Start Date Of Midterm Exam </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Exam.@Aca_Exam.Property_StartDateOfMidtermExam" class="form-control date-picker" placeholder="Enter Start Date Of Midterm Exam"   />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Start Date Of Midterm Exam." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                            <td class="fieldlabel">End Date Of Midterm Exam </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Exam.@Aca_Exam.Property_EndDateOfMidtermExam" class="form-control date-picker" placeholder="Enter End Date Of Midterm Exam"   />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter End Date Of Midterm Exam." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                            <td class="fieldlabel">Date Of Midterm Result Publication </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Exam.@Aca_Exam.Property_DateOfMidtermResultPublication" class="form-control date-picker" placeholder="Enter Date Of Midterm Result Publication"   />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Of Midterm Result Publication." data-toggle="tooltip"></i></span></td>
+                        </tr>
+
+                        <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                                <td class="fieldlabel">Start Date Of Term Final Exam </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_StartDateOfTermFinalExam" class="form-control date-picker" placeholder="Enter Start Date Of Term Final Exam"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Start Date Of Term Final Exam." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                                <td class="fieldlabel">End Date Of Term Final Exam </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_EndDateOfTermFinalExam" class="form-control date-picker" placeholder="Enter End Date Of Term Final Exam"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter End Date Of Term Final Exam." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)">
+                                <td class="fieldlabel">Date Of Term Final Result Publication </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_DateOfTermFinalResultPublication" class="form-control date-picker" placeholder="Enter Date Of Term Final Result Publication"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Of Term Final Result Publication." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+                            
+                            <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_Remarks" class="form-control" placeholder="Enter Remarks" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+
+                    <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)" class="col-md-6 table-form">
+                        <div class="form-title">
+                            Allowed Payment Due Settings
+                        </div>
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+
+                                <tr>
+                                    <td class="fieldlabel">Continuous Assessment Marks Allowed Payment Due Upto </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="Exam.@Aca_Exam.Property_ContinuousAssessmentMarksAllowedPaymentDueUpto" class="form-control" placeholder="Enter Continuous Assessment Marks Allowed Payment Due Upto" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Continuous Assessment Marks Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                               
+
+
+                                <tr>
+                                    <td class="fieldlabel">Midterm Result Allowed Payment Due Upto </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="Exam.@Aca_Exam.Property_MidtermResultAllowedPaymentDueUpto" class="form-control" placeholder="Enter Midterm Result Allowed Payment Due Upto" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Midterm Result Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                               
+
+
+                                <tr>
+                                    <td class="fieldlabel">Final Term Result Allowed Payment Due Upto </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="Exam.@Aca_Exam.Property_FinalTermResultAllowedPaymentDueUpto" class="form-control" placeholder="Enter Final Term Result Allowed Payment Due Upto" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Final Term Result Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+
+                               
+
+                                <tr>
+                                    <td class="fieldlabel">Midterm Admit Card Download Payment Due Upto </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="Exam.@Aca_Exam.Property_MidtermAdmitCardDownloadPaymentDueUpto" class="form-control" placeholder="Enter Midterm Admit Card Download Payment Due Upto" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Midterm Admit Card Download Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+
+                                <tr>
+                                    <td class="fieldlabel">Final Term Admit Card Download Payment Due Upto </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="Exam.@Aca_Exam.Property_FinalTermAdmitCardDownloadPaymentDueUpto" class="form-control" placeholder="Enter Final Term Admit Card Download Payment Due Upto" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Final Term Admit Card Download Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+
+                    <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)" class="col-md-6 table-form">
+                        <div class="form-title">
+                            Academic Settings
+                        </div>
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                    <td class="fieldlabel">Is Published Midterm Admit Card </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishedMidtermAdmitCard" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Published Midterm Admit Card if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                             
+                                <tr>
+                                    <td class="fieldlabel">Is Published Final Term Admit Card </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishedFinalTermAdmitCard" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Published Final Term Admit Card if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Theory Continuous Assessment Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenTheoryContinuousAssessmentMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Continuous Assessment Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Non Theory Continuous Assessment Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenNonTheoryContinuousAssessmentMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Continuous Assessment Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Theory Mid Term Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenTheoryMidTermMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Mid Term Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Non Theory Mid Term Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenNonTheoryMidTermMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Mid Term Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Theory Final Term Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenTheoryFinalTermMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Final Term Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Open Non Theory Final Term Mark Input </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsOpenNonTheoryFinalTermMarkInput" />
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Final Term Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div><!--Col end-->
+                
+                    <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)
+                     || Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)
+                     " class="col-md-6 table-form">
+                        <div class="form-title">
+                            @* For Supple Exam *@
+                            Allowed Payment & Due Settings
+                        </div>
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel">Referred Supple Exam Fee </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_ReferredSuppleExamFee" class="form-control" placeholder="Enter Referred Supple Exam Fee" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Referred Supple Exam Fee." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Back Log Supple Exam Fee </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_BackLogSuppleExamFee" class="form-control" placeholder="Enter Back Log Supple Exam Fee" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Back Log Supple Exam Fee." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Supple Apply Allowed Payment Due Upto </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_SuppleApplyAllowedPaymentDueUpto" class="form-control" placeholder="Enter Supple Apply Allowed Payment Due Upto"/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Apply Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Supple Admit Card Download Payment Due Upto </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_SuppleAdmitCardDownloadPaymentDueUpto" class="form-control" placeholder="Enter Supple Admit Card Download Payment Due Upto"/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Admit Card Download Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Supple Result Allowed Payment Due Upto </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_SuppleResultAllowedPaymentDueUpto" class="form-control" placeholder="Enter Supple Result Allowed Payment Due Upto"/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Result Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                
+                    <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)
+                     || Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)
+                     " class="col-md-12 table-form">
+                        <div class="form-title">
+                            @* For Supple Exam *@
+                            Academic Settings
+                        </div>
+                        <div class="col-md-6">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel" style="width: 300px;">Is Open Theory Supple Apply For Student </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenTheorySuppleApplyForStudent" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Supple Apply For Student if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Open Non Theory Supple Apply For Student </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenNonTheorySuppleApplyForStudent" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Supple Apply For Student if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Supple Application Last Date </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_SuppleApplicationLastDate" class="form-control date-picker" placeholder="Enter Supple Application Last Date" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Application Last Date." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Open Theory Supple Apply For Admin </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenTheorySuppleApplyForAdmin" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Supple Apply For Admin if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Open Non Theory Supple Apply For Admin </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenNonTheorySuppleApplyForAdmin" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Supple Apply For Admin if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+
+                                    <tr>
+                                        <td class="fieldlabel">Max Time Can Apply For One Theory </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_MaxTimeCanApplyForOneTheory" class="form-control" placeholder="Enter Max Time Can Apply For One Theory" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Max Time Can Apply For One Theory." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Max Time Can Apply For One Non Theory </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_MaxTimeCanApplyForOneNonTheory" class="form-control" placeholder="Enter Max Time Can Apply For One Non Theory" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Max Time Can Apply For One Non Theory." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Published Supple Admit Card </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsPublishedSuppleAdmitCard" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Published Supple Admit Card if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Open Theory Supple Mark Input </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenTheorySuppleMarkInput" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Theory Supple Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Open Non Theory Supple Mark Input </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsOpenNonTheorySuppleMarkInput" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Open Non Theory Supple Mark Input if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                </div><!--Col end-->
+                <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)
+                     || Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)
+                     " class="col-md-12 table-form">
+                        <div class="form-title">
+                            @SiteSettings.Instance.SuppleExamViewName Exam Instructions 
+                        </div>
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                    <td style="width: 230px;" class="fieldlabel">Students Instructions For Apply <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_StudentsInstructionsForApply" class="form-control" placeholder="Enter Students Instructions For Apply" required="" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Students Instructions For Apply." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Faculty Instructions For Mark Entry <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_FacultyInstructionsForMarkEntry" class="form-control" placeholder="Enter Faculty Instructions For Mark Entry" required="" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Faculty Instructions For Mark Entry." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Student Apply Confirmation Message <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_StudentApplyConfirmationMessage" class="form-control" placeholder="Enter Student Apply Confirmation Message" required="" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Apply Confirmation Message." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+
+                    <div class="col-md-12 table-form">
+                        <div class="row">
+                            @if (canEditResultPublishingSettings)
+                            {
+                                <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.FinalTerm)" class="col-md-6 table-form">
+                                    <div class="form-title">
+                                        Result Publish Settings
+                                    </div>
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Theory Continuous Assessment Marks </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishTheoryContinuousAssessmentMarks" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Theory Continuous Assessment Marks if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Non Theory Continuous Assessment Marks </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishNonTheoryContinuousAssessmentMarks" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Non Theory Continuous Assessment Marks if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Theory Midterm Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishTheoryMidtermResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Theory Midterm Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Non Theory Midterm Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishNonTheoryMidtermResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Non Theory Midterm Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Theory Final Term Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishTheoryFinalTermResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Theory Final Term Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Non Theory Final Term Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_IsPublishNonTheoryFinalTermResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Non Theory Final Term Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--Col end-->
+                                <div ng-show="Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)
+                         || Exam.@Aca_Exam.Property_ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)
+                         " class="col-md-6 table-form">
+                                    <div class="form-title">
+                                        @* For Supple Exam *@
+                                        Result Publish Settings
+                                    </div>
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Theory Supple Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsPublishTheorySuppleResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Theory Supple Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Is Publish Non Theory Supple Result </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_IsPublishNonTheorySuppleResult" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Publish Non Theory Supple Result if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--Col end-->
+                            }
+                            @if (HttpUtil.IsSupperAdmin())
+                            {
+                                <div class="col-md-6 table-form">
+                                    <div class="form-title">
+                                        Result Generate Settings (For Super Admin)
+                                    </div>
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                            <tr>
+                                                <td class="fieldlabel">Auto Grade Grace Mark </td>
+                                                <td class="fieldarea">
+                                                    <input type="number" ng-model="Exam.@Aca_Exam.Property_AutoGradeGraceMark" class="form-control" placeholder="Enter Auto Grade Grace Mark" />
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Auto Grade Grace Mark." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Auto Grade Grace Mark For Pass </td>
+                                                <td class="fieldarea">
+                                                    <input type="number" ng-model="Exam.ExamSuppleJson.@Aca_ExamSupple.Property_AutoGradeGraceMarkForPass" class="form-control" placeholder="Enter Auto Grade Grace Mark For Pass" />
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Auto Grade Grace Mark For Pass." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Absent Mark Symbol <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_AbsentMarkSymbol" class="form-control" placeholder="Enter Absent Mark Symbol" maxlength="5" required="" />
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Absent Mark Symbol." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Absent Grade</td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_AbsentGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Continuation Grade</td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_ContinuationGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Maximum Grade For Improve Exam Apply Grade </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_MaximumGradeForImproveExamGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Maximum Improve Exam Allow Grade</td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_MaximumImproveExamAllowGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Maximumm Grade For Retake Course Apply Grade </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_MaximummGradeForRetakeCourseGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Maximum Retake Course Allow Grade </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="Exam.@Aca_Exam.Property_MaximumRetakeCourseAllowGradeId"
+                                                            ng-options="option.Id as option.Name for option in GradingPolicyOptionList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy Option." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--Col end-->
+                            }
+
+                        </div>
+                    </div>
+
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button ng-click="@(saveExam)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                    </div>
+                </div>
+                <br/>
+                @if (canEditResultPublishingSettings)
+                {
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel" style="width: 65px;">History </td>
+                                        <td class="fieldarea" ng-bind-html="renderHtml(Exam.@Aca_Exam.Property_History)"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+<style>
+    .admission-form .form-title {
+        padding: 3px 0;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .educationHistory select {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .educationHistory thead > tr > th {
+        font-size: 11px;
+    }
+
+    .educationHistory input[type="text"],
+    .admission-discount-table input[type="text"] {
+        width: 100%;
+        font-size: 12px;
+        padding-left: 3px;
+        margin-bottom: 3px;
+    }
+
+    .educationHistory .glyphicon.glyphicon-asterisk {
+        font-size: 7px;
+    }
+
+    .educationHistory input[type="text"]:focus {
+        box-shadow: 0 0 1px 0.5px #3391c9;
+    }
+
+    .educationHistory label {
+        font-size: 9px;
+        margin-bottom: 0px;
+    }
+
+    .admission-form input,
+    .admission-form optgroup,
+    .admission-form select,
+    .admission-form textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .admission-form td.fieldlabel {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .admission-form .glyphicon {
+        font-size: 7px !important;
+    }
+
+    .admission-form-common-section td {
+        padding-bottom: 5px;
+    }
+
+        .admission-form-common-section td.fieldlabel {
+            width: 105px;
+        }
+
+    .admission-form .checkbox-inline {
+        font-size: 10px;
+    }
+
+        .admission-form .checkbox-inline input {
+            height: 15px !important;
+        }
+
+    .admission-form .table-form td {
+        padding: 3px 3px;
+    }
+
+    .admission-discount-table tr td:first-child,
+    .bold-text {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    .text-dropdown-toggle .dropdown-menu li a:hover {
+        background: #1884e6;
+        color: #fff;
+    }
+
+    .text-dropdown {
+        max-height: 115px;
+        overflow-y: auto;
+        font-size: 13px;
+        padding: 6px 12px;
+        width: 100%;
+        line-height: 1.42857143;
+        background-image: none;
+    }
+
+    .text-dropdown-toggle ul {
+        max-height: 115px !important;
+        padding: 0px !important;
+        overflow-x: hidden !important;
+    }
+
+        .text-dropdown-toggle ul li a {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            padding: 2px 10px !important;
+        }
+
+    .admission-form-common-section tr td {
+        text-align: right;
+        padding-right: 5px;
+    }
+
+    .admission-form .form-title {
+        font-weight: 600 !important;
+        font-size: 15px;
+    }
+
+    .fieldarea .checkbox {
+        margin-top: 3px !important;
+        margin-bottom: -4px !important;
+    }
+
+    .padding-l-10 {
+        padding-left: 10px;
+    }
+</style>
+
+
+

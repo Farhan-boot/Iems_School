@@ -1,0 +1,1049 @@
+@using EMS.CoreLibrary
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Edit Profile";
+    var StudentId = HttpUtil.Profile.UserId;
+
+    //WebApi link for single row
+    var getStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProfileApi", action = "GetStudentById", area = "Student" });
+    var getStudentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProfileApi", action = "GetStudentDataExtra", area = "Student" });
+    var saveStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProfileApi", action = "SaveStudent", area = "Academic" });
+    var deleteStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProfileApi", action = "GetDeleteStudentById", area = "Student" });
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Profile/Edit.js?v=3"></script>
+}
+@section StyleSection
+{
+    <style>
+        .profile-container .header-avatar {
+            width: 160px;
+            height: 160px;
+            -webkit-border-radius: 50%;
+            -webkit-background-clip: padding-box;
+            -moz-border-radius: 50%;
+            -moz-background-clip: padding;
+            border-radius: 50%;
+            background-clip: padding-box;
+            border: 5px solid #ffffff;
+            -webkit-box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            -moz-box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            margin: 25px auto;
+            margin-left: 16px;
+        }
+    </style>
+}
+<div ng-controller="ProfileEditCtrl" ng-init="Init(
+      '@StudentId'
+      ,'@getStudentByIdUrl'
+      ,'@getStudentDataExtraUrl'
+      ,'@saveStudentUrl'
+      ,'@deleteStudentByIdUrl')">
+
+    <div class="widget-body" id="StudentAddEdit">
+        <div class="row profile-container ">
+            <div class="col-sm-3 ">
+                <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" alt="@HttpUtil.Profile.Name" class="header-avatar">
+            </div>
+
+            <div class="col-sm-5">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Name</th>
+                        <th>:</th>
+                        <th>{{Obj.Account.@User_Account.Property_FullName | uppercase}}</th>
+                    </tr>
+                    <tr>
+                        <td>Class Roll</td>
+                        <td>:</td>
+                        <td>{{Obj.Student.@User_Student.Property_ClassRollNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Registration No</td>
+                        <td>:</td>
+                        <td>{{Obj.Student.@User_Student.Property_RegistrationNo | uppercase}}</td>
+                    </tr>
+                    <tr>
+                        <td>Username</td>
+                        <td>:</td>
+                        <td>{{Obj.Account.@User_Account.Property_UserName}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td>:</td>
+                        <td>{{Obj.Account.@User_Account.Property_DateOfBirth | date:'yyyy, dd MMMM, EEEE'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Admission Date</td>
+                        <td>:</td>
+                        <td>{{Obj.Student.@User_Account.Property_JoiningDate | date:'yyyy, dd MMMM'}}</td>
+                    </tr>
+                    <tr>
+                        <td>CGPA</td>
+                        <td>:</td>
+                        <td>{{Obj.Student.@User_Student.Property_CGPA}}</td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="col-sm-4">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Department</td>
+                        <td>:</td>
+                        <td>
+                            <select ng-model="Obj.Student.@User_Account.Property_DepartmentId"
+                                    ng-options="option.Id as option.Name for option in DepartmentList " ng-init="" class="form-control" disabled="disabled"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Program</td>
+                        <td>:</td>
+                        <td>
+                            <select ng-model="Obj.Student.@User_Student.Property_ProgramId"
+                                    ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control" disabled="disabled"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Curriculum</td>
+                        <td>:</td>
+                        <td>
+                            <select ng-model="Obj.Student.@User_Student.Property_CurriculumId"
+                                    ng-options="option.Id as option.Name for option in CurriculumList " ng-init="" class="form-control" disabled="disabled"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Level Term</td>
+                        <td>:</td>
+                        <td>
+                            <b>
+                                <select ng-model="Obj.Student.@User_Student.Property_LevelTermId"
+                                        ng-options="option.Id as option.Name for option in StudyLevelList " ng-init="" class="form-control" style="display: inline-block !important;" disabled="disabled"></select> 
+                            </b>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dept Batch</td>
+                        <td>:</td>
+                        <td>
+                            <select ng-model="Obj.Student.@User_Student.Property_ContinuingBatchId"
+                                    ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control" disabled="disabled"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Credit Completed</td>
+                        <td>:</td>
+                        <td>{{Obj.Student.@User_Student.Property_CreditCompleted}}</td>
+                    </tr>
+
+
+                    @*<tr>
+                            <td>Nationality</td>
+                            <td>:</td>
+                            <td>{{Obj.Nationality | uppercase}}</td>
+                        </tr>*@
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <div ng-hide="IsDisabled" class="alert alert-danger " style="margin-top: -10px !important;">
+        <i class="fa-fw fa fa-warning themeprimary"></i><b>Your Online Profile Registration is pending! Please confirm your Profile Information to get Term Result/Registration/Admid Card/Certificate/Transcript.</b>
+    </div>
+
+    <h5 ng-show="IsDisabled" class="row-title before-success">
+        <i class="fa-fw fa fa-check themeprimary"></i>Congratulation you have successfully completed your Online Profile Registration. @*Now you can download and print your all forms from "Step-4" Tab.*@
+    </h5>
+    <div ng-show="HasError" class="alert alert-danger alert-shadowed radius-bordered">
+        @*<button type="button" class="close" data-dismiss="alert">×</button>*@<i class="fa-fw fa fa-times"></i>
+        <strong>Sorry!</strong>    <span >{{ErrorMsg}}</span>
+    </div>
+    @*<hr />*@
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span  class="widget-caption ">
+                        {{Obj.Account.@User_Account.Property_FullName | uppercase}}
+                    </span>
+                    @*<div class="widget-buttons buttons-bordered no-padding-right">
+                            <span  class="input-icon">
+                                <input type="text" ng-model="StudentId" ng-Enter="@(getStudentById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                                <i class="glyphicon glyphicon-search blue"></i>
+                            </span>
+                        </div>*@
+                    <div class="widget-buttons no-padding-left">
+                        @*<button ng-click="@(getNewStudent)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                        @*<a href="(listStudentPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>*@
+                        @*<button ng-click="refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>*@
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body no-padding">
+                    <div class="widget-main ">
+
+
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="tabProfile">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#Details" aria-expanded="false">
+                                        Details
+                                    </a>
+                                </li>
+                                <li class="tab-red">
+                                    <a data-toggle="tab" href="#Contact" aria-expanded="false">
+                                        Contact
+                                    </a>
+                                </li>
+                                <li class="tab-red">
+                                    <a data-toggle="tab" href="#Education" aria-expanded="false">
+                                        Education
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content radius-bordered">
+                                <div id="Details" class="tab-pane in active">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry bg-blueberry">
+                                                    <i class="widget-icon glyphicon glyphicon-user"></i>
+                                                    <span  class="widget-caption">Basic Information</span>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Full Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                                <span  class="input-icon icon-right">
+                                                                    <input ng-disabled="IsDisabled" type="text" ng-change="changeFullName()" ng-model="Obj.Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" required="" />
+                                                                    <i class="glyphicon glyphicon-user circular"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label class="control-label">
+                                                                    Full Name in Bengali (<a target="_blank" href="http://www.google.com/intl/bn/inputtools/try/">Try online</a>)
+                                                                    <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                            title="ইউনিকোড ভিত্তিক পুরো নাম বাংলায়">
+                                                                        <i class="fa fa-question-circle"></i>
+                                                                    </button><span  class="red glyphicon glyphicon-asterisk"></span>
+                                                                </label>
+                                                                <span  class="input-icon icon-right">
+                                                                    <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_BanglaName" class="form-control" placeholder="Enter Bangla Name" required="" />
+                                                                    <i class="glyphicon glyphicon-user circular"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-sm-6 form-group">
+                                                                <label class="control-label">Name Prefix</label>
+                                                                <input type="text" ng-model="Obj.Account.@User_Account.Property_Prefix" class="form-control" placeholder="Enter Prefix" maxlength="50" required="" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Name Suffix</label>
+                                                                <input type="text" ng-model="Obj.Account.@User_Account.Property_Suffix" class="form-control" placeholder="Enter Suffix" maxlength="50" required="" />
+                                                            </div>*@
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Gender<span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_GenderEnumId" ng-options="option.Id as option.Name for option in GenderEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Religion <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_ReligionEnumId" ng-options="option.Id as option.Name for option in ReligionEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Blood Group <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_BloodGroupEnumId" ng-options="option.Id as option.Name for option in BloodGroupEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Nationality <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_Nationality" class="form-control" placeholder="Enter Nationality" required="" />
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">
+                                                                National ID No. (13 to 17 digit)
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="13 or 17 Digit Bangladeshi National ID Number">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_NationalIdNumber" class="form-control" placeholder="Enter National ID Number" required="" />
+                                                                <i class="fa fa-credit-card circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">
+                                                                Birth Certificate No.
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Birth Certificate Number">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_BirthCertificateNumber" class="form-control" placeholder="Enter Birth Certificate No." required="" />
+                                                                <i class="fa fa-credit-card circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">
+                                                                Personal Bank Name
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Bank of your Account Name">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_BankName" ng-options="option.Id as option.Name for option in BankList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">
+                                                                Bank Account No.
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Bank Account number">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <div class="input-group">
+                                                                <span  class="input-group-addon">A/C NO. </span>
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_BankAccountNo" class="form-control" placeholder="Enter Bank Account No" />
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-sm-3 form-group">
+                                                                <label class="control-label">Father</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_FatherId" class="form-control" placeholder="Enter Father Id" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Mother</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_MotherId" class="form-control" placeholder="Enter Mother Id" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Other Parent</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_OtherParentId" class="form-control" placeholder="Enter Other Parent Id" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Is Late</label>
+                                                                <input type="checkbox" ng-model="Obj.Account.@User_Account.Property_IsLate" class="form-control" placeholder="Enter Is Late" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Is Military</label>
+                                                                <input type="checkbox" ng-model="Obj.Account.@User_Account.Property_IsMilitary" class="form-control" placeholder="Enter Is Military" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Is Approved</label>
+                                                                <input type="checkbox" ng-model="Obj.Account.@User_Account.Property_IsApproved" class="form-control" placeholder="Enter Is Approved" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Is Locked</label>
+                                                                <input type="checkbox" ng-model="Obj.Account.@User_Account.Property_IsLockedOut" class="form-control" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Last Lockout Date</label>
+                                                                <input ng-disabled="true" type="datetime" ng-model="Obj.Account.@User_Account.Property_LastLockoutDate" class="form-control" placeholder="Enter Last Lockout Date" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Failed Password Attempt Count</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_FailedPasswordAttemptCount" class="form-control" placeholder="Enter Failed Password Attempt Count" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Failed Password Attempt Window Start</label>
+                                                                <input ng-disabled="true" type="datetime" ng-model="Obj.Account.@User_Account.Property_FailedPasswordAttemptWindowStart" class="form-control" placeholder="Enter Failed Password Attempt Window Start" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Failed Password Answer Attempt Count</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_FailedPasswordAnswerAttemptCount" class="form-control" placeholder="Enter Failed Password Answer Attempt Count" />
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Failed Password Answer Attempt Window Start</label>
+                                                                <input ng-disabled="true" type="datetime" ng-model="Obj.Account.@User_Account.Property_FailedPasswordAnswerAttemptWindowStart" class="form-control" placeholder="Enter Failed Password Answer Attempt Window Start" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Remarks <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                                <input ng-disabled="true" type="text" ng-model="Obj.Account.@User_Account.Property_Remarks" class="form-control" placeholder="Enter Remarks" required="" />
+                                                            </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                <label class="control-label">Is Migrate</label>
+                                                                <input ng-disabled="true" type="checkbox" ng-model="Obj.Account.@User_Account.Property_IsMigrate" class="form-control" placeholder="Enter Is Migrate" />
+                                                            </div>
+                                                            <div class="col-sm-4 form-group">
+                                                                <label class="control-label">Migration Id</label>
+                                                                <input ng-disabled="true" type="number" ng-model="Obj.Account.@User_Account.Property_MigrationId" class="form-control" placeholder="Enter Migration Id" />
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry bg-blueberry">
+                                                    <i class="widget-icon glyphicon glyphicon-user"></i>
+                                                    <span  class="widget-caption">Individual Information</span>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">Father's Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_FatherName" class="form-control" placeholder="Enter Father Name" />
+                                                                <i class="glyphicon glyphicon-user circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">Father's Mobile <span >(ex: 01XXXXXXXXX)</span><span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Student.@User_Student.Property_FatherMobile" class="form-control" placeholder="Enter Father's Mobile" />
+                                                                <i class="glyphicon glyphicon-phone circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">Mother's Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_MotherName" class="form-control" placeholder="Enter Mother Name" />
+                                                                <i class="glyphicon glyphicon-user circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">Mother's Mobile <span >(ex: 01XXXXXXXXX)</span><span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Student.@User_Student.Property_MotherMobile" class="form-control" placeholder="Enter Mother's Mobile" />
+                                                                <i class="glyphicon glyphicon-phone circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        @*<div class="col-sm-4 form-group">
+                                                                <label class="control-label">User Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                                <input type="text" ng-model="Obj.Account.@User_Account.Property_UserName" class="form-control" placeholder="Enter User Name" maxlength="128" required="" />
+                                                            </div>
+                                                            <div class="col-sm-4 form-group">
+                                                                <label class="control-label">User Type</label>
+                                                                <select ng-disabled="true" ng-model="Obj.Account.@User_Account.Property_UserTypeEnumId" ng-options="option.Id as option.Name for option in UserTypeEnumList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-4 form-group">
+                                                                <label class="control-label">User Status</label>
+                                                                <select ng-model="Obj.Account.@User_Account.Property_UserStatusEnumId" ng-options="option.Id as option.Name for option in UserStatusEnumList " ng-init="" class="form-control"></select>
+                                                            </div>*@
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Date of Birth (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                @*<input ng-model="Obj.Account.DateOfBirthString" class="form-control " type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">*@
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.DateOfBirthString" data-mask="99/99/9999" class="form-control " placeholder="DD/MM/YYYY">
+                                                                <i class="glyphicon glyphicon-calendar circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Birth Place <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_PlaceOfBirthCity" class="form-control" placeholder="Enter Place Of Birth" required="" />
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">City of Birth Place <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_PlaceOfBirthCity" class="form-control" placeholder="Enter Place Of Birth City" required="" />
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Country of Birth Place</label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_PlaceOfBirthCountryId" ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-4 form-group">
+                                                            <label class="control-label">Height</label>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <input ng-disabled="IsDisabled" type="number" ng-model="Obj.Account.@User_Account.Property_Height" class="form-control" placeholder="Enter Height" />
+                                                                    <span  class="input-group-addon">cm</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-sm-4 form-group">
+                                                            <label class="control-label">Weight</label>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <input ng-disabled="IsDisabled" type="number" ng-model="Obj.Account.@User_Account.Property_Weight" class="form-control" placeholder="Enter Weight" />
+                                                                    <span  class="input-group-addon">lbs</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+                                                        <div class="col-sm-4 form-group">
+                                                            <label class="control-label">Marital Status <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_MaritalStatusEnumId" ng-options="option.Id as option.Name for option in MaritalStatusEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="control-label">
+                                                                Spouse Name
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Spouse Name is Husband or Wife Name">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text"
+                                                                       ng-disabled="IsDisabled || Obj.Account.@User_Account.Property_MaritalStatusEnumId==@((int) User_Account.MaritalStatusEnum.Single)"
+                                                                       ng-model="Obj.Account.@User_Account.Property_SpouseName" class="form-control" placeholder="Enter Spouse Name" />
+                                                                <i class="glyphicon glyphicon-user circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        @*<div class="col-sm-6 form-group">
+                                                                <label class="control-label">Created Date</label>
+                                                                <input ng-disabled="true" type="datetime" value="{{Obj.Account.@User_Account.Property_CreateDate | date:'dd/MM/yyyy h:mm:ss a'}}" class="form-control" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Last Changed</label>
+                                                                <input ng-disabled="true" type="datetime" value="{{Obj.Account.@User_Account.Property_LastChanged | date:'dd/MM/yyyy h:mm:ss a'}}" class="form-control" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Last Login</label>
+                                                                <input ng-disabled="true" type="datetime" value="{{Obj.Account.@User_Account.Property_LastLoginDate | date:'dd/MM/yyyy h:mm:ss a'}}" class="form-control" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Last Password Changed</label>
+                                                                <input ng-disabled="true" type="datetime" value="{{Obj.Account.@User_Account.Property_LastPasswordChangedDate | date:'dd/MM/yyyy h:mm:ss a'}}" class="form-control" />
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Is Approved</label>
+                                                                <div class="">
+                                                                    <span  ng-show="Obj.Account.@User_Account.Property_IsApproved" class="badge badge-success"> Approved </span>
+                                                                    <span  ng-hide="Obj.Account.@User_Account.Property_IsApproved" class="badge badge-danger"> Disapproved </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label class="control-label">Is Locked</label>
+                                                                <div class="">
+                                                                    <span  ng-show="Obj.Account.@User_Account.Property_IsLockedOut" class="badge badge-success"> Locked </span>
+                                                                    <span  ng-hide="Obj.Account.@User_Account.Property_IsLockedOut" class="badge badge-danger"> Unlocked </span>
+                                                                </div>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry bg-blueberry">
+                                                    <i class="widget-icon glyphicon glyphicon-user"></i>
+                                                    <span  class="widget-caption">Academic Information</span>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="row">
+                                                        @*<div class="col-sm-3 form-group">
+                                                            <label class="control-label">Military Category <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-change="changeMilitaryCategory()" ng-model="Obj.Account.@User_Account.Property_CategoryEnumId" ng-options="option.Id as option.Name for option in UserCategoryEnumList " ng-init="" class="form-control"></select>
+                                                        </div>*@
+                                                        @*<div class="col-sm-5 form-group" ng-show="Obj.Account.@User_Account.Property_CategoryEnumId!=@((int) User_Account.UserCategoryEnum.Civil)">
+                                                            <label class="control-label">Rank/Designation <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_RankId" ng-options="option.Id as option.Name for option in RankFilterList " ng-init="" class="form-control"></select>
+                                                        </div>*@
+                                                        @*<div class="col-sm-4 form-group" ng-show="Obj.Account.@User_Account.Property_CategoryEnumId!=@((int) User_Account.UserCategoryEnum.Civil)">
+                                                            <label class="control-label">Personal/Service No. ( BA/PN/BD00XXXXXX )</label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Account.@User_Account.Property_PersonalNo" class="form-control" placeholder="Enter Personal No" />
+                                                                <i class="fa fa-credit-card circular"></i>
+                                                            </span>
+                                                        </div>*@
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label">Campus <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Account.@User_Account.Property_CampusId" ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        @*<div class="col-sm-3 form-group">
+                                                                <label class="control-label">Admission Exam </label>
+                                                                <input type="number" ng-model="Obj.Student.@User_Student.Property_AdmissionExamSettingId" class="form-control" placeholder="Enter Admission Exam Setting Id" />
+                                                            </div>*@
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label">
+                                                                Admitted Date (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Academic Admitted Date in @SiteSettings.Instance.InstituteShortName (dd/mm/yyyy ex:19/04/1998)">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" ng-model="Obj.Student.@User_Account.Property_JoiningDate" class="form-control date-picker" type="text" placeholder="dd/mm/yyyy">
+                                                                <i class="glyphicon glyphicon-calendar circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label">Admission Test Roll No </label>
+                                                            <input ng-disabled="IsDisabled" type="number" ng-model="Obj.Student.@User_Student.Property_AdmissionTestRollNo" class="form-control" placeholder="Enter Admissiont Test Roll No" />
+                                                        </div> <!--dropdown option for EnumList-->
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label"> Student Quota </label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Student.@User_Student.Property_StudentQuotaNameId" ng-options="option.Id as option.Name for option in StudentQuotaEnumList " ng-init="" class="form-control"></select>
+                                                        </div> <!--dropdown option for EnumList-->
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label"> Parents Primary Job Type </label>
+                                                            <select ng-disabled="IsDisabled" ng-model="Obj.Student.@User_Student.Property_ParentsPrimaryJobTypeId" ng-options="option.Id as option.Name for option in ParentsPrimaryJobTypeEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <!--dropdown option for EnumList-->
+                                                        @*<div class="col-sm-3 form-group">
+                                                                    <label class="control-label"> Enrollment Status </label>
+                                                                    <select ng-model="Obj.Student.@User_Student.Property_EnrollmentStatusEnumId" ng-options="option.Id as option.Name for option in EnrolmentStatusEnumList " ng-init="" class="form-control"></select>
+                                                                </div>
+
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label"> Enrollment Type </label>
+                                                                    <select ng-model="Obj.Student.@User_Student.Property_EnrollmentTypeEnumId" ng-options="option.Id as option.Name for option in EnrolmentTypeEnumList " ng-init="" class="form-control"></select>
+                                                                </div>
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Department </label>
+                                                                    <select ng-model="Obj.Student.@User_Student.Property_DepartmentId"
+                                                                            ng-options="option.Id as option.Name for option in DepartmentList " ng-init="" class="form-control"></select>
+                                                                </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                <label class="control-label">Dept Batch </label>
+                                                                <select ng-model="Obj.Student.@User_Student.Property_ContinuingBatchId"
+                                                                        ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Program </label>
+                                                                <select ng-model="Obj.Student.@User_Student.Property_ProgramId"
+                                                                        ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-4 form-group">
+                                                                    <label class="control-label">Curriculum </label>
+                                                                    <select ng-model="Obj.Student.@User_Student.Property_CurriculumId"
+                                                                            ng-options="option.Id as option.Name for option in CurriculumList " ng-init="" class="form-control"></select>
+                                                                </div>
+                                                            <div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Class Roll No </label>
+                                                                    <input type="number" ng-model="Obj.Student.@User_Student.Property_ClassRollNo" class="form-control" placeholder="Enter Class Roll No" />
+                                                                </div>*@
+                                                        @*<div class="col-sm-3 form-group">
+                                                            <label class="control-label">Registration No</label>
+                                                            <input type="text" ng-model="Obj.Student.@User_Student.Property_RegistrationNo" class="form-control" placeholder="Enter Registraion No" disabled="" value="0" />
+                                                        </div>*@
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label">Registration Year (eg: 2014-15) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="Obj.Student.@User_Student.Property_RegistrationSession" class="form-control" placeholder="Enter Registraion Session" required="" />
+                                                        </div>
+                                                        @*<div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Fee Code </label>
+                                                                    <input type="number" ng-model="Obj.Student.@User_Student.Property_FeeCodeId" class="form-control" placeholder="Enter Fee Code Id" />
+                                                                </div>
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label"> Grade Type </label>
+                                                                    <select ng-model="Obj.Student.@User_Student.Property_GradeTypeEnumId" ng-options="option.Id as option.Name for option in GradeTypeEnumList " ng-init="" class="form-control"></select>
+                                                                </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                <label class="control-label">Level </label>
+                                                                <select ng-model="Obj.Student.@User_Student.Property_LevelId"
+                                                                        ng-options="option.Id as option.Name for option in StudyLevelList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                <label class="control-label">Term </label>
+                                                                <select ng-model="Obj.Student.@User_Student.Property_TermId"
+                                                                        ng-options="option.Id as option.Name for option in StudyTermList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                    <label class="control-label">CGPA </label>
+                                                                    <input ng-disabled="true" type="number" ng-model="Obj.Student.@User_Student.Property_CGPA" class="form-control" placeholder="Enter CGPA" />
+                                                                </div>
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Credit Completed </label>
+                                                                    <input ng-disabled="true" type="number" ng-model="Obj.Student.@User_Student.Property_CreditCompleted" class="form-control" placeholder="Enter Credit Completed" />
+                                                                </div>
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Course Completed </label>
+                                                                    <input ng-disabled="true" type="number" ng-model="Obj.Student.@User_Student.Property_CourseCompleted" class="form-control" placeholder="Enter Course Completed" />
+                                                                </div>
+                                                                <div class="col-sm-3 form-group">
+                                                                    <label class="control-label">Incomplete Credits </label>
+                                                                    <input ng-disabled="true" type="number" ng-model="Obj.Student.@User_Student.Property_IncompleteCredits" class="form-control" placeholder="Enter Incomplete Credits" />
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <div class="checkbox">
+                                                                        <input type="checkbox" ng-model="Obj.Student.IsGraduated" /> Is Graduated
+                                                                    </div>
+                                                                </div>*@
+                                                        <div class="col-sm-3 form-group" ng-show="Obj.Student.IsGraduated">
+                                                            <label class="control-label">
+                                                                Graduated Date (dd/mm/yyyy)
+                                                                <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                                        title="Academic Graduated Date in @SiteSettings.Instance.InstituteShortName (dd/mm/yyyy ex:19/04/1998)">
+                                                                    <i class="fa fa-question-circle"></i>
+                                                                </button>
+                                                            </label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input ng-disabled="IsDisabled" ng-model="Obj.Student.@User_Account.Property_LeavingDate" ng-disabled="!Obj.Student.IsGraduated" class="form-control date-picker" type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">
+                                                                <i class="glyphicon glyphicon-calendar circular"></i>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="Contact" class="tab-pane">
+                                    <div class="form-title">
+                                        Contact Number
+                                    </div>
+                                    <div class="widget">
+                                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                                            <i class="widget-icon fa fa-info-circle"></i>
+                                            <span  class="widget-caption">All Contact Numbers</span>
+                                        </div>
+                                        <div class="widget-body">
+                                            <div class="row">
+                                                <div class="col-sm-4" ng-repeat="row in Obj.ContactNumberList">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            {{ContactNumberTypeEnumList[row.@User_ContactNumber.Property_ContactNumberTypeEnumId].Name}}
+                                                            <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)">
+                                                                (ex: 01XXXXXXXXX)
+                                                            </span>
+                                                            <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.HomePhone) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficePhone)">
+                                                                (ex: 02XXXXXXXXX)
+                                                            </span>
+                                                            <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeIntercom) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.ArmyTelephone)">
+                                                                (4 digit)
+                                                            </span>
+                                                            <strong class="red" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile)"> * </strong>
+                                                        </label>
+                                                        <span  class="input-icon icon-right">
+                                                            <input type="text" ng-model="row.@User_ContactNumber.Property_ContactNumber" class="form-control" placeholder="Enter Contact Number" required="" />
+                                                            <i class="glyphicon glyphicon-phone circular" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+                                                            <i class="glyphicon glyphicon-earphone circular" ng-hide="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-title">
+                                        Contact Email
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12" ng-repeat="row in Obj.ContactEmailList">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                                                    <i class="widget-icon fa fa-info-circle"></i>
+                                                    <span  class="widget-caption">
+                                                        {{ContactEmailTypeEnumList[row.@User_ContactEmail.Property_ContactEmailTypeEnumId].Name}}
+                                                    </span>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Contact Email <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                                <span  class="input-icon icon-right">
+                                                                    <input type="email" ng-model="row.@User_ContactEmail.Property_ContactEmail" class="form-control" placeholder="Enter Contact Email" required="" />
+                                                                    <i class="fa fa-envelope circular"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-3 form-group" style="display: none">
+                                                            <label class="control-label"> Contact Email Type</label>
+                                                            <select ng-disabled="true" ng-model="row.@User_ContactEmail.Property_ContactEmailTypeEnumId" ng-options="option.Id as option.Name for option in ContactEmailTypeEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        @* <div class="col-sm-3 form-group">
+                                                                <label class="control-label"> Privacy</label>
+                                                                <select ng-model="row.@User_ContactEmail.Property_PrivacyEnumId" ng-options="option.Id as option.Name for option in PrivacyEnumList " ng-init="" class="form-control"></select>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsPrimary" /> Is Primary
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsActive" /> Is Active
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsValid" /> Is Valid
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsMailingContact" /> Is Mailing Contact
+                                                                </div>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-title">
+                                        Contact Address
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="red">
+                                                    <label class="control-label">
+                                                        <input type="checkbox" ng-change="chnageAddressMIST()" ng-model="IsPresentAddressMIST"> Check if <strong>Present Address</strong> is in @SiteSettings.Instance.InstituteShortName Residential Address.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="red">
+                                                    <label class="control-label">
+                                                        <input type="checkbox" ng-change="chnageAddress()" ng-model="IsSameAddress"> Check if <strong>Present and Permanent Address</strong> are same.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    <div class="row">
+                                        <div class="col-md-6" ng-repeat="row in Obj.ContactAddressList">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                                                    <i class="widget-icon fa fa-info-circle"></i>
+                                                    <span  class="widget-caption">{{ContactAddressTypeEnumList[row.@User_ContactAddress.Property_ContactAddressTypeEnumId].Name}} Address</span>
+                                                </div>
+                                                <div class="widget-body ">
+                                                    <div class="row">
+                                                        @*<div class="col-sm-12 form-group">
+                                                            <label class="control-label">Care of (C/O)</label>
+                                                            <div class="input-group">
+                                                                <span  class="input-group-addon">C/O</span>
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_CareOfPersonName" class="form-control" placeholder="Enter Care Of Person Name" required="" />
+                                                                <span  class="input-group-addon"><i class="glyphicon glyphicon-user circular"></i></span>
+                                                            </div>
+                                                        </div>*@
+                                                        @*<div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Flat/Apartment No./Name</label>
+                                                                <span  class="input-icon icon-right">
+                                                                    <input type="text" ng-change="chnageAddress()"
+                                                                           ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                           ng-model="row.@User_ContactAddress.Property_AppartmentNo"
+                                                                           class="form-control" placeholder="Enter No./Name" required="" />
+                                                                    <i class="fa fa-building circular"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>*@
+                                                        @*<div class="col-sm-6 form-group">
+                                                            <label class="control-label">House/Building No./Name</label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_HouseNo"
+                                                                       class="form-control" placeholder="Enter No./Name" required="" />
+                                                                <i class="fa fa-building-o circular"></i>
+                                                            </span>
+                                                        </div>*@
+                                                        @*<div class="col-sm-6 form-group">
+                                                            <label class="control-label">Road No./Name</label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_RoadNo"
+                                                                       class="form-control" placeholder="Enter No./Name" required="" />
+                                                                <i class="fa fa-road circular"></i>
+                                                            </span>
+                                                        </div>*@
+                                                        @*<div class="col-sm-6 form-group">
+                                                            <label class="control-label">Area Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_AreaInfo"
+                                                                       class="form-control" placeholder="Enter Area Name" required="" />
+                                                                <i class="fa fa-map-marker circular"></i>
+                                                            </span>
+                                                        </div>*@
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Post Office <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_PostOffice"
+                                                                       class="form-control" placeholder="Enter Post Office" required="" />
+                                                                <i class="fa fa-bank circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Police Station <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_PoliceStation"
+                                                                       class="form-control" placeholder="Enter Police Station" required="" />
+                                                                <i class="fa fa-bank circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">District/State/City <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="text" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_District"
+                                                                       class="form-control" placeholder="Enter District/State/City" required="" />
+                                                                <i class="fa fa-map-marker circular"></i>
+                                                            </span>
+                                                        </div>
+                                                        @*<div class="col-sm-6 form-group">
+                                                            <label class="control-label">Post/Zip Code</label>
+                                                            <span  class="input-icon icon-right">
+                                                                <input type="number" ng-change="chnageAddress()"
+                                                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                       ng-model="row.@User_ContactAddress.Property_PostCode" class="form-control" placeholder="Enter Post Code" />
+                                                                <i class="fa fa-location-arrow circular"></i>
+                                                            </span>
+                                                        </div>*@
+                                                        <div class="col-sm-6 form-group">
+                                                            <label class="control-label">Country</label>
+                                                            <select ng-change="chnageAddress()"
+                                                                    ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                                    ng-model="row.@User_ContactAddress.Property_CountryId" ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        <div class="col-sm-6 form-group" style="display: none">
+                                                            <label class="control-label">Contact Address Type</label>
+                                                            <select ng-disabled="true" ng-model="row.@User_ContactAddress.Property_ContactAddressTypeEnumId" ng-options="option.Id as option.Name for option in ContactAddressTypeEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        @* <div class="col-sm-6 form-group">
+                                                                 <label class="control-label">Privacy</label>
+                                                                 <select ng-model="row.@User_ContactAddress.Property_PrivacyEnumId" ng-options="option.Id as option.Name for option in PrivacyEnumList " ng-init="" class="form-control"></select>
+                                                             </div>
+                                                            <div class="col-sm-2 form-group">
+                                                                     <label class="control-label">Is Valid</label>
+                                                                     <input type="checkbox" ng-model="row.@User_ContactAddress.Property_IsValid" class="form-control" placeholder="Enter Is Valid" />
+                                                                 </div>
+                                                                 <div class="col-sm-4 form-group">
+                                                                     <label class="control-label">Is Mailing Contact</label>
+                                                                     <input type="checkbox" ng-model="row.@User_ContactAddress.Property_IsMailingContact" class="form-control" placeholder="Enter Is Mailing Contact" />
+                                                                 </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Education" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-sm-12" ng-repeat="row in Obj.EducationList">
+                                            <div class="widget">
+                                                <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                                                    <i class="widget-icon fa fa-info-circle"></i>
+                                                    <span  class="widget-caption">
+                                                        {{DegreeEquivalentEnumList[row.@User_Education.Property_DegreeEquivalentEnumId].Name | uppercase}}
+                                                    </span>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-3 form-group" style="display: none">
+                                                            <label class="control-label"> Degree Equivalent </label>
+                                                            <select ng-disabled="IsDisabled" ng-model="row.@User_Education.Property_DegreeEquivalentEnumId" ng-options="option.Id as option.Name for option in DegreeEquivalentEnumList " ng-init="" class="form-control"></select>
+                                                        </div>
+                                                        @*<div class="col-sm-3 form-group">
+                                                            <label class="control-label"> Education Type </label>
+                                                            <select ng-disabled="IsDisabled" ng-model="row.@User_Education.Property_EducationTypeEnumId" ng-options="option.Id as option.Name for option in EducationTypeEnumList " ng-init="" class="form-control"></select>
+                                                        </div>*@
+                                                        <div class="col-sm-3 form-group">
+                                                            <label class="control-label">Degree Title <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_DegreeTitle" class="form-control" placeholder="Enter Degree Title" required="" />
+                                                        </div>
+                                                        @*<div class="col-sm-3 form-group">
+                                                            <label class="control-label">Group (eg: Science) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_ConcentratedMajor" class="form-control" placeholder="Enter Concentrated Major" />
+                                                        </div>*@
+                                                        <div class="col-sm-4 form-group">
+                                                            <label class="control-label">Institution Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_InstitutionName" class="form-control" placeholder="Enter Institution Name" required="" />
+                                                        </div>
+                                                        @*<div class="col-sm-2 form-group">
+                                                            <label class="control-label">Board <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_Board" class="form-control" placeholder="Enter Board" />
+                                                        </div>*@
+                                                        <div class="col-sm-2 form-group">
+                                                            <label class="control-label">Year of Passing <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="number" ng-model="row.@User_Education.Property_YearOfPassing" class="form-control" placeholder="Enter Year Of Passing" />
+                                                        </div>
+
+                                                        @*<div class="col-sm-2 form-group">
+                                                            <label class="control-label">Session (eg: 2012-13) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_Session" class="form-control" placeholder="Enter Session" required="" />
+                                                        </div>*@
+                                                        @*<div class="col-sm-2 form-group">
+                                                            <label class="control-label">GPA/Division (eg: 4.75/1st Division) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                                            <input ng-disabled="IsDisabled" type="text" ng-model="row.@User_Education.Property_Result" class="form-control" placeholder="Enter Result" required="" />
+                                                        </div>*@
+                                                        @*
+                                                             <div class="col-sm-3 form-group">
+                                                                <label class="control-label">Duration </label>
+                                                                <input type="text" ng-model="row.@User_Education.Property_Duration" class="form-control" placeholder="Enter Duration" maxlength="250" />
+                                                            </div
+                                                            <div class="col-sm-12 form-group">
+                                                                <label class="control-label">Achievement </label>
+                                                                <input type="text" ng-model="row.@User_Education.Property_Achievement" class="form-control" placeholder="Enter Achivement" />
+                                                            </div>
+                                                        *@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--Widget Body end-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-footer " style="color: black">
+        <b style="color: red">Attention! Must Read: </b>
+        <div>
+            <ul class="" style="list-style-type: decimal; padding-left: 17px; text-align: left">
+                <li>
+                    @SiteSettings.Instance.InstituteShortName is very strict about information given by student about him/her profile. Especially father/mother’s contact number, education information and address are subject to Audit by @SiteSettings.Instance.InstituteShortName Authority.
+                </li>
+                <li>
+                    If you are <b>SURE</b> that above information are correct and you don't need to change
+                    any information any further (except@*mobile, email and*@ present address), only then press Confirm Button below to confirm your registration for @SiteSettings.Instance.InstituteShortName EMS.
+                </li>
+                <li>Please remember that if you confirm once, you can not edit your saved information any further (except@* mobile, email and*@ present address).</li>
+
+            </ul>
+        </div>
+        <hr />
+        <div>
+
+            <p class="text-justify" style="color: red; font-weight: bold">
+                I, <strong>{{Obj.Name | uppercase}}</strong> do hereby certify that the information furnished in this form is complete & true.
+                Any false information given in this form, identified at any time will lead to the cancellation of my admission in @SiteSettings.Instance.InstituteShortName.
+            </p>
+
+        </div>
+        <div ng-show="HasError" class="alert alert-danger alert-shadowed radius-bordered">
+            <button type="button" class="close" data-dismiss="alert">×</button><i class="fa-fw fa fa-times"></i>
+            <strong>Sorry!</strong>    <span >{{ErrorMsg}}</span>
+        </div>
+
+        <DIV class="text-center" g-show="Obj.Account.@User_Account.Property_IsMigrate">
+            <button ng-disabled="IsDisabled" ng-click="(saveStudent)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Confirm & Lock My Profile</button>
+        </DIV>
+
+    </div>
+
+</div>
+@*<div class="widget-footer">
+        <div class="" id="simplewizardinwidget-actions">
+            <button ng-hide="IsConfirmed" ng-click="SavePersonalInfo()" class="btn btn-lg btn-success"><i class="fa fa-save"></i> Save </button>
+            <button ng-show="IsStep1Done"
+                    type="button" class="btn  btn-lg shiny btn-blue btn-next " data-last="Finish">
+                Next <i class="fa fa-angle-right"></i>
+            </button>
+        </div>
+    </div>*@
+

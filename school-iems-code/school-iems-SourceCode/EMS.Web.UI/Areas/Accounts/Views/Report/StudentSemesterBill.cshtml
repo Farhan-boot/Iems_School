@@ -1,0 +1,124 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Web.Jsons.Custom.Account.StudentPayment
+@model EMS.Framework.Objects.MvcModelListResult<SemesterWiseStdTransectionModel>
+@{
+
+    var id = Request.QueryString["stdId"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)id == null ? "0" : (string)id;
+
+
+    var getPrintStudentCollectionReportByStdIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentCollectionReportApi", action = "GetPrintStudentCollectionReportByStdId", area = "Accounts" });
+
+    ViewBag.Title = "Student Semester Bill";
+    Layout = "~/Views/Shared/Report/_LayoutReportCore.cshtml";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/Report/StudentCollectionReport.js?v=1"></script>
+   
+}
+
+@{
+    User_Student student = null;
+    var FeeCodeId = 0;
+    if (!Model.HasError)
+    {
+         student = Model.DataBag.Student;
+         FeeCodeId = student.FeeCodeId;
+    }
+
+}
+
+@helper Header(User_Student student)
+{
+var reportModel = new ReportHeaderFooterModel();
+reportModel.ReportNo = string.Format("{0} ({1})", student.User_Account.FullName.ToTitleCase(), student.User_Account.UserName);
+reportModel.HtmlRightArea = "SACNT/002/201901";
+reportModel.Subtitle = student.Aca_Program.ShortTitle;
+ViewBag.ReportModel = reportModel;
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+@*@helper Footer()
+{
+    <div style="margin-top: 10px;">
+
+    </div>
+}*@
+
+
+@section ReportHeaderSection
+{
+   @if (Model.HasError)
+    {
+        <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> @Model.ErrorHtml !
+        </div>
+        return;
+    }
+
+
+    <div class="main-body">
+        @Header(student)
+    </div>
+}
+<div ng-controller="StudentCollectionReport"
+     class="std-payment-collection-form main-body CollectionReport table-border"
+     ng-init="Init(
+        '@StudentId'
+       ,'@getPrintStudentCollectionReportByStdIdUrl'
+        ,'@FeeCodeId'
+     )">
+    @Html.Partial("~/Areas/Accounts/Views/Student/FastPaymentCollection/_SemesterBills.cshtml", true)
+</div>
+
+@section ReportFooterSection
+{
+
+    <div class="main-body">
+        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+    </div>
+}
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+        padding: 0px 0px 10px !important;
+    }
+
+    thead.show-on-print, tfoot.show-on-print {
+        display: table-header-group !important;
+    }
+
+    .main-body table tr td:first-child {
+        width: 200px;
+        text-align: left;
+    }
+
+    .main-body table tr td:last-child {
+        width: 200px;
+        text-align: right;
+    }
+
+    .top-no-border tr td {
+        border-top: none;
+    }
+
+    .table-border td, .table-border th {
+        border: 1px solid black;
+        padding: 0px 5px;
+    }
+
+    .CollectionReport .hide-on-print {
+        display: none !important;
+    }
+
+    br {
+        display: none;
+    }
+</style>

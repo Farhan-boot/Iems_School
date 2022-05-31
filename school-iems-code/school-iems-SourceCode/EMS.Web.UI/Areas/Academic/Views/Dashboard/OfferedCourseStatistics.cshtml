@@ -1,0 +1,48 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Offered Course Statistics";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td class="text-center" style="width: 140px;">Year Level Term</td>
+                <td class="text-center">Total Offered Courses</td>
+                <td class="text-center">[A] Class Section</td>
+                <td class="text-center">[B] Class Section</td>
+                <td class="text-center">Not Available Class Routine</td>
+                <td class="text-center">Not Register Student</td>
+                <td class="text-center">Not Allot Faculty</td>
+                <td class="text-center">Locked Class Result</td>
+            </tr>
+            @foreach (var semester in HttpUtil.DbContext.Aca_Semester
+            .OrderByDescending(x => x.Year)
+            .ThenByDescending(x => x.TermId)
+     
+            .ToList())
+            {
+                <tr>
+                    <td class="text-center">@semester.Name</td>
+                    <td class="text-center">@HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id)</td>
+                    <td class="text-center">@HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && x.ClassSectionId == 1)</td>
+                    <td class="text-center">@HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && x.ClassSectionId == 2)</td>
+                    <td class="text-center red">
+                        @HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && !x.Aca_ClassRoutine.Any())
+                    </td>
+                    <td class="text-center red">
+                        @HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && !x.Aca_ClassTakenByStudent.Any())
+                    </td>
+                    <td class="text-center red">
+                        @HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && !x.Aca_ClassTakenByEmployee.Any())
+                    </td>
+                    <td class="text-center red">
+                        @HttpUtil.DbContext.Aca_Class.Count(x => x.SemesterId == semester.Id && x.Aca_ResultClassSetting.Any(y => y.IsLocekdByAdmin == true))
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

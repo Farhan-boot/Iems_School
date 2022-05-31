@@ -1,0 +1,170 @@
+﻿
+<!--File:Inv_Store Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Store";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StoreId = (string) id == null?"0":(string)id;
+    
+    //Inv_Store WebApi Single Row link   
+    var getStoreByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreById", area = "Inventory" });
+    var getStoreDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreDataExtra", area = "Inventory" });
+    var saveStoreUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "SaveStore", area = "Inventory" });
+    var deleteStoreByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetDeleteStoreById", area = "Inventory" });
+
+    //Inv_Store WebApi List link 
+    var getPagedStoreUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StoreApi", action = "GetPagedStore", area = "Inventory"});
+    var getAllStoreUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetAllStore", area = "Inventory" });
+    var saveStoreListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "SaveStoreList", area = "Inventory" });
+    var getStoreListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreListDataExtra", area = "Inventory" });
+
+    var editStoreByIdPageUrl = Url.Action("StoreAddEdit", "Store", new { area = "Inventory" });
+    var listStorePageUrl = Url.Action("StoreList", "Store", new { area = "Inventory" });
+    
+    //Inv_Store Angular Functions
+    string getStoreById="getStoreById";
+    var saveStore = "saveStore";
+    var getNewStore = "getNewStore";
+    var refreshPage = "loadPage()";
+    string deleteStoreById="deleteStoreById";
+    string loadStoreExtraData="loadStoreExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Store/StoreAddEdit.js"></script>
+}
+
+<div id="StoreAddEdit" class="row" ng-controller="StoreAddEditCtrl" ng-init="Init(
+      '@StoreId'
+      ,'@getStoreByIdUrl'
+      ,'@getStoreDataExtraUrl'
+      ,'@saveStoreUrl'
+      ,'@deleteStoreByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="Store.@Inv_Store.Property_Name!=''">{{(Store.@Inv_Store.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="StoreId" ng-Enter="@(getStoreById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewStore)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listStorePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                 <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Store.@Inv_Store.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                 <td class="fieldlabel">Select Room </td>
+                                 <td class="fieldarea">
+                                     @*<input type="text" ng-model="Store.@Inv_Store.Property_RoomId" class="form-control" placeholder="Enter RoomId" maxlength="50" />*@
+
+                                     <select ng-model="Store.@Inv_Store.Property_RoomId" ng-options="option.Id as option.Name for option in RoomList" title="Select Room" ng-init="" class="form-control">
+                                         <option value="" label="" class="">---Select One---</option>
+                                     </select>
+                                 </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter RoomId." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                 <td class="fieldlabel">CampusId </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Store.@Inv_Store.Property_CampusId" class="form-control" placeholder="Enter CampusId"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter CampusId." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             <tr>
+                                 <td class="fieldlabel">Phone <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Store.@Inv_Store.Property_Phone" class="form-control" placeholder="Enter Phone"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Phone." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <tr>
+                            <td class="fieldlabel">Details <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Store.@Inv_Store.Property_Details" class="form-control" placeholder="Enter Details"  required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Details." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Address  <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Store.@Inv_Store.Property_Address" class="form-control" placeholder="Enter Address"  required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Description <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Store.@Inv_Store.Property_Description" class="form-control" placeholder="Enter Description"  required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Remark  <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Store.@Inv_Store.Property_Remark" class="form-control" placeholder="Enter Remark" required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                       
+
+                        @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Store.@Inv_Store.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveStore)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

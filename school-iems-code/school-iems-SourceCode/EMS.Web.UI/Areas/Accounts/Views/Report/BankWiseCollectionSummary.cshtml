@@ -1,0 +1,32 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+
+
+@{
+    ViewBag.Title = "Bank Wise Collection Summary";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccountsReport.cshtml";
+}
+
+@section ScriptSection
+{
+
+    <script src="~/Areas/Accounts/Views/Report/Shared/_BankWiseCollectionSummary.js"></script>
+
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+
+@Html.Partial("~/Areas/Accounts/Views/Report/Shared/_BankWiseCollectionSummary.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}
+
+

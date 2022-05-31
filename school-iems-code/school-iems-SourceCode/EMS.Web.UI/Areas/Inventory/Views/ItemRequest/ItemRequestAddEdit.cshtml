@@ -1,0 +1,175 @@
+﻿<!--File:Invt_ItemRequest Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Item Request";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemRequestId = (string)id == null ? "0" : (string)id;
+
+    //Invt_ItemRequest WebApi Single Row link
+    var getItemRequestByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetItemRequestById", area = "Inventory" });
+    var getItemRequestDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetItemRequestDataExtra", area = "Inventory" });
+    var saveItemRequestUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "SaveItemRequest", area = "Inventory" });
+    var deleteItemRequestByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetDeleteItemRequestById", area = "Inventory" });
+
+    //Invt_ItemRequest WebApi List link
+    var getPagedItemRequestUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetPagedItemRequest", area = "Inventory" });
+    var getAllItemRequestUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetAllItemRequest", area = "Inventory" });
+    var saveItemRequestListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "SaveItemRequestList", area = "Inventory" });
+    var getItemRequestListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemRequestApi", action = "GetItemRequestListDataExtra", area = "Inventory" });
+
+    var editItemRequestByIdPageUrl = Url.Action("ItemRequestAddEdit", "ItemRequest", new { area = "Inventory" });
+    var listItemRequestPageUrl = Url.Action("ItemRequestList", "ItemRequest", new { area = "Inventory" });
+
+    //Invt_ItemRequest Angular Functions
+    string getItemRequestById = "getItemRequestById";
+    var saveItemRequest = "saveItemRequest";
+    var getNewItemRequest = "getNewItemRequest";
+    var refreshPage = "loadPage()";
+    string deleteItemRequestById = "deleteItemRequestById";
+    string loadItemRequestExtraData = "loadItemRequestExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ItemRequest/ItemRequestAddEdit.js"></script>
+}
+
+<div id="ItemRequestAddEdit" class="row" ng-controller="ItemRequestAddEditCtrl" ng-init="Init(
+      '@ItemRequestId'
+      ,'@getItemRequestByIdUrl'
+      ,'@getItemRequestDataExtraUrl'
+      ,'@saveItemRequestUrl'
+      ,'@deleteItemRequestByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    @*<span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="ItemRequest.@Invt_ItemRequest.Property_Name!=''">{{(ItemRequest.@Invt_ItemRequest.Property_Name)}}</strong>
+                    </span>*@
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="ItemRequestId" ng-Enter="@(getItemRequestById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewItemRequest)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listItemRequestPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <!--dropdown option for EnumList-->
+                                    <tr>
+                                        <td class="fieldlabel">Request Type </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ItemRequest.@Invt_ItemRequest.Property_RequestTypeEnumId" ng-options="option.Id as option.Name for option in RequestTypeEnumList" title="Select Request Type" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Request Type." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Request Person Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="ItemRequest.@Invt_ItemRequest.Property_RequestPersonName" class="form-control" placeholder="Enter Request Person Name" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Request Person Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Return Date </td>
+                                        <td class="fieldarea">
+                                            <input type="datetime" ng-model="ItemRequest.@Invt_ItemRequest.Property_ReturnDate" class="form-control date-picker" placeholder="Enter Return Date" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Return Date." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Item Name </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ItemRequest.@Invt_ItemRequest.Property_ItemId" ng-options="option.Id as option.Name for option in ItemList" title="Select Item" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Id." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <!--dropdown option for EnumList-->
+                                    <tr>
+                                        <td class="fieldlabel">Unit Type </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ItemRequest.@Invt_ItemRequest.Property_UnitTypeEnumId" ng-options="option.Id as option.Name for option in UnitTypeEnumList" title="Select Unit Type" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Unit Type." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Unit </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="ItemRequest.@Invt_ItemRequest.Property_Unit" class="form-control" placeholder="Enter Unit" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Unit." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <!--dropdown option for EnumList-->
+                                    @*<tr>
+                                        <td class="fieldlabel">Status </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ItemRequest.@Invt_ItemRequest.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Deleted </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="ItemRequest.@Invt_ItemRequest.Property_IsDeleted" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Return </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="ItemRequest.@Invt_ItemRequest.Property_IsReturn" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Return if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>*@
+
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(saveItemRequest)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

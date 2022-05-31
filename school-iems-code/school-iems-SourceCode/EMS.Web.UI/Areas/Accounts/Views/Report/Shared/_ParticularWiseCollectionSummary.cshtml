@@ -1,0 +1,186 @@
+﻿
+<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getParticularWiseCollectionSummaryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentCollectionReportApi", action = "GetParticularWiseCollectionSummaryDataExtra", area = "Accounts" });
+    //WebApi link for List 
+    var getParticularWiseCollectionSummaryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentCollectionReportApi", action = "GetParticularWiseCollectionSummary", area = "Accounts" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="ParticularWiseCollectionSummaryCtrl"
+     ng-init="Init(
+     '@getParticularWiseCollectionSummaryDataExtraUrl'
+     ,'@getParticularWiseCollectionSummaryUrl'
+     )">
+    <div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                    <tr>
+                        <th style="text-align: center;" colspan="12"><strong>Report of Particular Wise Collection Summary</strong></th>
+                    </tr>
+                    <tr ng-hide="VoucherNo!=''" class="show-on-print">
+                        <th style="text-align: center;" colspan="12">
+                            <div>Program: <span ng-if="SelectedProgram==null">All Program</span>{{SelectedProgram.Name}} </div>
+                            <div>Bank: <span ng-if="SelectedBank==null">All Bank</span>{{SelectedBank.Name}}</div>
+                            <div>Particular: <span ng-if="SelectedParticularName==null">All Particular</span> {{SelectedParticularName.Name}}</div>
+                            <div>Start Date: {{StartDate |date:'dd/M/yyyy'}}</div>
+                            <div>End Date: {{EndDate |date:'dd/M/yyyy'}} </div>
+                        </th>
+                    </tr>
+                    <tr ng-show="VoucherNo!=''" class="show-on-print">
+                        <th style="text-align: center;" colspan="12">
+                            <table class="no-border">
+                                <tr>
+                                    <td style="text-align: left;">Voucher No: {{VoucherNo}}</td>
+                                    <td ng-show="!HasReportError" style="text-align: right;">Voucher Date: {{VoucherDate |date:'dd/MM/yyyy'}}</td>
+                                    <td ng-show="HasReportError" style="text-align: right;">
+                                        {{ReportErrorMessage}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="hide-on-print">
+                        <tr>
+                            <td ng-hide="VoucherNo!=''" style="width: 50px;">Program:</td>
+                            <td ng-hide="VoucherNo!=''" style="">
+                                <select ng-model="SelectedProgram"
+                                        ng-options="option as option.Name for option in ProgramList"
+                                        title="Select Program" class="form-control">
+                                    <option value="" label="" class="">All Program</option>
+                                </select>
+                            </td>
+                            <td ng-hide="VoucherNo!=''" style="width: 25px;">Bank: </td>
+                            <td ng-hide="VoucherNo!=''">
+                                <select ng-model="SelectedBank"
+                                        ng-options="option as option.Name for option in OfficialBankList" title="Select Bank" class="form-control">
+                                    <option value="" label="" class="">All Bank</option>
+                                </select>
+                            </td>
+                            <td ng-hide="VoucherNo!=''" style="width: 55px;">Particular: </td>
+                            <td ng-hide="VoucherNo!=''">
+                                <select ng-model="SelectedParticularName"
+                                        ng-options="option as option.Name for option in ParticularNameList" title="Select Particular" class="form-control">
+                                    <option value="" label="" class="">All Particular</option>
+                                </select>
+                            </td>
+                            <td ng-hide="VoucherNo!=''" style="width: 72px;">Start Date:</td>
+                            <td ng-hide="VoucherNo!=''">
+                                <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                            </td>
+                            <td ng-hide="VoucherNo!=''" style="width: 66px;">End Date:</td>
+                            <td ng-hide="VoucherNo!=''">
+                                <input ng-model="EndDate"  style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                            </td>
+                            <td style="width: 82px;">Voucher No:</td>
+                            <td>
+                                <input ng-model="VoucherNo" ng-enter="getParticularWiseCollectionSummary()" style="padding-left: 5px; width: 120px;" type="text" placeholder="Voucher No"/>
+                            </td>
+                        </tr>
+                    <tr class="hide-on-print">
+                        <td style="text-align: center;" colspan="12">
+                            <button class="btn btn-info" ng-click="getParticularWiseCollectionSummary()">
+                                View Report
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div  style="margin-top: 10px;" class="border-black main-body">
+            <table class="table-bordered table-border" style="width: 100%; text-align: center;">
+                <thead>
+                <tr style="font-weight: bold; font-size: 14px;">
+                    <th>No</th>
+                    <th>Particular Name</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="row in Report">
+                <tr style="font-weight: bold">
+                    <td>{{$index+1}}</td>
+                    <td>{{row.ParticularName}}</td>
+                    <td>{{row.TotalAmount|number:2}}</td>
+                </tr>
+                </tbody>
+                <tbody ng-hide="Report.length==0">
+                <tr style="font-size: 13px; font-weight: bold;">
+                    <td style="text-align: right;" colspan="2">Grand Total:</td>
+                    <td style="text-align: center;">{{GrandTotal|number:2}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top; 
+    }
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+    .no-border tr  td {
+        border: none !important;
+    }
+</style>

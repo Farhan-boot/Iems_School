@@ -1,0 +1,46 @@
+﻿@using EMS.Framework.Objects
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    ViewBag.Title = "Faculty Supple Manager";
+    Layout = "~/Areas/Employee/Views/Shared/_LayoutEmployee.cshtml";
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Employee/Views/FacultySuppleManager/Shared/_Index.js?v=4"></script>
+}
+@section StyleSection
+{
+
+    <style>
+        .bg-yellow-new { 
+            background-color: red !important;
+        }
+    </style>
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet"/>
+
+}
+
+@Html.Partial("~/Areas/Employee/Views/FacultySuppleManager/Shared/_Index.cshtml")
+
+<style>
+    .table-form td.fieldarea {
+        text-align: left !important;
+    }
+
+    .widget-select2 {
+        width: 500px;
+        display: inline-block;
+        float: left;
+        text-align: left;
+        margin-top: 4px;
+    }
+
+    .print-footer {
+        display: none !important;
+    }
+</style>

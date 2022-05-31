@@ -1,0 +1,347 @@
+﻿@using System.Linq
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Course Registration";
+    List<Aca_ClassTakenByStudent> courses = HttpUtil.DbContext.Aca_ClassTakenByStudent
+        .Include("Aca_Class")
+        .Include("Aca_Class.Aca_CurriculumCourse")
+        .Include("Aca_Class.Aca_Semester")
+        .Include("Aca_Class.Aca_StudyLevelTerm")
+        .Where(x => x.StudentId == HttpUtil.Profile.StudentId)
+        .OrderByDescending(x=>x.Aca_Class.Aca_StudyLevelTerm.LevelId)
+        .ThenByDescending(x=>x.Aca_Class.Aca_StudyLevelTerm.TermId)
+        .ThenBy(x=>x.Aca_Class.Code)
+        .ToList();
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassTakenByStudentId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row 
+    var getClassTakenByStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassTakenByStudentById", area = "Student" });
+    var getClassTakenByStudentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassTakenByStudentDataExtra", area = "Student" });
+    var saveClassTakenByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "SaveClassTakenByStudent", area = "Student" });
+    var deleteClassTakenByStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetDeleteClassTakenByStudentById", area = "Student" });
+
+    //WebApi link for List
+    var getPagedClassTakenByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetPagedClassTakenByStudent", area = "Student" });
+    var getAllClassTakenByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetAllClassTakenByStudent", area = "Student" });
+    var saveClassTakenByStudentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "SaveClassTakenByStudentList", area = "Student" });
+    var getClassTakenByStudentListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassTakenByStudentListDataExtra", area = "Student" });
+
+    var editClassTakenByStudentByIdPageUrl = Url.Action("Index", "Registration", new { area = "Student" });
+
+    //Angular Function Name
+    var getNewClassTakenByStudent = "getNewClassTakenByStudent";
+    var saveClassTakenByStudent = "saveClassTakenByStudent";
+    var deleteClassTakenByStudentById = "deleteClassTakenByStudentById";
+    var deleteClassTakenByStudentByObj = "deleteClassTakenByStudentByObj";
+    //for list
+    var searchClassTakenByStudentList = "searchClassTakenByStudentList";
+    var getPagedClassTakenByStudentList = "getPagedClassTakenByStudentList";
+    var getAllClassTakenByStudentList = "getAllClassTakenByStudentList";
+    var saveClassTakenByStudentList = "saveClassTakenByStudentList";
+    var getClassTakenByStudentListExtraData = "getClassTakenByStudentListExtraData";
+
+    var refreshPage = "loadPage()";
+}
+@section ScriptSection
+{
+    @*<script src="~/Areas/Student/Views/Registration/Index.js"></script>*@
+}
+
+<div ng-controller="ClassTakenByStudentListCtrl"
+     ng-init="Init(
+      '@getPagedClassTakenByStudentUrl'
+     ,'@deleteClassTakenByStudentByIdUrl'
+     ,'@getClassTakenByStudentListDataExtraUrl'
+     ,'@saveClassTakenByStudentListUrl'
+     ,'@getClassTakenByStudentByIdUrl'
+     ,'@getClassTakenByStudentDataExtraUrl'
+     ,'@saveClassTakenByStudentUrl'
+     )">
+<div class="text-center margin-bottom-10">
+    <a href="@Url.Action("OnlineCourseRegistration", "Registration", new {area = "Student"})" class="btn btn-success btn-lg"><i class="fa fa-paper-plane-o"></i> Apply for Online Course Registration</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        
+        @*========== Old Code===========*@
+        @*<div class="widget radius-bordered">
+            <div class="widget-header bg-blueberry">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption">Registered Course</span>
+                <div class="widget-buttons buttons-bordered no-padding-right">
+                    <select ng-model="SelectedStudentId" ng-change="@(searchClassTakenByStudentList)()"
+                            ng-options="option.Id as option.Name for option in SemesterLevelTermList " ng-init="" class="form-control input-xs ">
+                    </select>
+                </div>
+            </div>
+            <div class="widget-body">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead class="bordered-blueberry">
+                    <tr>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Credit</th>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Level Term</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var course in courses)
+                    {
+                        <tr>
+                            <td class="text-right">@course.Aca_Class.Code</td>
+                            <td>@course.Aca_Class.Name</td>
+                            <td class="text-center">@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F")</td>
+                            <td class="text-center">@course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence()</td>
+                            <td class="text-center"><span class="badge badge-success">Valid</span></td>
+                            <td class="text-center">@course.Aca_Class.Aca_SemesterLevelTerm.Name</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>*@
+        @*========== Old Code===========*@
+    </div>
+</div>
+@if (HttpUtil.Profile.UserId == 1)
+{
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>
+                <select class="form-control pull-right" id="SemesterDropDown" name="SemesterDropDown" style="width: 250px">
+                    <option value="1">2010-2011, Level-1 Term-I</option>
+                    <option value="2">2010-2011, Level-1 Term-II</option>
+                    <option value="3">2011-2012, Level-2 Term-I</option>
+                    <option value="4">2011-2012, Level-2 Term-II</option>
+                    <option value="5">2011-2012, Level-3 Term-I</option>
+                    <option selected="selected" value="6">2012-2013, Level-3 Term-II</option>
+                    <option value="7">2012-2013, Level-4 Term-I</option>
+                    <option value="8">2012-2013, Level-4 Term-II</option>
+                </select>
+                <label>Lecture </label>
+                <label class="label label-info" style="font-size: 14px;">16.0</label>
+                <label>Science </label>
+                <label class="label label-info" style="font-size: 14px;">1 </label>
+                <label>Computer </label>
+                <label class="label label-info" style="font-size: 14px;">2</label>
+                <label>Language </label>
+                <label class="label label-info" style="font-size: 14px;">0</label>
+                <label>Studio </label>
+                <label class="label label-info" style="font-size: 14px;">0</label>
+            </td>
+            <td>
+                <a href="/Student/Registration/Print?q=iBpjLWVwA0XyixALN9%2BffYNWd3y6bEc%2BVuSirFrRQZbVj%2FkWVXTbG4%2Fah4PwZSU4UYiU3nZbpxs%3D" class="btn btn-xs btn-danger pull-right">Print</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Registered</th>
+                    <th>Lec-Com-Sci-Lan-Stu</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=WSZh7xlFNH81ZQRsEJaq4A%3D%3D">00026-EMBEDDED PROGRAMMING [A]</a>
+
+
+                        <div>
+                            <span >(Theory) Time: Mon 4:0 PM - Mon 6:0 PM Room: 441</span>
+                        </div>
+                        <div>
+                            <span >(Lab) Time: Wed 2:0 PM - Wed 5:0 PM Room: CL3</span>
+                        </div>
+                    </td>
+                    <td>3 - 0 - 0 - 0 - 0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=MIYIVvw6olx5sDDO%2FsQcRg%3D%3D">00017-ADVANCED TOPICS IN PROGRAMMING II [A]</a>
+
+
+                        <div>
+                            <span >(Theory) Time: Tue 4:0 PM - Tue 6:0 PM Room: 432</span>
+                        </div>
+                        <div>
+                            <span >(Lab) Time: Sun 2:0 PM - Sun 5:0 PM Room: CL7</span>
+                        </div>
+                    </td>
+                    <td>3 - 0 - 0 - 0 - 0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=IO0qMCAuXcSG2Vyee62%2BuQ%3D%3D">00053-OPERATING SYSTEM [C]</a>
+
+
+                        <div>
+                            <span >(Theory) Time: Tue 8:0 - Tue 10:0 Room: 432</span>
+                        </div>
+                        <div>
+                            <span >(Lab) Time: Sun 8:0 - Sun 11:0 Room: CL2</span>
+                        </div>
+                    </td>
+                    <td>3 - 1 - 0 - 0 - 0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=p6e8ZWHs17Uld9BDe3bJwA%3D%3D">00082-WEB TECHNOLOGIES [A]</a>
+
+
+                        <div>
+                            <span >(Theory) Time: Wed 12:0 PM - Wed 2:0 PM Room: 434</span>
+                        </div>
+                        <div>
+                            <span >(Lab) Time: Mon 11:0 - Mon 2:0 PM Room: CL4</span>
+                        </div>
+                    </td>
+                    <td>3 - 1 - 0 - 0 - 0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=lKOYHMtXgBy8WRWRO97rtw%3D%3D">00405-TELECOMMUNICATIONS ENGINEERING [EEE] [D]</a>
+
+
+                        <div>
+                            <span >(Theory) Time: Mon 8:0 - Mon 9:30 Room: 234</span>
+                        </div>
+                        <div>
+                            <span >(Theory) Time: Wed 8:0 - Wed 9:30 Room: 234</span>
+                        </div>
+                    </td>
+                    <td>3 - 0 - 0 - 0 - 0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Student/Section?q=LNyhN1HqbJJoe09zuy4%2Blw%3D%3D">00602-TELECOMMUNICATIONS ENGINEERING LAB [EEE] [G]</a>
+
+
+                        <div>
+                            <span >(Lab) Time: Thu 8:0 - Thu 11:0 Room: EL34</span>
+                        </div>
+                    </td>
+                    <td>1 - 0 - 1 - 0 - 0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div id="divAssesment">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        Admission
+                        <span  class="badge badge-info pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Tuition
+                        <span  class="badge badge-green pull-right">
+                                56,000.00
+                            </span>
+                    </li>
+                    <li>
+                        Computer Lab
+                        <span  class="badge badge-info pull-right">
+                                8,000.00
+                            </span>
+                    </li>
+                    <li>
+                        Science Lab
+                        <span  class="badge badge-info pull-right">
+                                1,500.00
+                            </span>
+                    </li>
+                    <li>
+                        Language Lab
+                        <span  class="badge badge-info pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Studio
+                        <span  class="badge badge-info pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Development
+                        <span  class="badge badge-info pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Activity
+                        <span  class="badge badge-info pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Miscellaneous
+                        <span  class="badge badge-info pull-right">
+                                1,500.00
+                            </span>
+                    </li>
+                    <li>
+                        <strong class="text-info">Total</strong>
+                        <span  class="badge badge-blueberry pull-right">
+                                67,000.00
+                            </span>
+                    </li>
+
+                    <li>
+                        <label class="text-warning">Deduction</label>
+                        <span  class="badge badge-danger pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        Prev. Balance
+                        <span  class="badge badge-success pull-right">
+                                0.00
+                            </span>
+                    </li>
+                    <li>
+                        <strong class="text-info">Net Total</strong>
+                        <span  class="badge badge-blueberry pull-right">
+                                67,000.00
+                            </span>
+                    </li>
+                    <li>
+                        <strong>Amount Paid</strong>
+                        <span  class="badge badge-info pull-right">
+                                67,000.00
+                            </span>
+                    </li>
+                    <li>
+                        <label class="text-success">Balance</label>
+
+                        <span  class="badge badge-success pull-right">
+                                0.00
+                            </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}
+</div>

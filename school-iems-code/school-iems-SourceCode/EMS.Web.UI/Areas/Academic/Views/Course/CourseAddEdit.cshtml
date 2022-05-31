@@ -1,0 +1,135 @@
+﻿<!--File:Aca_Course Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Add/Edit Base/Master Course";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CourseId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetCourseById", area = "Academic" });
+    var getCourseDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetCourseDataExtra", area = "Academic" });
+    var saveCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "SaveCourse", area = "Academic" });
+    var deleteCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetDeleteCourseById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetPagedCourse", area = "Academic" });
+    var getAllCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetAllCourse", area = "Academic" });
+    var saveCourseListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "SaveCourseList", area = "Academic" });
+    var getCourseListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseApi", action = "GetCourseListDataExtra", area = "Academic" });
+
+    var editCourseByIdPageUrl = Url.Action("CourseAddEdit", "Course", new { area = "Academic" });
+    var listCoursePageUrl = Url.Action("CourseList", "Course", new { area = "Academic" });
+
+    // Angular Functions
+    string getCourseById = "getCourseById";
+    var saveCourse = "saveCourse";
+    var getNewCourse = "getNewCourse";
+    var refreshPage = "loadPage()";
+    string deleteCourseById = "deleteCourseById";
+    string loadCourseExtraData = "loadCourseExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/Course/CourseAddEdit.js"></script>
+}
+
+<div id="CourseAddEdit" class="row" ng-controller="CourseAddEditCtrl" ng-init="Init(
+      '@CourseId'
+      ,'@getCourseByIdUrl'
+      ,'@getCourseDataExtraUrl'
+      ,'@saveCourseUrl'
+      ,'@deleteCourseByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Course.@Aca_Course.Property_Name!=''">
+                        {{(Course.@Aca_Course.Property_Code)}} : {{(Course.@Aca_Course.Property_Name)}}
+                    </strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="CourseId" ng-Enter="@(getCourseById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewCourse)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listCoursePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Code <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Course.@Aca_Course.Property_Code" class="form-control" placeholder="Enter Code" maxlength="128" required=""/>
+                    </div>
+                    <div class="col-sm-7 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Course.@Aca_Course.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required=""/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Course Category </label>
+                        <select ng-model="Course.@Aca_Course.Property_CourseCategoryEnumId" ng-options="option.Id as option.Name for option in CourseCategoryEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Credit Hour </label>
+                        <input type="number" ng-model="Course.@Aca_Course.Property_CreditLoad" class="form-control" placeholder="Enter Credit Load"/>
+                    </div>
+                    @*<div class="col-sm-2 form-group">
+                        <label class="control-label">Contact Hour </label>
+                        <input type="number" ng-model="Course.@Aca_Course.Property_CreditHour" class="form-control" placeholder="Enter Credit Hour"/>
+                    </div>
+
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Level Term </label>
+                        <select ng-model="Course.@Aca_Course.Property_StudyLevelTermId"
+                                ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Department </label>
+                        <select ng-model="Course.@Aca_Course.Property_DepartmentId"
+                                ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="Course.@Aca_Course.Property_IsBachelorCourse"/> Bachelor Course
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="Course.@Aca_Course.Property_IsMastersCourse"/> Masters Course
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="Course.@Aca_Course.Property_IsPhdCourse"/> PhD Course
+                        </div>
+                    </div>*@
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Description </label>
+                        <textarea ng-model="Course.@Aca_Course.Property_Description" class="form-control" placeholder="Enter Description"></textarea>
+                    </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveCourse)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

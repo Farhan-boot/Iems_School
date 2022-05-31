@@ -1,0 +1,277 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@{
+    ViewBag.Title = "Add New Employee";
+
+    //WebApi link for AddNewApplicant
+    var getAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewEmployeeApi", action = "GetNewEmployee", area = "HR" });
+    var saveAccountUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AddNewEmployeeApi", action = "SaveEmployee", area = "HR" });
+   
+
+    var editEmployeeByIdPageUrl = Url.Action("UpdateEmployee", "ManageEmployee", new { area = "HR" });
+
+    string getAccountById = "getAccountById";
+    var saveAccount = "saveAccount";
+    var getNewAccount = "getNewAccount";
+    var refreshPage = "loadPage()";
+
+
+
+
+    string onChangeProgram = "onChangeProgram";
+    string onChangeExam = "onChangeAdmissionExam";
+    string onChangeFeeCode = "onChangeFeeCode";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/ManageEmployee/AddEmployee.js"></script>
+}
+
+
+<div id="AddNewApplicant" class="row" ng-controller="AddNewEmployeeCtrl" ng-init="Init(
+         '@getAccountByIdUrl'
+        ,'@saveAccountUrl'
+  
+     ,'@editEmployeeByIdPageUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        @*ng-show="HasViewPermission"*@
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Create New Employee
+                        @*<strong ng-show="Account.@User_Account.Property_Name!=''">{{(Account.@User_Account.Property_Name)}}</strong>*@
+                    </span>
+                    @*<div class="widget-buttons buttons-bordered no-padding-right" style="">
+                        <span class="input-icon">
+                            <input type="text" ng-model="AccountId" ng-Enter="@(getAccountById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search by ID">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+                    </div>*@
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewAccount)(0)" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@Url.Action("EmployeeList", "ManageEmployee", new {area = "HR"})" class="btn btn-blue btn-xs" target="_blank"><i class="fa fa-arrow-left"></i> Employee List</a>
+                        <button ng-click="@(refreshPage)" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-7 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Employee ID <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+
+                                            <input ng-disabled="Account.IsAutoUserName" type="text" ng-model="Account.@User_Account.Property_UserName" class="form-control " placeholder="[Auto Generate]" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Please type only last @(SiteSettings.Instance.StudentIdSerialDigitCount) Digit." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Full Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" maxlength="128" required="" />
+                                            @*<span ng-show="Account.@User_Account.Property_Id!=0" class="padding-l-10 bold-text" style="font-size: 18px;">{{Account.@User_Account.Property_FullName}}</span>*@
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Email <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Account.@User_Account.Property_UserEmail" class="form-control" placeholder="Enter Email" maxlength="128" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Mobile <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Account.@User_Account.Property_UserMobile" class="form-control" placeholder="Enter Mobile" maxlength="128" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Mobile." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Gender</td>
+                                        <td class="fieldarea">
+                                            <label class="radio-inline">
+                                                <input ng-model="Account.@User_Account.Property_GenderEnumId"
+                                                       value="@((byte) User_Account.GenderEnum.Male)"
+                                                       type="radio" name="latefeeoveride" tabindex="15"> Male
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input ng-model="Account.@User_Account.Property_GenderEnumId"
+                                                       value="@((byte) User_Account.GenderEnum.Female)"
+                                                       type="radio" name="latefeeoveride" tabindex="15"> Female
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Gender" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Date of Birth
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <input type="text"
+                                                   ng-model="Account.@User_Account.Property_DateOfBirth"
+                                                   class="form-control date-picker" datetime="dd/MM/yyyy" placeholder="Enter Date of Birth" required="">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date of Birth" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Joining Date
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <input type="text"
+                                                   ng-model="Account.@User_Account.Property_JoiningDate"
+                                                   class="form-control date-picker" datetime="dd/MM/yyyy" placeholder="Enter Joining Date" required="">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Joining Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Joining Semester</td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Account.Property_JoiningSemesterId"
+                                                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Joining Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Department</td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Account.Property_DepartmentId"
+                                                    ng-options="option.Id as option.Name group by option.Type for option in DepartmentList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select Department---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Post/Position
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_PositionId"
+                                                    ng-options="option.Id as option.Name for option in PositionList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Currently Working Office/Faculty/Dept " data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Employee Category
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_EmployeeCategoryEnumId"
+                                                    ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee Category " data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Salary Grade
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_JobClassEnumId"
+                                                    ng-options="option.Id as option.Name for option in JobClassEnumList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Job Class" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Working Hour
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_JobTypeEnumId"
+                                                    ng-options="option.Id as option.Name for option in JobTypeEnumList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Job Type " data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    @*<tr>
+                                            <td class="fieldlabel">Enrollment Type</td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Account.EnrollmentTypeEnumId"
+                                                        ng-change=""
+                                                        ng-options="option.Id as option.Name for option in  EnrollmentTypeEnumList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Enrollment Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>*@
+
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Employee Type
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_EmployeeTypeEnumId"
+                                                    ng-options="option.Id as option.Name for option in EmployeeTypeEnumList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel text-bold">
+                                            Working Status
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_WorkingStatusEnumId"
+                                                    ng-options="option.Id as option.Name for option in WorkingStatusEnumList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Working Status" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+
+
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button ng-show="Account.@User_Account.Property_Id==0" ng-click="@(saveAccount)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Create Employee</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

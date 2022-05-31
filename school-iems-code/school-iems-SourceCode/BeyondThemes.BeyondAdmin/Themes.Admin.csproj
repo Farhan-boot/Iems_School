@@ -1,0 +1,1486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F1FB09A-9139-4D4C-8D41-EEFAD3F46DF0}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BeyondThemes.BeyondAdmin</RootNamespace>
+    <AssemblyName>BeyondThemes.BeyondAdmin</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BeyondThemes.Bootstrap">
+      <HintPath>..\packages\WebTheme\4.5.1\BeyondThemes.Bootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="BundleTransformer.Core">
+      <HintPath>..\packages\BundleTransformer.Core.1.9.69\lib\net40\BundleTransformer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.13\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider.WebActivator">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.13\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="T4MVCExtensions">
+      <HintPath>..\packages\WebTheme\4.5.1\T4MVCExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.1\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\DefaultConnection.mdf" />
+    <Content Include="App_Data\DefaultConnection_log.ldf">
+      <DependentUpon>DefaultConnection.mdf</DependentUpon>
+    </Content>
+    <Content Include="assets\css\4095-rtl.min.css" />
+    <Content Include="assets\css\4095.min.css" />
+    <Content Include="assets\css\animate.min.css" />
+    <Content Include="assets\css\beyond-rtl.min.css" />
+    <Content Include="assets\css\beyond.min.css" />
+    <Content Include="assets\css\bootstrap-rtl.min.css" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\dataTables.bootstrap.css" />
+    <Content Include="assets\css\demo.min.css" />
+    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\skins\azure.min.css" />
+    <Content Include="assets\css\skins\black.min.css" />
+    <Content Include="assets\css\skins\blue.min.css" />
+    <Content Include="assets\css\skins\darkblue.min.css" />
+    <Content Include="assets\css\skins\darkred.min.css" />
+    <Content Include="assets\css\skins\deepblue.min.css" />
+    <Content Include="assets\css\skins\gray.min.css" />
+    <Content Include="assets\css\skins\green.min.css" />
+    <Content Include="assets\css\skins\orange.min.css" />
+    <Content Include="assets\css\skins\pink.min.css" />
+    <Content Include="assets\css\skins\purple.min.css" />
+    <Content Include="assets\css\skins\skins-mixins.min.css" />
+    <Content Include="assets\css\skins\teal.min.css" />
+    <Content Include="assets\css\typicons.min.css" />
+    <Content Include="assets\css\weather-icons.min.css" />
+    <Content Include="assets\fonts\BYekan.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="assets\fonts\FontAwesome.otf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\typicons.eot" />
+    <Content Include="assets\fonts\typicons.svg" />
+    <Content Include="assets\fonts\typicons.ttf" />
+    <Content Include="assets\fonts\typicons.woff" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="assets\fonts\WeatherIcons-Regular.otf" />
+    <Content Include="assets\fonts\YekanWeb-Bold.woff" />
+    <Content Include="assets\fonts\YekanWeb-Regular.woff" />
+    <Content Include="assets\img\angle-down.png" />
+    <Content Include="assets\img\app.png" />
+    <Content Include="assets\img\attach-blue.png" />
+    <Content Include="assets\img\attach-green.png" />
+    <Content Include="assets\img\attach-red.png" />
+    <Content Include="assets\img\attach-yellow.png" />
+    <Content Include="assets\img\avatars\adam-jansen.jpg" />
+    <Content Include="assets\img\avatars\bing.png" />
+    <Content Include="assets\img\avatars\divyia.jpg" />
+    <Content Include="assets\img\avatars\Javi-Jimenez.jpg" />
+    <Content Include="assets\img\avatars\John-Smith.jpg" />
+    <Content Include="assets\img\avatars\Lee-Munroe.jpg" />
+    <Content Include="assets\img\avatars\Matt-Cheuvront.jpg" />
+    <Content Include="assets\img\avatars\Nicolai-Larson.jpg" />
+    <Content Include="assets\img\avatars\Osvaldus-Valutis.jpg" />
+    <Content Include="assets\img\avatars\Sergey-Azovskiy.jpg" />
+    <Content Include="assets\img\avatars\Stephanie-Walter.jpg" />
+    <Content Include="assets\img\favicon.png" />
+    <Content Include="assets\img\jquery.minicolors.png" />
+    <Content Include="assets\img\logo-inverted.png" />
+    <Content Include="assets\img\logo-rtl.png" />
+    <Content Include="assets\img\logo-solo.png" />
+    <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\sort_asc.png" />
+    <Content Include="assets\img\sort_asc_disabled.png" />
+    <Content Include="assets\img\sort_both.png" />
+    <Content Include="assets\img\sort_desc.png" />
+    <Content Include="assets\img\sort_desc_disabled.png" />
+    <Content Include="assets\img\temp1.png" />
+    <Content Include="assets\img\tree-icons.png" />
+    <Content Include="assets\js\beyond.js" />
+    <Content Include="assets\js\beyond.min.js" />
+    <Content Include="assets\js\beyond.min.js.map">
+      <DependentUpon>beyond.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\bootbox\bootbox.js" />
+    <Content Include="assets\js\bootbox\bootbox.min.js" />
+    <Content Include="assets\js\bootbox\bootbox.min.js.map" />
+    <Content Include="assets\js\bootstrap.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.min.js" />
+    <Content Include="assets\js\charts\chartjs\chartjs-init.js" />
+    <Content Include="assets\js\charts\easypiechart\easypiechart-init.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js.map" />
+    <Content Include="assets\js\charts\flot\flot-init.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.axislabels.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js.map" />
+    <Content Include="assets\js\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js.map" />
+    <Content Include="assets\js\charts\morris\morris-init.js" />
+    <Content Include="assets\js\charts\morris\morris.js" />
+    <Content Include="assets\js\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="assets\js\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="assets\js\charts\sparkline\sparkline-init.js" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.js" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.min.js" />
+    <Content Include="assets\js\datatable\datatables-init.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js.map" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js.map">
+      <DependentUpon>dataTables.tableTools.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\datatable\jquery.dataTables.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js.map" />
+    <Content Include="assets\js\datatable\ZeroClipboard.js" />
+    <Content Include="assets\js\datetime\bootstrap-datepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js.map" />
+    <Content Include="assets\js\datetime\daterangepicker.js" />
+    <Content Include="assets\js\datetime\moment.js" />
+    <Content Include="assets\js\datetime\moment.min.js" />
+    <Content Include="assets\js\dropzone\dropzone.js" />
+    <Content Include="assets\js\dropzone\dropzone.min.js" />
+    <Content Include="assets\js\editors\summernote\summernote.js" />
+    <Content Include="assets\js\editors\summernote\summernote.min.js" />
+    <Content Include="assets\js\editors\wysiwyg\bootstrap-wysiwyg.js" />
+    <Content Include="assets\js\editors\wysiwyg\jquery.hotkeys.js" />
+    <Content Include="assets\js\editors\wysiwyg\prettify.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js.map" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js.map" />
+    <Content Include="assets\js\fuelux\treeview\treeview-init.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js.map" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.js" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.min.js" />
+    <Content Include="assets\js\fullcalendar\jquery-ui.custom.min.js" />
+    <Content Include="assets\js\fullcalendar\moment.min.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.min.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.min.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.min.js" />
+    <Content Include="assets\js\knob\jquery.knob.js" />
+    <Content Include="assets\js\nestable\jquery.nestable.min.js" />
+    <Content Include="assets\js\select2\select2.js" />
+    <Content Include="assets\js\select2\select2.min.js" />
+    <Content Include="assets\js\skins.js" />
+    <Content Include="assets\js\skins.min.js" />
+    <Content Include="assets\js\slider\jQRangeSlider\jQAllRangeSliders-withRuler-min.js" />
+    <Content Include="assets\js\slider\jQRangeSlider\jquery.mousewheel.min.js" />
+    <Content Include="assets\js\slider\jquery.nouislider.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js.map" />
+    <Content Include="assets\js\textarea\jquery.autosize.js" />
+    <Content Include="assets\js\textarea\jquery.autosize.min.js" />
+    <Content Include="assets\js\toastr\toastr.js" />
+    <Content Include="assets\js\toastr\toastr.min.js" />
+    <Content Include="assets\js\toastr\toastr.min.js.map" />
+    <Content Include="assets\js\validation\bootstrapValidator.js" />
+    <Content Include="assets\js\validation\bootstrapValidator.min.js" />
+    <Content Include="assets\sound\alert.mp3" />
+    <Content Include="assets\swf\copy_csv_xls.swf" />
+    <Content Include="assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Features\angular\app\app.js" />
+    <Content Include="Features\angular\app\beyond.js" />
+    <Content Include="Features\angular\app\config.js" />
+    <Content Include="Features\angular\app\config.lazyload.js" />
+    <Content Include="Features\angular\app\config.router.js" />
+    <Content Include="Features\angular\app\controllers\accordion.js" />
+    <Content Include="Features\angular\app\controllers\alert.js" />
+    <Content Include="Features\angular\app\controllers\button.js" />
+    <Content Include="Features\angular\app\controllers\chartjs.js" />
+    <Content Include="Features\angular\app\controllers\dashboard.js" />
+    <Content Include="Features\angular\app\controllers\databoxes.js" />
+    <Content Include="Features\angular\app\controllers\datatable.js" />
+    <Content Include="Features\angular\app\controllers\datepicker.js" />
+    <Content Include="Features\angular\app\controllers\daterangepicker.js" />
+    <Content Include="Features\angular\app\controllers\dropdown.js" />
+    <Content Include="Features\angular\app\controllers\flot.js" />
+    <Content Include="Features\angular\app\controllers\fullcalendar.js" />
+    <Content Include="Features\angular\app\controllers\minicolors.js" />
+    <Content Include="Features\angular\app\controllers\modal.js" />
+    <Content Include="Features\angular\app\controllers\morris.js" />
+    <Content Include="Features\angular\app\controllers\nestable.js" />
+    <Content Include="Features\angular\app\controllers\nggrid.js" />
+    <Content Include="Features\angular\app\controllers\pagination.js" />
+    <Content Include="Features\angular\app\controllers\profile.js" />
+    <Content Include="Features\angular\app\controllers\progressbar.js" />
+    <Content Include="Features\angular\app\controllers\select2.js" />
+    <Content Include="Features\angular\app\controllers\slider.js" />
+    <Content Include="Features\angular\app\controllers\tab.js" />
+    <Content Include="Features\angular\app\controllers\tagsinput.js" />
+    <Content Include="Features\angular\app\controllers\textangular.js" />
+    <Content Include="Features\angular\app\controllers\timepicker.js" />
+    <Content Include="Features\angular\app\controllers\toaster.js" />
+    <Content Include="Features\angular\app\controllers\treeview.js" />
+    <Content Include="Features\angular\app\controllers\validation.js" />
+    <Content Include="Features\angular\app\directives\chatbar.js" />
+    <Content Include="Features\angular\app\directives\header.js" />
+    <Content Include="Features\angular\app\directives\loading.js" />
+    <Content Include="Features\angular\app\directives\navbar.js" />
+    <Content Include="Features\angular\app\directives\realtimechart.js" />
+    <Content Include="Features\angular\app\directives\sidebar.js" />
+    <Content Include="Features\angular\app\directives\skin.js" />
+    <Content Include="Features\angular\app\directives\widget.js" />
+    <Content Include="Features\angular\assets\css\animate.css" />
+    <Content Include="Features\angular\assets\css\animate.min.css" />
+    <Content Include="Features\angular\assets\css\beyond-rtl.css" />
+    <Content Include="Features\angular\assets\css\beyond-rtl.css.map" />
+    <Content Include="Features\angular\assets\css\beyond-rtl.min.css" />
+    <Content Include="Features\angular\assets\css\beyond.css" />
+    <Content Include="Features\angular\assets\css\beyond.css.map" />
+    <Content Include="Features\angular\assets\css\beyond.less" />
+    <Content Include="Features\angular\assets\css\beyond.min.css" />
+    <Content Include="Features\angular\assets\css\bootstrap-rtl.css" />
+    <Content Include="Features\angular\assets\css\bootstrap-rtl.css.map" />
+    <Content Include="Features\angular\assets\css\bootstrap-rtl.min.css" />
+    <Content Include="Features\angular\assets\css\bootstrap.css" />
+    <Content Include="Features\angular\assets\css\bootstrap.css.map" />
+    <Content Include="Features\angular\assets\css\bootstrap.min.css" />
+    <Content Include="Features\angular\assets\css\demo.css" />
+    <Content Include="Features\angular\assets\css\demo.css.map" />
+    <Content Include="Features\angular\assets\css\demo.less" />
+    <Content Include="Features\angular\assets\css\demo.min.css" />
+    <Content Include="Features\angular\assets\css\font-awesome.css" />
+    <Content Include="Features\angular\assets\css\font-awesome.min.css" />
+    <Content Include="Features\angular\assets\css\skins\azure.css" />
+    <Content Include="Features\angular\assets\css\skins\azure.css.map" />
+    <Content Include="Features\angular\assets\css\skins\azure.less" />
+    <Content Include="Features\angular\assets\css\skins\azure.min.css" />
+    <Content Include="Features\angular\assets\css\skins\black.css" />
+    <Content Include="Features\angular\assets\css\skins\black.css.map" />
+    <Content Include="Features\angular\assets\css\skins\black.less" />
+    <Content Include="Features\angular\assets\css\skins\black.min.css" />
+    <Content Include="Features\angular\assets\css\skins\blue.css" />
+    <Content Include="Features\angular\assets\css\skins\Blue.css.map" />
+    <Content Include="Features\angular\assets\css\skins\Blue.less" />
+    <Content Include="Features\angular\assets\css\skins\blue.min.css" />
+    <Content Include="Features\angular\assets\css\skins\darkblue.css" />
+    <Content Include="Features\angular\assets\css\skins\darkblue.css.map" />
+    <Content Include="Features\angular\assets\css\skins\darkblue.less" />
+    <Content Include="Features\angular\assets\css\skins\darkblue.min.css" />
+    <Content Include="Features\angular\assets\css\skins\darkred.css" />
+    <Content Include="Features\angular\assets\css\skins\darkred.css.map" />
+    <Content Include="Features\angular\assets\css\skins\darkred.less" />
+    <Content Include="Features\angular\assets\css\skins\darkred.min.css" />
+    <Content Include="Features\angular\assets\css\skins\deepblue.css" />
+    <Content Include="Features\angular\assets\css\skins\deepblue.css.map" />
+    <Content Include="Features\angular\assets\css\skins\deepblue.less" />
+    <Content Include="Features\angular\assets\css\skins\deepblue.min.css" />
+    <Content Include="Features\angular\assets\css\skins\gray.css" />
+    <Content Include="Features\angular\assets\css\skins\gray.css.map" />
+    <Content Include="Features\angular\assets\css\skins\gray.less" />
+    <Content Include="Features\angular\assets\css\skins\gray.min.css" />
+    <Content Include="Features\angular\assets\css\skins\green.css" />
+    <Content Include="Features\angular\assets\css\skins\green.css.map" />
+    <Content Include="Features\angular\assets\css\skins\green.less" />
+    <Content Include="Features\angular\assets\css\skins\green.min.css" />
+    <Content Include="Features\angular\assets\css\skins\orange.css" />
+    <Content Include="Features\angular\assets\css\skins\orange.css.map" />
+    <Content Include="Features\angular\assets\css\skins\orange.less" />
+    <Content Include="Features\angular\assets\css\skins\orange.min.css" />
+    <Content Include="Features\angular\assets\css\skins\pink.css" />
+    <Content Include="Features\angular\assets\css\skins\pink.css.map" />
+    <Content Include="Features\angular\assets\css\skins\pink.less" />
+    <Content Include="Features\angular\assets\css\skins\pink.min.css" />
+    <Content Include="Features\angular\assets\css\skins\purple.css" />
+    <Content Include="Features\angular\assets\css\skins\purple.css.map" />
+    <Content Include="Features\angular\assets\css\skins\purple.less" />
+    <Content Include="Features\angular\assets\css\skins\purple.min.css" />
+    <Content Include="Features\angular\assets\css\skins\skins-mixins.css" />
+    <Content Include="Features\angular\assets\css\skins\skins-mixins.css.map" />
+    <Content Include="Features\angular\assets\css\skins\skins-mixins.less" />
+    <Content Include="Features\angular\assets\css\skins\skins-mixins.min.css" />
+    <Content Include="Features\angular\assets\css\skins\teal.css" />
+    <Content Include="Features\angular\assets\css\skins\teal.css.map" />
+    <Content Include="Features\angular\assets\css\skins\teal.less" />
+    <Content Include="Features\angular\assets\css\skins\teal.min.css" />
+    <Content Include="Features\angular\assets\css\typicons.css" />
+    <Content Include="Features\angular\assets\css\typicons.min.css" />
+    <Content Include="Features\angular\assets\css\weather-icons.css" />
+    <Content Include="Features\angular\assets\css\weather-icons.min.css" />
+    <Content Include="Features\angular\assets\fonts\BYekan.woff" />
+    <Content Include="Features\angular\assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="Features\angular\assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="Features\angular\assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Features\angular\assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="Features\angular\assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Features\angular\assets\fonts\FontAwesome.otf" />
+    <Content Include="Features\angular\assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Features\angular\assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Features\angular\assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Features\angular\assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Features\angular\assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Features\angular\assets\fonts\typicons.eot" />
+    <Content Include="Features\angular\assets\fonts\typicons.svg" />
+    <Content Include="Features\angular\assets\fonts\typicons.ttf" />
+    <Content Include="Features\angular\assets\fonts\typicons.woff" />
+    <Content Include="Features\angular\assets\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="Features\angular\assets\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="Features\angular\assets\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="Features\angular\assets\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="Features\angular\assets\fonts\WeatherIcons-Regular.otf" />
+    <Content Include="Features\angular\assets\img\angle-down.png" />
+    <Content Include="Features\angular\assets\img\app-45616.png" />
+    <Content Include="Features\angular\assets\img\app.png" />
+    <Content Include="Features\angular\assets\img\attach-blue.png" />
+    <Content Include="Features\angular\assets\img\attach-green.png" />
+    <Content Include="Features\angular\assets\img\attach-red.png" />
+    <Content Include="Features\angular\assets\img\attach-yellow.png" />
+    <Content Include="Features\angular\assets\img\avatars\adam-jansen.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\bing.png" />
+    <Content Include="Features\angular\assets\img\avatars\divyia.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Javi-Jimenez.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\John-Smith.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Lee-Munroe.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Matt-Cheuvront.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Nicolai-Larson.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Osvaldus-Valutis.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Sergey-Azovskiy.jpg" />
+    <Content Include="Features\angular\assets\img\avatars\Stephanie-Walter.jpg" />
+    <Content Include="Features\angular\assets\img\favicon.png" />
+    <Content Include="Features\angular\assets\img\jquery.minicolors.png" />
+    <Content Include="Features\angular\assets\img\logo-inverted.png" />
+    <Content Include="Features\angular\assets\img\logo-rtl.png" />
+    <Content Include="Features\angular\assets\img\logo-solo.png" />
+    <Content Include="Features\angular\assets\img\logo.png" />
+    <Content Include="Features\angular\assets\img\sort_asc.png" />
+    <Content Include="Features\angular\assets\img\sort_asc_disabled.png" />
+    <Content Include="Features\angular\assets\img\sort_both.png" />
+    <Content Include="Features\angular\assets\img\sort_desc.png" />
+    <Content Include="Features\angular\assets\img\sort_desc_disabled.png" />
+    <Content Include="Features\angular\assets\img\temp1.png" />
+    <Content Include="Features\angular\assets\img\tree-icons.png" />
+    <Content Include="Features\angular\assets\sound\alert.mp3" />
+    <Content Include="Features\angular\assets\swf\copy_csv_xls.swf" />
+    <Content Include="Features\angular\assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Features\angular\index.html" />
+    <Content Include="Features\angular\lib\angular\angular-animate\angular-animate.js" />
+    <Content Include="Features\angular\lib\angular\angular-aria\angular-aria.js" />
+    <Content Include="Features\angular\lib\angular\angular-breadcrumb\angular-breadcrumb.js" />
+    <Content Include="Features\angular\lib\angular\angular-cookies\angular-cookies.js" />
+    <Content Include="Features\angular\lib\angular\angular-loader\angular-loader.js" />
+    <Content Include="Features\angular\lib\angular\angular-message\angular-messages.js" />
+    <Content Include="Features\angular\lib\angular\angular-mocks\angular-mocks.js" />
+    <Content Include="Features\angular\lib\angular\angular-ngStorage\ngStorage.js" />
+    <Content Include="Features\angular\lib\angular\angular-ocLazyLoad\ocLazyLoad.js" />
+    <Content Include="Features\angular\lib\angular\angular-resource\angular-resource.js" />
+    <Content Include="Features\angular\lib\angular\angular-route\angular-route.js" />
+    <Content Include="Features\angular\lib\angular\angular-sanitize\angular-sanitize.js" />
+    <Content Include="Features\angular\lib\angular\angular-scenario\angular-scenario.js" />
+    <Content Include="Features\angular\lib\angular\angular-touch\angular-touch.js" />
+    <Content Include="Features\angular\lib\angular\angular-ui-bootstrap\ui-bootstrap.js" />
+    <Content Include="Features\angular\lib\angular\angular-ui-router\angular-ui-router.js" />
+    <Content Include="Features\angular\lib\angular\angular-ui-utils\angular-ui-utils.js" />
+    <Content Include="Features\angular\lib\angular\angular.js" />
+    <Content Include="Features\angular\lib\jquery\bootstrap.js" />
+    <Content Include="Features\angular\lib\jquery\bootstrap.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\chartjs\chart.js" />
+    <Content Include="Features\angular\lib\jquery\charts\chartjs\chart.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="Features\angular\lib\jquery\charts\easypiechart\jquery.easypiechart.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\easypiechart\jquery.easypiechart.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.axislabels.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.categories.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.categories.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.fillbetween.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.pie.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.pie.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.resize.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.resize.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.selection.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.selection.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.stack.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.stack.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.time.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.time.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\flot\jquery.flot.tooltip.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\charts\morris\morris.js" />
+    <Content Include="Features\angular\lib\jquery\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="Features\angular\lib\jquery\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\data.json" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.bootstrap.css" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.bootstrap.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.bootstrap.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.tableTools.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.tableTools.min.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\dataTables.tableTools.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\datatable\jquery.dataTables.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\jquery.dataTables.min.js" />
+    <Content Include="Features\angular\lib\jquery\datatable\ZeroClipboard.js" />
+    <Content Include="Features\angular\lib\jquery\fuelux\spinbox\fuelux.spinbox.js" />
+    <Content Include="Features\angular\lib\jquery\fuelux\spinbox\fuelux.spinbox.min.js" />
+    <Content Include="Features\angular\lib\jquery\fuelux\spinbox\fuelux.spinbox.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\fuelux\wizard\wizard-custom.js" />
+    <Content Include="Features\angular\lib\jquery\fuelux\wizard\wizard-custom.min.js" />
+    <Content Include="Features\angular\lib\jquery\fuelux\wizard\wizard-custom.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\fullcalendar\fullcalendar.js" />
+    <Content Include="Features\angular\lib\jquery\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Features\angular\lib\jquery\fullcalendar\jquery-ui.custom.min.js" />
+    <Content Include="Features\angular\lib\jquery\fullcalendar\moment.min.js" />
+    <Content Include="Features\angular\lib\jquery\inputmask\jasny-bootstrap.js" />
+    <Content Include="Features\angular\lib\jquery\inputmask\jasny-bootstrap.min.js" />
+    <Content Include="Features\angular\lib\jquery\jquery-ui-1.10.4.custom.js" />
+    <Content Include="Features\angular\lib\jquery\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="Features\angular\lib\jquery\jquery.min.js" />
+    <Content Include="Features\angular\lib\jquery\knob\jquery.knob.js" />
+    <Content Include="Features\angular\lib\jquery\slimscroll\jquery.slimscroll.js" />
+    <Content Include="Features\angular\lib\jquery\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Features\angular\lib\jquery\slimscroll\jquery.slimscroll.min.js.map" />
+    <Content Include="Features\angular\lib\jquery\textarea\jquery.autosize.js" />
+    <Content Include="Features\angular\lib\jquery\textarea\jquery.autosize.min.js" />
+    <Content Include="Features\angular\lib\modules\angular-bootstrap-nav-tree\abn_tree_directive.js" />
+    <Content Include="Features\angular\lib\modules\angular-daterangepicker\angular-daterangepicker.js" />
+    <Content Include="Features\angular\lib\modules\angular-daterangepicker\angular-daterangepicker.min.js" />
+    <Content Include="Features\angular\lib\modules\angular-daterangepicker\daterangepicker.js" />
+    <Content Include="Features\angular\lib\modules\angular-daterangepicker\moment.js" />
+    <Content Include="Features\angular\lib\modules\angular-dropzone\angular-dropzone.js" />
+    <Content Include="Features\angular\lib\modules\angular-dropzone\dropzone.js" />
+    <Content Include="Features\angular\lib\modules\angular-dropzone\dropzone.min.js" />
+    <Content Include="Features\angular\lib\modules\angular-minicolors\angular-minicolors.js" />
+    <Content Include="Features\angular\lib\modules\angular-minicolors\jquery.minicolors.js" />
+    <Content Include="Features\angular\lib\modules\angular-minicolors\jquery.minicolors.min.js" />
+    <Content Include="Features\angular\lib\modules\angular-nestable\angular-nestable.js" />
+    <Content Include="Features\angular\lib\modules\angular-nestable\jquery.nestable.js" />
+    <Content Include="Features\angular\lib\modules\angular-slider\angular-slider.js" />
+    <Content Include="Features\angular\lib\modules\angular-slider\angular-slider.min.js" />
+    <Content Include="Features\angular\lib\modules\angular-ui-calendar\calendar.js" />
+    <Content Include="Features\angular\lib\modules\angular-ui-select\select.css" />
+    <Content Include="Features\angular\lib\modules\angular-ui-select\select.js" />
+    <Content Include="Features\angular\lib\modules\angular-ui-select\select.min.css" />
+    <Content Include="Features\angular\lib\modules\angular-ui-select\select.min.js" />
+    <Content Include="Features\angular\lib\modules\angularjs-toaster\toaster.css" />
+    <Content Include="Features\angular\lib\modules\angularjs-toaster\toaster.js" />
+    <Content Include="Features\angular\lib\modules\angularjs-toaster\toaster.min.css" />
+    <Content Include="Features\angular\lib\modules\ng-grid\data.json" />
+    <Content Include="Features\angular\lib\modules\ng-grid\ng-grid.css" />
+    <Content Include="Features\angular\lib\modules\ng-grid\ng-grid.min.js" />
+    <Content Include="Features\angular\lib\modules\ng-tags-input\ng-tags-input.js" />
+    <Content Include="Features\angular\lib\modules\text-angular\textAngular-rangy.min.js" />
+    <Content Include="Features\angular\lib\modules\text-angular\textAngular-sanitize.min.js" />
+    <Content Include="Features\angular\lib\modules\text-angular\textAngular.min.js" />
+    <Content Include="Features\angular\lib\utilities.js" />
+    <Content Include="Features\angular\views\alerts.html" />
+    <Content Include="Features\angular\views\blank.html" />
+    <Content Include="Features\angular\views\buttons.html" />
+    <Content Include="Features\angular\views\calendar.html" />
+    <Content Include="Features\angular\views\chartjs.html" />
+    <Content Include="Features\angular\views\dashboard-arabic.html" />
+    <Content Include="Features\angular\views\dashboard-persian.html" />
+    <Content Include="Features\angular\views\dashboard.html" />
+    <Content Include="Features\angular\views\databoxes.html" />
+    <Content Include="Features\angular\views\easypiechart.html" />
+    <Content Include="Features\angular\views\elements.html" />
+    <Content Include="Features\angular\views\error-404.html" />
+    <Content Include="Features\angular\views\error-500.html" />
+    <Content Include="Features\angular\views\flot.html" />
+    <Content Include="Features\angular\views\font-awesome.html" />
+    <Content Include="Features\angular\views\form-editors.html" />
+    <Content Include="Features\angular\views\form-inputmask.html" />
+    <Content Include="Features\angular\views\form-inputs.html" />
+    <Content Include="Features\angular\views\form-layout.html" />
+    <Content Include="Features\angular\views\form-pickers.html" />
+    <Content Include="Features\angular\views\form-validation.html" />
+    <Content Include="Features\angular\views\form-wizard.html" />
+    <Content Include="Features\angular\views\glyph-icons.html" />
+    <Content Include="Features\angular\views\grid.html" />
+    <Content Include="Features\angular\views\inbox.html" />
+    <Content Include="Features\angular\views\invoice.html" />
+    <Content Include="Features\angular\views\layout-arabic.html" />
+    <Content Include="Features\angular\views\layout-persian.html" />
+    <Content Include="Features\angular\views\layout.html" />
+    <Content Include="Features\angular\views\lock.html" />
+    <Content Include="Features\angular\views\login.html" />
+    <Content Include="Features\angular\views\message-compose.html" />
+    <Content Include="Features\angular\views\message-view.html" />
+    <Content Include="Features\angular\views\modals.html" />
+    <Content Include="Features\angular\views\morris.html" />
+    <Content Include="Features\angular\views\mvc.html" />
+    <Content Include="Features\angular\views\nestable-list.html" />
+    <Content Include="Features\angular\views\partials\arabic\navbar.html" />
+    <Content Include="Features\angular\views\partials\arabic\sidebar.html" />
+    <Content Include="Features\angular\views\partials\breadcrumbs.html" />
+    <Content Include="Features\angular\views\partials\chatbar.html" />
+    <Content Include="Features\angular\views\partials\header.html" />
+    <Content Include="Features\angular\views\partials\loading.html" />
+    <Content Include="Features\angular\views\partials\navbar.html" />
+    <Content Include="Features\angular\views\partials\persian\navbar.html" />
+    <Content Include="Features\angular\views\partials\persian\sidebar.html" />
+    <Content Include="Features\angular\views\partials\sidebar.html" />
+    <Content Include="Features\angular\views\pricing.html" />
+    <Content Include="Features\angular\views\profile.html" />
+    <Content Include="Features\angular\views\register.html" />
+    <Content Include="Features\angular\views\sparkline.html" />
+    <Content Include="Features\angular\views\tables-data.html" />
+    <Content Include="Features\angular\views\tables-simple.html" />
+    <Content Include="Features\angular\views\tabs.html" />
+    <Content Include="Features\angular\views\timeline.html" />
+    <Content Include="Features\angular\views\treeview.html" />
+    <Content Include="Features\angular\views\typicons.html" />
+    <Content Include="Features\angular\views\typography.html" />
+    <Content Include="Features\angular\views\versions.html" />
+    <Content Include="Features\angular\views\weather-icons.html" />
+    <Content Include="Features\angular\views\widgets.html" />
+    <Content Include="Features\docs\css\documentation.css" />
+    <Content Include="Features\docs\images\body.png" />
+    <Content Include="Features\docs\images\border_bottom.png" />
+    <Content Include="Features\docs\images\collapse.png" />
+    <Content Include="Features\docs\images\header.png" />
+    <Content Include="Features\docs\images\layout.png" />
+    <Content Include="Features\docs\images\less.png" />
+    <Content Include="Features\docs\images\logo-solo.png" />
+    <Content Include="Features\docs\images\main-container.png" />
+    <Content Include="Features\docs\images\navbar.png" />
+    <Content Include="Features\docs\images\page-content.png" />
+    <Content Include="Features\docs\images\themecolors.png" />
+    <Content Include="Features\docs\index.html" />
+    <Content Include="Features\docs\js\fancybox\blank.gif" />
+    <Content Include="Features\docs\js\fancybox\fancybox_loading.gif" />
+    <Content Include="Features\docs\js\fancybox\fancybox_overlay.png" />
+    <Content Include="Features\docs\js\fancybox\fancybox_sprite.png" />
+    <Content Include="Features\docs\js\fancybox\jquery.fancybox.css" />
+    <Content Include="Features\docs\js\fancybox\jquery.fancybox.js" />
+    <Content Include="Features\docs\js\fancybox\jquery.fancybox.pack.js" />
+    <Content Include="Features\docs\js\jquery-ui-1.9.0.custom\css\no-theme\jquery-ui-1.9.0.custom.css" />
+    <Content Include="Features\docs\js\jquery-ui-1.9.0.custom\js\jquery-1.8.2.js" />
+    <Content Include="Features\docs\js\jquery-ui-1.9.0.custom\js\jquery-ui-1.9.0.custom.min.js" />
+    <Content Include="Features\documentation\assets\css\app.min.css" />
+    <Content Include="Features\documentation\assets\css\bootstrap.min.css" />
+    <Content Include="Features\documentation\assets\css\docs.css" />
+    <Content Include="Features\documentation\assets\img\breadcrumbs.jpg" />
+    <Content Include="Features\documentation\assets\img\header.jpg" />
+    <Content Include="Features\documentation\assets\img\layout.jpg" />
+    <Content Include="Features\documentation\assets\img\logo.png" />
+    <Content Include="Features\documentation\assets\img\navbar.jpg" />
+    <Content Include="Features\documentation\assets\img\sidebar-form.jpg" />
+    <Content Include="Features\documentation\assets\img\sidebar-menu.jpg" />
+    <Content Include="Features\documentation\assets\js\bootstrap.min.js" />
+    <Content Include="Features\documentation\assets\js\init.js" />
+    <Content Include="Features\documentation\assets\js\jquery.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shBrushCSharp.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shBrushCss.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shBrushJScript.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shBrushXml.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shCore.css" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shCore.js" />
+    <Content Include="Features\documentation\assets\js\syntaxhighlighter\shThemeDefault.css" />
+    <Content Include="Features\documentation\index.html" />
+    <Content Include="Features\html\alerts.html" />
+    <Content Include="Features\html\assets\css\4095-rtl.css" />
+    <Content Include="Features\html\assets\css\4095-rtl.css.map" />
+    <Content Include="Features\html\assets\css\4095-rtl.min.css" />
+    <Content Include="Features\html\assets\css\4095.css" />
+    <Content Include="Features\html\assets\css\4095.css.map" />
+    <Content Include="Features\html\assets\css\4095.less" />
+    <Content Include="Features\html\assets\css\4095.min.css" />
+    <Content Include="Features\html\assets\css\animate.css" />
+    <Content Include="Features\html\assets\css\animate.min.css" />
+    <Content Include="Features\html\assets\css\beyond-less\400-500.less" />
+    <Content Include="Features\html\assets\css\beyond-less\accordions.less" />
+    <Content Include="Features\html\assets\css\beyond-less\alerts.less" />
+    <Content Include="Features\html\assets\css\beyond-less\animations.less" />
+    <Content Include="Features\html\assets\css\beyond-less\body.less" />
+    <Content Include="Features\html\assets\css\beyond-less\breadcrumbs.less" />
+    <Content Include="Features\html\assets\css\beyond-less\buttons.less" />
+    <Content Include="Features\html\assets\css\beyond-less\charts.less" />
+    <Content Include="Features\html\assets\css\beyond-less\chat.less" />
+    <Content Include="Features\html\assets\css\beyond-less\checkbox-radiobox.less" />
+    <Content Include="Features\html\assets\css\beyond-less\colorpicker.less" />
+    <Content Include="Features\html\assets\css\beyond-less\colors.less" />
+    <Content Include="Features\html\assets\css\beyond-less\comment.less" />
+    <Content Include="Features\html\assets\css\beyond-less\dashboard.less" />
+    <Content Include="Features\html\assets\css\beyond-less\databoxes.less" />
+    <Content Include="Features\html\assets\css\beyond-less\datepicker.less" />
+    <Content Include="Features\html\assets\css\beyond-less\daterangepicker.less" />
+    <Content Include="Features\html\assets\css\beyond-less\dropdowns.less" />
+    <Content Include="Features\html\assets\css\beyond-less\dropzone.less" />
+    <Content Include="Features\html\assets\css\beyond-less\editors.less" />
+    <Content Include="Features\html\assets\css\beyond-less\fonts.less" />
+    <Content Include="Features\html\assets\css\beyond-less\forms-inputs.less" />
+    <Content Include="Features\html\assets\css\beyond-less\fullcalendar.less" />
+    <Content Include="Features\html\assets\css\beyond-less\helpers.less" />
+    <Content Include="Features\html\assets\css\beyond-less\invoice.less" />
+    <Content Include="Features\html\assets\css\beyond-less\labels-badges.less" />
+    <Content Include="Features\html\assets\css\beyond-less\loading.less" />
+    <Content Include="Features\html\assets\css\beyond-less\lockscreen.less" />
+    <Content Include="Features\html\assets\css\beyond-less\login.less" />
+    <Content Include="Features\html\assets\css\beyond-less\mail.less" />
+    <Content Include="Features\html\assets\css\beyond-less\main-container.less" />
+    <Content Include="Features\html\assets\css\beyond-less\modals.less" />
+    <Content Include="Features\html\assets\css\beyond-less\navbar.less" />
+    <Content Include="Features\html\assets\css\beyond-less\nestable-lists.less" />
+    <Content Include="Features\html\assets\css\beyond-less\notifications.less" />
+    <Content Include="Features\html\assets\css\beyond-less\orders.less" />
+    <Content Include="Features\html\assets\css\beyond-less\page-content.less" />
+    <Content Include="Features\html\assets\css\beyond-less\page-header-body.less" />
+    <Content Include="Features\html\assets\css\beyond-less\pagination.less" />
+    <Content Include="Features\html\assets\css\beyond-less\popovers.less" />
+    <Content Include="Features\html\assets\css\beyond-less\pricing.less" />
+    <Content Include="Features\html\assets\css\beyond-less\profile.less" />
+    <Content Include="Features\html\assets\css\beyond-less\progressbars.less" />
+    <Content Include="Features\html\assets\css\beyond-less\register.less" />
+    <Content Include="Features\html\assets\css\beyond-less\search-help-bar.less" />
+    <Content Include="Features\html\assets\css\beyond-less\select2.less" />
+    <Content Include="Features\html\assets\css\beyond-less\sidebar.less" />
+    <Content Include="Features\html\assets\css\beyond-less\sliders.less" />
+    <Content Include="Features\html\assets\css\beyond-less\spaces.less" />
+    <Content Include="Features\html\assets\css\beyond-less\spinners.less" />
+    <Content Include="Features\html\assets\css\beyond-less\switches.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tables.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tabs.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tagsinput.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tasks.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tickets.less" />
+    <Content Include="Features\html\assets\css\beyond-less\timeline.less" />
+    <Content Include="Features\html\assets\css\beyond-less\timepicker.less" />
+    <Content Include="Features\html\assets\css\beyond-less\tooltips.less" />
+    <Content Include="Features\html\assets\css\beyond-less\treeview.less" />
+    <Content Include="Features\html\assets\css\beyond-less\typography.less" />
+    <Content Include="Features\html\assets\css\beyond-less\validator.less" />
+    <Content Include="Features\html\assets\css\beyond-less\variables.less" />
+    <Content Include="Features\html\assets\css\beyond-less\wells.less" />
+    <Content Include="Features\html\assets\css\beyond-less\widget.less" />
+    <Content Include="Features\html\assets\css\beyond-less\wizards.less" />
+    <Content Include="Features\html\assets\css\beyond-rtl.css" />
+    <Content Include="Features\html\assets\css\beyond-rtl.css.map" />
+    <Content Include="Features\html\assets\css\beyond-rtl.min.css" />
+    <Content Include="Features\html\assets\css\beyond.css" />
+    <Content Include="Features\html\assets\css\beyond.css.map" />
+    <Content Include="Features\html\assets\css\beyond.less" />
+    <Content Include="Features\html\assets\css\beyond.min.css" />
+    <Content Include="Features\html\assets\css\bootstrap-less\.csscomb.json" />
+    <Content Include="Features\html\assets\css\bootstrap-less\.csslintrc" />
+    <Content Include="Features\html\assets\css\bootstrap-less\alerts.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\badges.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\bootstrap.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\breadcrumbs.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\button-groups.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\buttons.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\carousel.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\close.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\code.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\component-animations.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\dropdowns.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\forms.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\glyphicons.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\grid.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\input-groups.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\jumbotron.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\labels.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\list-group.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\media.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\alerts.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\background-variant.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\border-radius.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\buttons.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\center-block.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\clearfix.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\forms.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\gradients.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\grid-framework.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\grid.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\hide-text.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\image.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\labels.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\list-group.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\nav-divider.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\nav-vertical-align.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\opacity.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\pagination.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\panels.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\progress-bar.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\reset-filter.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\reset-text.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\resize.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\responsive-visibility.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\size.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\tab-focus.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\table-row.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\text-emphasis.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\text-overflow.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\mixins\vendor-prefixes.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\modals.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\navbar.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\navs.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\normalize.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\pager.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\pagination.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\panels.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\popovers.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\print.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\progress-bars.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\responsive-embed.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\responsive-utilities.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\scaffolding.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\tables.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\theme.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\thumbnails.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\tooltip.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\type.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\utilities.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\variables.less" />
+    <Content Include="Features\html\assets\css\bootstrap-less\wells.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\alerts-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\badges-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\bootstrap-rtl.css" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\bootstrap-rtl.css.map" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\bootstrap-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\bootstrap-rtl.min.css" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\button-groups-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\carousel-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\close-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\dropdowns-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\forms-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\grid-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\input-groups-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\list-group-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\media-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\merged-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins-rtl.css" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins-rtl.min.css" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins\gradients-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins\grid-framework-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins\grid-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\mixins\pagination-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\modals-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\navbar-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\navs-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\normalize-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\pager-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\pagination-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\panels-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\popovers-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\progress-bars-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\responsive-embed-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\tables-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\type-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\utilities-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl-less\variables-rtl.less" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl.css" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl.css.map" />
+    <Content Include="Features\html\assets\css\bootstrap-rtl.min.css" />
+    <Content Include="Features\html\assets\css\bootstrap.css" />
+    <Content Include="Features\html\assets\css\bootstrap.css.map" />
+    <Content Include="Features\html\assets\css\bootstrap.min.css" />
+    <Content Include="Features\html\assets\css\dataTables.bootstrap.css" />
+    <Content Include="Features\html\assets\css\dataTables.bootstrap.rtl.css" />
+    <Content Include="Features\html\assets\css\demo.css" />
+    <Content Include="Features\html\assets\css\demo.css.map" />
+    <Content Include="Features\html\assets\css\demo.less" />
+    <Content Include="Features\html\assets\css\demo.min.css" />
+    <Content Include="Features\html\assets\css\font-awesome.css" />
+    <Content Include="Features\html\assets\css\font-awesome.min.css" />
+    <Content Include="Features\html\assets\css\other-less\LessHat.css" />
+    <Content Include="Features\html\assets\css\other-less\lesshat.less" />
+    <Content Include="Features\html\assets\css\other-less\lesshat.min.css" />
+    <Content Include="Features\html\assets\css\skins\azure.css" />
+    <Content Include="Features\html\assets\css\skins\azure.css.map" />
+    <Content Include="Features\html\assets\css\skins\azure.less" />
+    <Content Include="Features\html\assets\css\skins\azure.min.css" />
+    <Content Include="Features\html\assets\css\skins\black.css" />
+    <Content Include="Features\html\assets\css\skins\black.css.map" />
+    <Content Include="Features\html\assets\css\skins\black.less" />
+    <Content Include="Features\html\assets\css\skins\black.min.css" />
+    <Content Include="Features\html\assets\css\skins\blue.css" />
+    <Content Include="Features\html\assets\css\skins\Blue.css.map" />
+    <Content Include="Features\html\assets\css\skins\Blue.less" />
+    <Content Include="Features\html\assets\css\skins\blue.min.css" />
+    <Content Include="Features\html\assets\css\skins\darkblue.css" />
+    <Content Include="Features\html\assets\css\skins\darkblue.css.map" />
+    <Content Include="Features\html\assets\css\skins\darkblue.less" />
+    <Content Include="Features\html\assets\css\skins\darkblue.min.css" />
+    <Content Include="Features\html\assets\css\skins\darkred.css" />
+    <Content Include="Features\html\assets\css\skins\darkred.css.map" />
+    <Content Include="Features\html\assets\css\skins\darkred.less" />
+    <Content Include="Features\html\assets\css\skins\darkred.min.css" />
+    <Content Include="Features\html\assets\css\skins\deepblue.css" />
+    <Content Include="Features\html\assets\css\skins\deepblue.css.map" />
+    <Content Include="Features\html\assets\css\skins\deepblue.less" />
+    <Content Include="Features\html\assets\css\skins\deepblue.min.css" />
+    <Content Include="Features\html\assets\css\skins\gray.css" />
+    <Content Include="Features\html\assets\css\skins\gray.css.map" />
+    <Content Include="Features\html\assets\css\skins\gray.less" />
+    <Content Include="Features\html\assets\css\skins\gray.min.css" />
+    <Content Include="Features\html\assets\css\skins\green.css" />
+    <Content Include="Features\html\assets\css\skins\green.css.map" />
+    <Content Include="Features\html\assets\css\skins\green.less" />
+    <Content Include="Features\html\assets\css\skins\green.min.css" />
+    <Content Include="Features\html\assets\css\skins\orange.css" />
+    <Content Include="Features\html\assets\css\skins\orange.css.map" />
+    <Content Include="Features\html\assets\css\skins\orange.less" />
+    <Content Include="Features\html\assets\css\skins\orange.min.css" />
+    <Content Include="Features\html\assets\css\skins\pink.css" />
+    <Content Include="Features\html\assets\css\skins\pink.css.map" />
+    <Content Include="Features\html\assets\css\skins\pink.less" />
+    <Content Include="Features\html\assets\css\skins\pink.min.css" />
+    <Content Include="Features\html\assets\css\skins\purple.css" />
+    <Content Include="Features\html\assets\css\skins\purple.css.map" />
+    <Content Include="Features\html\assets\css\skins\purple.less" />
+    <Content Include="Features\html\assets\css\skins\purple.min.css" />
+    <Content Include="Features\html\assets\css\skins\skins-mixins.css" />
+    <Content Include="Features\html\assets\css\skins\skins-mixins.css.map" />
+    <Content Include="Features\html\assets\css\skins\skins-mixins.less" />
+    <Content Include="Features\html\assets\css\skins\skins-mixins.min.css" />
+    <Content Include="Features\html\assets\css\skins\teal.css" />
+    <Content Include="Features\html\assets\css\skins\teal.css.map" />
+    <Content Include="Features\html\assets\css\skins\teal.less" />
+    <Content Include="Features\html\assets\css\skins\teal.min.css" />
+    <Content Include="Features\html\assets\css\typicons.css" />
+    <Content Include="Features\html\assets\css\typicons.min.css" />
+    <Content Include="Features\html\assets\css\weather-icons.css" />
+    <Content Include="Features\html\assets\css\weather-icons.min.css" />
+    <Content Include="Features\html\assets\fonts\BYekan.woff" />
+    <Content Include="Features\html\assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="Features\html\assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="Features\html\assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Features\html\assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="Features\html\assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Features\html\assets\fonts\FontAwesome.otf" />
+    <Content Include="Features\html\assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Features\html\assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Features\html\assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Features\html\assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Features\html\assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Features\html\assets\fonts\typicons.eot" />
+    <Content Include="Features\html\assets\fonts\typicons.svg" />
+    <Content Include="Features\html\assets\fonts\typicons.ttf" />
+    <Content Include="Features\html\assets\fonts\typicons.woff" />
+    <Content Include="Features\html\assets\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="Features\html\assets\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="Features\html\assets\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="Features\html\assets\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="Features\html\assets\fonts\WeatherIcons-Regular.otf" />
+    <Content Include="Features\html\assets\fonts\YekanWeb-Bold.woff" />
+    <Content Include="Features\html\assets\fonts\YekanWeb-Regular.woff" />
+    <Content Include="Features\html\assets\img\angle-down.png" />
+    <Content Include="Features\html\assets\img\app-45616.png" />
+    <Content Include="Features\html\assets\img\app.png" />
+    <Content Include="Features\html\assets\img\attach-blue.png" />
+    <Content Include="Features\html\assets\img\attach-green.png" />
+    <Content Include="Features\html\assets\img\attach-red.png" />
+    <Content Include="Features\html\assets\img\attach-yellow.png" />
+    <Content Include="Features\html\assets\img\avatars\adam-jansen.jpg" />
+    <Content Include="Features\html\assets\img\avatars\bing.png" />
+    <Content Include="Features\html\assets\img\avatars\divyia.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Javi-Jimenez.jpg" />
+    <Content Include="Features\html\assets\img\avatars\John-Smith.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Lee-Munroe.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Matt-Cheuvront.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Nicolai-Larson.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Osvaldus-Valutis.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Sergey-Azovskiy.jpg" />
+    <Content Include="Features\html\assets\img\avatars\Stephanie-Walter.jpg" />
+    <Content Include="Features\html\assets\img\favicon.png" />
+    <Content Include="Features\html\assets\img\jquery.minicolors.png" />
+    <Content Include="Features\html\assets\img\logo-inverted.png" />
+    <Content Include="Features\html\assets\img\logo-rtl.png" />
+    <Content Include="Features\html\assets\img\logo-solo.png" />
+    <Content Include="Features\html\assets\img\logo.png" />
+    <Content Include="Features\html\assets\img\sort_asc.png" />
+    <Content Include="Features\html\assets\img\sort_asc_disabled.png" />
+    <Content Include="Features\html\assets\img\sort_both.png" />
+    <Content Include="Features\html\assets\img\sort_desc.png" />
+    <Content Include="Features\html\assets\img\sort_desc_disabled.png" />
+    <Content Include="Features\html\assets\img\temp1.png" />
+    <Content Include="Features\html\assets\img\tree-icons.png" />
+    <Content Include="Features\html\assets\js\beyond.js" />
+    <Content Include="Features\html\assets\js\beyond.min.js" />
+    <Content Include="Features\html\assets\js\beyond.min.js.map" />
+    <Content Include="Features\html\assets\js\bootbox\bootbox.js" />
+    <Content Include="Features\html\assets\js\bootbox\bootbox.min.js" />
+    <Content Include="Features\html\assets\js\bootbox\bootbox.min.js.map" />
+    <Content Include="Features\html\assets\js\bootstrap.js" />
+    <Content Include="Features\html\assets\js\bootstrap.min.js" />
+    <Content Include="Features\html\assets\js\charts\chartjs\Chart.js" />
+    <Content Include="Features\html\assets\js\charts\chartjs\Chart.min.js" />
+    <Content Include="Features\html\assets\js\charts\chartjs\chartjs-init.js" />
+    <Content Include="Features\html\assets\js\charts\easypiechart\easypiechart-init.js" />
+    <Content Include="Features\html\assets\js\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="Features\html\assets\js\charts\easypiechart\jquery.easypiechart.min.js" />
+    <Content Include="Features\html\assets\js\charts\easypiechart\jquery.easypiechart.min.js.map" />
+    <Content Include="Features\html\assets\js\charts\flot\flot-init.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.axislabels.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.categories.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.categories.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.fillbetween.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.min.js.map" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.pie.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.pie.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.resize.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.resize.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.selection.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.selection.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.stack.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.stack.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.time.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.time.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="Features\html\assets\js\charts\flot\jquery.flot.tooltip.min.js.map" />
+    <Content Include="Features\html\assets\js\charts\morris\morris-init.js" />
+    <Content Include="Features\html\assets\js\charts\morris\morris.js" />
+    <Content Include="Features\html\assets\js\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="Features\html\assets\js\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="Features\html\assets\js\charts\sparkline\sparkline-init.js" />
+    <Content Include="Features\html\assets\js\colorpicker\jquery.minicolors.js" />
+    <Content Include="Features\html\assets\js\colorpicker\jquery.minicolors.min.js" />
+    <Content Include="Features\html\assets\js\datatable\datatables-init.js" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.bootstrap.js" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.bootstrap.min.js.map" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.tableTools.js" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.tableTools.min.js" />
+    <Content Include="Features\html\assets\js\datatable\dataTables.tableTools.min.js.map" />
+    <Content Include="Features\html\assets\js\datatable\jquery.dataTables.js" />
+    <Content Include="Features\html\assets\js\datatable\jquery.dataTables.min.js" />
+    <Content Include="Features\html\assets\js\datatable\jquery.dataTables.min.js.map" />
+    <Content Include="Features\html\assets\js\datatable\ZeroClipboard.js" />
+    <Content Include="Features\html\assets\js\datetime\bootstrap-datepicker.js" />
+    <Content Include="Features\html\assets\js\datetime\bootstrap-timepicker.js" />
+    <Content Include="Features\html\assets\js\datetime\bootstrap-timepicker.min.js" />
+    <Content Include="Features\html\assets\js\datetime\bootstrap-timepicker.min.js.map" />
+    <Content Include="Features\html\assets\js\datetime\daterangepicker.js" />
+    <Content Include="Features\html\assets\js\datetime\moment.js" />
+    <Content Include="Features\html\assets\js\datetime\moment.min.js" />
+    <Content Include="Features\html\assets\js\dropzone\dropzone.js" />
+    <Content Include="Features\html\assets\js\dropzone\dropzone.min.js" />
+    <Content Include="Features\html\assets\js\editors\summernote\summernote.js" />
+    <Content Include="Features\html\assets\js\editors\summernote\summernote.min.js" />
+    <Content Include="Features\html\assets\js\editors\wysiwyg\bootstrap-wysiwyg.js" />
+    <Content Include="Features\html\assets\js\editors\wysiwyg\jquery.hotkeys.js" />
+    <Content Include="Features\html\assets\js\editors\wysiwyg\prettify.js" />
+    <Content Include="Features\html\assets\js\fuelux\spinbox\fuelux.spinbox.js" />
+    <Content Include="Features\html\assets\js\fuelux\spinbox\fuelux.spinbox.min.js" />
+    <Content Include="Features\html\assets\js\fuelux\spinbox\fuelux.spinbox.min.js.map" />
+    <Content Include="Features\html\assets\js\fuelux\treeview\tree-custom.js" />
+    <Content Include="Features\html\assets\js\fuelux\treeview\tree-custom.min.js" />
+    <Content Include="Features\html\assets\js\fuelux\treeview\tree-custom.min.js.map" />
+    <Content Include="Features\html\assets\js\fuelux\treeview\treeview-init.js" />
+    <Content Include="Features\html\assets\js\fuelux\wizard\wizard-custom.js" />
+    <Content Include="Features\html\assets\js\fuelux\wizard\wizard-custom.min.js" />
+    <Content Include="Features\html\assets\js\fuelux\wizard\wizard-custom.min.js.map" />
+    <Content Include="Features\html\assets\js\fullcalendar\fullcalendar.js" />
+    <Content Include="Features\html\assets\js\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Features\html\assets\js\fullcalendar\jquery-ui.custom.min.js" />
+    <Content Include="Features\html\assets\js\fullcalendar\moment.min.js" />
+    <Content Include="Features\html\assets\js\inputmask\jasny-bootstrap.js" />
+    <Content Include="Features\html\assets\js\inputmask\jasny-bootstrap.min.js" />
+    <Content Include="Features\html\assets\js\jquery-ui-1.10.4.custom.js" />
+    <Content Include="Features\html\assets\js\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="Features\html\assets\js\jquery.min.js" />
+    <Content Include="Features\html\assets\js\knob\jquery.knob.js" />
+    <Content Include="Features\html\assets\js\nestable\jquery.nestable.min.js" />
+    <Content Include="Features\html\assets\js\select2\select2.full.js" />
+    <Content Include="Features\html\assets\js\select2\select2.full.min.js" />
+    <Content Include="Features\html\assets\js\select2\select2.js" />
+    <Content Include="Features\html\assets\js\select2\select2.min.js" />
+    <Content Include="Features\html\assets\js\skins.js" />
+    <Content Include="Features\html\assets\js\skins.min.js" />
+    <Content Include="Features\html\assets\js\skins.min.js.map" />
+    <Content Include="Features\html\assets\js\slider\jQRangeSlider\jQAllRangeSliders-withRuler-min.js" />
+    <Content Include="Features\html\assets\js\slider\jQRangeSlider\jquery.mousewheel.min.js" />
+    <Content Include="Features\html\assets\js\slider\jquery.nouislider.js" />
+    <Content Include="Features\html\assets\js\slimscroll\jquery.slimscroll.js" />
+    <Content Include="Features\html\assets\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Features\html\assets\js\slimscroll\jquery.slimscroll.min.js.map" />
+    <Content Include="Features\html\assets\js\tagsinput\bootstrap-tagsinput.js" />
+    <Content Include="Features\html\assets\js\tagsinput\bootstrap-tagsinput.min.js" />
+    <Content Include="Features\html\assets\js\tagsinput\bootstrap-tagsinput.min.js.map" />
+    <Content Include="Features\html\assets\js\textarea\jquery.autosize.js" />
+    <Content Include="Features\html\assets\js\textarea\jquery.autosize.min.js" />
+    <Content Include="Features\html\assets\js\toastr\toastr.js" />
+    <Content Include="Features\html\assets\js\toastr\toastr.min.js" />
+    <Content Include="Features\html\assets\js\toastr\toastr.min.js.map" />
+    <Content Include="Features\html\assets\js\validation\bootstrapValidator.js" />
+    <Content Include="Features\html\assets\js\validation\bootstrapValidator.min.js" />
+    <Content Include="Features\html\assets\js\validation\bootstrapValidator.min.js.map" />
+    <Content Include="Features\html\assets\sound\alert.mp3" />
+    <Content Include="Features\html\assets\swf\copy_csv_xls.swf" />
+    <Content Include="Features\html\assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Features\html\blank.html" />
+    <Content Include="Features\html\buttons.html" />
+    <Content Include="Features\html\calendar.html" />
+    <Content Include="Features\html\chartjs.html" />
+    <Content Include="Features\html\databoxes.html" />
+    <Content Include="Features\html\easypiecharts.html" />
+    <Content Include="Features\html\elements.html" />
+    <Content Include="Features\html\error-404.html" />
+    <Content Include="Features\html\error-500.html" />
+    <Content Include="Features\html\flot.html" />
+    <Content Include="Features\html\font-awesome.html" />
+    <Content Include="Features\html\form-editors.html" />
+    <Content Include="Features\html\form-inputmask.html" />
+    <Content Include="Features\html\form-inputs.html" />
+    <Content Include="Features\html\form-layouts.html" />
+    <Content Include="Features\html\form-pickers.html" />
+    <Content Include="Features\html\form-validation.html" />
+    <Content Include="Features\html\form-wizard.html" />
+    <Content Include="Features\html\glyph-icons.html" />
+    <Content Include="Features\html\grid.html" />
+    <Content Include="Features\html\inbox.html" />
+    <Content Include="Features\html\index-rtl-ar.html" />
+    <Content Include="Features\html\index-rtl-fa.html" />
+    <Content Include="Features\html\index.html" />
+    <Content Include="Features\html\invoice.html" />
+    <Content Include="Features\html\lock.html" />
+    <Content Include="Features\html\login.html" />
+    <Content Include="Features\html\message-compose.html" />
+    <Content Include="Features\html\message-view.html" />
+    <Content Include="Features\html\modals.html" />
+    <Content Include="Features\html\morris.html" />
+    <Content Include="Features\html\mvc.html" />
+    <Content Include="Features\html\nestable-list.html" />
+    <Content Include="Features\html\pricing.html" />
+    <Content Include="Features\html\profile.html" />
+    <Content Include="Features\html\register.html" />
+    <Content Include="Features\html\sparkline.html" />
+    <Content Include="Features\html\tables-data.html" />
+    <Content Include="Features\html\tables-simple.html" />
+    <Content Include="Features\html\tabs.html" />
+    <Content Include="Features\html\timeline.html" />
+    <Content Include="Features\html\treeview.html" />
+    <Content Include="Features\html\typicon.html" />
+    <Content Include="Features\html\typography.html" />
+    <Content Include="Features\html\versions.html" />
+    <Content Include="Features\html\weather-icons.html" />
+    <Content Include="Features\html\widgets.html" />
+    <Content Include="Features\landing\assets\css\bootstrap.min.css" />
+    <Content Include="Features\landing\assets\css\ecommerce-page.css" />
+    <Content Include="Features\landing\assets\css\ecommerce-page.min.css" />
+    <Content Include="Features\landing\assets\css\landing-page.css" />
+    <Content Include="Features\landing\assets\css\landing-page.min.css" />
+    <Content Include="Features\landing\assets\css\less\lib\mixins.css" />
+    <Content Include="Features\landing\assets\css\less\lib\mixins.min.css" />
+    <Content Include="Features\landing\assets\css\pe.css" />
+    <Content Include="Features\landing\assets\css\portfolio-page.css" />
+    <Content Include="Features\landing\assets\css\portfolio-page.min.css" />
+    <Content Include="Features\landing\assets\fonts\Pe-icon-7-stroke.svg" />
+    <Content Include="Features\landing\assets\img\avatars\allison.jpg" />
+    <Content Include="Features\landing\assets\img\avatars\andy.jpg" />
+    <Content Include="Features\landing\assets\img\avatars\avatar1.jpg" />
+    <Content Include="Features\landing\assets\img\avatars\avatar2.jpg" />
+    <Content Include="Features\landing\assets\img\avatars\avatar3.jpg" />
+    <Content Include="Features\landing\assets\img\avatars\jared.jpg" />
+    <Content Include="Features\landing\assets\img\cover-bg-2.jpg" />
+    <Content Include="Features\landing\assets\img\cover-bg.jpg" />
+    <Content Include="Features\landing\assets\img\favicon.png" />
+    <Content Include="Features\landing\assets\img\laptop.png" />
+    <Content Include="Features\landing\assets\img\logo.png" />
+    <Content Include="Features\landing\assets\img\mobile.png" />
+    <Content Include="Features\landing\assets\img\pc.png" />
+    <Content Include="Features\landing\assets\img\products\p2.png" />
+    <Content Include="Features\landing\assets\img\products\p3.png" />
+    <Content Include="Features\landing\assets\img\products\p4.png" />
+    <Content Include="Features\landing\assets\img\products\p5.png" />
+    <Content Include="Features\landing\assets\img\products\p6.png" />
+    <Content Include="Features\landing\assets\img\products\p7.png" />
+    <Content Include="Features\landing\assets\img\products\p8.png" />
+    <Content Include="Features\landing\assets\img\products\p9.png" />
+    <Content Include="Features\landing\assets\img\search-bg.jpg" />
+    <Content Include="Features\landing\assets\img\tablet.png" />
+    <Content Include="Features\landing\assets\img\video-bg-2.jpg" />
+    <Content Include="Features\landing\assets\img\video-bg-3.jpg" />
+    <Content Include="Features\landing\assets\img\video-bg.jpg" />
+    <Content Include="Features\landing\assets\img\works\w1.jpg" />
+    <Content Include="Features\landing\assets\img\works\w2.jpg" />
+    <Content Include="Features\landing\assets\img\works\w3.jpg" />
+    <Content Include="Features\landing\assets\img\works\w4.jpg" />
+    <Content Include="Features\landing\assets\img\works\w5.jpg" />
+    <Content Include="Features\landing\assets\img\works\w6.jpg" />
+    <Content Include="Features\landing\assets\img\works\w7.jpg" />
+    <Content Include="Features\landing\assets\img\works\w8.jpg" />
+    <Content Include="Features\landing\assets\js\app.js" />
+    <Content Include="Features\landing\assets\js\bootstrap.min.js" />
+    <Content Include="Features\landing\assets\js\gmaps\gmaps.js" />
+    <Content Include="Features\landing\assets\js\gmaps\gmaps.min.js" />
+    <Content Include="Features\landing\assets\js\jquery-2.0.3.min.js" />
+    <Content Include="Features\landing\assets\js\jquery.easing.1.3.js" />
+    <Content Include="Features\landing\assets\js\skrollr.min.js" />
+    <Content Include="Features\landing\assets\video\video.mp4" />
+    <Content Include="Features\landing\ecommerce.html" />
+    <Content Include="Features\landing\landing.html" />
+    <Content Include="Features\landing\portfolio.html" />
+    <Content Include="Global.asax" />
+    <Content Include="Mvc.sitemap" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Lock.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Home\Alerts.cshtml" />
+    <Content Include="Views\Home\Arabic.cshtml" />
+    <Content Include="Views\Home\Blank.cshtml" />
+    <Content Include="Views\Home\Buttons.cshtml" />
+    <Content Include="Views\Home\Calendar.cshtml" />
+    <Content Include="Views\Home\ChartJS.cshtml" />
+    <Content Include="Views\Home\Compose.cshtml" />
+    <Content Include="Views\Home\Databoxes.cshtml" />
+    <Content Include="Views\Home\DataPickers.cshtml" />
+    <Content Include="Views\Home\DataTables.cshtml" />
+    <Content Include="Views\Home\EasyPieCharts.cshtml" />
+    <Content Include="Views\Home\Elements.cshtml" />
+    <Content Include="Views\Home\Error404.cshtml" />
+    <Content Include="Views\Home\Error500.cshtml" />
+    <Content Include="Views\Home\FlotCharts.cshtml" />
+    <Content Include="Views\Home\FontAwesome.cshtml" />
+    <Content Include="Views\Home\FormEditors.cshtml" />
+    <Content Include="Views\Home\FormInputMask.cshtml" />
+    <Content Include="Views\Home\FormInputs.cshtml" />
+    <Content Include="Views\Home\FormLayouts.cshtml" />
+    <Content Include="Views\Home\FormValidation.cshtml" />
+    <Content Include="Views\Home\GlyphIcons.cshtml" />
+    <Content Include="Views\Home\Grid.cshtml" />
+    <Content Include="Views\Home\Inbox.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Invoice.cshtml" />
+    <Content Include="Views\Home\Modals.cshtml" />
+    <Content Include="Views\Home\MorrisCharts.cshtml" />
+    <Content Include="Views\Home\NestableList.cshtml" />
+    <Content Include="Views\Home\Persian.cshtml" />
+    <Content Include="Views\Home\PricingTables.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
+    <Content Include="Views\Home\SimpleTables.cshtml" />
+    <Content Include="Views\Home\SparklineCharts.cshtml" />
+    <Content Include="Views\Home\Tabs.cshtml" />
+    <Content Include="Views\Home\Timeline.cshtml" />
+    <Content Include="Views\Home\TreeView.cshtml" />
+    <Content Include="Views\Home\Typicons.cshtml" />
+    <Content Include="Views\Home\Typography.cshtml" />
+    <Content Include="Views\Home\ViewMessage.cshtml" />
+    <Content Include="Views\Home\WeatherIcons.cshtml" />
+    <Content Include="Views\Home\Widgets.cshtml" />
+    <Content Include="Views\Home\Wizards.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_ArabicLayout.cshtml" />
+    <Content Include="Views\Shared\_Default.cshtml" />
+    <Content Include="Views\Shared\_Empty.cshtml" />
+    <Content Include="Views\Shared\_PersianLayout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Web.config" />
+    <Content Include="Features\html\assets\css\bootstrap.min.css.map" />
+    <Content Include="Features\landing\assets\css\ecommerce-page.css.map" />
+    <Content Include="Features\landing\assets\css\ecommerce-page.less" />
+    <Content Include="Features\landing\assets\css\landing-page.css.map" />
+    <Content Include="Features\landing\assets\css\landing-page.less" />
+    <Content Include="Features\landing\assets\css\less\app\ecommerce.less" />
+    <Content Include="Features\landing\assets\css\less\app\landing.less" />
+    <Content Include="Features\landing\assets\css\less\app\parallax.less" />
+    <Content Include="Features\landing\assets\css\less\app\portfolio.less" />
+    <Content Include="Features\landing\assets\css\less\lib\lesshat.less" />
+    <Content Include="Features\landing\assets\css\less\lib\mixins.css.map" />
+    <Content Include="Features\landing\assets\css\less\lib\mixins.less" />
+    <Content Include="Features\landing\assets\css\portfolio-page.css.map" />
+    <Content Include="Features\landing\assets\css\portfolio-page.less" />
+    <Content Include="Features\landing\assets\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Features\landing\assets\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Features\landing\assets\fonts\Pe-icon-7-stroke.woff" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="assets\js\jqueryval\jquery.validate-vsdoc.js" />
+    <None Include="MvcSiteMapSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\angular\app\filters\" />
+    <Folder Include="Features\angular\app\services\" />
+    <Folder Include="Features\html\upload\" />
+    <Folder Include="Features\react\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>44379</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/btheme</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

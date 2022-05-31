@@ -1,0 +1,105 @@
+﻿
+<!--File:HR_Designation Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Designation";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DesignationId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getDesignationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationById", area = "HR" });
+    var getDesignationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationDataExtra", area = "HR" });
+    var saveDesignationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "SaveDesignation", area = "HR" });
+    var deleteDesignationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDeleteDesignationById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedDesignationUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "DesignationApi", action = "GetPagedDesignation", area = "HR"});
+    var getAllDesignationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetAllDesignation", area = "HR" });
+    var saveDesignationListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "SaveDesignationList", area = "HR" });
+    var getDesignationListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationListDataExtra", area = "HR" });
+
+    var editDesignationByIdPageUrl = Url.Action("DesignationAddEdit", "Designation", new { area = "HR" });
+    var manageDesignationBreakdownListUrl = Url.Action("DesignationList", "Designation", new { area = "HR" });
+    
+    // Angular Functions
+    string getDesignationById="getDesignationById";
+    var saveDesignation = "saveDesignation";
+    var getNewDesignation = "getNewDesignation";
+    var refreshPage = "loadPage()";
+    string deleteDesignationById="deleteDesignationById";
+    string loadDesignationExtraData="loadDesignationExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Designation/DesignationAddEdit.js"></script>
+}
+
+<div id="DesignationAddEdit" class="row" ng-controller="DesignationAddEditCtrl" ng-init="Init(
+      '@DesignationId'
+      ,'@getDesignationByIdUrl'
+      ,'@getDesignationDataExtraUrl'
+      ,'@saveDesignationUrl'
+      ,'@deleteDesignationByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">Add/Edit</span>
+                <div class="widget-buttons buttons-bordered no-padding-right">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="DesignationId" ng-Enter="@(getDesignationById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewDesignation)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <!--text type-->
+                        <div class="col-sm-6 form-group">
+                            <label>Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                            <input type="text" ng-model="Designation.@HR_Designation.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Local Name </label>
+                            <input type="text" ng-model="Designation.@HR_Designation.Property_LocalName" class="form-control" placeholder="Enter Local Name" maxlength="256"  />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Description </label>
+                            <input type="text" ng-model="Designation.@HR_Designation.Property_Description" class="form-control" placeholder="Enter Description"   />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Priority </label>
+                            <input type="number" ng-model="Designation.@HR_Designation.Property_Priority" class="form-control" placeholder="Enter Priority"   />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Job Class Id </label>
+                            <input type="number" ng-model="Designation.@HR_Designation.Property_JobClassId" class="form-control" placeholder="Enter Job Class Id"   />
+                        </div>
+                        <!--dropdown option for EnumList-->
+                        <div class="col-sm-6 form-group">
+                            <label> Status  </label>
+                            <select ng-model="Designation.@HR_Designation.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"  ></select>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Is Academic </label>
+                            <input type="checkbox" ng-model="Designation.@HR_Designation.Property_IsAcademic" class="form-control" placeholder="Enter Is Academic"   />
+                        </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveDesignation)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

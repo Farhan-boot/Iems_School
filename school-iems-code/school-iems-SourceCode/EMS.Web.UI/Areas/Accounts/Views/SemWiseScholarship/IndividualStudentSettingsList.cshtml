@@ -1,0 +1,702 @@
+﻿
+<!--File:Acnt_SemWiseScholarship List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "1st Semester Scholarships";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var SemWiseScholarshipId = (string)id == null ? "0" : (string)id;
+
+    var userName = Request.QueryString["un"];//ViewContext.RouteData.Values["id"];
+    var userNameStr = (string)userName == null ? "" : (string)userName;
+
+
+
+    //WebApi link for single row
+
+    var getStudentInfoByUserNameUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetStudentInfoByUserName", area = "Accounts" });
+    var getSemWiseScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetSemWiseScholarshipById", area = "Accounts" });
+    var getSemWiseScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetSemWiseScholarshipDataExtra", area = "Accounts" });
+    var saveSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveIndividualStudentScholarship", area = "Accounts" });
+    var deleteSemWiseScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetDeleteIndividualStudentScholarshipById", area = "Accounts" });
+
+    var getTrashIndividualStudentScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetTrashIndividualStudentScholarshipById", area = "Accounts" });
+    var getLockOrUnlockIndividualStudentScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetLockOrUnlockIndividualStudentScholarshipById", area = "Accounts" });
+
+    var getApplyOrCancelScholarshipForIndividualStudentByScholarshipIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetApplyOrCancelScholarshipForIndividualStudentByScholarshipId", area = "Accounts" });
+    var saveMarkAsApplyScholarshipForIndividualStudentForGlobalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveMarkAsApplyScholarshipForIndividualStudentForGlobal", area = "Accounts" });
+
+
+
+    var saveLockIndividualStudentScholarshipByIdForGlobalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveLockIndividualStudentScholarshipByIdForGlobal", area = "Accounts" });
+    var saveUnlockIndividualStudentScholarshipByIdForGlobalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveUnlockIndividualStudentScholarshipByIdForGlobal", area = "Accounts" });
+    var saveTrashIndividualStudentScholarshipListForGlobalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveTrashIndividualStudentScholarshipListForGlobal", area = "Accounts" });
+    var saveUnTrashIndividualStudentScholarshipListForGlobalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveUnTrashIndividualStudentScholarshipListForGlobal", area = "Accounts" });
+
+    var getScholarshipCreateFromSscAndHscResultByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetScholarshipCreateFromSscAndHscResultByStudentId", area = "Accounts" });
+
+    
+
+//WebApi link for List
+var getPagedSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetPagedIndividualStudentScholarship", area = "Accounts" });
+    var getAllSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetAllSemWiseScholarship", area = "Accounts" });
+    var saveSemWiseScholarshipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "SaveSemWiseScholarshipList", area = "Accounts" });
+    var getSemWiseScholarshipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IndividualStudentApi", action = "GetSemWiseScholarshipListDataExtra", area = "Accounts" });
+
+    var IndividualStudentSettingsList2 = Url.Action("IndividualStudentSettingsList2", "SemWiseScholarship", new { area = "Accounts" });
+    var editStudentByIdAdmissionPageUrl = Url.Action("StudentProfile", "Student", new { area = "Admission" });
+
+
+    //Angular Function Name
+    var getNewSemWiseScholarship = "getNewSemWiseScholarship";
+    var saveSemWiseScholarship = "saveSemWiseScholarship";
+    var deleteSemWiseScholarshipById = "deleteSemWiseScholarshipById";
+    var deleteSemWiseScholarshipByObj = "deleteSemWiseScholarshipByObj";
+    //for list
+    var searchSemWiseScholarshipList = "searchSemWiseScholarshipList";
+    var getPagedSemWiseScholarshipList = "getPagedSemWiseScholarshipList";
+    var getAllSemWiseScholarshipList = "getAllSemWiseScholarshipList";
+    var saveSemWiseScholarshipList = "saveSemWiseScholarshipList";
+    var getSemWiseScholarshipListExtraData = "getSemWiseScholarshipListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/SemWiseScholarship/IndividualStudentSettingsList.js?v=2"></script>
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+            collapseSidebar();
+        });
+    </script>
+}
+
+
+<div ng-controller="SemWiseScholarshipListCtrl"
+     ng-init="Init(
+     '@userNameStr'
+      ,'@getPagedSemWiseScholarshipUrl'
+     ,'@deleteSemWiseScholarshipByIdUrl'
+     ,'@getSemWiseScholarshipListDataExtraUrl'
+     ,'@saveSemWiseScholarshipListUrl'
+     ,'@getSemWiseScholarshipByIdUrl'
+     ,'@getSemWiseScholarshipDataExtraUrl'
+     ,'@saveSemWiseScholarshipUrl'
+    ,'@getStudentInfoByUserNameUrl'
+    ,'@getTrashIndividualStudentScholarshipByIdUrl'
+    ,'@getLockOrUnlockIndividualStudentScholarshipByIdUrl'
+     ,'@saveLockIndividualStudentScholarshipByIdForGlobalUrl'
+     ,'@saveUnlockIndividualStudentScholarshipByIdForGlobalUrl' 
+     ,'@saveTrashIndividualStudentScholarshipListForGlobalUrl'
+     ,'@saveUnTrashIndividualStudentScholarshipListForGlobalUrl'
+    ,'@getApplyOrCancelScholarshipForIndividualStudentByScholarshipIdUrl'
+    ,'@saveMarkAsApplyScholarshipForIndividualStudentForGlobalUrl'
+    ,'@getScholarshipCreateFromSscAndHscResultByStudentIdUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+
+    
+<div class="widget">
+<div class="widget-header bordered-bottom bordered-sky ">
+    <i class="widget-icon fa fa-list bold  "></i>
+    <span class="widget-caption ">Individual Student Scholarship </span>
+
+
+
+</div>
+<div class="widget-body no-padding" style="overflow: auto">
+<table class="table table-bordered educationHistory" style="font-size: 11px;">
+    <thead class="show-on-print">
+    <tr>
+        <th style="text-align: center;" colspan="12"><strong>Report of Voucher Wise Summary</strong></th>
+    </tr>
+    <tr  class="show-on-print">
+        <th style="text-align: center;" colspan="12">
+            <div class="ng-binding">Program: <!-- ngIf: SelectedProgram==null --><span ng-if="SelectedProgram==null" class="ng-scope">All Program</span><!-- end ngIf: SelectedProgram==null --> </div>
+            <div class="ng-binding">Bank: <!-- ngIf: SelectedBank==null --><span ng-if="SelectedBank==null" class="ng-scope">All Bank</span><!-- end ngIf: SelectedBank==null --></div>
+            <div class="ng-binding">Particular: <!-- ngIf: SelectedParticularName==null --><span ng-if="SelectedParticularName==null" class="ng-scope">All Particular</span><!-- end ngIf: SelectedParticularName==null --> </div>
+            <div class="ng-binding">Start Date: 29/8/2021</div>
+            <div class="ng-binding">End Date: 29/8/2021 </div>
+        </th>
+    </tr>
+    <tr ng-show="VoucherNo!=''" class="show-on-print ng-hide">
+        <th style="text-align: center;" colspan="12">
+            <div class="ng-binding">Voucher No:  </div>
+        </th>
+    </tr>
+    </thead>
+    <tbody class="hide-on-print">
+    <tr>
+        @*<td style="width: 70px;" class="">
+            Student ID:
+        </td>*@
+        @*<td style="width: 145px;">
+            <span class="input-icon">
+                <input type="text" ng-model="UserName" 
+                       ng-Enter="@(getPagedSemWiseScholarshipList)()" 
+                       ng-change="UserNameOnChange()"
+                       class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                <i class="glyphicon glyphicon-search blue"></i>
+            </span>
+        </td>*@
+
+        <td ng-show="UserName==''"  style="width: 50px;" class="">Program:</td>
+        <td ng-show="UserName==''" class="">
+            <select ng-model="SelectedProgramId" 
+                    ng-change="ClearScholarshipList()"
+                    ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">All Program</option>
+            </select>
+        </td>
+                        
+        <td  style="width: 92px;" class="">Admission Semester: </td>
+        <td  class="">
+            <select ng-model="SelectedStartSemesterId" 
+                    ng-change="OnChangeStartSemester()"
+                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">--Select Semester--</option>
+            </select>
+        </td>
+        @*<td  style="width: 92px;" class="">End Semester:</td>
+        <td class="">
+            <select ng-model="SelectedEndSemesterId" 
+                    ng-change="ClearScholarshipList()"
+                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">All Semester</option>
+            </select>
+        </td>*@
+        <td  style="width: 61px;" class="">Category:</td>
+        <td class="">
+            <select ng-model="SelectedDiscountCategoryEnumId" 
+                    ng-change="ClearScholarshipList()"
+                    ng-options="option.Id as option.Name for option in DiscountCategoryEnumList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">All Category</option>
+            </select>
+        </td>
+                        
+    </tr>
+    <tr class="hide-on-print">
+        <td style="text-align: center;" colspan="12">
+            <div>
+                <label style="margin-left: 30px;">
+                    <input ng-model="isShowTrashedScholarship" ng-change="getPagedSemWiseScholarshipList()" type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;">
+                    <span style="color: #e74b37;">Show Deleted Scholarship Only</span>
+                </label>
+            </div>
+            <button ng-click="@(getPagedSemWiseScholarshipList)()" class="btn btn-info"><i class="fa fa-refresh"></i> Load Data</button>
+        </td>
+    </tr>
+    <tr ng-if="Student!=null">
+        <td class="text-bold" colspan="10" style="text-align: center;">
+            Student Information
+            <button style="float: right;" ng-click="individualStudentScholarshipAddModalOpen()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+        </td>
+    </tr>
+    <tr ng-if="Student!=null">
+        <td colspan="5">
+            <table class="table table-hover table-striped table-bordered std-info-table" style="color: #555555;">
+                <tbody>
+                <tr role="row">
+                        <td style="width: 133px;" class="text-bold">ID:</td>
+                        <td class="text-bold text-left">
+                            <a target="_blank" href="#">
+                                {{Student.UserName}}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td>Student Name:</td>
+                        <td class="text-left">
+                            <a target="_blank" href="#">
+                                {{Student.FullName}}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td>Program:</td>
+                        <td class="text-left ng-binding">
+                            {{Student.ProgramName}}
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td>Mobile No:</td>
+                        <td class="text-left ng-binding">
+                            {{Student.MobileNo}}
+                        </td>
+                    </tr>
+                   
+                    
+                   
+                </tbody>
+            </table>
+
+        </td>
+        <td colspan="5">
+
+            <table class="table table-hover table-striped table-bordered std-info-table" style="color: #555555;">
+                <tbody>
+                <tr role="row">
+                    <td style="width: 130px;">SSC/Equivalent GPA:</td>
+                    <td class="text-left ng-binding">
+                        {{Student.SscGpa}} <span ng-if="Student.IsGoldenSsc"> (Golden) </span>
+                    </td>
+                </tr>
+                <tr role="row">
+                    <td>HSC/Equivalent:</td>
+                    <td class="text-left ng-binding">
+                        {{Student.HscGpa}} <span ng-if="Student.IsGoldenHsc"> (Golden) </span>
+                    </td>
+                </tr>
+                <tr role="row">
+                    <td>Average GPA:</td>
+                    <td class="text-left ng-binding">
+                        {{Student.AverageGpa|number : 2}} <span ng-if="Student.AverageIsGolden"> (Golden) </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+            
+
+<div ng-if="SemWiseScholarshipList.length>0">
+    
+    <div class="table-footer no-print">
+        @OptionControl()
+    </div>
+    <div>
+        <div class="widget-buttons no-padding-right">
+            @*<button ng-click="saveTrashIndividualStudentScholarshipListForGlobal()" ng-hide="isShowTrashedScholarship" class="btn btn-xs btn-danger">
+                 <i class="fa fa-trash"></i> Mark as delete
+            </button>*@
+            @*<button ng-click="saveUnTrashIndividualStudentScholarshipListForGlobal()" ng-show="isShowTrashedScholarship" class="btn btn-xs btn-danger ng-hide">
+                 <i class="fa fa-undo"></i> Mark as Un-Delete
+            </button>*@
+            <button ng-click="saveLockIndividualStudentScholarshipByIdForGlobal()" ng-hide="isShowTrashedScholarship" class="btn btn-xs btn-success">
+                 <i class="fa fa-lock"></i> Mark as Verified
+            </button>
+            <button ng-click="saveUnlockIndividualStudentScholarshipByIdForGlobal()" ng-hide="isShowTrashedScholarship" class="btn btn-xs btn-warning">
+                <i class="fa fa-unlock"></i> Mark as Unverified
+            </button>
+            @*<button ng-click="saveMarkAsApplyScholarshipForIndividualStudentForGlobal()" ng-hide="isShowTrashedScholarship" class="btn btn-xs btn-success">
+                 Mark as Apply
+            </button>*@
+            <button ng-click="getScholarshipCreateFromSscAndHscResultByStudentId()" ng-hide="isShowTrashedScholarship || SelectedStudentId<=0" class="btn btn-xs btn-info">
+                Regenerate by Ssc & Hsc Result
+            </button>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover"  style="margin-bottom: 15px;">
+        <thead class="bordered-blue">
+            <tr>
+                <th colspan="12" style="text-align: center;font-size: 25px;">1<sup>st</sup> Semester Scholarships of {{SelectedStartSemesterName}}</th>
+            </tr>
+        <tr>
+            <th class="text-center">
+                <input type="checkbox" ng-model="IsSelectAll" ng-click="selectAll(IsSelectAll)">
+            </th>
+            <th class="text-center">SN</th>
+            <th class="text-center">Student ID</th>
+            <th class="text-center">Student Name</th>
+            <th class="text-center">Scholarship Name</th>
+            @*<th class="text-center">Discount Category</th>*@
+            @*<th class="text-center" title="Depend On Specific Particular">Specific Particular</th>*@
+            @*<th class="text-center">Is Global Discount</th>*@
+
+            <!--th class="text-center">Student Id</th-->
+            @*<th class="text-center">Is Percent Amount</th>*@
+            <th class="text-center">Amount</th>
+            <!--th class="text-center">Discount Category Enum Id</th-->
+
+            <th class="text-center">Program</th>
+            <th class="text-center">Admission Semester</th>
+            @*<th class="text-center">End Semester</th>*@
+            @*<th class="text-center">Remark</th>*@
+            @*<th class="text-center">History</th>*@
+            @*<th class="text-center">Is Deleted</th>*@
+            <th class="text-center no-print" style="width: 135px;">Action</th>
+        </tr>
+        </thead>
+        <tbody >
+            @* | filter:{@Acnt_SemWiseScholarship.Property_IsAffected:false} *@
+        <tr ng-repeat="row in SemWiseScholarshipList">
+            <td class="text-center">
+                <input type="checkbox" ng-model="row.@Acnt_SemWiseScholarship.Property_IsSelected"/>
+            </td>
+            <td class="text-center">{{$index+1}}</td>
+
+            <td class="">
+
+                <a target="_blank" href="@(IndividualStudentSettingsList2+"?un="){{row.StudentUserName}}">
+                    {{row.StudentUserName}}
+                </a>
+
+            </td>
+            <td class="">
+                <a target="_blank" href="@(editStudentByIdAdmissionPageUrl)/?id={{row.UserAccountId}}&stdId={{row.StudentId}}&un={{row.StudentUserName}}#Scholarship-Settings">
+                    {{row.StudentFullName}}
+                </a>
+            </td>
+            <td class="">
+                {{row.NameParticularName}}
+            </td>
+            <!--td class="">{{row.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId}}</td-->
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_DiscountCategory}}</td>*@
+            @*<td class="">
+                {{row.DependOnParticularName}}
+            </td>*@
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsGlobalDiscount}}</td>*@
+
+            <!--td class="">{{row.@Acnt_SemWiseScholarship.Property_StudentId}}</td-->
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsPercentAmount}}</td>*@
+            <td class="text-center">
+                {{row.@Acnt_SemWiseScholarship.Property_Amount}}
+                <span ng-if="row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> %</span>
+                <span ng-if="!row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> BDT</span>
+            </td>
+
+            <td class="">
+                <select ng-model="row.@Acnt_SemWiseScholarship.Property_ProgramId"
+                        ng-disabled="true"
+                        ng-options="option.Id as option.Name for option in ProgramList" title="" ng-init="" class="form-control">
+                    <option value="" label="" class="">All Program</option>
+                </select>
+            </td>
+            <td class="">
+                <select ng-model="row.@Acnt_SemWiseScholarship.Property_StartSemesterId"
+                        ng-disabled="true"
+                        ng-options="option.Id as option.Name for option in SemesterList" title="" ng-init="" class="form-control">
+                    <option value="" label="" class=""></option>
+                </select>
+            </td>
+            @*<td class="">
+                <select ng-model="row.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                        ng-disabled="true"
+                        ng-options="option.Id as option.Name for option in SemesterList" title="" ng-init="" class="form-control">
+                    <option value="" label="" class="">Continuing</option>
+                </select>
+            </td>*@
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_Remark}}</td>*@
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_History}}</td>*@
+            @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsDeleted}}</td>*@
+
+
+            <td class="text-center no-print">
+                <button ng-click="getLockOrUnlockIndividualStudentScholarshipById(row,false)"
+                        ng-show="row.IsLocked && !row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                        class="btn btn-xs btn-success">
+                    <i class="fa fa-lock"></i>
+                </button>
+                <button ng-click="getLockOrUnlockIndividualStudentScholarshipById(row,true)"
+                        ng-show="!row.IsLocked && !row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                        class="btn btn-xs btn-warning">
+                    <i class="fa fa-unlock"></i>
+                </button>
+                
+                <button ng-click="individualStudentScholarshipViewModalOpen(row)"
+                        class="btn btn-xs btn-default">
+                    <i class="fa fa-eye"></i>
+                </button>
+                
+
+                @*<button 
+                    ng-click="getApplyOrCancelScholarshipForIndividualStudentByScholarshipId(row,true)"
+                        $1$ng-show="row.IsLocked && !row.@Acnt_SemWiseScholarship.Property_IsDeleted"#1#
+                        class="btn btn-xs btn-success">
+                    Apply
+                </button>*@
+
+                @*<div class="widget-buttons">
+                    <div class="btn-group">
+                        <a ng-if="!(row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked)"
+                           class="btn btn-primary btn-xs shiny" ng-click="individualStudentScholarshipEditModalOpen(row)" href="javascript:void(0);">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <a ng-if="row.@Acnt_SemWiseScholarship.Property_IsLocked || row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                           class="btn btn-primary btn-xs shiny" ng-click="individualStudentScholarshipViewModalOpen(row)" href="javascript:void(0);">
+                            <i class="fa fa-eye"></i> View
+                        </a>
+
+                        <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-blue pull-left">
+                            <li ng-hide="row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked">
+                                <a ng-click="individualStudentScholarshipEditModalOpen(row)"><i class="fa fa-edit"></i> Edit</a>
+                            </li>
+                            <li>
+                                <a ng-click="individualStudentScholarshipViewModalOpen(row)"><i class="fa fa-eye"></i> View</a>
+                            </li>
+                            <li ng-hide="row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked">
+                                <a ng-click="getTrashIndividualStudentScholarshipById(row,true)" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+                            </li>
+                            <li ng-show="row.@Acnt_SemWiseScholarship.Property_IsDeleted">
+                                <a ng-click="getTrashIndividualStudentScholarshipById(row,false)" style="color: red;"><i class="fa fa-undo"></i> Un-Delete</a>
+                            </li>
+                            <li ng-show="row.@Acnt_SemWiseScholarship.Property_IsDeleted">
+                                <a ng-click="@(deleteSemWiseScholarshipById)(row)" style="color: red;"><i class="fa fa-remove"></i> Permanent Delete</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>*@
+                
+                
+                
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-striped table-bordered table-hover" style="margin-bottom: 15px; display: none;">
+        <thead class="bordered-blue">
+        <tr>
+            <th colspan="12" style="text-align: center;font-size: 25px;">Affected Scholarships of {{SelectedStartSemesterName}}</th>
+        </tr>
+        <tr>
+            <th class="text-center">
+                <input type="checkbox" ng-model="IsSelectAllForAffectedList" ng-click="selectAllForAffectedList()">
+            </th>
+            <th class="text-center">SN</th>
+            <th class="text-center">Student ID</th>
+            <th class="text-center">Student Name</th>
+            <th class="text-center">Scholarship Name</th>
+            <th class="text-center">Discount Category</th>
+            <th class="text-center" title="Depend On Specific Particular">Specific Particular</th>
+            @*<th class="text-center">Is Global Discount</th>*@
+
+            <!--th class="text-center">Student Id</th-->
+            @*<th class="text-center">Is Percent Amount</th>*@
+            <th class="text-center">Amount</th>
+            <!--th class="text-center">Discount Category Enum Id</th-->
+
+            <th class="text-center">Program</th>
+            <th class="text-center">Start Semester</th>
+            <th class="text-center">End Semester</th>
+            @*<th class="text-center">Remark</th>*@
+            @*<th class="text-center">History</th>*@
+            @*<th class="text-center">Is Deleted</th>*@
+            <th class="text-center no-print" style="width: 135px;">Action</th>
+        </tr>
+        </thead>
+            <tbody ng-if="SemWiseScholarshipList.length>0">
+
+                <tr ng-repeat="row in SemWiseScholarshipList | filter:{@Acnt_SemWiseScholarship.Property_IsAffected:true}">
+                    <td class="text-center">
+                        <input type="checkbox" ng-model="row.@Acnt_SemWiseScholarship.Property_IsSelected" />
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+
+                    <td class="">
+
+                        <a target="_blank" href="@(Request.Url.AbsolutePath+"?un="){{row.StudentUserName}}">
+                            {{row.StudentUserName}}
+                        </a>
+
+                    </td>
+                    <td class="">
+                        <a target="_blank" href="@(editStudentByIdAdmissionPageUrl)/?id={{row.UserAccountId}}&stdId={{row.StudentId}}&un={{row.StudentUserName}}#Scholarship-Settings">
+                            {{row.StudentFullName}}
+                        </a>
+                    </td>
+                    <td class="">
+                        {{row.NameParticularName}}
+                    </td>
+                    <!--td class="">{{row.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId}}</td-->
+                    <td class="">{{row.@Acnt_SemWiseScholarship.Property_DiscountCategory}}</td>
+                    <td class="">
+                        {{row.DependOnParticularName}}
+                    </td>
+                    @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsGlobalDiscount}}</td>*@
+
+                    <!--td class="">{{row.@Acnt_SemWiseScholarship.Property_StudentId}}</td-->
+                    @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsPercentAmount}}</td>*@
+                    <td class="text-center">
+                        {{row.@Acnt_SemWiseScholarship.Property_Amount}}
+                        <span ng-if="row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> %</span>
+                        <span ng-if="!row.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> BDT</span>
+                    </td>
+
+                    <td class="">
+                        <select ng-model="row.@Acnt_SemWiseScholarship.Property_ProgramId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in ProgramList" title="" ng-init="" class="form-control">
+                            <option value="" label="" class="">All Program</option>
+                        </select>
+                    </td>
+                    <td class="">
+                        <select ng-model="row.@Acnt_SemWiseScholarship.Property_StartSemesterId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in SemesterList" title="" ng-init="" class="form-control">
+                            <option value="" label="" class=""></option>
+                        </select>
+                    </td>
+                    <td class="">
+                        <select ng-model="row.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in SemesterList" title="" ng-init="" class="form-control">
+                            <option value="" label="" class="">Continuing</option>
+                        </select>
+                    </td>
+                    @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_Remark}}</td>*@
+                    @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_History}}</td>*@
+                    @*<td class="">{{row.@Acnt_SemWiseScholarship.Property_IsDeleted}}</td>*@
+
+
+                    <td class="text-center no-print">
+                        @*<button ng-click="getLockOrUnlockIndividualStudentScholarshipById(row,false)"
+                                ng-show="row.IsLocked && !row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                                class="btn btn-xs btn-success">
+                            <i class="fa fa-lock"></i>
+                        </button>*@
+                        @*<button ng-click="getLockOrUnlockIndividualStudentScholarshipById(row,true)"
+                                ng-show="!row.IsLocked && !row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                                class="btn btn-xs btn-warning">
+                            <i class="fa fa-unlock"></i>
+                        </button>*@
+                        <button ng-click="getApplyOrCancelScholarshipForIndividualStudentByScholarshipId(row,false)"
+                                ng-show="!row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                                class="btn btn-xs btn-danger">
+                          Cancel
+                        </button>
+
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a ng-if="!(row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked)"
+                                   class="btn btn-primary btn-xs shiny" ng-click="individualStudentScholarshipEditModalOpen(row)" href="javascript:void(0);">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                                <a ng-if="row.@Acnt_SemWiseScholarship.Property_IsLocked || row.@Acnt_SemWiseScholarship.Property_IsDeleted"
+                                   class="btn btn-primary btn-xs shiny" ng-click="individualStudentScholarshipViewModalOpen(row)" href="javascript:void(0);">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+
+                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li ng-hide="row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked">
+                                        <a ng-click="individualStudentScholarshipEditModalOpen(row)"><i class="fa fa-edit"></i> Edit</a>
+                                    </li>
+                                    <li>
+                                        <a ng-click="individualStudentScholarshipViewModalOpen(row)"><i class="fa fa-eye"></i> View</a>
+                                    </li>
+                                    <li ng-hide="row.@Acnt_SemWiseScholarship.Property_IsDeleted || row.@Acnt_SemWiseScholarship.Property_IsLocked">
+                                        <a ng-click="getTrashIndividualStudentScholarshipById(row,true)" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+                                    </li>
+                                    <li ng-show="row.@Acnt_SemWiseScholarship.Property_IsDeleted">
+                                        <a ng-click="getTrashIndividualStudentScholarshipById(row,false)" style="color: red;"><i class="fa fa-undo"></i> Un-Delete</a>
+                                    </li>
+                                    @*<li>
+                                        <a ng-click="@(deleteSemWiseScholarshipById)(row)" style="color: red;"><i class="fa fa-remove"></i> Permanent Delete</a>
+                                    </li>*@
+
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <div class="table-footer no-print">
+        @OptionControl()
+    </div>
+
+</div>
+            
+
+</div>
+</div>
+    
+@* Start Individual Student Scholarship AddEdit Modal*@
+<div class="modal fade" id="individualStudentScholarshipAddEditModal" tabindex="-1" role="dialog" aria-labelledby="individualStudentScholarshipAddEditModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Individual Student Scholarship  {{SelectedSemesterName}} </h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention Please!</strong> {{ErrorMsg}}
+                    </div>
+
+                    @Html.Partial("~/Areas/Accounts/Views/SemWiseScholarship/Shared/_IndividualStudentScholarshipAddEdit.cshtml")
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button ng-click="saveSemWiseScholarship ()" type="button" class="btn btn-success">
+                        <span class="fa fa-save"></span> Save
+                    </button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@* End Individual Student Scholarship AddEdit Modal*@
+
+
+@* Start Individual Student Scholarship view Modal*@
+<div class="modal fade" id="individualStudentScholarshipViewModal" tabindex="-1" role="dialog" aria-labelledby="individualStudentScholarshipViewModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Individual Student Scholarship  {{SelectedSemesterName}} </h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("~/Areas/Accounts/Views/SemWiseScholarship/Shared/_IndividualStudentScholarshipViewDetails.cshtml")
+            </div>
+        </div>
+    </div>
+</div>
+@* End Individual Student Scholarship View Modal*@
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

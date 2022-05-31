@@ -1,0 +1,262 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+}
+ <div class="widget">
+    <div class="widget-header bordered-bottom bordered-green">
+        <i class="widget-icon fa fa-users"></i>
+        <span  class="widget-caption">Regular Students</span>
+        @if (HttpUtil.IsSupperAdmin()||  PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.StudentCourseRegistration.CanPermanentDelete))
+        {
+            <div class="widget-buttons buttons-bordered">
+                <button ng-click="deleteClassAllStudent(@((byte) Aca_Exam.ExamTypeEnum.FinalTerm))"
+                        class="btn btn-xs btn-danger">
+                    <i class="fa fa-trash"></i> Delete All Regular Student
+                </button>
+            </div>
+        }
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="refreshClassStudents()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+        </div>
+        <div class="widget-buttons buttons-bordered" style="display: none">
+            <button ng-click="searchStudents(@((byte) Aca_Exam.ExamTypeEnum.FinalTerm))"
+                    type="button" class="btn btn-xs btn-success"
+                    data-toggle="modal" data-target="#addCourseStudentsModal">
+                 <i class="fa fa-plus"></i> Add New Regular Student
+             </button>
+         </div>
+         
+     </div>
+     <div class="widget-body">
+         <table class="table table-striped table-bordered table-hover">
+             <thead class="bordered-blue">
+             <tr>
+                 <th class="text-center">Ser</th>
+                 <th class="text-center">Class Roll</th>
+                 <th class="text-center">Name</th>
+                 @*<th class="text-center">Enroll Type</th>*@
+                 <th class="text-center">Registration</th>
+                 <th class="text-center">Status</th>
+                 <th class="text-center" style="width: 140px;">Action</th>
+             </tr>
+             </thead>
+             <tbody> @*| orderBy:'ClassRollNo'*@
+             <tr ng-repeat="row in ClassStudentList|filter:{@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId:@((byte) Aca_Exam.ExamTypeEnum.FinalTerm)}">
+                 <td class="text-center">{{$index+1}}</td>
+                 <td class="text-center">{{row.Student.@User_Student.Property_ClassRollNo}}</td>
+                 <td>
+                     <a target="_blank" href="@(editStudentByIdAcademicPageUrl)/?id={{row.Student.@User_Student.Property_UserId}}&stdId={{row.Student.@User_Student.Property_Id}}&un={{row.Student.@User_Student.Property_ClassRollNo}}" class="text-bold" title="click to view profile"> {{row.Student.FullName}}</a> 
+                     @*<a href="@Url.Action("StudentAddEdit", "Student", new {area = "Academic"})?id={{row.Student.Id}}" target="_blank" title="click to view profile"> {{row.Student.FullName}}</a>*@
+                 </td>
+                 @*
+                                <td class="text-center padding-2">
+                                    <select ng-model="row.@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId"
+                                            ng-options="option.Id as option.Name for option in StudentEnrollTypeEnumList "
+                                            ng-init="" class="form-control padding-2"></select>
+                                </td>*@
+             <td class="text-center padding-2">
+
+                 <span ng-show="(
+                       row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop) || 
+                       row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)
+                       )"
+                       style="color: red;font-weight: bold">
+                     {{row.@Aca_ClassTakenByStudent.Property_RegistrationStatus}}
+                 </span>
+
+                 <span ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.DropForRetakeOrImprovement)"
+                       class="warning" style="font-weight: bold">
+                     {{row.@Aca_ClassTakenByStudent.Property_RegistrationStatus}}
+                 </span>
+
+                 <span ng-show="(
+                       row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.FreshRegistration) || 
+                       row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.RetakeRegistration) ||
+                       row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId ==@((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.ImprovementRegistration) 
+                       )"
+                       style="color: green;"
+                     >
+                     {{row.@Aca_ClassTakenByStudent.Property_RegistrationStatus}}
+                 </span>
+
+                 @*<select ng-model="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId"
+        ng-options="option.Id as option.Name for option in StudentRegistrationStatusEnumList "
+        ng-init="" class="form-control padding-2"></select>*@
+             </td>
+                 <td class="text-center padding-2">
+                     {{row.@Aca_ClassTakenByStudent.Property_Status}}
+                     @*<select ng-model="row.@Aca_ClassTakenByStudent.Property_StatusEnumId"
+                             ng-options="option.Id as option.Name for option in StudentStatusEnumList "
+                             ng-init="" class="form-control padding-2"></select>*@
+                 </td>
+                 <td class="text-center">
+                     @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.StudentCourseRegistration.CanPermanentDelete))
+                     {
+                        <button ng-click="deleteClassStudent(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                     }
+
+                     <button style="margin-top:3px" title="Cancel: Refund Full Payment!" ng-click="getTrashUntrashCourseByClassId(row,true)" ng-hide="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)" class="btn btn-xs btn-danger">
+                         <i class="fa fa-times"></i> Cancel
+                     </button>
+                     <button style="margin-top:3px" ng-click="getTrashUntrashCourseByClassId(row,false)" ng-hide="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId!=@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)" class="btn btn-xs btn-warning">
+                         <i class="fa fa-refresh"> Un Cancel</i>
+                     </button>
+
+                     <button style="margin-top:3px" title="Drop: No Payment Refund!" ng-click="getDropUnDropCourseByClassId(row,true)" ng-hide="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)
+                                                                                || row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop)
+                                                                                " class="btn btn-xs btn-warning">
+                         Drop
+                     </button>
+                     <button style="margin-top:3px" ng-click="getDropUnDropCourseByClassId(row,false)" ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop)" class="btn btn-xs btn-warning">
+                         Un Drop
+                     </button>
+                 </td>
+             </tr>
+             </tbody>
+         </table>
+         <!-- Modal -->
+         <div class="modal fade" id="addCourseStudentsModal" tabindex="-1" role="dialog" aria-labelledby="addCourseStudentsModal">
+             <div class="modal-dialog modal-lg" role="document">
+                 <div class="modal-content">
+                     <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+                         <h4 class="modal-title" id="addCourseStudentsModalLabel">Add Regular Students in this Course</h4>
+                     </div>
+                     <div class="modal-body">
+                         <div class="form-group form-inline">
+                             <input ng-model="SelectTypeId" type="radio" value="0"> Select from student list
+                             &nbsp;&nbsp;<input ng-model="SelectTypeId" ng-change="changeSearchStudentsBySemesterLevelTerm()" type="radio" value="1"> Copy from other class student list
+                             &nbsp;&nbsp;<input ng-model="SelectTypeId" type="radio" value="2"> Search by Class Roll
+                             <button type="button"
+                                     ng-click="addClassStudents(
+                                                    @((byte) Aca_Exam.ExamTypeEnum.FinalTerm),
+                                                    @((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.FreshRegistration),
+                                                    @((byte) Aca_ClassTakenByStudent.StatusEnum.Valid)
+                                                    )"
+                                     class="btn btn-xs btn-success pull-right">
+                                 <i class="fa fa-plus"></i> Add
+                             </button>
+                         </div>
+                         <div class="form-group form-inline">
+                             <span  class="text-info">Select : </span>
+                             @*<span >Department </span><select ng-show="SelectTypeId==0" ng-model="SearchStudentsByDepartmentId" ng-options="option.Id as option.Name for option in DepartmentList" class="form-control input-xs" required></select>*@
+                             <select ng-model="SearchStudentsByStudyLevelTermId"
+                                     ng-show="SelectTypeId==0"
+                                     ng-options="option.Id as option.Name for option in StudyLevelTermList"
+                                     class="form-control input-xs" required style="width: 105px;"></select>
+
+                             <select ng-model="SearchStudentCampusId"
+                                     ng-show="SelectTypeId==0"
+                                     ng-options="option.Id as option.Name for option in CampusList "  ng-init="" class="form-control input-xs" style=""></select>
+                                        
+                             <select ng-model="SearchStudentsBySemesterId"
+                                     ng-show="SelectTypeId==1"
+                                     ng-change="changeSearchStudentsBySemesterLevelTerm()"
+                                     ng-options="option.Id as option.Name for option in SemesterLevelTermList"
+                                     class="form-control input-xs" required style="width: 140px;"></select>
+                             <select ng-model="SearchStudentsByClassId"
+                                     ng-show="SelectTypeId==1"
+                                     ng-options="option.Id as option.Name for option in ClassList"
+                                     class="form-control input-xs" required>
+                                 <option value="" label="" class="">---Select Class---</option>
+                             </select>
+                             <input type="text" ng-model="SearchClassRoll"
+                                    ng-show="SelectTypeId==2"
+                                    class="form-control input-xs" placeholder="search by Class Roll" style="">
+                             <button ng-click="searchStudents(@((byte) Aca_Exam.ExamTypeEnum.FinalTerm))" class="btn btn-xs btn-primary"><i class="fa fa-search"></i> Search</button>
+                         </div>
+                         @*<div class="form-group no-margin">
+                                        <input ng-model="searchRegularStudent" class="form-control" placeholder="type to search" autocomplete="on">
+                                    </div>*@
+                         <div class="form-group no-margin">
+                             <div class="input-icon icon-right input-group-xs">
+                                 <input ng-model="searchAddRegularStudent" class="form-control input-xs" id="searchAddRegularStudent" type="text" placeholder="type to search from below list" autocomplete="on">
+                                 <i class="white fa fa-times bg-purple" ng-click="searchAddRegularStudent='';"></i>
+                             </div>
+                         </div>
+                         @*paiging start*@
+                         <div class="row no-print">
+                             <div class="col-sm-12">
+                                 <div class="form-inline pull-left">
+                                     <div class="form-group">
+                                         <label ng-hide="SearchStudentTotalServerItems==0">Showing {{SearchStudentTotalServerItems*(SearchStudentPageNo-1)+1}} to {{SearchStudentTotalServerItems*SearchStudentPageNo}} of {{SearchStudentTotalItems}} </label>
+                                         <label ng-show="SearchStudentTotalServerItems==0" class="text-danger">No Data Found!</label>
+                                     </div>
+                                 </div>
+                                 <div class="form-inline pull-right">
+                                     <div class="form-group">
+                                         <label>Page Size</label>
+                                         <input ng-model="SearchStudentPageSize" ng-enter="searchStudentChangePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                                     </div>
+                                     <div class="form-group">
+                                         <label>Page No.</label>
+                                         <input ng-model="SearchStudentPageNo" ng-enter="searchStudentChangePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                                         <label>of {{SearchStudentTotalItems/SearchStudentPageSize| number:0}}</label>
+                                     </div>
+                                     <div class="form-group">
+                                         <button ng-click="searchStudentPrev()" ng-hide="SearchStudentTotalItems == 0 || SearchStudentPageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                                         <button ng-click="searchStudentNext()" ng-hide="SearchStudentTotalItems == 0 || SearchStudentPageNo >= SearchStudentTotalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         @*Paiging End*@
+                         <table class="table table-striped table-bordered table-hover">
+                             <thead class="bordered-blue">
+                             <tr>
+                                 <th class="text-center" style="width: 35px;">
+                                     <input type="checkbox" ng-model="SelectAllStudents" ng-change="selectAllStudents()" class="form-control">
+                                 </th>
+                                 <th class="text-center" style="width: 35px;">SN</th>
+                                 <th class="text-center" style="width: 100px;">Username</th>
+                                 <th class="text-center">Name</th>
+                                 <th class="text-center" style="width: 100px;">Class Roll</th>
+                                 <th class="text-center" style="width: 135px;">Enrollment Status</th>
+                             </tr>
+                             </thead>
+                             <tbody> @*| orderBy:'ClassRollNo'*@ 
+                             <tr ng-repeat="row in StudentList |filter:searchAddRegularStudent" ng-class="{ 'success': row.IsAlreadyAdded }">
+                                 <td class="text-center">
+                                     <input type="checkbox"
+                                            ng-hide="row.IsAlreadyAdded"
+                                            ng-disabled="row.IsAlreadyAdded"
+                                            ng-model="row.IsSelected"
+                                            ng-change="selectStudent(row.Id)"
+                                            class="form-control">
+                                 </td>
+                                 <td class="text-center">{{$index+1}}</td>
+                                 <td class="text-center">{{row.UserName}}</td>
+                                 <td>
+                                    
+                                     <a target="_blank" href="@(editStudentByIdAcademicPageUrl)/?id={{row.@User_Student.Property_UserId}}&stdId={{row.@User_Student.Property_Id}}&un={{row.@User_Student.Property_ClassRollNo}}" class="text-bold"> {{row.FullName}}</a> 
+                                                
+                                 </td>
+                                 <td class="text-center">{{row.@User_Student.Property_ClassRollNo}}</td>
+                                 <td class="text-center">{{row.@User_Student.Property_EnrollmentStatus}}</td>
+                             </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                     <div class="modal-footer">
+                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                         <button type="button"
+                                 ng-click="addClassStudents(
+                                                @((byte) Aca_Exam.ExamTypeEnum.FinalTerm),
+                                                @((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.FreshRegistration),
+                                                @((byte) Aca_ClassTakenByStudent.StatusEnum.Valid)
+                                                )"
+                                 class="btn btn-success">
+                             <i class="fa fa-plus"></i> Add
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <!-- Modal End -->
+     </div>
+     <div class="widget-footer">
+         @*<button ng-show="ClassStudentList.length>0" ng-click="saveAllClassStudents()" class="btn btn-success"><i class="fa fa-save"></i> Save All Regular Students</button>*@
+     </div>
+ </div>

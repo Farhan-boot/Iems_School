@@ -1,0 +1,263 @@
+﻿
+
+@using EMS.DataAccess.Data
+@model dynamic
+@{
+    ViewBag.Title = "Income Forecast Report";
+
+    //WebApi link for single row
+    var getIncomeForecastReportDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IncomeForecastReportApi", action = "GetIncomeForecastReportDataExtra", area = "Accounts" });
+    var getPagedIncomeForecastReportUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IncomeForecastReportApi", action = "GetPagedIncomeForecastReport", area = "Accounts" });
+    var getBatchListForIncomeForecastReportUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "IncomeForecastReportApi", action = "GetBatchListForIncomeForecastReport", area = "Accounts" });
+
+
+}
+<script>
+    $(document).ready(function () {
+        //console.log("ready!");
+        collapseSidebar();
+    });
+
+</script>
+<div ng-controller="IncomeForecastReportCtrl"
+     ng-init="Init(
+      '@getIncomeForecastReportDataExtraUrl'
+     ,'@getPagedIncomeForecastReportUrl'
+      ,'@getBatchListForIncomeForecastReportUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b> </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered " style="width: 500px">
+                        <tr>
+                            <td style="width: 130px">Semester/Session</td>
+                            <td>
+                                <select ng-model="SelectedSemesterId" ng-change="getBatchListForIncomeForecastReport()"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select Semester---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Registration Status</td>
+                            <td>
+                                <select ng-model="SelectedRegistrationStatusEnumId"
+                                        ng-change="getBatchListForIncomeForecastReport()"
+                                        ng-options="option.Id as option.Name for option in RegistrationStatusEnumList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select Registration Status---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Program </td>
+                            <td>
+                                <select ng-model="SelectedProgramId"
+                                        ng-change="getBatchListForIncomeForecastReport()"
+                                        ng-options="option.Id as option.ShortTitle for option in ProgramList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---All Program---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Batch</td>
+                            <td>
+                                <select ng-model="SelectedContinuingBatchId"
+                                        ng-change="cleanUi()"
+                                        ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---All Batch---</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Start Month</td>
+                            <td>
+                                <input ng-model="StartMonth" class="form-control" type="month"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>End Month</td>
+                            <td>
+                                <input ng-model="EndMonth" class="form-control" type="month"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button ng-click="getPagedClassList()"
+                                        ng-disabled="SelectedSemesterId==0 || SelectedSemesterId==null"
+                                        class="btn btn-xs btn-success">
+                                    <i class="fa fa-search"></i> Load Income Forecast Report
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    @* *@
+                    <div ng-show="StudentList.length>0" class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky ">
+                            <i class="widget-icon fa fa-list bold  "></i>
+                            <span class="widget-caption "><b> </b></span>
+                            <div class="widget-buttons no-padding-left">
+                                <div class="dropdown form-group margin-right-10">
+                                    <button class="btn btn-xs btn-danger dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <i class="fa fa-download"></i> Download List
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                        <li><a href="#" onclick="$('#IncomeForecastReport').tableExport({ fileName: 'IncomeForecastReport', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel(.xls)</a></li>
+                                        <li><a href="#" onclick="$('#IncomeForecastReport').tableExport({ fileName: 'IncomeForecastReport', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word(.doc)</a></li>
+                                        <li><a href="#" onclick="$('#IncomeForecastReport').tableExport({ fileName: 'IncomeForecastReport', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV(.csv)</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="IncomeForecastReport" class="widget-body no-padding" style="overflow: auto;">
+                            <div class="table-footer no-print">
+                                @OptionControl()
+                            </div>
+                            @*<table  class="table table-striped table-bordered table-hover">
+                                    <thead class="bordered-blue">
+
+                                        <tr>
+
+                                            <th class="text-center" style="">Semester</th>
+                                            <th class="text-center" style="">
+                                                <select disabled="" ng-model="SelectedSemesterId" ng-change="getExamList()"
+                                                             ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+                                                    <option value="" label="" class="">---Select Semester---</option>
+                                                </select>
+                                            </th>
+                                            <th class="text-center">Program</th>
+                                            <th class="text-center">
+                                                <select disabled="" ng-model="SelectedProgramId"
+                                                             ng-options="option.Id as option.ShortTitle for option in ProgramList " ng-init="" class="form-control">
+                                                    <option value="" label="" class="">---Select Program Type---</option>
+                                                </select>
+                                            </th>
+                                            <th class="text-center" title="This Student Package Amount">Batch</th>
+                                            <th class="text-center" title="Overall Bill">
+                                                <select disabled="" ng-model="SelectedContinuingBatchId"
+                                                             ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control">
+                                                    <option value="" label="" class="">---Select Batch---</option>
+                                                </select>
+                                            </th>
+
+
+
+                                        </tr>
+                                    </thead>
+                                </table>*@
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center" style="display: none">
+                                        <input type="checkbox" ng-click="selectAll($event)">
+                                    </th>
+                                    <th class="text-center" style="width: 35px;">SN</th>
+                                    <th class="text-center" style="width: 100px;">Student ID</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Phone No.</th>
+                                    <th class="text-center">Starting Semester</th>
+                                    <th class="text-center">Start Month</th>
+                                    <th class="text-center">End Month</th>
+                                    <th class="text-center">Net Package</th>
+                                    <th class="text-center">Total Paid</th>
+                                    <th class="text-center">Net Balance</th>
+                                    <th class="text-center">Month Remaining</th>
+                                    <th class="text-center" ng-repeat="row in MonthList">{{row}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="row in StudentList">
+                                    <td class="text-center" style="display: none">
+                                        <input type="checkbox" ng-model="row.@Aca_Class.Property_IsSelected"/>
+                                    </td>
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="text-center">
+                                        <a target="_blank" href="@Url.Action("FastPaymentCollection", "Student", new {area = "Accounts"})?sid={{row.StdUserName}}">{{row.StdUserName}}</a>
+                                    </td>
+                                    <td class="text-left">{{row.StdName}}</td>
+                                    <td class="text-center">{{row.PhoneNo}}</td>
+                                    <td class="text-center">{{row.StartingSemester}}</td>
+                                    <td class="text-center">{{row.StartMonth}}</td>
+                                    <td class="text-center">{{row.EndMonth}}</td>
+                                    <td class="text-center">{{row.NetPackageAmount}}</td>
+                                    <td class="text-center">{{row.TotalPaid}}</td>
+                                    <td class="text-center">{{row.NetBalance}}</td>
+                                    <td class="text-center">{{row.MonthRemaining}}</td>
+                                    <td class="text-center" ng-repeat="value in row.MonthWiseDueList track by $index">{{value | number:2}}</td>
+                                    <td class="text-center" ng-repeat="n in [].constructor(totalMonth - row.MonthWiseDueList.length) track by $index"></td>
+                                </tr>
+
+                                <tr class="text-bold">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">Total</td>
+                                    <td class="text-center" ng-repeat="value in TotalList track by $index">{{value | number:2}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-footer no-print">
+                                @OptionControl()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+            <div class="col-sm-4">
+                <div class="form-inline pull-left">
+                    <div class="form-group">
+                        <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-inline pull-right">
+                    <div class="form-group">
+                        <label>Page Size</label>
+                        <select style="min-width: 60px;" ng-change="changePageSize()" ng-model="PageSize" class="form-control input-opt">
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                            <option value="1500">1500</option>
+                        </select>
+                        @*<input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">*@
+                    </div>
+                    <div class="form-group">
+                        <label>Page No.</label>
+                        <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                        <label>of {{totalItems/PageSize| number:0}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+}

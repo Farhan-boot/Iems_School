@@ -1,0 +1,21 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+@model EMS.Framework.Objects.MvcModelResult<ReportController.DayBookModel>
+@{
+    ViewBag.Title = "Day Book";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccountingReport.cshtml";
+
+}
+
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_DayBookPrint.cshtml", Model)
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

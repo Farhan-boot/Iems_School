@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://docs.oasis-open.org/ns/search-ws/sruRequest" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/ns/search-ws/sruRequest" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="searchRetrieveRequest" type="searchRetrieveRequestType" />
+  <xs:complexType name="searchRetrieveRequestType">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="query" />
+      <xs:element minOccurs="0" ref="startRecord" />
+      <xs:element minOccurs="0" ref="maximumRecords" />
+      <xs:element minOccurs="0" ref="recordXMLEscaping" />
+      <xs:element minOccurs="0" ref="recordSchema" />
+      <xs:element minOccurs="0" ref="resultSetTTL" />
+      <xs:element minOccurs="0" ref="Stylesheet" />
+      <xs:element minOccurs="0" ref="queryType" />
+      <xs:element minOccurs="0" ref="sortKeys" />
+      <xs:element minOccurs="0" ref="renderedBy" />
+      <xs:element minOccurs="0" ref="httpAccept" />
+      <xs:element minOccurs="0" ref="responseType" />
+      <xs:element minOccurs="0" ref="recordPacking" />
+      <xs:element minOccurs="0" ref="facetLimit" />
+      <xs:element minOccurs="0" ref="facetStart" />
+      <xs:element minOccurs="0" ref="facetSort" />
+      <xs:element minOccurs="0" ref="facetCount" />
+      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="facetCount" type="xs:string" />
+  <xs:element name="query" type="xs:string" />
+  <xs:element default="1" name="startRecord" type="xs:positiveInteger" />
+  <xs:element name="maximumRecords" type="xs:nonNegativeInteger" />
+  <xs:element default="xml" name="recordXMLEscaping">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="xml" />
+        <xs:enumeration value="string" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="recordSchema" type="xs:string" />
+  <xs:element name="resultSetTTL" type="xs:nonNegativeInteger" />
+  <xs:element name="Stylesheet" type="xs:anyURI" />
+  <xs:element default="cql" name="queryType" type="xs:string" />
+  <xs:element name="sortKeys" type="xs:string" />
+  <xs:element default="client" name="renderedBy">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="client" />
+        <xs:enumeration value="server" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element default="application/soap+xml" name="httpAccept" type="xs:string" />
+  <xs:element name="responseType" type="xs:string" />
+  <xs:element default="packed" name="recordPacking">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="packed" />
+        <xs:enumeration value="unpacked" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="facetLimit" type="xs:string" />
+  <xs:element default="1" name="facetStart" type="xs:positiveInteger" />
+  <xs:element name="facetSort" type="xs:string" />
+</xs:schema>

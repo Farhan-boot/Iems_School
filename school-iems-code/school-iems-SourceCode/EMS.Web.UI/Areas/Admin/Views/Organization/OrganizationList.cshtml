@@ -1,0 +1,183 @@
+﻿
+<!--File:HR_Organization List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Organization List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var OrganizationId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getOrganizationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "GetOrganizationById", area = "Admin" });
+    var getOrganizationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "GetOrganizationDataExtra", area = "Admin" });
+    var saveOrganizationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "SaveOrganization", area = "Admin" });
+    var deleteOrganizationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "GetDeleteOrganizationById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedOrganizationUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "OrganizationApi", action = "GetPagedOrganization", area = "Admin"});
+    var getAllOrganizationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "GetAllOrganization", area = "Admin" });
+    var saveOrganizationListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "SaveOrganizationList", area = "Admin" });
+    var getOrganizationListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OrganizationApi", action = "GetOrganizationListDataExtra", area = "Admin" });
+
+    var editOrganizationByIdPageUrl = Url.Action("OrganizationAddEdit", "Organization", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewOrganization = "getNewOrganization";
+    var saveOrganization = "saveOrganization";
+    var deleteOrganizationById = "deleteOrganizationById";
+    var deleteOrganizationByObj = "deleteOrganizationByObj";
+    //for list
+    var searchOrganizationList = "searchOrganizationList";
+    var getPagedOrganizationList = "getPagedOrganizationList";
+    var getAllOrganizationList = "getAllOrganizationList";
+    var saveOrganizationList = "saveOrganizationList";
+    var getOrganizationListExtraData = "getOrganizationListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Organization/OrganizationList.js"></script>
+}
+
+
+<div ng-controller="OrganizationListCtrl"
+     ng-init="Init(
+      '@getPagedOrganizationUrl'
+     ,'@deleteOrganizationByIdUrl'
+     ,'@getOrganizationListDataExtraUrl'
+     ,'@saveOrganizationListUrl'
+     ,'@getOrganizationByIdUrl'
+     ,'@getOrganizationDataExtraUrl'
+     ,'@saveOrganizationUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Organization </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchOrganizationList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editOrganizationByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchOrganizationList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    @*      <th class="text-center">Short Name</th>
+    <th class="text-center">Organization No</th>
+      <th class="text-center">Description</th>*@
+                    <th class="text-center">Address</th>
+                    @*<th class="text-center">Short Address</th>
+                    <th class="text-center">Map Embed Code</th>*@
+                    <th class="text-center">Email</th>
+                    @*<th class="text-center">Mobile</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Fax</th>*@
+                    <th class="text-center">Website</th>
+                                @*<th class="text-center">Founded</th>
+    <th class="text-center">Logo Without Name Url</th>
+    <th class="text-center">Logo With Short Name Url</th>
+    <th class="text-center">Logo With Long Name Url</th>
+    <th class="text-center">Logo Without Name Black White Url</th>
+    <th class="text-center">Fevicon Url</th>
+    <th class="text-center">Type Enum Id</th>
+    <th class="text-center">Type</th>
+    <th class="text-center">Status Enum Id</th>
+    <th class="text-center">Status</th>*@
+        <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in OrganizationList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@HR_Organization.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@HR_Organization.Property_Name}}</td>
+                    @*  <td class="">{{row.@HR_Organization.Property_ShortName}}</td>
+                    <td class="">{{row.@HR_Organization.Property_OrganizationNo}}</td>
+    <td class="">{{row.@HR_Organization.Property_Description}}</td>*@
+                    <td class="">{{row.@HR_Organization.Property_Address}}</td>
+                    @*<td class="">{{row.@HR_Organization.Property_ShortAddress}}</td>
+                    <td class="">{{row.@HR_Organization.Property_MapEmbedCode}}</td>*@
+                    <td class="">{{row.@HR_Organization.Property_Email}}</td>
+                    @*<td class="">{{row.@HR_Organization.Property_Mobile}}</td>
+                    <td class="">{{row.@HR_Organization.Property_Phone}}</td>
+                    <td class="">{{row.@HR_Organization.Property_Fax}}</td>*@
+                    <td class="">{{row.@HR_Organization.Property_Website}}</td>
+                    @*<td class="">{{row.@HR_Organization.Property_Founded}}</td>
+                    <td class="">{{row.@HR_Organization.Property_LogoWithoutNameUrl}}</td>
+                    <td class="">{{row.@HR_Organization.Property_LogoWithShortNameUrl}}</td>
+                    <td class="">{{row.@HR_Organization.Property_LogoWithLongNameUrl}}</td>
+                    <td class="">{{row.@HR_Organization.Property_LogoWithoutNameBlackWhiteUrl}}</td>
+                    <td class="">{{row.@HR_Organization.Property_FeviconUrl}}</td>
+                    <!--td class="">{{row.@HR_Organization.Property_TypeEnumId}}</td-->
+                    <td class="">{{row.@HR_Organization.Property_Type}}</td>
+                    <!--td class="">{{row.@HR_Organization.Property_StatusEnumId}}</td-->
+                    <td class="">{{row.@HR_Organization.Property_Status}}</td>*@
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editOrganizationByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteOrganizationById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

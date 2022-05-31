@@ -1,0 +1,29 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+
+
+@{
+    ViewBag.Title = "Program Wise Grade Summary Sheet";
+
+    Layout = "~/Areas/ExamSection/Views/Shared/_LayoutExamSectionReport.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Report/Shared/_ProgramWiseGradeSummarySheet.js?v=0"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/ExamSection/Views/Report/Shared/_ProgramWiseGradeSummarySheet.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

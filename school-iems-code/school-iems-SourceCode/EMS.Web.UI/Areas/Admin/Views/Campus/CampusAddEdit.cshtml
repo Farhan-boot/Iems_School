@@ -1,0 +1,107 @@
+﻿<!--File:General_Campus Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Campus";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CampusId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getCampusByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusById", area = "Admin" });
+    var getCampusDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusDataExtra", area = "Admin" });
+    var saveCampusUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "SaveCampus", area = "Admin" });
+    var deleteCampusByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetDeleteCampusById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedCampusUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetPagedCampus", area = "Admin" });
+    var getAllCampusUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetAllCampus", area = "Admin" });
+    var saveCampusListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "SaveCampusList", area = "Admin" });
+    var getCampusListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusListDataExtra", area = "Admin" });
+
+    var editCampusByIdPageUrl = Url.Action("CampusAddEdit", "Campus", new { area = "Admin" });
+    var listCampusPageUrl = Url.Action("CampusList", "Campus", new { area = "Admin" });
+
+    // Angular Functions
+    string getCampusById = "getCampusById";
+    var saveCampus = "saveCampus";
+    var getNewCampus = "getNewCampus";
+    var refreshPage = "loadPage()";
+    string deleteCampusById = "deleteCampusById";
+    string loadCampusExtraData = "loadCampusExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Campus/CampusAddEdit.js"></script>
+}
+<div id="CampusAddEdit" class="row" ng-controller="CampusAddEditCtrl" ng-init="Init(
+      '@CampusId'
+      ,'@getCampusByIdUrl'
+      ,'@getCampusDataExtraUrl'
+      ,'@saveCampusUrl'
+      ,'@deleteCampusByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Campus.@General_Campus.Property_Name!=''">{{(Campus.@General_Campus.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="CampusId" ng-Enter="@(getCampusById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewCampus)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listCampusPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-8 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Campus.@General_Campus.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Campus.@General_Campus.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="50" required="" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Order No </label>
+                        <input type="number" ng-model="Campus.@General_Campus.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label"> Type  </label>
+                        <select ng-model="Campus.@General_Campus.Property_TypeEnumId" ng-options="option.Id as option.Name for option in TypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label"> Status  </label>
+                        <select ng-model="Campus.@General_Campus.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Address </label>
+                        <textarea type="text" ng-model="Campus.@General_Campus.Property_Address" class="form-control" placeholder="Enter Address" maxlength="256"></textarea>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Map Embed Code </label>
+                        <textarea type="text" ng-model="Campus.@General_Campus.Property_MapEmbedCode" class="form-control" placeholder="Enter Map Embed Code"></textarea>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Remarks </label>
+                        <textarea type="text" ng-model="Campus.@General_Campus.Property_Remarks" class="form-control" placeholder="Enter Remarks" maxlength="500"></textarea>
+                    </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveCampus)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

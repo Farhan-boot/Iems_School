@@ -1,0 +1,207 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+
+    ViewBag.Title = "Semester Wise Result";
+
+
+    var getSemesterWiseResultDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SemesterWiseResultApi", action = "GetSemesterWiseResultDataExtra", area = "Student" });
+    var getMidtermResultBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SemesterWiseResultApi", action = "GetMidtermResultBySemesterId", area = "Student" });
+    var getFinalTermResultBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SemesterWiseResultApi", action = "GetFinalTermResultBySemesterId", area = "Student" });
+
+    string getSemesterResultByStudentUserName = "getSemesterResultByStudentUserName";
+}
+@section ScriptSection
+{
+
+    <script src="~/Areas/Student/Views/Reports/SemesterWiseResult.js?v=1"></script>
+    
+}
+
+<div class="row"
+     ng-controller="PublicResultPublishPanelCtrl"
+     ng-init="Init(
+     '@getSemesterWiseResultDataExtraUrl'
+     ,'@getMidtermResultBySemesterIdUrl'
+    ,'@getFinalTermResultBySemesterIdUrl'
+     )">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption "><b>Semester Wise Result ({{SelectedSemester.Name}})</b></span>
+                <div class="widget-buttons">
+                    Select Semester:
+                </div>
+                <div class="widget-buttons">
+                    <select ng-model="SelectedSemester"
+                            ng-change="onChangeSemester()"
+                            ng-options="option.Name for option in SemesterList"
+                            ng-init="" class="form-control input-sm" style="margin-top: 3px;"></select>
+                </div>
+                <div class="widget-buttons">
+                    <button ng-click="refreshResult()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+
+            </div><!--Widget Header-->
+
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div style="font-size: 16px; font-weight: bold" class="text-center">
+                                    @SiteSettings.Instance.InstituteName
+                                </div>
+                                <div style="font-size: 15px;" class="text-center">
+                                    {{StudentProgramName}}
+                                </div>
+                                <br />
+                                <table style="width: 100%">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span>Student ID: </span>
+                                                <span style="font-weight: bold;">@HttpUtil.Profile.UserName</span>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <span>Name:</span> @HttpUtil.Profile.Name
+                                            </td>
+                                            <td style="text-align: right">
+                                                <span>
+                                                    Result Semester:
+                                                </span>
+                                                <span>{{SelectedSemester.Name}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="midTermResult" class="col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="exam-type text-center" style="margin-bottom: 5px;">
+                                    <span>Midterm Result</span>
+                                    <button ng-click="isPrintOnlyMidTerm()" class="pull-right btn btn-xs btn-info"><i class="fa fa-print"></i> print</button>
+                                </div>
+                                <div ng-show="HasMidtermResultError || MidtermResultError!=''" class="alert alert-danger fade in radius-bordered alert-shadowed  no-print">
+                                    <button ng-click="HasMidtermResultError=false" class="close" data-dismiss1="alert">×</button>
+                                    <i class="fa-fw fa fa-warning"></i>
+                                    <strong>Sorry!</strong> {{MidtermResultError}}
+                                </div>
+
+                                <div>
+                                    <div ng-show="MidtermResult!=null" style="overflow: auto;">
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 70px;">Course Code</th>
+                                                <th class="text-center">Course Title</th>
+                                                <th class="text-center" style="width: 60px;">Mark</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="row in MidtermResult">
+                                                <td>{{row.CourseCode}}</td>
+                                                <td class="text-left">
+                                                    {{row.CourseName}}
+                                                    <span style="font-size: 10px;">
+                                                        (<em>{{row.RegistrationStatus}}</em>)
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">{{row.MidtermMark}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="finalTermResult" class="col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="exam-type text-center" style="margin-bottom: 5px;">
+                                    <span>Final Term Result</span>
+                                    <button ng-click="isPrintOnlyFinalTerm()" class="pull-right btn btn-xs btn-info"><i class="fa fa-print"></i> print</button>
+                                </div>
+                                <div ng-show="HasFinalTermResultError ||FinalTermResultError!=''" class="alert alert-danger fade in radius-bordered alert-shadowed no-print">
+                                    <button ng-click="HasFinalTermResultError=false" class="close" data-dismiss1="alert">×</button>
+                                    <i class="fa-fw fa fa-warning"></i>
+                                    <strong>Sorry!</strong> {{FinalTermResultError}}
+                                </div>
+                                <div>
+                                    <div ng-show="FinalTermResult!=null">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 70px;">Course Code</th>
+                                                <th class="text-center">Course Title</th>
+                                                <th class="text-center" style="width: 55px;">Credit Hours</th>
+                                                <th class="text-center" style="width: 55px;">Grade</th>
+                                                <th class="text-center" style="width: 55px;">Grade Point</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="row in FinalTermResult">
+                                                <td>{{row.CourseCode}}</td>
+                                                <td class="text-left">
+                                                    {{row.CourseName}}
+                                                    <span style="font-size: 10px;">
+                                                        (<em>{{row.RegistrationStatus}}</em>)
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">{{row.CreditLoad}}</td>
+                                                <td class="text-center">{{row.@Aca_ResultClass.Property_Grade}}</td>
+                                                <td class="text-center">{{row.@Aca_ResultClass.Property_GradePoint}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div style="margin-top: 20px; font-weight: bold; font-size: 15px;">
+                                            Total Credit: {{TotalCredit}} | Earned Credit: {{EarnedCredit}} | SGPA: {{SGPA}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12 text-center show-on-print">
+                        N.B.: Result Printed From Student Panel.
+                    </div>
+                </div>
+            </div>
+        </div><!--Widget Body-->
+    </div><!--Widget-->
+</div>
+
+<style>
+    .result-box-size {
+        width: 70%;
+        margin: 0 auto;
+    }
+
+    .result-publishing-panel input {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .exam-type {
+        font-size: 22px;
+        font-weight: bold;
+        color: #d65050;
+    }
+</style>

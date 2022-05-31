@@ -1,0 +1,328 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea().AddSpacesToSentence();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li>
+            <a title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "ExamSection"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">@currentArea Home</span>
+            </a>
+        </li>
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanView)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanAdd)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-users"></i>
+                    <span class="menu-text"> Student Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="@Url.Action("StudentList", "Student", new {area = "Academic"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Student List</span>
+                        </a>
+                    </li>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("StudentListEdit", "Student", new {area = "Academic",id=0})">
+                                <i class="menu-icon fa fa-edit"></i>
+                                <span class="menu-text">Update Level Term</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.GradingPolicy.CanView)
+                                             || PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.GradingPolicy.CanAdd)
+                                             || PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.GradingPolicy.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text">Grading Policy </span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="@Url.Action("GradingPolicyList", "GradingPolicyManager", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Grading Policy List </span>
+                        </a>
+                    </li>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.GradingPolicy.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("GradingPolicyAddEdit", "GradingPolicyManager", new {area = "ExamSection",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text"> Add New </span>
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <a href="@Url.Action("GradingPolicyOptionList", "GradingPolicyManager", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Policy Option List </span>
+                        </a>
+                    </li>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.GradingPolicy.CanAdd))
+                {
+                        <li>
+                            <a href="@Url.Action("GradingPolicyOptionAddEdit", "GradingPolicyManager", new {area = "ExamSection",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text"> Add New Policy Option</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.MarkDistributionPolicy.CanView)
+                                     || PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.MarkDistributionPolicy.CanAdd)
+                                     || PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.MarkDistributionPolicy.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text"> Mark Distribution Policy </span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="@Url.Action("MarkDistributionPolicyList", "MarkDistributionPolicy", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Policy List </span>
+                        </a>
+                    </li>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.PolicyManager.MarkDistributionPolicy.CanAdd))
+                {
+                        <li>
+                            <a href="@Url.Action("MarkDistributionPolicyAddEdit", "MarkDistributionPolicy", new {area = "ExamSection",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text"> Add New </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.OfferedClass.CanView)
+         || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.OfferedClass.CanAdd)
+         || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.OfferedClass.CanEdit))
+    {
+
+        <li>
+            <a href="@Url.Action("ClassList", "ClassManager", new {area = "Academic"})">
+                <i class="menu-icon fa fa-list"></i>
+                <span class="menu-text">Offered Courses</span>
+            </a>
+        </li>
+    }
+       
+        @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanView)
+                                         || PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanAdd)
+                                         || PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text"> Exam Mgt. </span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="@Url.Action("ExamList", "Exam", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Exam List </span>
+                        </a>
+                    </li>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanAdd))
+                {
+                        <li>
+                            <a href="@Url.Action("ExamAddEdit", "Exam", new {area = "ExamSection",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text"> Add New </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Tabulation Mgt. </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("ManageTabulationSheet", "TabulationManager", new {area = "ExamSection"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Level Term Wise Tabulation</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ManageBatchWiseTabulationSheet", "TabulationManager", new {area = "ExamSection"})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text" style="font-size: 10px;">Batch Wise Tabulation</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li>
+        <a href="@Url.Action("ResultSubmissionReport", "ResultManagement", new {area = "ExamSection"})">
+            <i class="menu-icon fa fa-search"></i>
+            <span class="menu-text">Mark Submit Mgt. </span>
+        </a>
+    </li>
+        
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-files-o"></i>
+            <span class="menu-text"> Supple Mgt. </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("Apply", "SuppleManager", new {area = "ExamSection"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text">Apply</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("CourseList", "SuppleManager", new {area = "ExamSection"})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">Course List</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    @*@if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.ClassManager.Class.CanView)
+                                         || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.ClassManager.Class.CanAdd)
+                                         || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.ClassManager.Class.CanEdit))
+        {
+            <li>
+                <a href="@Url.Action("ClassList", "ClassManager", new {area = "Academic"})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">Class Test Marks</span>
+                </a>
+            </li>
+        }*@
+        
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span class="menu-text"> Reports </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ClassResultManager.ClassResult.ResultChangeHistory))
+                {
+                    <li>
+                        <a href="@Url.Action("MarkChangeHistory", "Report", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-files-o"></i>
+                            <span class="menu-text">Mark Change History</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanPrintExamAttendanceSheet))
+                {
+                    <li>
+                        <a href="@Url.Action("ClassWiseAttendancePrintManager", "Report", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-files-o"></i>
+                            <span class="menu-text"> Exam Attendance</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanPrintAdmitCard))
+                {
+                    <li>
+                        <a href="@Url.Action("BulkAdmitCardPrintManager", "Report", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-files-o"></i>
+                            <span class="menu-text"> Admit Card Print</span>
+                        </a>
+                    </li>
+                }
+    
+                @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanPrintDegreeCompleteReport))
+                {
+                    <li>
+                        <a href="@Url.Action("ProgramWiseDegreeCompleteManager", "Report", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-files-o"></i>
+                            <span class="menu-text">Degree Complete</span>
+                        </a>
+                    </li>
+                }
+
+                @if (PermissionUtil.HasPermission(PermissionCollection.ExamArea.ExamManager.Exam.CanPrintGradeSummarySheet))
+                {
+                    <li>
+                        <a href="@Url.Action("ProgramWiseGradeSummarySheet", "Report", new {area = "ExamSection"})">
+                            <i class="menu-icon fa fa-files-o"></i>
+                            <span class="menu-text">Grade Summary</span>
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="@Url.Action("StudentEligibleReportManager", "Report", new {area = "ExamSection"})">
+                        <i class="menu-icon fa fa-files-o"></i>
+                        <span class="menu-text">Fail/Improvement List</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+    <li>
+        <a href="@Url.Action("ResultBlockUnblockManager", "ResultBlockUnblock", new {area = "ExamSection"})">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text">Result Block Unblock </span>
+        </a>
+    </li>
+
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-users"></i>
+            <span class="menu-text">Online Result</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a target="_blank" href="@Url.Action("Index", "OnlineResult",new {area = ""})">
+                    <i class="menu-icon fa fa-files-o"></i>
+                    <span class="menu-text"> Midterm Result</span>
+                </a>
+            </li>
+
+            <li>
+                <a target="_blank" href="@Url.Action("Index", "OnlineResult", new {area = "", termid = 2})">
+                    <i class="menu-icon fa fa-files-o"></i>
+                    <span class="menu-text"> Final Term Result</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    
+
+    <li>
+        <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+            <strong class="menu-text">@SiteSettings.Copyright</strong>
+        </a>
+    </li>
+    </ul>
+</div>

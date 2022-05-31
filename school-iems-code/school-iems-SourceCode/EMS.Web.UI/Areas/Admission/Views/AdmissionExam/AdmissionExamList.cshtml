@@ -1,0 +1,277 @@
+﻿
+<!--File:Adm_AdmissionExam List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admission: Admission Circular List";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmission.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var AdmissionExamId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getAdmissionExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAdmissionExamById", area = "Admission" });
+    var getAdmissionExamDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAdmissionExamDataExtra", area = "Admission" });
+    var saveAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "SaveAdmissionExam", area = "Admission" });
+    var deleteAdmissionExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetDeleteAdmissionExamById", area = "Admission" });
+
+    //WebApi link for List
+    var getPagedAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "AdmissionExamApi", action = "GetPagedAdmissionExam", area = "Admission"});
+    var getAllAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAllAdmissionExam", area = "Admission" });
+    var saveAdmissionExamListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "SaveAdmissionExamList", area = "Admission" });
+    var getAdmissionExamListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAdmissionExamListDataExtra", area = "Admission" });
+    var getCopyAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetCopyAdmissionExam", area = "Admission" });
+
+    var editAdmissionExamByIdPageUrl = Url.Action("AdmissionExamAddEdit", "AdmissionExam", new { area = "Admission" });
+
+    //Angular Function Name
+    var getNewAdmissionExam = "getNewAdmissionExam";
+    var saveAdmissionExam = "saveAdmissionExam";
+    var deleteAdmissionExamById = "deleteAdmissionExamById";
+    var deleteAdmissionExamByObj = "deleteAdmissionExamByObj";
+    //for list
+    var searchAdmissionExamList = "searchAdmissionExamList";
+    var getPagedAdmissionExamList = "getPagedAdmissionExamList";
+    var getAllAdmissionExamList = "getAllAdmissionExamList";
+    var saveAdmissionExamList = "saveAdmissionExamList";
+    var getAdmissionExamListExtraData = "getAdmissionExamListExtraData";
+    var showCopyAdmissionExamModal = "showCopyAdmissionExamModal";
+    var getCopyAdmissionExam = "getCopyAdmissionExam";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/AdmissionExam/AdmissionExamList.js?v=3"></script>
+}
+
+
+<div ng-controller="AdmissionExamListCtrl"  ng-init="Init(
+      '@getPagedAdmissionExamUrl'
+     ,'@deleteAdmissionExamByIdUrl'
+     ,'@getAdmissionExamListDataExtraUrl'
+     ,'@saveAdmissionExamListUrl'
+     ,'@getAdmissionExamByIdUrl'
+     ,'@getAdmissionExamDataExtraUrl'
+     ,'@saveAdmissionExamUrl'
+    ,'@getCopyAdmissionExamUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Admission Circular </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <span>Select Semester Duration</span>
+                    <select ng-model="SelectedSemesterDurationEnumId" ng-change="@(searchAdmissionExamList)()" 
+                            ng-options="option.Id as option.Name for option in SemesterDurationEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Any Duration---</option>
+                    </select>
+                </span>
+            </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchAdmissionExamList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editAdmissionExamByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchAdmissionExamList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">Session Name</th>
+                    <!--th class="text-center">Program Type Enum Id</th-->
+                    <th class="text-center">Program Type</th>
+                    <!--th class="text-center">Circular Status Enum Id</th-->
+                    <th class="text-center">Circular Status</th>
+                    <!--th class="text-center">Semester Id</th-->
+                    @*<th class="text-center">Online Form Fillup Start Date</th>*@
+                    @*<th class="text-center">Online Form Fillup End Date</th>*@
+                    @*<th class="text-center">Online Admit Card Publish Date</th>*@
+                    @*<th class="text-center">Online Admit Card Lock Date</th>*@
+                    <th class="text-center">Exam Date</th>
+                    @*<th class="text-center">Exam Result Publish Date</th>*@
+                    <th class="text-center">Admission Start Date</th>
+                    @*<th class="text-center">Amission Forms Download Start Date</th>*@
+                    @*<th class="text-center">Amission Forms Download End Date</th>*@
+                    @*<th class="text-center">Circular Notice Html</th>*@
+                    @*<th class="text-center">Remark</th>*@
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in AdmissionExamList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Adm_AdmissionExam.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@Adm_AdmissionExam.Property_Name}}</td>
+                    <td class="">{{row.@Adm_AdmissionExam.Property_ShortName}}</td>
+                    <td class="">{{row.@Adm_AdmissionExam.Property_SessionName}}</td>
+                    <!--td class="">{{row.@Adm_AdmissionExam.Property_ProgramTypeEnumId}}</td-->
+                    <td class="">{{row.@Adm_AdmissionExam.Property_ProgramType}}</td>
+                    <!--td class="">{{row.@Adm_AdmissionExam.Property_CircularStatusEnumId}}</td-->
+                    <td class="">{{row.@Adm_AdmissionExam.Property_CircularStatus}}</td>
+                    <!--td class="">{{row.@Adm_AdmissionExam.Property_SemesterId}}</td-->
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_OnlineFormFillupStartDate}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_OnlineFormFillupEndDate}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_OnlineAdmitCardPublishDate}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_OnlineAdmitCardLockDate}}</td>*@
+                    <td class="">{{row.@Adm_AdmissionExam.Property_ExamDate | date : dd.MM.yyyy}}</td>
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_ExamResultPublishDate}}</td>*@
+                    <td class="">{{row.@Adm_AdmissionExam.Property_AdmissionStartDate | date : dd.MM.yyyy}}</td>
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_AmissionFormsDownloadStartDate}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_AmissionFormsDownloadEndDate}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_CircularNoticeHtml}}</td>*@
+                    @*<td class="">{{row.@Adm_AdmissionExam.Property_Remark}}</td>*@
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editAdmissionExamByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(showCopyAdmissionExamModal)(row)" class="btn btn-xs btn-warning"><i class="fa fa-files-o"></i></button>
+                        <button ng-click="@(deleteAdmissionExamById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="CopyAdmissionExamModal" tabindex="-1" role="dialog" aria-labelledby="CopyAdmissionExamModal">
+    <div class="modal-dialog modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">Copy Admission Circular To New Semester</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel">
+                                    Source Admission Exam<span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                                <td class="fieldarea">
+                                    <label>{{SelectedSemesterName}}</label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Source Admission Exam." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">
+                                    New Circular Semester<span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                                <td class="fieldarea">
+                                    <select ng-model="NewAdmissionExamSemesterId"
+                                            ng-options="option.Id as option.Name for option in SemesterList |filter:{SemesterDurationEnumId: SemesterDurationEnumId}" ng-init="" class="form-control input-xs ">
+                                        <option value="" label="" class="">---Select New Circular Semester---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Destination Semester." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="fieldlabel">
+                                    New Admission Session Name<span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="NewAdmissionExamName" class="form-control input-xs" placeholder="Enter New Admission Session Name"/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter New Admission Session Name" data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="fieldlabel">
+                                    Student Id Prefix<span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentIdPrefix" class="form-control input-xs" placeholder="Enter Student Id Prefix"/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Id Prefix" data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="fieldlabel">
+                                    UGC Unique Id Prefix<span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentUgcIdPrefix" class="form-control input-xs" placeholder="Enter UGC Unique Id Prefix" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter UGC Unique Id Prefix" data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr>
+                                    <td class="fieldlabel">
+                                        Increment Batch Count<span class="red glyphicon glyphicon-asterisk"></span>
+                                    </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="IncrementBatchCount" class="form-control input-xs" placeholder="Enter  Increment Batch Count"/>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter  Increment Batch Count" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+                <button ng-disabled="IsCopyingBusy" ng-click="@(getCopyAdmissionExam)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Copy and Create New Admission Circular </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

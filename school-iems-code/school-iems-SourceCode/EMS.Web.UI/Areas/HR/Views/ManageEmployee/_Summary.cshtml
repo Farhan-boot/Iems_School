@@ -1,0 +1,171 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    string removeUploadedPhoto = "removeUploadedPhoto";
+    string uploadProfilePic = "uploadProfilePic";
+    string selectedProfilePhotoOnChange = "selectedProfilePhotoOnChange";
+}
+<div class="widget-body" id="StudentAddEdit">
+    <div class="row profile-container ">
+        <div class="col-sm-3 text-center">
+            <img style="height: 200px; width: 200px" ng-show="Account.@User_Account.Property_ProfilePictureImageUrl != null" src="{{Account.ProfilePictureBase64}}" alt="@HttpUtil.Profile.Name" class="header-avatar">
+            <img id="profilePhoto" style="height: 200px; width: 200px" ng-show="Account.@User_Account.Property_ProfilePictureImageUrl == null" src="/assets/img/avatars/BlankPerson.png" alt="@HttpUtil.Profile.Name" class="header-avatar">
+            @*<input type="file" name="fileToUpload" id="fileToUpload">*@
+            <br />
+            @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanRemoveProfilePicture))
+            {
+                <button ng-hide="Account.@User_Account.Property_ProfilePictureImageUrl == null" style="margin: 10px" ng-click="@(removeUploadedPhoto)()" class="btn btn-danger shiny"><i class="fa fa-trash"></i> Remove </button>
+            }
+
+            @*<button id="isPhotoUploadAble" style="margin: 10px; text-align: center" ng-click="@(uploadProfilePic)()" class="btn btn-success shiny"><i class="fa fa-upload"></i> Upload</button>*@
+
+            @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanUploadProfilePicture))
+            {
+                <input ng-show="Account.@User_Account.Property_ProfilePictureImageUrl == null" id="photoUploader"
+                       onchange="angular.element(this).scope().@(selectedProfilePhotoOnChange)(this)"
+                       ng-change="@(selectedProfilePhotoOnChange)()" ng-model="Account.@User_Account.Property_ProfilePictureImageUrl"
+                       type="file" ngf-pattern="'.jpg'"
+                       ngf-accept="'.jpg'"
+                       accept=".jpg"
+                       ngf-max-files="1"
+                       style="width: 150px; font-size: 10px" />
+            }
+        </div>
+
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-sm-8">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Full Name</td>
+                            <td>
+                                <input ng-disabled="true" type="text" ng-model="Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" maxlength="128" required="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>User Name</td>
+                            <td>
+                                <input ng-disabled="true" type="text" ng-model="Account.@User_Account.Property_UserName" class="form-control" placeholder="Enter User Name" maxlength="128" required="" />
+                            </td>
+                        </tr>
+                        @*<tr>
+                                <td>Military Category</td>
+                                <td>
+                                    <select ng-disabled="true" ng-model="Account.@User_Account.Property_CategoryEnumId" ng-options="option.Id as option.Name for option in UserCategoryEnumList " ng-init="" class="form-control"></select>
+                                </td>
+                            </tr>
+                                    <tr>
+                                    <td>Rank/Designation</td>
+                                    <td>
+                                        <select ng-disabled="true" ng-model="Account.@User_Account.Property_RankId" ng-options="option.Id as option.Name for option in RankList " ng-init="" class="form-control"></select>
+                                    </td>
+                                </tr>*@
+                        <tr>
+                            <td>Employee Category</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_EmployeeCategoryEnumId" ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Employee Type</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_EmployeeTypeEnumId" ng-options="option.Id as option.Name for option in EmployeeTypeEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>First Joining</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_JoiningDepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Currently Working</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_JoiningDepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Post/Position</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_PositionId" ng-options="option.Id as option.Name for option in PositionList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-sm-4">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>User Type</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Account.Property_UserTypeEnumId" ng-options="option.Id as option.Name for option in UserTypeEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>User Status</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Account.Property_UserStatusEnumId" ng-options="option.Id as option.Name for option in UserStatusEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Job Class</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_JobClassEnumId" ng-options="option.Id as option.Name for option in JobClassEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Job Type</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_JobTypeEnumId" ng-options="option.Id as option.Name for option in JobTypeEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Working Status</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Employee.Property_WorkingStatusEnumId" ng-options="option.Id as option.Name for option in WorkingStatusEnumList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Campus</td>
+                            <td>
+                                <select ng-disabled="true" ng-model="Account.@User_Account.Property_CampusId" ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Joining Date</td>
+                            <td>
+                                <input ng-disabled="true" ng-model="Account.@User_Account.Property_JoiningDate" class="form-control date-picker" type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">
+                            </td>
+                        </tr>
+                        @*<tr>
+                                <td>@SiteSettings.Instance.InstituteShortName ID No.</td>
+                                <td>
+                                    <input ng-disabled="true" type="text" ng-model="Account.@User_Employee.Property_OldIdNo" class="form-control" placeholder="Enter @SiteSettings.Instance.InstituteShortName ID Number" maxlength="128" />
+                                </td>
+                            </tr>*@
+                        <tr>
+                            <td>Is Approved</td>
+                            <td>
+                                <div class="">
+                                    <span ng-show="Account.@User_Account.Property_IsApproved" class="badge badge-success"> Yes </span>
+                                    <span ng-hide="Account.@User_Account.Property_IsApproved" class="badge badge-danger"> No </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Is Locked</td>
+                            <td>
+                                <div class="">
+                                    <span ng-hide="Account.@User_Account.Property_UserStatusEnumId==@((byte)User_Account.UserStatusEnum.Active)" class="badge badge-danger "> Yes </span>
+                                    <span ng-show="Account.@User_Account.Property_UserStatusEnumId==@((byte)User_Account.UserStatusEnum.Active)" class="badge badge-success"> No </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<br />

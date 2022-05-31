@@ -1,0 +1,48 @@
+﻿
+
+@{
+    var getStudentByUserName = "getStudentByUserName";
+}
+
+
+
+<div >
+    <div class="row" style="width: 70%; margin: 0 auto;">
+  
+        <div class="col-md-12 widget-body  bordered-blue bordered-green no-padding padding-bottom-10"  style="float: none; margin: 0 auto">
+
+            <div>
+                <div style="text-align: center">
+
+                    <div class="widget-header  bordered-blue bordered-top" style="text-align: center !important">
+                        <center><span class="widget-caption "><b style="font-size: 18px;color:crimson">Rapid Payment Collection Panel :</b></span></center>
+                    </div>
+
+                    @*<h4><strong class="">"You have been selected for Admission Test"</strong></h4>*@
+                    <br/>
+                    <h5 class="text-success"><b>Please Type Student ID:</b></h5>
+                    <p style="text-align: center">
+                        @*<b>Your Admission Test Roll Number :</b><b style="color: red;">0125</b><br />
+                        Exam Date : {{Obj.ExamDate}}, {{Obj.ExamTime}}<br>*@
+
+                        <div class="" style="width: 200px; margin: 0 auto;margin-bottom: 20px">
+                            
+                                <input type="text" ng-model="SearchUserName" ng-Enter="@(getStudentByUserName)()" class="form-control input-lg " placeholder="Type Student ID" style="">
+                                
+                           
+                        </div>
+                        <button ng-disabled="SearchUserName.length<5"  class="btn btn-sky" ng-click="@(getStudentByUserName)()"><i class="fa fa-search"></i>Start Collection</button>
+                    </p>
+                    <hr />
+                    @*<p ng-show1="Obj.CenterName" style="text-align: center">
+                        Center: <b class="ng-binding"></b><br>
+                        Room: 
+                    </p>*@
+
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+</div>

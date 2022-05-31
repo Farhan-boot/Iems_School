@@ -1,0 +1,205 @@
+﻿<!--File:Aca_Class List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Non Departmental Offered Course (Class) List";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassById", area = "Academic" });
+    var getClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassDataExtra", area = "Academic" });
+    var saveClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClass", area = "Academic" });
+    var deleteClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetDeleteClassById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetPagedOthersDeptClass", area = "Academic" });
+    var getAllClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetAllClass", area = "Academic" });
+    var saveClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClassList", area = "Academic" });
+    var getClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassListDataExtra", area = "Academic" });
+
+    var editClassByIdPageUrl = Url.Action("ClassAddEdit", "ClassManager", new { area = "Academic" });
+
+    //Angular Function Name
+    var getNewClass = "getNewClass";
+    var saveClass = "saveClass";
+    var deleteClassById = "deleteClassById";
+    var deleteClassByObj = "deleteClassByObj";
+    //for list
+    var searchClassList = "searchClassList";
+    var getPagedClassList = "getPagedClassList";
+    var getAllClassList = "getAllClassList";
+    var saveClassList = "saveClassList";
+    var getClassListExtraData = "getClassListExtraData";
+
+    var refreshPage = "searchClassList()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ClassManager/ClassList.js"></script>
+}
+
+
+<div ng-controller="ClassListCtrl"
+     ng-init="Init(
+      '@getPagedClassUrl'
+     ,'@deleteClassByIdUrl'
+     ,'@getClassListDataExtraUrl'
+     ,'@saveClassListUrl'
+     ,'@getClassByIdUrl'
+     ,'@getClassDataExtraUrl'
+     ,'@saveClassUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Class </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Curriculum Course</span>*@
+                    <select ng-model="SelectedDepartmentId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control input-xs ">
+                        @*<option value="" label="" class="">---Select All Dept---</option>*@
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Semester Level Term</span>*@
+                    <select ng-model="SelectedSemesterId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.Name for option in SemesterLevelTermList " ng-init="" class="form-control input-xs ">
+                        @*<option value="" label="" class="">---Select All Semester---</option>*@
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Curriculum Course</span>*@
+                    <select ng-model="SelectedCurriculumCourseId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.Name for option in CurriculumCourseList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Curriculum Course---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Semester</span>*@
+                    <select ng-model="SelectedSemesterId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Semester---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Study Level Term</span>*@
+                    <select ng-model="SelectedStudyLevelTermId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Study Level Term---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Campus</span>*@
+                    <select ng-model="SelectedCampusId" ng-change="@(searchClassList)()"
+                            ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Campus---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchClassList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search by code" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editClassByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding" style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center" style="display: none">
+                            <input type="checkbox" ng-click="selectAll($event)">
+                        </th>
+                        <th class="text-center">Ser</th>
+                        <th class="text-center">Class No</th>
+                        <th class="text-center">Section</th>
+                        <th class="text-center">Course Code</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center" style="width: 71px;">Student Capacity</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Dept</th>
+                        <th class="text-center no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="row in ClassList">
+                        <td class="text-center" style="display:none">
+                            <input type="checkbox" ng-model="row.@Aca_Class.Property_IsSelected" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{row.@Aca_Class.Property_ClassNo}}</td>
+                        <td class="text-center">{{row.ClassSectionName}}</td>
+                        <td class="text-right">{{row.@Aca_Class.Property_Code}}</td>
+                        <td class="">{{row.@Aca_Class.Property_Name}}</td>
+                        <td class="text-center">{{row.@Aca_Class.Property_RegularCapacity}}</td>
+                        <td class="text-center">{{row.@Aca_Class.Property_Status}}</td>
+                        <td class="text-center">{{row.DepartmentShortName}}</td>
+                        <td class="text-center no-print">
+                            <a target="_blank" href="@(editClassByIdPageUrl)/?id={{row.Id}}#ClassTeachers" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Allot Teachers</a>
+                            @*<button ng-click="@(deleteClassById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>*@
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

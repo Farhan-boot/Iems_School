@@ -1,0 +1,8 @@
+﻿@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<Acnt_StdTransaction>
+
+@{
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+}
+
+@Html.Partial("~/Areas/Academic/Views/Student/_PrintPaySlip.cshtml", Model);

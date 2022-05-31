@@ -1,0 +1,128 @@
+﻿@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Bulk Offered Course";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassById", area = "Academic" });
+    var getClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetBulkClassDataExtra", area = "Academic" });
+    var saveClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClass", area = "Academic" });
+    var deleteClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetDeleteClassById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetPagedClass", area = "Academic" });
+    var getAllClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetAllClass", area = "Academic" });
+    var saveClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClassList", area = "Academic" });
+    var getClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassListDataExtra", area = "Academic" });
+
+    var editClassByIdPageUrl = Url.Action("ClassAddEdit", "Class", new { area = "Academic" });
+    var listClassPageUrl = Url.Action("ClassList", "Class", new { area = "Academic" });
+
+    // Angular Functions
+    string getClassById = "getClassById";
+    var saveClass = "saveClass";
+    var getNewClass = "getNewClass";
+    var refreshPage = "loadPage()";
+    string deleteClassById = "deleteClassById";
+    string loadClassExtraData = "loadClassExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ClassManager/BulkClass.js"></script>
+}
+
+<div id="ClassAddEdit" class="row" ng-controller="ClassAddEditCtrl" ng-init="Init(
+      '@ClassId'
+      ,'@getClassByIdUrl'
+      ,'@getClassDataExtraUrl'
+      ,'@saveClassUrl'
+      ,'@deleteClassByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Class.@Aca_Class.Property_Name!=''">{{(Class.@Aca_Class.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="ClassId" ng-Enter="@(getClassById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewClass)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label"> Program Type  </label>
+                        <select ng-model="Class.@Aca_Class.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Department </label>
+                        <select ng-model="Class.@Aca_Class.Property_DepartmentId"
+                                ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Program </label>
+                        <select ng-model="Class.@Aca_Class.Property_CurriculumCourseId"
+                                ng-options="option.Id as option.ShortTitle for option in FilterProgramList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Curriculum </label>
+                        <select ng-model="Class.@Aca_Class.Property_CurriculumCourseId"
+                                ng-options="option.Id as option.ShortName for option in FilterCurriculumList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Curriculum Course </label>
+                        <select ng-model="Class.@Aca_Class.Property_CurriculumCourseId"
+                                ng-options="option.Id as option.Name for option in CurriculumCourseList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Semester Level Term </label>
+                        <select ng-model="Class.@Aca_Class.Property_SemesterId"
+                                ng-options="option.Id as option.Name for option in SemesterLevelTermList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Campus </label>
+                        <select ng-model="Class.@Aca_Class.Property_CampusId"
+                                ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control">
+                        </select>
+                    </div>
+                    @*<div class="col-sm-2 form-group">
+                        <label class="control-label">Section </label>
+                        <input type="text" ng-model="Class.@Aca_Class.Property_Section" class="form-control" placeholder="Enter Section" maxlength="50" />
+                    </div>*@
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Regular Capacity </label>
+                        <input type="number" ng-model="Class.@Aca_Class.Property_RegularCapacity" class="form-control" placeholder="Enter Regular Capacity" />
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label"> Status  </label>
+                        <select ng-model="Class.@Aca_Class.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+                    </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveClass)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>

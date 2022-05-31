@@ -1,0 +1,262 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    var id = Request.QueryString["empId"];//ViewContext.RouteData.Values["id"];
+    var employeeId = (string)id == null ? "0" : (string)id;
+
+    var getMonthlyPayslipByEmployeeIdUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "MonthlyPayslipApi", action = "GetMonthlyPayslipByEmployeeId", area = "HR"});
+    var deleteMonthlyPayslipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipApi", action = "GetDeleteMonthlyPayslipById", area = "HR" });
+    var getMonthlyPayslipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipApi", action = "GetMonthlyPayslipById", area = "HR" });
+    var getMonthlyPayslipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipApi", action = "GetMonthlyPayslipDataExtra", area = "HR" });
+    var saveMonthlyPayslipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipApi", action = "SaveMonthlyPayslip", area = "HR" });
+    var saveMonthlyPayslipDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "SaveMonthlyPayslipDetailsList", area = "HR" });
+    var trashUnTrashByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipApi", action = "GetTrashUnTrashById", area = "HR" });
+
+    //details
+    var deleteMonthlyPayslipDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "GetDeleteMonthlyPayslipDetailsById", area = "HR" });
+    var getMonthlyPayslipDetailsByMonthlyPayslipIdUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "MonthlyPayslipDetailsApi", action = "GetMonthlyPayslipDetailsByMonthlyPayslipId", area = "HR"});
+    var getMonthlyPayslipDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "GetMonthlyPayslipDetailsById", area = "HR" });
+    var getMonthlyPayslipDetailsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "GetMonthlyPayslipDetailsDataExtra", area = "HR" });
+    var saveMonthlyPayslipDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "SaveMonthlyPayslipDetails", area = "HR" });
+
+    //Angular js variables.
+    var loadPage = "loadPage";
+    var deleteMonthlyPayslipById = "deleteMonthlyPayslipById";
+    var searchMonthlyPayslipList = "getMonthlyPayslipDetailsByEmployeeId";
+    string getMonthlyPayslipById = "getMonthlyPayslipById";
+    var saveMonthlyPayslip = "saveMonthlyPayslip";
+    var getNewMonthlyPayslip = "getNewMonthlyPayslip";
+
+    var deleteMonthlyPayslipDetailsById = "deleteMonthlyPayslipDetailsById";
+    var searchMonthlyPayslipDetailsList = "searchMonthlyPayslipDetailsList";
+    string getMonthlyPayslipDetailsById = "getMonthlyPayslipDetailsById";
+    var saveMonthlyPayslipDetails = "saveMonthlyPayslipDetails";
+    var getNewMonthlyPayslipDetails = "getNewMonthlyPayslipDetails";
+    var trashUnTrashById = "trashUnTrashById";
+    var showHistoryModal = "showHistoryModal";
+}
+
+<div ng-controller="MonthlyPayslipCtrl"
+     ng-init="Init(
+     '@employeeId'
+    ,'@getMonthlyPayslipByEmployeeIdUrl'
+    ,'@deleteMonthlyPayslipByIdUrl'
+    ,'@getMonthlyPayslipDataExtraUrl'
+    ,'@getMonthlyPayslipByIdUrl'
+    ,'@saveMonthlyPayslipUrl'
+    ,'@deleteMonthlyPayslipDetailsByIdUrl'
+    ,'@getMonthlyPayslipDetailsByMonthlyPayslipIdUrl'
+    ,'@getMonthlyPayslipDetailsByIdUrl'
+    ,'@getMonthlyPayslipDetailsDataExtraUrl'
+    ,'@saveMonthlyPayslipDetailsUrl'
+    ,'@saveMonthlyPayslipDetailsListUrl'
+    ,'@trashUnTrashByIdUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="form-title">
+        User Monthly Payslip
+    </div>
+
+    <div style="text-align: center;">
+        <button ng-click="@(loadPage)()"
+                style="margin-top: 20px; margin-bottom: 50px;"
+                ng-show="!IsLoadEmployeeMonthlyPayslip"
+                class="btn btn-info btn-size">
+            Load Employee's Monthly Payslip
+        </button>
+    </div>
+
+    <div ng-show="IsLoadEmployeeMonthlyPayslip"
+         class="widget">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="widget" ng-show="HasViewPermission">
+
+                    <div class="widget-header bordered-bottom bordered-sky ">
+                        <i class="widget-icon fa fa-list bold  "></i>
+                        <span class="widget-caption ">Manage Monthly Payslip </span>
+                        <div class="widget-buttons no-padding-left">
+                            <label style="margin-left: 30px;">
+                                <input ng-model="IsShowTrashedItems"
+                                       ng-change="@(searchMonthlyPayslipList)()"
+                                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                                <span style="color: #e74b37;">Show Deleted Data</span>
+                            </label>
+                            <button ng-show="MonthlyPayslipList.length < PayrollList.length" ng-click="@(getNewMonthlyPayslip)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Generate New Payslip</button>
+                            <button ng-click="@(searchMonthlyPayslipList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="widget-body no-padding">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center" style="display:none">
+                                        <input type="checkbox" ng-click="selectAll($event)">
+                                    </th>
+                                    <th class="text-center">SN</th>
+                                    <th class="text-center">Payroll</th>
+                                    <th class="text-center">Total Addition</th>
+                                    <th class="text-center">Total Deduction</th>
+                                    <th class="text-center">Net Total</th>
+                                    <th class="text-center">Is Draft</th>
+                                    @*<th class="text-center">Remarks</th>*@
+                                    <th class="text-center no-print" style="width: 100px">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="row in MonthlyPayslipList" ng-click="editMonthlyPayslip($index)" ng-class="{ 'active': $index == selectedMonthlyPayslipIndex}">
+                                    <td class="text-center" style="display:none">
+                                        <input type="checkbox" ng-model="row.@HR_MonthlyPayslip.Property_IsSelected" />
+                                    </td>
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="">{{row.@HR_MonthlyPayslip.Property_Name}}</td>
+                                    <td class="">{{row.@HR_MonthlyPayslip.Property_TotalAddition}}</td>
+                                    <td class="">{{row.@HR_MonthlyPayslip.Property_TotalDeduction}}</td>
+                                    <td class="">{{row.@HR_MonthlyPayslip.Property_TotalAddition - row.@HR_MonthlyPayslip.Property_TotalDeduction}}</td>
+                                    <td class="text-center">
+                                        <label style="color: green" ng-show="row.@HR_MonthlyPayslip.Property_IsDraft"> Yes </label>
+                                        <label style="color: red" ng-hide="row.@HR_MonthlyPayslip.Property_IsDraft"> No </label>
+                                    </td>
+                                    @*<td class="">{{row.@HR_MonthlyPayslip.Property_Remarks}}</td>*@
+                                    <td class="text-center no-print">
+
+                                        <div class="widget-buttons">
+                                            <div class="btn-group">
+                                                <a class="btn btn-blue btn-sm " href="#">Action</a>
+                                                <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                                    <li ng-hide="row.@HR_Payroll.Property_IsDeleted">
+                                                        <a ng-click="@(getMonthlyPayslipById)(row.Id)"><i class="fa fa-edit"></i> Edit</a>
+                                                    </li>
+                                                    <li ng-hide="row.@HR_Payroll.Property_IsDeleted">
+                                                        <a style="color: red" ng-click="@(trashUnTrashById)(row,true)"><i class="fa fa-trash"></i> Delete</a>
+                                                    </li>
+                                                    <li ng-show="row.@HR_Payroll.Property_IsDeleted">
+                                                        <a ng-click="@(trashUnTrashById)(row,false)"><i class="fa fa-undo"></i> Un-Delete</a>
+                                                    </li>
+
+                                                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.MonthlyPayslip.CanDelete))
+                                                    {
+                                                        <li>
+                                                            <a style="color: red" ng-click="@(deleteMonthlyPayslipById)(row)"><i class="fa fa-times"></i> Permanent Delete</a>
+                                                        </li>
+                                                    }
+                                                    <li>
+                                                        <a ng-click="@(showHistoryModal)()"><i class="fa fa-eye"></i> Show Change Log</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <div ng-show="MonthlyPayslipList.length>0 && !IsShowTrashedItems" class="col-md-6">
+                @Html.Partial("~/Areas/HR/Views/MonthlyPayslip/Payslip/_Payslip.cshtml")
+            </div>
+        </div>
+    </div>
+<!--History Modal Start-->
+
+    <div class="modal fade bd-example-modal-lg" id="PayslipHistoryModal" tabindex="-1" role="dialog" aria-labelledby="PayslipHistoryModal" area-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> History of all the action Performed in this Payslip.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-12 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: left;padding: 5px !important;" ng-bind-html="renderHtml(EmployeeMonthlyPayslip.@HR_MonthlyPayslip.Property_History)"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- History Modal End-->
+<!--Monthly Payslip Modal -->
+    <div class="modal fade" id="MonthlyPayslipModal" tabindex="-1" role="dialog" aria-labelledby="MonthlyPayslipModal">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">Add/Edit Monthly Payslip</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Payroll </td>
+                                    <td class="fieldarea">
+                                        <select ng-disabled="EmployeeMonthlyPayslip.Id!=0" ng-model="EmployeeMonthlyPayslip.@HR_MonthlyPayslip.Property_PayrollId"
+                                                ng-options="option.Id as option.Name for option in PayrollList " ng-init="" class="form-control select-inline">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Payroll." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Is Draft </td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" ng-model="EmployeeMonthlyPayslip.@HR_MonthlyPayslip.Property_IsDraft"/>
+                                        </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Draft if required." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Remarks </td>
+                                    <td class="fieldarea">
+                                        <textarea rows="10" type="text" ng-model="EmployeeMonthlyPayslip.@HR_MonthlyPayslip.Property_Remarks" class="form-control" placeholder="Enter Remarks"></textarea>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button ng-show="EmployeeMonthlyPayslip.Id==0" ng-click="@(saveMonthlyPayslip)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Generate Monthly Payslip</button>
+                    <button ng-hide="EmployeeMonthlyPayslip.Id==0" ng-click="@(saveMonthlyPayslip)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Update</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Monthly Payslip Modal End -->
+    <!--Monthly Payslip Modal -->
+
+</div>
+
+
+

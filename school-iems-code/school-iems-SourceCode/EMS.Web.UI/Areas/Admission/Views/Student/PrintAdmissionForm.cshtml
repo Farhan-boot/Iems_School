@@ -1,0 +1,10 @@
+﻿@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+
+@{
+    ViewBag.Title="Admission Form";
+
+    Layout = "~/Views/Shared/_LayoutBootstrap.cshtml";
+}
+
+@Html.Partial("~/Areas/Admission/Views/Student/_PrintAdmissionForm.cshtml", Model)

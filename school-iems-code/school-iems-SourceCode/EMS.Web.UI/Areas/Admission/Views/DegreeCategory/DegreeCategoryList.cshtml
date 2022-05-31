@@ -1,0 +1,155 @@
+﻿
+<!--File:Adm_DegreeCategory List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admission: Degree Category List";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmission.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DegreeCategoryId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getDegreeCategoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "GetDegreeCategoryById", area = "Admission" });
+    var getDegreeCategoryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "GetDegreeCategoryDataExtra", area = "Admission" });
+    var saveDegreeCategoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "SaveDegreeCategory", area = "Admission" });
+    var deleteDegreeCategoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "GetDeleteDegreeCategoryById", area = "Admission" });
+
+    //WebApi link for List
+    var getPagedDegreeCategoryUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "DegreeCategoryApi", action = "GetPagedDegreeCategory", area = "Admission"});
+    var getAllDegreeCategoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "GetAllDegreeCategory", area = "Admission" });
+    var saveDegreeCategoryListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "SaveDegreeCategoryList", area = "Admission" });
+    var getDegreeCategoryListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DegreeCategoryApi", action = "GetDegreeCategoryListDataExtra", area = "Admission" });
+
+    var editDegreeCategoryByIdPageUrl = Url.Action("DegreeCategoryAddEdit", "DegreeCategory", new { area = "Admission" });
+
+    //Angular Function Name
+    var getNewDegreeCategory = "getNewDegreeCategory";
+    var saveDegreeCategory = "saveDegreeCategory";
+    var deleteDegreeCategoryById = "deleteDegreeCategoryById";
+    var deleteDegreeCategoryByObj = "deleteDegreeCategoryByObj";
+    //for list
+    var searchDegreeCategoryList = "searchDegreeCategoryList";
+    var getPagedDegreeCategoryList = "getPagedDegreeCategoryList";
+    var getAllDegreeCategoryList = "getAllDegreeCategoryList";
+    var saveDegreeCategoryList = "saveDegreeCategoryList";
+    var getDegreeCategoryListExtraData = "getDegreeCategoryListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/DegreeCategory/DegreeCategoryList.js"></script>
+}
+
+
+<div ng-controller="DegreeCategoryListCtrl"
+     ng-init="Init(
+      '@getPagedDegreeCategoryUrl'
+     ,'@deleteDegreeCategoryByIdUrl'
+     ,'@getDegreeCategoryListDataExtraUrl'
+     ,'@saveDegreeCategoryListUrl'
+     ,'@getDegreeCategoryByIdUrl'
+     ,'@getDegreeCategoryDataExtraUrl'
+     ,'@saveDegreeCategoryUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Degree Category </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchDegreeCategoryList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editDegreeCategoryByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchDegreeCategoryList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Full Name</th>
+                    <!--th class="text-center">Degree Equivalent Enum Id</th-->
+                    <th class="text-center">Degree Equivalent</th>
+                    <!--th class="text-center">Board Type Enum Id</th-->
+                    <th class="text-center">Board Type</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Is Enable</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in DegreeCategoryList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Adm_DegreeCategory.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@Adm_DegreeCategory.Property_Name}}</td>
+                    <td class="">{{row.@Adm_DegreeCategory.Property_FullName}}</td>
+                    <!--td class="">{{row.@Adm_DegreeCategory.Property_DegreeEquivalentEnumId}}</td-->
+                    <td class="">{{row.@Adm_DegreeCategory.Property_DegreeEquivalent}}</td>
+                    <!--td class="">{{row.@Adm_DegreeCategory.Property_BoardTypeEnumId}}</td-->
+                    <td class="">{{row.@Adm_DegreeCategory.Property_BoardType}}</td>
+                    <td class="">{{row.@Adm_DegreeCategory.Property_OrderNo}}</td>
+                    <td class="">{{row.@Adm_DegreeCategory.Property_IsEnable}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editDegreeCategoryByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteDegreeCategoryById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

@@ -1,0 +1,2373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EubOracle1ModelStoreContainer" CdmEntityContainer="OracleDbEntities">
+    <EntitySetMapping Name="AC_GROUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.AC_GROUP">
+        <MappingFragment StoreEntitySet="AC_GROUP">
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="AC_GP_ID" ColumnName="AC_GP_ID" />
+          <ScalarProperty Name="GROUP_ID" ColumnName="GROUP_ID" />
+          <ScalarProperty Name="GROUP_NAME" ColumnName="GROUP_NAME" />
+          <ScalarProperty Name="NATURE" ColumnName="NATURE" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="SS_FACTY_SS_FACTY_ID" ColumnName="SS_FACTY_SS_FACTY_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AC_LEDGER">
+      <EntityTypeMapping TypeName="EubOracle1Model.AC_LEDGER">
+        <MappingFragment StoreEntitySet="AC_LEDGER">
+          <ScalarProperty Name="CTYPE" ColumnName="CTYPE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+          <ScalarProperty Name="DEP_AC_ID" ColumnName="DEP_AC_ID" />
+          <ScalarProperty Name="BANK_AC_TYPE" ColumnName="BANK_AC_TYPE" />
+          <ScalarProperty Name="GROUP_TYPE" ColumnName="GROUP_TYPE" />
+          <ScalarProperty Name="LEDGER_NAME" ColumnName="LEDGER_NAME" />
+          <ScalarProperty Name="DEP_RATE" ColumnName="DEP_RATE" />
+          <ScalarProperty Name="DR_OP_BAL" ColumnName="DR_OP_BAL" />
+          <ScalarProperty Name="CR_OP_BAL" ColumnName="CR_OP_BAL" />
+          <ScalarProperty Name="LEDGER_ID" ColumnName="LEDGER_ID" />
+          <ScalarProperty Name="AC_SG_AC_SG_ID" ColumnName="AC_SG_AC_SG_ID" />
+          <ScalarProperty Name="AC_SG_ID" ColumnName="AC_SG_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AC_SUB_GROUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.AC_SUB_GROUP">
+        <MappingFragment StoreEntitySet="AC_SUB_GROUP">
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="COURSE_TYPE_CODE" ColumnName="COURSE_TYPE_CODE" />
+          <ScalarProperty Name="AC_SG_ID" ColumnName="AC_SG_ID" />
+          <ScalarProperty Name="AC_GP_ID" ColumnName="AC_GP_ID" />
+          <ScalarProperty Name="SGROUP_ID" ColumnName="SGROUP_ID" />
+          <ScalarProperty Name="SGROUP_NAME" ColumnName="SGROUP_NAME" />
+          <ScalarProperty Name="AC_GP_AC_GP_ID" ColumnName="AC_GP_AC_GP_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCBUYER">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCBUYER">
+        <MappingFragment StoreEntitySet="ACCBUYER">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="BUYSNM" ColumnName="BUYSNM" />
+          <ScalarProperty Name="BUYNM" ColumnName="BUYNM" />
+          <ScalarProperty Name="BUYID" ColumnName="BUYID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCCHARTOFACCOUNT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCCHARTOFACCOUNT">
+        <MappingFragment StoreEntitySet="ACCCHARTOFACCOUNT">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="LOCID" ColumnName="LOCID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="SUBLGID" ColumnName="SUBLGID" />
+          <ScalarProperty Name="ALLOCPCT" ColumnName="ALLOCPCT" />
+          <ScalarProperty Name="ALLOCCATCD" ColumnName="ALLOCCATCD" />
+          <ScalarProperty Name="MAJPRDCD" ColumnName="MAJPRDCD" />
+          <ScalarProperty Name="CURBAL" ColumnName="CURBAL" />
+          <ScalarProperty Name="MONBAL" ColumnName="MONBAL" />
+          <ScalarProperty Name="OPNBAL" ColumnName="OPNBAL" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="RFACCNO" ColumnName="RFACCNO" />
+          <ScalarProperty Name="RFLGID" ColumnName="RFLGID" />
+          <ScalarProperty Name="DEPRATE" ColumnName="DEPRATE" />
+          <ScalarProperty Name="DEPID" ColumnName="DEPID" />
+          <ScalarProperty Name="DRCR" ColumnName="DRCR" />
+          <ScalarProperty Name="GTYPE" ColumnName="GTYPE" />
+          <ScalarProperty Name="NATURE" ColumnName="NATURE" />
+          <ScalarProperty Name="ACCLVL" ColumnName="ACCLVL" />
+          <ScalarProperty Name="ACCNMSH" ColumnName="ACCNMSH" />
+          <ScalarProperty Name="ACCNM" ColumnName="ACCNM" />
+          <ScalarProperty Name="ACCNO" ColumnName="ACCNO" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCCOMPANY">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCCOMPANY">
+        <MappingFragment StoreEntitySet="ACCCOMPANY">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DEFSTS" ColumnName="DEFSTS" />
+          <ScalarProperty Name="COMPGPID" ColumnName="COMPGPID" />
+          <ScalarProperty Name="COMPVCTAG" ColumnName="COMPVCTAG" />
+          <ScalarProperty Name="COMPESTDT" ColumnName="COMPESTDT" />
+          <ScalarProperty Name="COMPACTCLSDT" ColumnName="COMPACTCLSDT" />
+          <ScalarProperty Name="COMPFYEAR" ColumnName="COMPFYEAR" />
+          <ScalarProperty Name="COMPCNTPSN" ColumnName="COMPCNTPSN" />
+          <ScalarProperty Name="COMPVATREGNO" ColumnName="COMPVATREGNO" />
+          <ScalarProperty Name="COMPBCURR" ColumnName="COMPBCURR" />
+          <ScalarProperty Name="COMPLOGO" ColumnName="COMPLOGO" />
+          <ScalarProperty Name="COMPWWW" ColumnName="COMPWWW" />
+          <ScalarProperty Name="COMPEMAIL" ColumnName="COMPEMAIL" />
+          <ScalarProperty Name="COMPFAX" ColumnName="COMPFAX" />
+          <ScalarProperty Name="COMPPH" ColumnName="COMPPH" />
+          <ScalarProperty Name="COMPLOC" ColumnName="COMPLOC" />
+          <ScalarProperty Name="COMPADDR" ColumnName="COMPADDR" />
+          <ScalarProperty Name="COMPSNMBAN" ColumnName="COMPSNMBAN" />
+          <ScalarProperty Name="COMPSNM" ColumnName="COMPSNM" />
+          <ScalarProperty Name="COMPNMBAN" ColumnName="COMPNMBAN" />
+          <ScalarProperty Name="COMPNM" ColumnName="COMPNM" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCCOMPANYGROUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCCOMPANYGROUP">
+        <MappingFragment StoreEntitySet="ACCCOMPANYGROUP">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DEFSTS" ColumnName="DEFSTS" />
+          <ScalarProperty Name="COMPGPLOGO" ColumnName="COMPGPLOGO" />
+          <ScalarProperty Name="COMPGPWWW" ColumnName="COMPGPWWW" />
+          <ScalarProperty Name="COMPGPEMAIL" ColumnName="COMPGPEMAIL" />
+          <ScalarProperty Name="COMPGPFAX" ColumnName="COMPGPFAX" />
+          <ScalarProperty Name="COMPGPPH" ColumnName="COMPGPPH" />
+          <ScalarProperty Name="COMPGPLOC" ColumnName="COMPGPLOC" />
+          <ScalarProperty Name="COMPGPADDR" ColumnName="COMPGPADDR" />
+          <ScalarProperty Name="COMPGPSNMBAN" ColumnName="COMPGPSNMBAN" />
+          <ScalarProperty Name="COMPGPSNM" ColumnName="COMPGPSNM" />
+          <ScalarProperty Name="COMPGPBAN" ColumnName="COMPGPBAN" />
+          <ScalarProperty Name="COMPGPNM" ColumnName="COMPGPNM" />
+          <ScalarProperty Name="COMPGPID" ColumnName="COMPGPID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCLOCATION">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCLOCATION">
+        <MappingFragment StoreEntitySet="ACCLOCATION">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DEFSTS" ColumnName="DEFSTS" />
+          <ScalarProperty Name="LOCBADDR" ColumnName="LOCBADDR" />
+          <ScalarProperty Name="LOCADDR" ColumnName="LOCADDR" />
+          <ScalarProperty Name="LOCBSNM" ColumnName="LOCBSNM" />
+          <ScalarProperty Name="LOCBNM" ColumnName="LOCBNM" />
+          <ScalarProperty Name="LOCSNM" ColumnName="LOCSNM" />
+          <ScalarProperty Name="LOCNM" ColumnName="LOCNM" />
+          <ScalarProperty Name="LOCID" ColumnName="LOCID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCORDER">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCORDER">
+        <MappingFragment StoreEntitySet="ACCORDER">
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="MONTH" ColumnName="MONTH" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="BUYID" ColumnName="BUYID" />
+          <ScalarProperty Name="ORDSNO" ColumnName="ORDSNO" />
+          <ScalarProperty Name="ORDNO" ColumnName="ORDNO" />
+          <ScalarProperty Name="ORDID" ColumnName="ORDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCPROJECT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCPROJECT">
+        <MappingFragment StoreEntitySet="ACCPROJECT">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DEFSTS" ColumnName="DEFSTS" />
+          <ScalarProperty Name="PRJVAL" ColumnName="PRJVAL" />
+          <ScalarProperty Name="PRJSTS" ColumnName="PRJSTS" />
+          <ScalarProperty Name="PRJTP" ColumnName="PRJTP" />
+          <ScalarProperty Name="PRJEDDT" ColumnName="PRJEDDT" />
+          <ScalarProperty Name="PRJSTDT" ColumnName="PRJSTDT" />
+          <ScalarProperty Name="PRJBADDR" ColumnName="PRJBADDR" />
+          <ScalarProperty Name="PRJADDR" ColumnName="PRJADDR" />
+          <ScalarProperty Name="PRJBSNM" ColumnName="PRJBSNM" />
+          <ScalarProperty Name="PRJBNM" ColumnName="PRJBNM" />
+          <ScalarProperty Name="PRJSNM" ColumnName="PRJSNM" />
+          <ScalarProperty Name="PRJNM" ColumnName="PRJNM" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCSUBLEDGER">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCSUBLEDGER">
+        <MappingFragment StoreEntitySet="ACCSUBLEDGER">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="SUBGTYPE" ColumnName="SUBGTYPE" />
+          <ScalarProperty Name="SUBNATURE" ColumnName="SUBNATURE" />
+          <ScalarProperty Name="SUBACCLVL" ColumnName="SUBACCLVL" />
+          <ScalarProperty Name="SUBACCNMSH" ColumnName="SUBACCNMSH" />
+          <ScalarProperty Name="SUBACCNM" ColumnName="SUBACCNM" />
+          <ScalarProperty Name="SUBACCNO" ColumnName="SUBACCNO" />
+          <ScalarProperty Name="SUBLGID" ColumnName="SUBLGID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCTRANDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCTRANDTL">
+        <MappingFragment StoreEntitySet="ACCTRANDTL">
+          <ScalarProperty Name="USER_ID_UP" ColumnName="USER_ID_UP" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="FCDRAMT" ColumnName="FCDRAMT" />
+          <ScalarProperty Name="FCCRAMT" ColumnName="FCCRAMT" />
+          <ScalarProperty Name="FC_CREDIT" ColumnName="FC_CREDIT" />
+          <ScalarProperty Name="FC_DEBIT" ColumnName="FC_DEBIT" />
+          <ScalarProperty Name="FC_RATE" ColumnName="FC_RATE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="MONTH" ColumnName="MONTH" />
+          <ScalarProperty Name="BUYERID" ColumnName="BUYERID" />
+          <ScalarProperty Name="ORDID" ColumnName="ORDID" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="TMID" ColumnName="TMID" />
+          <ScalarProperty Name="NARRDTL" ColumnName="NARRDTL" />
+          <ScalarProperty Name="CRAMT" ColumnName="CRAMT" />
+          <ScalarProperty Name="DRAMT" ColumnName="DRAMT" />
+          <ScalarProperty Name="DRCR" ColumnName="DRCR" />
+          <ScalarProperty Name="TDID" ColumnName="TDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCTRANMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCTRANMST">
+        <MappingFragment StoreEntitySet="ACCTRANMST">
+          <ScalarProperty Name="USER_ID_UP" ColumnName="USER_ID_UP" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="LOCATION" ColumnName="LOCATION" />
+          <ScalarProperty Name="MANUAL_ID" ColumnName="MANUAL_ID" />
+          <ScalarProperty Name="VOUCHER_NO" ColumnName="VOUCHER_NO" />
+          <ScalarProperty Name="BANKSLIP_MRNO" ColumnName="BANKSLIP_MRNO" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="SYEAR" ColumnName="SYEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="BVN" ColumnName="BVN" />
+          <ScalarProperty Name="VTP" ColumnName="VTP" />
+          <ScalarProperty Name="BANKID" ColumnName="BANKID" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="LOCID" ColumnName="LOCID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="NARRMST" ColumnName="NARRMST" />
+          <ScalarProperty Name="PYRVTO" ColumnName="PYRVTO" />
+          <ScalarProperty Name="CHEQDT" ColumnName="CHEQDT" />
+          <ScalarProperty Name="CHEQNO" ColumnName="CHEQNO" />
+          <ScalarProperty Name="MOP" ColumnName="MOP" />
+          <ScalarProperty Name="VCMRIN" ColumnName="VCMRIN" />
+          <ScalarProperty Name="VMINO" ColumnName="VMINO" />
+          <ScalarProperty Name="VCNO" ColumnName="VCNO" />
+          <ScalarProperty Name="VCTP" ColumnName="VCTP" />
+          <ScalarProperty Name="VCDT" ColumnName="VCDT" />
+          <ScalarProperty Name="TMID" ColumnName="TMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ADMISSION_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.ADMISSION_INFO">
+        <MappingFragment StoreEntitySet="ADMISSION_INFO">
+          <ScalarProperty Name="CREDITWAIVER" ColumnName="CREDITWAIVER" />
+          <ScalarProperty Name="AD" ColumnName="AD" />
+          <ScalarProperty Name="OTHERS" ColumnName="OTHERS" />
+          <ScalarProperty Name="GENERAL" ColumnName="GENERAL" />
+          <ScalarProperty Name="MINOR" ColumnName="MINOR" />
+          <ScalarProperty Name="MAJOR" ColumnName="MAJOR" />
+          <ScalarProperty Name="TUT_FEE" ColumnName="TUT_FEE" />
+          <ScalarProperty Name="WAIVER1" ColumnName="WAIVER1" />
+          <ScalarProperty Name="IN_ACTIVE" ColumnName="IN_ACTIVE" />
+          <ScalarProperty Name="PERPUSE" ColumnName="PERPUSE" />
+          <ScalarProperty Name="CREDIT_WAIVER" ColumnName="CREDIT_WAIVER" />
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="SPECIAL_WAIVER_TUTION" ColumnName="SPECIAL_WAIVER_TUTION" />
+          <ScalarProperty Name="NIT_PACKAGE_AMOUNT" ColumnName="NIT_PACKAGE_AMOUNT" />
+          <ScalarProperty Name="SPECIAL_WAIVER" ColumnName="SPECIAL_WAIVER" />
+          <ScalarProperty Name="OFA" ColumnName="OFA" />
+          <ScalarProperty Name="RATIO" ColumnName="RATIO" />
+          <ScalarProperty Name="OFA_ID" ColumnName="OFA_ID" />
+          <ScalarProperty Name="DEV_FEE" ColumnName="DEV_FEE" />
+          <ScalarProperty Name="REGISTRATION_FEE" ColumnName="REGISTRATION_FEE" />
+          <ScalarProperty Name="T_REGISTRATION" ColumnName="T_REGISTRATION" />
+          <ScalarProperty Name="LAB_FEE" ColumnName="LAB_FEE" />
+          <ScalarProperty Name="LIBRARY_FEE" ColumnName="LIBRARY_FEE" />
+          <ScalarProperty Name="TUTION_FEE" ColumnName="TUTION_FEE" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="TOTAL_SEMESTER" ColumnName="TOTAL_SEMESTER" />
+          <ScalarProperty Name="ADMISSION_AMOUNT" ColumnName="ADMISSION_AMOUNT" />
+          <ScalarProperty Name="TOTAL_PACKAGE_AMT" ColumnName="TOTAL_PACKAGE_AMT" />
+          <ScalarProperty Name="DURATION" ColumnName="DURATION" />
+          <ScalarProperty Name="TOTAL_CREDIT" ColumnName="TOTAL_CREDIT" />
+          <ScalarProperty Name="WAIVER" ColumnName="WAIVER" />
+          <ScalarProperty Name="ADMISSION_DATE" ColumnName="ADMISSION_DATE" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="STSESSION" ColumnName="STSESSION" />
+          <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+          <ScalarProperty Name="SECONDARY_MAJOR" ColumnName="SECONDARY_MAJOR" />
+          <ScalarProperty Name="PRIMARY_MAJOR" ColumnName="PRIMARY_MAJOR" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="ST_ID" ColumnName="ST_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTENDANCE_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTENDANCE_D">
+        <MappingFragment StoreEntitySet="ATTENDANCE_D">
+          <ScalarProperty Name="CLASS_NO_30_DATE" ColumnName="CLASS_NO_30_DATE" />
+          <ScalarProperty Name="CLASS_NO_29_DATE" ColumnName="CLASS_NO_29_DATE" />
+          <ScalarProperty Name="CLASS_NO_28_DATE" ColumnName="CLASS_NO_28_DATE" />
+          <ScalarProperty Name="CLASS_NO_27_DATE" ColumnName="CLASS_NO_27_DATE" />
+          <ScalarProperty Name="CLASS_NO_26_DATE" ColumnName="CLASS_NO_26_DATE" />
+          <ScalarProperty Name="CLASS_NO_25_DATE" ColumnName="CLASS_NO_25_DATE" />
+          <ScalarProperty Name="CLASS_NO_24_DATE" ColumnName="CLASS_NO_24_DATE" />
+          <ScalarProperty Name="CLASS_NO_23_DATE" ColumnName="CLASS_NO_23_DATE" />
+          <ScalarProperty Name="CLASS_NO_22_DATE" ColumnName="CLASS_NO_22_DATE" />
+          <ScalarProperty Name="CLASS_NO_21_DATE" ColumnName="CLASS_NO_21_DATE" />
+          <ScalarProperty Name="CLASS_NO_20_DATE" ColumnName="CLASS_NO_20_DATE" />
+          <ScalarProperty Name="CLASS_NO_19_DATE" ColumnName="CLASS_NO_19_DATE" />
+          <ScalarProperty Name="CLASS_NO_18_DATE" ColumnName="CLASS_NO_18_DATE" />
+          <ScalarProperty Name="CLASS_NO_17_DATE" ColumnName="CLASS_NO_17_DATE" />
+          <ScalarProperty Name="CLASS_NO_16_DATE" ColumnName="CLASS_NO_16_DATE" />
+          <ScalarProperty Name="CLASS_NO_15_DATE" ColumnName="CLASS_NO_15_DATE" />
+          <ScalarProperty Name="CLASS_NO_14_DATE" ColumnName="CLASS_NO_14_DATE" />
+          <ScalarProperty Name="CLASS_NO_13_DATE" ColumnName="CLASS_NO_13_DATE" />
+          <ScalarProperty Name="CLASS_NO_12_DATE" ColumnName="CLASS_NO_12_DATE" />
+          <ScalarProperty Name="CLASS_NO_11_DATE" ColumnName="CLASS_NO_11_DATE" />
+          <ScalarProperty Name="CLASS_NO_10_DATE" ColumnName="CLASS_NO_10_DATE" />
+          <ScalarProperty Name="CLASS_NO_9_DATE" ColumnName="CLASS_NO_9_DATE" />
+          <ScalarProperty Name="CLASS_NO_8_DATE" ColumnName="CLASS_NO_8_DATE" />
+          <ScalarProperty Name="CLASS_NO_7_DATE" ColumnName="CLASS_NO_7_DATE" />
+          <ScalarProperty Name="CLASS_NO_6_DATE" ColumnName="CLASS_NO_6_DATE" />
+          <ScalarProperty Name="CLASS_NO_5_DATE" ColumnName="CLASS_NO_5_DATE" />
+          <ScalarProperty Name="CLASS_NO_4_DATE" ColumnName="CLASS_NO_4_DATE" />
+          <ScalarProperty Name="CLASS_NO_3_DATE" ColumnName="CLASS_NO_3_DATE" />
+          <ScalarProperty Name="CLASS_NO_2_DATE" ColumnName="CLASS_NO_2_DATE" />
+          <ScalarProperty Name="CLASS_NO_1_DATE" ColumnName="CLASS_NO_1_DATE" />
+          <ScalarProperty Name="CLASS_NO_30" ColumnName="CLASS_NO_30" />
+          <ScalarProperty Name="CLASS_NO_29" ColumnName="CLASS_NO_29" />
+          <ScalarProperty Name="CLASS_NO_28" ColumnName="CLASS_NO_28" />
+          <ScalarProperty Name="CLASS_NO_27" ColumnName="CLASS_NO_27" />
+          <ScalarProperty Name="CLASS_NO_26" ColumnName="CLASS_NO_26" />
+          <ScalarProperty Name="CLASS_NO_25" ColumnName="CLASS_NO_25" />
+          <ScalarProperty Name="CLASS_NO_24" ColumnName="CLASS_NO_24" />
+          <ScalarProperty Name="CLASS_NO_23" ColumnName="CLASS_NO_23" />
+          <ScalarProperty Name="CLASS_NO_22" ColumnName="CLASS_NO_22" />
+          <ScalarProperty Name="CLASS_NO_21" ColumnName="CLASS_NO_21" />
+          <ScalarProperty Name="CLASS_NO_20" ColumnName="CLASS_NO_20" />
+          <ScalarProperty Name="CLASS_NO_19" ColumnName="CLASS_NO_19" />
+          <ScalarProperty Name="CLASS_NO_18" ColumnName="CLASS_NO_18" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="ATTENDANCE_DATE" ColumnName="ATTENDANCE_DATE" />
+          <ScalarProperty Name="CLASS_NO_17" ColumnName="CLASS_NO_17" />
+          <ScalarProperty Name="CLASS_NO_16" ColumnName="CLASS_NO_16" />
+          <ScalarProperty Name="CLASS_NO_15" ColumnName="CLASS_NO_15" />
+          <ScalarProperty Name="CLASS_NO_14" ColumnName="CLASS_NO_14" />
+          <ScalarProperty Name="CLASS_NO_13" ColumnName="CLASS_NO_13" />
+          <ScalarProperty Name="CLASS_NO_12" ColumnName="CLASS_NO_12" />
+          <ScalarProperty Name="CLASS_NO_11" ColumnName="CLASS_NO_11" />
+          <ScalarProperty Name="CLASS_NO_10" ColumnName="CLASS_NO_10" />
+          <ScalarProperty Name="CLASS_NO_9" ColumnName="CLASS_NO_9" />
+          <ScalarProperty Name="CLASS_NO_8" ColumnName="CLASS_NO_8" />
+          <ScalarProperty Name="CLASS_NO_7" ColumnName="CLASS_NO_7" />
+          <ScalarProperty Name="CLASS_NO_6" ColumnName="CLASS_NO_6" />
+          <ScalarProperty Name="CLASS_NO_5" ColumnName="CLASS_NO_5" />
+          <ScalarProperty Name="CLASS_NO_4" ColumnName="CLASS_NO_4" />
+          <ScalarProperty Name="CLASS_NO_3" ColumnName="CLASS_NO_3" />
+          <ScalarProperty Name="CLASS_NO_2" ColumnName="CLASS_NO_2" />
+          <ScalarProperty Name="CLASS_NO_1" ColumnName="CLASS_NO_1" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="STUDENT_ID" ColumnName="STUDENT_ID" />
+          <ScalarProperty Name="ATTENDANCE_M_ID" ColumnName="ATTENDANCE_M_ID" />
+          <ScalarProperty Name="ATTENDANCE_D_ID" ColumnName="ATTENDANCE_D_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTENDANCE_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTENDANCE_M">
+        <MappingFragment StoreEntitySet="ATTENDANCE_M">
+          <ScalarProperty Name="CLASS_NO_1_D24" ColumnName="CLASS_NO_1_D24" />
+          <ScalarProperty Name="CLASS_NO_1_D23" ColumnName="CLASS_NO_1_D23" />
+          <ScalarProperty Name="CLASS_NO_1_D22" ColumnName="CLASS_NO_1_D22" />
+          <ScalarProperty Name="CLASS_NO_1_D21" ColumnName="CLASS_NO_1_D21" />
+          <ScalarProperty Name="CLASS_NO_1_D20" ColumnName="CLASS_NO_1_D20" />
+          <ScalarProperty Name="CLASS_NO_1_D19" ColumnName="CLASS_NO_1_D19" />
+          <ScalarProperty Name="CLASS_NO_1_D18" ColumnName="CLASS_NO_1_D18" />
+          <ScalarProperty Name="CLASS_NO_1_D17" ColumnName="CLASS_NO_1_D17" />
+          <ScalarProperty Name="CLASS_NO_1_D16" ColumnName="CLASS_NO_1_D16" />
+          <ScalarProperty Name="CLASS_NO_1_D15" ColumnName="CLASS_NO_1_D15" />
+          <ScalarProperty Name="CLASS_NO_1_D14" ColumnName="CLASS_NO_1_D14" />
+          <ScalarProperty Name="CLASS_NO_1_D13" ColumnName="CLASS_NO_1_D13" />
+          <ScalarProperty Name="CLASS_NO_1_D12" ColumnName="CLASS_NO_1_D12" />
+          <ScalarProperty Name="CLASS_NO_1_D11" ColumnName="CLASS_NO_1_D11" />
+          <ScalarProperty Name="CLASS_NO_1_D10" ColumnName="CLASS_NO_1_D10" />
+          <ScalarProperty Name="CLASS_NO_1_D9" ColumnName="CLASS_NO_1_D9" />
+          <ScalarProperty Name="CLASS_NO_1_D8" ColumnName="CLASS_NO_1_D8" />
+          <ScalarProperty Name="CLASS_NO_1_D7" ColumnName="CLASS_NO_1_D7" />
+          <ScalarProperty Name="CLASS_NO_1_D6" ColumnName="CLASS_NO_1_D6" />
+          <ScalarProperty Name="CLASS_NO_1_D5" ColumnName="CLASS_NO_1_D5" />
+          <ScalarProperty Name="CLASS_NO_1_D4" ColumnName="CLASS_NO_1_D4" />
+          <ScalarProperty Name="CLASS_NO_1_D3" ColumnName="CLASS_NO_1_D3" />
+          <ScalarProperty Name="CLASS_NO_1_D2" ColumnName="CLASS_NO_1_D2" />
+          <ScalarProperty Name="CLASS_NO_1_D1" ColumnName="CLASS_NO_1_D1" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="ATTENDANCE_DATE" ColumnName="ATTENDANCE_DATE" />
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="COURSE_TEACHER" ColumnName="COURSE_TEACHER" />
+          <ScalarProperty Name="SECTION" ColumnName="SECTION" />
+          <ScalarProperty Name="COURSE_TITLE" ColumnName="COURSE_TITLE" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="PROGRAM_CODE" ColumnName="PROGRAM_CODE" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ATTENDANCE_M_ID" ColumnName="ATTENDANCE_M_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_D">
+        <MappingFragment StoreEntitySet="ATTMARK_D">
+          <ScalarProperty Name="Pk" ColumnName="Pk" />
+          <ScalarProperty Name="CTYPE" ColumnName="CTYPE" />
+          <ScalarProperty Name="MSTATUS" ColumnName="MSTATUS" />
+          <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ATTENDANCE" ColumnName="ATTENDANCE" />
+          <ScalarProperty Name="FINAL_40" ColumnName="FINAL_40" />
+          <ScalarProperty Name="MID_TERM" ColumnName="MID_TERM" />
+          <ScalarProperty Name="ASSIGNMENT" ColumnName="ASSIGNMENT" />
+          <ScalarProperty Name="ORAL_TEST" ColumnName="ORAL_TEST" />
+          <ScalarProperty Name="CT_3" ColumnName="CT_3" />
+          <ScalarProperty Name="CT_2" ColumnName="CT_2" />
+          <ScalarProperty Name="CT_1" ColumnName="CT_1" />
+          <ScalarProperty Name="CLASS_PERF" ColumnName="CLASS_PERF" />
+          <ScalarProperty Name="TOTAL_MARK" ColumnName="TOTAL_MARK" />
+          <ScalarProperty Name="FINAL" ColumnName="FINAL" />
+          <ScalarProperty Name="TEST2" ColumnName="TEST2" />
+          <ScalarProperty Name="TEST1" ColumnName="TEST1" />
+          <ScalarProperty Name="PRO_ASS" ColumnName="PRO_ASS" />
+          <ScalarProperty Name="CLASS_ATTN" ColumnName="CLASS_ATTN" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_M_CT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_M_CT">
+        <MappingFragment StoreEntitySet="ATTMARK_M_CT">
+          <ScalarProperty Name="UNIVERSITY_NAME" ColumnName="UNIVERSITY_NAME" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_M_CW">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_M_CW">
+        <MappingFragment StoreEntitySet="ATTMARK_M_CW">
+          <ScalarProperty Name="UNIVERSITY_NAME" ColumnName="UNIVERSITY_NAME" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AUTHOR">
+      <EntityTypeMapping TypeName="EubOracle1Model.AUTHOR">
+        <MappingFragment StoreEntitySet="AUTHOR">
+          <ScalarProperty Name="AUTHOR_NAME" ColumnName="AUTHOR_NAME" />
+          <ScalarProperty Name="AUTHOR_ID" ColumnName="AUTHOR_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BALSHEETDDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.BALSHEETDDTL">
+        <MappingFragment StoreEntitySet="BALSHEETDDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DDGRP" ColumnName="DDGRP" />
+          <ScalarProperty Name="ADDTP" ColumnName="ADDTP" />
+          <ScalarProperty Name="BSDDSEQ" ColumnName="BSDDSEQ" />
+          <ScalarProperty Name="NMSHDDTL" ColumnName="NMSHDDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BSDID" ColumnName="BSDID" />
+          <ScalarProperty Name="BSDDID" ColumnName="BSDDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BALSHEETDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.BALSHEETDTL">
+        <MappingFragment StoreEntitySet="BALSHEETDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DGRP" ColumnName="DGRP" />
+          <ScalarProperty Name="ADDTP" ColumnName="ADDTP" />
+          <ScalarProperty Name="BSDSEQ" ColumnName="BSDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BSMID" ColumnName="BSMID" />
+          <ScalarProperty Name="BSDID" ColumnName="BSDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BALSHEETMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.BALSHEETMST">
+        <MappingFragment StoreEntitySet="BALSHEETMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="MGRP" ColumnName="MGRP" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="BSMSEQ" ColumnName="BSMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BSMID" ColumnName="BSMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BOOK_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.BOOK_INFO">
+        <MappingFragment StoreEntitySet="BOOK_INFO">
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="LOST_DATE" ColumnName="LOST_DATE" />
+          <ScalarProperty Name="LOST_PURPOSE" ColumnName="LOST_PURPOSE" />
+          <ScalarProperty Name="LOST_STATUS" ColumnName="LOST_STATUS" />
+          <ScalarProperty Name="EDITION" ColumnName="EDITION" />
+          <ScalarProperty Name="PUBLISHED_PLACE" ColumnName="PUBLISHED_PLACE" />
+          <ScalarProperty Name="SUBJECT_NAME_2" ColumnName="SUBJECT_NAME_2" />
+          <ScalarProperty Name="SUBJECT_NAME_1" ColumnName="SUBJECT_NAME_1" />
+          <ScalarProperty Name="PAGE_NUMBER_VOLUM" ColumnName="PAGE_NUMBER_VOLUM" />
+          <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="DATE_OF_PUBLICATION" ColumnName="DATE_OF_PUBLICATION" />
+          <ScalarProperty Name="PUBLISHER_NAME" ColumnName="PUBLISHER_NAME" />
+          <ScalarProperty Name="AUTHOR_NAME_2" ColumnName="AUTHOR_NAME_2" />
+          <ScalarProperty Name="AUTHOR_NAME_1" ColumnName="AUTHOR_NAME_1" />
+          <ScalarProperty Name="AUTHOR_NAME" ColumnName="AUTHOR_NAME" />
+          <ScalarProperty Name="SUBJECT_NAME" ColumnName="SUBJECT_NAME" />
+          <ScalarProperty Name="BOOK_NAME" ColumnName="BOOK_NAME" />
+          <ScalarProperty Name="BOOK_ID" ColumnName="BOOK_ID" />
+          <ScalarProperty Name="BOOK_INFO_ID" ColumnName="BOOK_INFO_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BOOK_LEND_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.BOOK_LEND_INFO">
+        <MappingFragment StoreEntitySet="BOOK_LEND_INFO">
+          <ScalarProperty Name="SUB_ID" ColumnName="SUB_ID" />
+          <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+          <ScalarProperty Name="BOOK_STATUS" ColumnName="BOOK_STATUS" />
+          <ScalarProperty Name="RETURN_DATE" ColumnName="RETURN_DATE" />
+          <ScalarProperty Name="BOOK_ID" ColumnName="BOOK_ID" />
+          <ScalarProperty Name="EMP_ID" ColumnName="EMP_ID" />
+          <ScalarProperty Name="MEM_ID" ColumnName="MEM_ID" />
+          <ScalarProperty Name="ISSUE_DATE" ColumnName="ISSUE_DATE" />
+          <ScalarProperty Name="LEND_ID" ColumnName="LEND_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BUDGETDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.BUDGETDTL">
+        <MappingFragment StoreEntitySet="BUDGETDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="DEPT" ColumnName="DEPT" />
+          <ScalarProperty Name="BUDMID" ColumnName="BUDMID" />
+          <ScalarProperty Name="BUDAMT" ColumnName="BUDAMT" />
+          <ScalarProperty Name="BUDDID" ColumnName="BUDDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BUDGETMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.BUDGETMST">
+        <MappingFragment StoreEntitySet="BUDGETMST">
+          <ScalarProperty Name="ORDID" ColumnName="ORDID" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="BGRPMID" ColumnName="BGRPMID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="LOCID" ColumnName="LOCID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="BUDDT" ColumnName="BUDDT" />
+          <ScalarProperty Name="BUDMID" ColumnName="BUDMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BUDGETRPTDDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.BUDGETRPTDDTL">
+        <MappingFragment StoreEntitySet="BUDGETRPTDDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DDGRP" ColumnName="DDGRP" />
+          <ScalarProperty Name="BGDDSEQ" ColumnName="BGDDSEQ" />
+          <ScalarProperty Name="NMSHDDTL" ColumnName="NMSHDDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BGRPDID" ColumnName="BGRPDID" />
+          <ScalarProperty Name="BGRPDDID" ColumnName="BGRPDDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BUDGETRPTDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.BUDGETRPTDTL">
+        <MappingFragment StoreEntitySet="BUDGETRPTDTL">
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DGRP" ColumnName="DGRP" />
+          <ScalarProperty Name="BGDSEQ" ColumnName="BGDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BGRPMID" ColumnName="BGRPMID" />
+          <ScalarProperty Name="BGRPDID" ColumnName="BGRPDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BUDGETRPTMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.BUDGETRPTMST">
+        <MappingFragment StoreEntitySet="BUDGETRPTMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="MGRP" ColumnName="MGRP" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="BGMSEQ" ColumnName="BGMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="BGRPMID" ColumnName="BGRPMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CARD">
+      <EntityTypeMapping TypeName="EubOracle1Model.CARD">
+        <MappingFragment StoreEntitySet="CARD">
+          <ScalarProperty Name="SECURITY_MONEY" ColumnName="SECURITY_MONEY" />
+          <ScalarProperty Name="CARD_DESC" ColumnName="CARD_DESC" />
+          <ScalarProperty Name="CARD_ID" ColumnName="CARD_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CASHFLOWDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.CASHFLOWDTL">
+        <MappingFragment StoreEntitySet="CASHFLOWDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DGRP" ColumnName="DGRP" />
+          <ScalarProperty Name="ADDTP" ColumnName="ADDTP" />
+          <ScalarProperty Name="CFDSEQ" ColumnName="CFDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CFMID" ColumnName="CFMID" />
+          <ScalarProperty Name="CFDID" ColumnName="CFDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CASHFLOWMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.CASHFLOWMST">
+        <MappingFragment StoreEntitySet="CASHFLOWMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="MGRP" ColumnName="MGRP" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="CFMSEQ" ColumnName="CFMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CFMID" ColumnName="CFMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CIRD_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.CIRD_INFO">
+        <MappingFragment StoreEntitySet="CIRD_INFO">
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="VALIDITY" ColumnName="VALIDITY" />
+          <ScalarProperty Name="ADRESS" ColumnName="ADRESS" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="STUDENT_ID" ColumnName="STUDENT_ID" />
+          <ScalarProperty Name="CIRD_NUMBER" ColumnName="CIRD_NUMBER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COLL_INFO_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.COLL_INFO_D">
+        <MappingFragment StoreEntitySet="COLL_INFO_D">
+          <ScalarProperty Name="PK" ColumnName="PK" />
+          <ScalarProperty Name="USER_ID_UP" ColumnName="USER_ID_UP" />
+          <ScalarProperty Name="CID" ColumnName="CID" />
+          <ScalarProperty Name="TDID" ColumnName="TDID" />
+          <ScalarProperty Name="TOT" ColumnName="TOT" />
+          <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COLL_INFO_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.COLL_INFO_M">
+        <MappingFragment StoreEntitySet="COLL_INFO_M">
+          <ScalarProperty Name="USER_ID_UP" ColumnName="USER_ID_UP" />
+          <ScalarProperty Name="MRAMT" ColumnName="MRAMT" />
+          <ScalarProperty Name="SEMESTER1" ColumnName="SEMESTER1" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="CID" ColumnName="CID" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="AUTOMRNO" ColumnName="AUTOMRNO" />
+          <ScalarProperty Name="COLL_ID" ColumnName="COLL_ID" />
+          <ScalarProperty Name="TMID" ColumnName="TMID" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="VOUCHER_NO" ColumnName="VOUCHER_NO" />
+          <ScalarProperty Name="COLLECTION_TYPE" ColumnName="COLLECTION_TYPE" />
+          <ScalarProperty Name="BANK_ID" ColumnName="BANK_ID" />
+          <ScalarProperty Name="SDATE" ColumnName="SDATE" />
+          <ScalarProperty Name="BANK_SLIP_NO" ColumnName="BANK_SLIP_NO" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COLL_INFO_M_DELETE">
+      <EntityTypeMapping TypeName="EubOracle1Model.COLL_INFO_M_DELETE">
+        <MappingFragment StoreEntitySet="COLL_INFO_M_DELETE">
+          <ScalarProperty Name="MRAMT" ColumnName="MRAMT" />
+          <ScalarProperty Name="SEMESTER1" ColumnName="SEMESTER1" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="CID" ColumnName="CID" />
+          <ScalarProperty Name="COLL_ID" ColumnName="COLL_ID" />
+          <ScalarProperty Name="TMID" ColumnName="TMID" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="VOUCHER_NO" ColumnName="VOUCHER_NO" />
+          <ScalarProperty Name="COLLECTION_TYPE" ColumnName="COLLECTION_TYPE" />
+          <ScalarProperty Name="BANK_ID" ColumnName="BANK_ID" />
+          <ScalarProperty Name="SDATE" ColumnName="SDATE" />
+          <ScalarProperty Name="BANK_SLIP_NO" ColumnName="BANK_SLIP_NO" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COLL_INFO_MD">
+      <EntityTypeMapping TypeName="EubOracle1Model.COLL_INFO_MD">
+        <MappingFragment StoreEntitySet="COLL_INFO_MD">
+          <ScalarProperty Name="USER_ID_UP" ColumnName="USER_ID_UP" />
+          <ScalarProperty Name="MRAMT" ColumnName="MRAMT" />
+          <ScalarProperty Name="SEMESTER1" ColumnName="SEMESTER1" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="CID" ColumnName="CID" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="AUTOMRNO" ColumnName="AUTOMRNO" />
+          <ScalarProperty Name="COLL_ID" ColumnName="COLL_ID" />
+          <ScalarProperty Name="TMID" ColumnName="TMID" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="VOUCHER_NO" ColumnName="VOUCHER_NO" />
+          <ScalarProperty Name="COLLECTION_TYPE" ColumnName="COLLECTION_TYPE" />
+          <ScalarProperty Name="BANK_ID" ColumnName="BANK_ID" />
+          <ScalarProperty Name="SDATE" ColumnName="SDATE" />
+          <ScalarProperty Name="BANK_SLIP_NO" ColumnName="BANK_SLIP_NO" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COURSEMAP_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.COURSEMAP_M">
+        <MappingFragment StoreEntitySet="COURSEMAP_M">
+          <ScalarProperty Name="DEV_FEE" ColumnName="DEV_FEE" />
+          <ScalarProperty Name="REG_FEE" ColumnName="REG_FEE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DEPARTMENT">
+      <EntityTypeMapping TypeName="EubOracle1Model.DEPARTMENT">
+        <MappingFragment StoreEntitySet="DEPARTMENT">
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="DEPARTMENT_CODE" ColumnName="DEPARTMENT_CODE" />
+          <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+          <ScalarProperty Name="FACULTY_ID" ColumnName="FACULTY_ID" />
+          <ScalarProperty Name="DEPARTMENT_ID" ColumnName="DEPARTMENT_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DESIGNATION">
+      <EntityTypeMapping TypeName="EubOracle1Model.DESIGNATION">
+        <MappingFragment StoreEntitySet="DESIGNATION">
+          <ScalarProperty Name="DESIGNATION1" ColumnName="DESIGNATION" />
+          <ScalarProperty Name="DESIG_ID" ColumnName="DESIG_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DISTRICT">
+      <EntityTypeMapping TypeName="EubOracle1Model.DISTRICT">
+        <MappingFragment StoreEntitySet="DISTRICT">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DISTSNM" ColumnName="DISTSNM" />
+          <ScalarProperty Name="DISTNM" ColumnName="DISTNM" />
+          <ScalarProperty Name="DISTID" ColumnName="DISTID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EDUCATION">
+      <EntityTypeMapping TypeName="EubOracle1Model.EDUCATION">
+        <MappingFragment StoreEntitySet="EDUCATION">
+          <ScalarProperty Name="pk" ColumnName="pk" />
+          <ScalarProperty Name="GOLDEN" ColumnName="GOLDEN" />
+          <ScalarProperty Name="CGPAWF" ColumnName="CGPAWF" />
+          <ScalarProperty Name="CGPA" ColumnName="CGPA" />
+          <ScalarProperty Name="INSTITUTION" ColumnName="INSTITUTION" />
+          <ScalarProperty Name="PERCENTAGE" ColumnName="PERCENTAGE" />
+          <ScalarProperty Name="DIVISION_CLASS" ColumnName="DIVISION_CLASS" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="BOARD_UNIVERSITB" ColumnName="BOARD_UNIVERSITB" />
+          <ScalarProperty Name="NAME_OF_DEGREE" ColumnName="NAME_OF_DEGREE" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EMP_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.EMP_INFO">
+        <MappingFragment StoreEntitySet="EMP_INFO">
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="DESIG_ID" ColumnName="DESIG_ID" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="PER_ADD" ColumnName="PER_ADD" />
+          <ScalarProperty Name="PRE_ADD" ColumnName="PRE_ADD" />
+          <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+          <ScalarProperty Name="MARITAL_STATUS" ColumnName="MARITAL_STATUS" />
+          <ScalarProperty Name="GENDER" ColumnName="GENDER" />
+          <ScalarProperty Name="HIRE_DATE" ColumnName="HIRE_DATE" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="FATHER_NAME" ColumnName="FATHER_NAME" />
+          <ScalarProperty Name="EMP_NAME" ColumnName="EMP_NAME" />
+          <ScalarProperty Name="EMP_ID" ColumnName="EMP_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FACULTY">
+      <EntityTypeMapping TypeName="EubOracle1Model.FACULTY">
+        <MappingFragment StoreEntitySet="FACULTY">
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="FACULTY_CODE" ColumnName="FACULTY_CODE" />
+          <ScalarProperty Name="FACULTY_NAME" ColumnName="FACULTY_NAME" />
+          <ScalarProperty Name="FACULTY_ID" ColumnName="FACULTY_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FIND">
+      <EntityTypeMapping TypeName="EubOracle1Model.FIND">
+        <MappingFragment StoreEntitySet="FIND">
+          <ScalarProperty Name="ACTION_DATE" ColumnName="ACTION_DATE" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="PROGRAMID" ColumnName="PROGRAMID" />
+          <ScalarProperty Name="PROGRAMNM" ColumnName="PROGRAMNM" />
+          <ScalarProperty Name="RRID" ColumnName="RRID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="INCOMEDDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.INCOMEDDTL">
+        <MappingFragment StoreEntitySet="INCOMEDDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DDGRP" ColumnName="DDGRP" />
+          <ScalarProperty Name="ADDTP" ColumnName="ADDTP" />
+          <ScalarProperty Name="INDDSEQ" ColumnName="INDDSEQ" />
+          <ScalarProperty Name="NMSHDDTL" ColumnName="NMSHDDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="INDID" ColumnName="INDID" />
+          <ScalarProperty Name="INDDID" ColumnName="INDDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="INCOMEDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.INCOMEDTL">
+        <MappingFragment StoreEntitySet="INCOMEDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DGRP" ColumnName="DGRP" />
+          <ScalarProperty Name="ADDTP" ColumnName="ADDTP" />
+          <ScalarProperty Name="INDSEQ" ColumnName="INDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="INMID" ColumnName="INMID" />
+          <ScalarProperty Name="INDID" ColumnName="INDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="INCOMEMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.INCOMEMST">
+        <MappingFragment StoreEntitySet="INCOMEMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="MGRP" ColumnName="MGRP" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="INMSEQ" ColumnName="INMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="INMID" ColumnName="INMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="INTERTRANSMAP">
+      <EntityTypeMapping TypeName="EubOracle1Model.INTERTRANSMAP">
+        <MappingFragment StoreEntitySet="INTERTRANSMAP">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="MAPTP" ColumnName="MAPTP" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="INMPID" ColumnName="INMPID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LEND_INFO_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.LEND_INFO_D">
+        <MappingFragment StoreEntitySet="LEND_INFO_D">
+          <ScalarProperty Name="FINE_AMOUNT" ColumnName="FINE_AMOUNT" />
+          <ScalarProperty Name="ACTUAL_RETURN_DATE" ColumnName="ACTUAL_RETURN_DATE" />
+          <ScalarProperty Name="RETURN_STATUS" ColumnName="RETURN_STATUS" />
+          <ScalarProperty Name="ACCESSION_NUMBER" ColumnName="ACCESSION_NUMBER" />
+          <ScalarProperty Name="LEND_INFO_M_ID" ColumnName="LEND_INFO_M_ID" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="RETURN_DATE" ColumnName="RETURN_DATE" />
+          <ScalarProperty Name="ISSUE_DATE" ColumnName="ISSUE_DATE" />
+          <ScalarProperty Name="SUBJECT_NAME" ColumnName="SUBJECT_NAME" />
+          <ScalarProperty Name="CALL_NUMBER" ColumnName="CALL_NUMBER" />
+          <ScalarProperty Name="BOOK_NAME" ColumnName="BOOK_NAME" />
+          <ScalarProperty Name="LEND_INFO_D_ID" ColumnName="LEND_INFO_D_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LEND_INFO_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.LEND_INFO_M">
+        <MappingFragment StoreEntitySet="LEND_INFO_M">
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ADRESS" ColumnName="ADRESS" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="STUDENT_ID" ColumnName="STUDENT_ID" />
+          <ScalarProperty Name="CIRD_NUMBER" ColumnName="CIRD_NUMBER" />
+          <ScalarProperty Name="LEND_INFO_M_ID" ColumnName="LEND_INFO_M_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LOANTRANS">
+      <EntityTypeMapping TypeName="EubOracle1Model.LOANTRANS">
+        <MappingFragment StoreEntitySet="LOANTRANS">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="LOCID" ColumnName="LOCID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="TRANSTAG" ColumnName="TRANSTAG" />
+          <ScalarProperty Name="NARR" ColumnName="NARR" />
+          <ScalarProperty Name="LNTAMT" ColumnName="LNTAMT" />
+          <ScalarProperty Name="CHEQDT" ColumnName="CHEQDT" />
+          <ScalarProperty Name="CHEQNO" ColumnName="CHEQNO" />
+          <ScalarProperty Name="TOLGID" ColumnName="TOLGID" />
+          <ScalarProperty Name="FMLGID" ColumnName="FMLGID" />
+          <ScalarProperty Name="TOPRJID" ColumnName="TOPRJID" />
+          <ScalarProperty Name="FMPRJID" ColumnName="FMPRJID" />
+          <ScalarProperty Name="LNTDT" ColumnName="LNTDT" />
+          <ScalarProperty Name="LNTNO" ColumnName="LNTNO" />
+          <ScalarProperty Name="LNTID" ColumnName="LNTID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LOOKUPDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.LOOKUPDTL">
+        <MappingFragment StoreEntitySet="LOOKUPDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="LKMCD" ColumnName="LKMCD" />
+          <ScalarProperty Name="REFLKDCD" ColumnName="REFLKDCD" />
+          <ScalarProperty Name="LOOKSNM" ColumnName="LOOKSNM" />
+          <ScalarProperty Name="LOOKNM" ColumnName="LOOKNM" />
+          <ScalarProperty Name="LKDCD" ColumnName="LKDCD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LOOKUPMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.LOOKUPMST">
+        <MappingFragment StoreEntitySet="LOOKUPMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="TABSNM" ColumnName="TABSNM" />
+          <ScalarProperty Name="TABNM" ColumnName="TABNM" />
+          <ScalarProperty Name="LKMCD" ColumnName="LKMCD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MEMBER_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.MEMBER_INFO">
+        <MappingFragment StoreEntitySet="MEMBER_INFO">
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="CARD_ID" ColumnName="CARD_ID" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="REFERENCE" ColumnName="REFERENCE" />
+          <ScalarProperty Name="MOBILE_NO" ColumnName="MOBILE_NO" />
+          <ScalarProperty Name="PER_ADD" ColumnName="PER_ADD" />
+          <ScalarProperty Name="PRE_ADD" ColumnName="PRE_ADD" />
+          <ScalarProperty Name="JOIN_DATE" ColumnName="JOIN_DATE" />
+          <ScalarProperty Name="GENDER" ColumnName="GENDER" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="FATHER_NAME" ColumnName="FATHER_NAME" />
+          <ScalarProperty Name="MEM_NAME" ColumnName="MEM_NAME" />
+          <ScalarProperty Name="MEM_ID" ColumnName="MEM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MENU_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.MENU_INFO">
+        <MappingFragment StoreEntitySet="MENU_INFO">
+          <ScalarProperty Name="MENU_NAME" ColumnName="MENU_NAME" />
+          <ScalarProperty Name="MENU_ID" ColumnName="MENU_ID" />
+          <ScalarProperty Name="MODULE_ID" ColumnName="MODULE_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MENU_MODULE">
+      <EntityTypeMapping TypeName="EubOracle1Model.MENU_MODULE">
+        <MappingFragment StoreEntitySet="MENU_MODULE">
+          <ScalarProperty Name="MOUDLE_NAME" ColumnName="MOUDLE_NAME" />
+          <ScalarProperty Name="MODULE_ID" ColumnName="MODULE_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PROGRAM">
+      <EntityTypeMapping TypeName="EubOracle1Model.PROGRAM">
+        <MappingFragment StoreEntitySet="PROGRAM">
+          <ScalarProperty Name="GENERAL" ColumnName="GENERAL" />
+          <ScalarProperty Name="MINOR" ColumnName="MINOR" />
+          <ScalarProperty Name="MAJOR" ColumnName="MAJOR" />
+          <ScalarProperty Name="OTHERS" ColumnName="OTHERS" />
+          <ScalarProperty Name="PROGRAM_ID_PK" ColumnName="PROGRAM_ID_PK" />
+          <ScalarProperty Name="DEPARTMENT" ColumnName="DEPARTMENT" />
+          <ScalarProperty Name="FACULTY" ColumnName="FACULTY" />
+          <ScalarProperty Name="SIT" ColumnName="SIT" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="DEV_FEE" ColumnName="DEV_FEE" />
+          <ScalarProperty Name="TUTION_FEE" ColumnName="TUTION_FEE" />
+          <ScalarProperty Name="TOTAL_REG_FEE" ColumnName="TOTAL_REG_FEE" />
+          <ScalarProperty Name="TOTAL_PACKAGE_AMOUNT" ColumnName="TOTAL_PACKAGE_AMOUNT" />
+          <ScalarProperty Name="PER_CREDIT_FEE" ColumnName="PER_CREDIT_FEE" />
+          <ScalarProperty Name="LIBRARY_FEE" ColumnName="LIBRARY_FEE" />
+          <ScalarProperty Name="LAB_FEE" ColumnName="LAB_FEE" />
+          <ScalarProperty Name="REGISTRATION_FEE" ColumnName="REGISTRATION_FEE" />
+          <ScalarProperty Name="ADMISSION_FEE" ColumnName="ADMISSION_FEE" />
+          <ScalarProperty Name="TOTAL_SEMESTER" ColumnName="TOTAL_SEMESTER" />
+          <ScalarProperty Name="DEPT_NO" ColumnName="DEPT_NO" />
+          <ScalarProperty Name="DURATION" ColumnName="DURATION" />
+          <ScalarProperty Name="TOTAL_CREDIT" ColumnName="TOTAL_CREDIT" />
+          <ScalarProperty Name="PROGRAM_DETAILS" ColumnName="PROGRAM_DETAILS" />
+          <ScalarProperty Name="PROGRAM1" ColumnName="PROGRAM" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PROGRAM1">
+      <EntityTypeMapping TypeName="EubOracle1Model.PROGRAM1">
+        <MappingFragment StoreEntitySet="PROGRAM1">
+          <ScalarProperty Name="SP" ColumnName="SP" />
+          <ScalarProperty Name="TYPE_OF_DEGREE" ColumnName="TYPE_OF_DEGREE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="PROGRAM1_CODE" ColumnName="PROGRAM1_CODE" />
+          <ScalarProperty Name="PROGRAM1_NAME" ColumnName="PROGRAM1_NAME" />
+          <ScalarProperty Name="DEPARTMENT_ID" ColumnName="DEPARTMENT_ID" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PUBLISHER">
+      <EntityTypeMapping TypeName="EubOracle1Model.PUBLISHER">
+        <MappingFragment StoreEntitySet="PUBLISHER">
+          <ScalarProperty Name="PUBLISHER_NAME" ColumnName="PUBLISHER_NAME" />
+          <ScalarProperty Name="PUBLISHER_ID" ColumnName="PUBLISHER_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RATIODTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.RATIODTL">
+        <MappingFragment StoreEntitySet="RATIODTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DGRP" ColumnName="DGRP" />
+          <ScalarProperty Name="RATDSEQ" ColumnName="RATDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="RATMID" ColumnName="RATMID" />
+          <ScalarProperty Name="RATDID" ColumnName="RATDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RATIOMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.RATIOMST">
+        <MappingFragment StoreEntitySet="RATIOMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="MGRP" ColumnName="MGRP" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="RATMSEQ" ColumnName="RATMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="RATMID" ColumnName="RATMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="REG_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.REG_D">
+        <MappingFragment StoreEntitySet="REG_D">
+          <ScalarProperty Name="PK" ColumnName="PK" />
+          <ScalarProperty Name="RRID" ColumnName="RRID" />
+          <ScalarProperty Name="INSTRUCTOR_NAME" ColumnName="INSTRUCTOR_NAME" />
+          <ScalarProperty Name="DAY" ColumnName="DAY" />
+          <ScalarProperty Name="TIME_SCHEDULE" ColumnName="TIME_SCHEDULE" />
+          <ScalarProperty Name="INSTRUCTOR_ID" ColumnName="INSTRUCTOR_ID" />
+          <ScalarProperty Name="ROOM_NO" ColumnName="ROOM_NO" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="REG_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.REG_M">
+        <MappingFragment StoreEntitySet="REG_M">
+          <ScalarProperty Name="RRID" ColumnName="RRID" />
+          <ScalarProperty Name="WAIVER_ON_SEMESTER_RESULT" ColumnName="WAIVER_ON_SEMESTER_RESULT" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="GROUP_ID" ColumnName="GROUP_ID" />
+          <ScalarProperty Name="TOTAL_SEMESTER_TK" ColumnName="TOTAL_SEMESTER_TK" />
+          <ScalarProperty Name="FEES_PAID" ColumnName="FEES_PAID" />
+          <ScalarProperty Name="FEES_DEU_TK" ColumnName="FEES_DEU_TK" />
+          <ScalarProperty Name="REGISTRATION_ID" ColumnName="REGISTRATION_ID" />
+          <ScalarProperty Name="FEES_DEU" ColumnName="FEES_DEU" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="ADMISSON_FEE" ColumnName="ADMISSON_FEE" />
+          <ScalarProperty Name="LIBRARY_FEE" ColumnName="LIBRARY_FEE" />
+          <ScalarProperty Name="LAB_FEE" ColumnName="LAB_FEE" />
+          <ScalarProperty Name="DEV_FEE" ColumnName="DEV_FEE" />
+          <ScalarProperty Name="WAIVER_AMT" ColumnName="WAIVER_AMT" />
+          <ScalarProperty Name="SPECIAL_DISCOUNT" ColumnName="SPECIAL_DISCOUNT" />
+          <ScalarProperty Name="REG_FEE" ColumnName="REG_FEE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RETURN_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.RETURN_INFO">
+        <MappingFragment StoreEntitySet="RETURN_INFO">
+          <ScalarProperty Name="LEND_INFO_D_ID" ColumnName="LEND_INFO_D_ID" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="RECIVED" ColumnName="RECIVED" />
+          <ScalarProperty Name="FINE" ColumnName="FINE" />
+          <ScalarProperty Name="ACTUAL_RETURN_DATE" ColumnName="ACTUAL_RETURN_DATE" />
+          <ScalarProperty Name="RETURN_DATE" ColumnName="RETURN_DATE" />
+          <ScalarProperty Name="ISSUE_DATE" ColumnName="ISSUE_DATE" />
+          <ScalarProperty Name="CALL_NUMBER" ColumnName="CALL_NUMBER" />
+          <ScalarProperty Name="SUBJECT_NAME" ColumnName="SUBJECT_NAME" />
+          <ScalarProperty Name="BOOK_NAME" ColumnName="BOOK_NAME" />
+          <ScalarProperty Name="ADRESS" ColumnName="ADRESS" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="STUDENT_NAME" ColumnName="STUDENT_NAME" />
+          <ScalarProperty Name="STUDENT_ID" ColumnName="STUDENT_ID" />
+          <ScalarProperty Name="CIRD_NUMBER" ColumnName="CIRD_NUMBER" />
+          <ScalarProperty Name="ACCESSION_NUMBER" ColumnName="ACCESSION_NUMBER" />
+          <ScalarProperty Name="RETURN_INFO_M_ID" ColumnName="RETURN_INFO_M_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SFGRPPRIVILEGE">
+      <EntityTypeMapping TypeName="EubOracle1Model.SFGRPPRIVILEGE">
+        <MappingFragment StoreEntitySet="SFGRPPRIVILEGE">
+          <ScalarProperty Name="GRPPRVDEL" ColumnName="GRPPRVDEL" />
+          <ScalarProperty Name="GRPPRVEDIT" ColumnName="GRPPRVEDIT" />
+          <ScalarProperty Name="GRPPRVADD" ColumnName="GRPPRVADD" />
+          <ScalarProperty Name="GRPPRVVIEW" ColumnName="GRPPRVVIEW" />
+          <ScalarProperty Name="SBMODUID" ColumnName="SBMODUID" />
+          <ScalarProperty Name="MODUID" ColumnName="MODUID" />
+          <ScalarProperty Name="SFUSRGRPID" ColumnName="SFUSRGRPID" />
+          <ScalarProperty Name="GRPPRVID" ColumnName="GRPPRVID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SFMODULE">
+      <EntityTypeMapping TypeName="EubOracle1Model.SFMODULE">
+        <MappingFragment StoreEntitySet="SFMODULE">
+          <ScalarProperty Name="MODUAPPNM" ColumnName="MODUAPPNM" />
+          <ScalarProperty Name="MODUNM" ColumnName="MODUNM" />
+          <ScalarProperty Name="MODUID" ColumnName="MODUID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SFSUBMODULE">
+      <EntityTypeMapping TypeName="EubOracle1Model.SFSUBMODULE">
+        <MappingFragment StoreEntitySet="SFSUBMODULE">
+          <ScalarProperty Name="SBMODUISRPT" ColumnName="SBMODUISRPT" />
+          <ScalarProperty Name="SBMODUAPPNM" ColumnName="SBMODUAPPNM" />
+          <ScalarProperty Name="SBMODUNM" ColumnName="SBMODUNM" />
+          <ScalarProperty Name="MODUID" ColumnName="MODUID" />
+          <ScalarProperty Name="SBMODUID" ColumnName="SBMODUID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SFUSERS">
+      <EntityTypeMapping TypeName="EubOracle1Model.SFUSERS">
+        <MappingFragment StoreEntitySet="SFUSERS">
+          <ScalarProperty Name="USRPWD" ColumnName="USRPWD" />
+          <ScalarProperty Name="USRLNM" ColumnName="USRLNM" />
+          <ScalarProperty Name="USRFNM" ColumnName="USRFNM" />
+          <ScalarProperty Name="USRNM" ColumnName="USRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SFUSERSGROUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.SFUSERSGROUP">
+        <MappingFragment StoreEntitySet="SFUSERSGROUP">
+          <ScalarProperty Name="USRGRPNM" ColumnName="USRGRPNM" />
+          <ScalarProperty Name="SFUSRGRPID" ColumnName="SFUSRGRPID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="STUDENT">
+      <EntityTypeMapping TypeName="EubOracle1Model.STUDENT">
+        <MappingFragment StoreEntitySet="STUDENT">
+          <ScalarProperty Name="STUDENT_STATUS" ColumnName="STUDENT_STATUS" />
+          <ScalarProperty Name="MAILING_ADDRESS2" ColumnName="MAILING_ADDRESS2" />
+          <ScalarProperty Name="MAILING_ADDRESS3" ColumnName="MAILING_ADDRESS3" />
+          <ScalarProperty Name="PHONE2" ColumnName="PHONE2" />
+          <ScalarProperty Name="MOBILE3" ColumnName="MOBILE3" />
+          <ScalarProperty Name="MOBILE2" ColumnName="MOBILE2" />
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="NID" ColumnName="NID" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="ADMISSION_TYPE" ColumnName="ADMISSION_TYPE" />
+          <ScalarProperty Name="F_CELL" ColumnName="F_CELL" />
+          <ScalarProperty Name="M_CELL" ColumnName="M_CELL" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="THANA" ColumnName="THANA" />
+          <ScalarProperty Name="DISTRICT" ColumnName="DISTRICT" />
+          <ScalarProperty Name="COUNTRY_OF_BIRTH" ColumnName="COUNTRY_OF_BIRTH" />
+          <ScalarProperty Name="LG" ColumnName="LG" />
+          <ScalarProperty Name="RG" ColumnName="RG" />
+          <ScalarProperty Name="GADDRESS" ColumnName="GADDRESS" />
+          <ScalarProperty Name="GPHONE" ColumnName="GPHONE" />
+          <ScalarProperty Name="GMOBILE" ColumnName="GMOBILE" />
+          <ScalarProperty Name="GEMAIL" ColumnName="GEMAIL" />
+          <ScalarProperty Name="HIDE" ColumnName="HIDE" />
+          <ScalarProperty Name="WAIVER_AMOUNT" ColumnName="WAIVER_AMOUNT" />
+          <ScalarProperty Name="EACH_SEMESTER_FEE" ColumnName="EACH_SEMESTER_FEE" />
+          <ScalarProperty Name="ADMISSION_FEE" ColumnName="ADMISSION_FEE" />
+          <ScalarProperty Name="TOTAL_SEMESTER" ColumnName="TOTAL_SEMESTER" />
+          <ScalarProperty Name="TOTAL_COURSE_FEE" ColumnName="TOTAL_COURSE_FEE" />
+          <ScalarProperty Name="STSESSION" ColumnName="STSESSION" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ADMISSION_DATE" ColumnName="ADMISSION_DATE" />
+          <ScalarProperty Name="SEMESTER_ID" ColumnName="SEMESTER_ID" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="REASON_OF_AID" ColumnName="REASON_OF_AID" />
+          <ScalarProperty Name="AID_PERCENT" ColumnName="AID_PERCENT" />
+          <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+          <ScalarProperty Name="SECENDARY_MAJOR" ColumnName="SECENDARY_MAJOR" />
+          <ScalarProperty Name="PRIMARY_MAJOR" ColumnName="PRIMARY_MAJOR" />
+          <ScalarProperty Name="NATIONALITY" ColumnName="NATIONALITY" />
+          <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="MOTHER_NAME" ColumnName="MOTHER_NAME" />
+          <ScalarProperty Name="RELIGION" ColumnName="RELIGION" />
+          <ScalarProperty Name="SEX" ColumnName="SEX" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="PARMANENT_ADDRERSS" ColumnName="PARMANENT_ADDRERSS" />
+          <ScalarProperty Name="MAILING_ADDRESS" ColumnName="MAILING_ADDRESS" />
+          <ScalarProperty Name="FATHER_NAME" ColumnName="FATHER_NAME" />
+          <ScalarProperty Name="NNAME" ColumnName="NNAME" />
+          <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+          <ScalarProperty Name="MNAME" ColumnName="MNAME" />
+          <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SUBJECT">
+      <EntityTypeMapping TypeName="EubOracle1Model.SUBJECT">
+        <MappingFragment StoreEntitySet="SUBJECT">
+          <ScalarProperty Name="SUB_NAME" ColumnName="SUB_NAME" />
+          <ScalarProperty Name="SUB_ID" ColumnName="SUB_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_EDUCATION">
+      <EntityTypeMapping TypeName="EubOracle1Model.T_EDUCATION">
+        <MappingFragment StoreEntitySet="T_EDUCATION">
+          <ScalarProperty Name="EDU_ID" ColumnName="EDU_ID" />
+          <ScalarProperty Name="GOLDEN" ColumnName="GOLDEN" />
+          <ScalarProperty Name="CGPAWF" ColumnName="CGPAWF" />
+          <ScalarProperty Name="CGPA" ColumnName="CGPA" />
+          <ScalarProperty Name="INSTITUTION" ColumnName="INSTITUTION" />
+          <ScalarProperty Name="PERCENTAGE" ColumnName="PERCENTAGE" />
+          <ScalarProperty Name="DIVISION_CLASS" ColumnName="DIVISION_CLASS" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="BOARD_UNIVERSITB" ColumnName="BOARD_UNIVERSITB" />
+          <ScalarProperty Name="NAME_OF_DEGREE" ColumnName="NAME_OF_DEGREE" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TEACHER">
+      <EntityTypeMapping TypeName="EubOracle1Model.TEACHER">
+        <MappingFragment StoreEntitySet="TEACHER">
+          <ScalarProperty Name="EDU_ID" ColumnName="EDU_ID" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ADMISSION_TYPE" ColumnName="ADMISSION_TYPE" />
+          <ScalarProperty Name="F_CELL" ColumnName="F_CELL" />
+          <ScalarProperty Name="M_CELL" ColumnName="M_CELL" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="THANA" ColumnName="THANA" />
+          <ScalarProperty Name="DISTRICT" ColumnName="DISTRICT" />
+          <ScalarProperty Name="COUNTRY_OF_BIRTH" ColumnName="COUNTRY_OF_BIRTH" />
+          <ScalarProperty Name="LG" ColumnName="LG" />
+          <ScalarProperty Name="RG" ColumnName="RG" />
+          <ScalarProperty Name="GADDRESS" ColumnName="GADDRESS" />
+          <ScalarProperty Name="GPHONE" ColumnName="GPHONE" />
+          <ScalarProperty Name="GMOBILE" ColumnName="GMOBILE" />
+          <ScalarProperty Name="GEMAIL" ColumnName="GEMAIL" />
+          <ScalarProperty Name="HIDE" ColumnName="HIDE" />
+          <ScalarProperty Name="WAIVER_AMOUNT" ColumnName="WAIVER_AMOUNT" />
+          <ScalarProperty Name="EACH_SEMESTER_FEE" ColumnName="EACH_SEMESTER_FEE" />
+          <ScalarProperty Name="ADMISSION_FEE" ColumnName="ADMISSION_FEE" />
+          <ScalarProperty Name="TOTAL_SEMESTER" ColumnName="TOTAL_SEMESTER" />
+          <ScalarProperty Name="TOTAL_COURSE_FEE" ColumnName="TOTAL_COURSE_FEE" />
+          <ScalarProperty Name="STSESSION" ColumnName="STSESSION" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ADMISSION_DATE" ColumnName="ADMISSION_DATE" />
+          <ScalarProperty Name="SEMESTER_ID" ColumnName="SEMESTER_ID" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="REASON_OF_AID" ColumnName="REASON_OF_AID" />
+          <ScalarProperty Name="AID_PERCENT" ColumnName="AID_PERCENT" />
+          <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+          <ScalarProperty Name="SECENDARY_MAJOR" ColumnName="SECENDARY_MAJOR" />
+          <ScalarProperty Name="PRIMARY_MAJOR" ColumnName="PRIMARY_MAJOR" />
+          <ScalarProperty Name="NATIONALITY" ColumnName="NATIONALITY" />
+          <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="MOTHER_NAME" ColumnName="MOTHER_NAME" />
+          <ScalarProperty Name="RELIGION" ColumnName="RELIGION" />
+          <ScalarProperty Name="SEX" ColumnName="SEX" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="PARMANENT_ADDRERSS" ColumnName="PARMANENT_ADDRERSS" />
+          <ScalarProperty Name="MAILING_ADDRESS" ColumnName="MAILING_ADDRESS" />
+          <ScalarProperty Name="FATHER_NAME" ColumnName="FATHER_NAME" />
+          <ScalarProperty Name="NNAME" ColumnName="NNAME" />
+          <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+          <ScalarProperty Name="MNAME" ColumnName="MNAME" />
+          <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="THANA">
+      <EntityTypeMapping TypeName="EubOracle1Model.THANA">
+        <MappingFragment StoreEntitySet="THANA">
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="MONTH" ColumnName="MONTH" />
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="DISTID" ColumnName="DISTID" />
+          <ScalarProperty Name="THASNM" ColumnName="THASNM" />
+          <ScalarProperty Name="THANM" ColumnName="THANM" />
+          <ScalarProperty Name="THAID" ColumnName="THAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALDTL">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALDTL">
+        <MappingFragment StoreEntitySet="TRIALBALDTL">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="TBDSEQ" ColumnName="TBDSEQ" />
+          <ScalarProperty Name="NMSHDTL" ColumnName="NMSHDTL" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="TBMID" ColumnName="TBMID" />
+          <ScalarProperty Name="TBDID" ColumnName="TBDID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALFIVECOA">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALFIVECOA">
+        <MappingFragment StoreEntitySet="TRIALBALFIVECOA">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="FVCLBAL" ColumnName="FVCLBAL" />
+          <ScalarProperty Name="FVCRAMT" ColumnName="FVCRAMT" />
+          <ScalarProperty Name="FVDRAMT" ColumnName="FVDRAMT" />
+          <ScalarProperty Name="FVOPBAL" ColumnName="FVOPBAL" />
+          <ScalarProperty Name="FVNAT" ColumnName="FVNAT" />
+          <ScalarProperty Name="FVACCLVL" ColumnName="FVACCLVL" />
+          <ScalarProperty Name="FVADDTP" ColumnName="FVADDTP" />
+          <ScalarProperty Name="FVRPTTAG" ColumnName="FVRPTTAG" />
+          <ScalarProperty Name="FVTBSEQ" ColumnName="FVTBSEQ" />
+          <ScalarProperty Name="FVNMSH" ColumnName="FVNMSH" />
+          <ScalarProperty Name="FVLGID" ColumnName="FVLGID" />
+          <ScalarProperty Name="TBFRCAID" ColumnName="TBFRCAID" />
+          <ScalarProperty Name="TBFVCAID" ColumnName="TBFVCAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALFIVECOAPROJ">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALFIVECOAPROJ">
+        <MappingFragment StoreEntitySet="TRIALBALFIVECOAPROJ">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="FVCLBAL" ColumnName="FVCLBAL" />
+          <ScalarProperty Name="FVCRAMT" ColumnName="FVCRAMT" />
+          <ScalarProperty Name="FVDRAMT" ColumnName="FVDRAMT" />
+          <ScalarProperty Name="FVOPBAL" ColumnName="FVOPBAL" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="FVNAT" ColumnName="FVNAT" />
+          <ScalarProperty Name="FVACCLVL" ColumnName="FVACCLVL" />
+          <ScalarProperty Name="FVADDTP" ColumnName="FVADDTP" />
+          <ScalarProperty Name="FVRPTTAG" ColumnName="FVRPTTAG" />
+          <ScalarProperty Name="FVTBSEQ" ColumnName="FVTBSEQ" />
+          <ScalarProperty Name="FVNMSH" ColumnName="FVNMSH" />
+          <ScalarProperty Name="FVLGID" ColumnName="FVLGID" />
+          <ScalarProperty Name="TBFRPJID" ColumnName="TBFRPJID" />
+          <ScalarProperty Name="TBFVPJID" ColumnName="TBFVPJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALFOURCOA">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALFOURCOA">
+        <MappingFragment StoreEntitySet="TRIALBALFOURCOA">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="FRCLBAL" ColumnName="FRCLBAL" />
+          <ScalarProperty Name="FRCRAMT" ColumnName="FRCRAMT" />
+          <ScalarProperty Name="FRDRAMT" ColumnName="FRDRAMT" />
+          <ScalarProperty Name="FROPBAL" ColumnName="FROPBAL" />
+          <ScalarProperty Name="FRNAT" ColumnName="FRNAT" />
+          <ScalarProperty Name="FRACCLVL" ColumnName="FRACCLVL" />
+          <ScalarProperty Name="FRADDTP" ColumnName="FRADDTP" />
+          <ScalarProperty Name="FRRPTTAG" ColumnName="FRRPTTAG" />
+          <ScalarProperty Name="FRTBSEQ" ColumnName="FRTBSEQ" />
+          <ScalarProperty Name="FRNMSH" ColumnName="FRNMSH" />
+          <ScalarProperty Name="FRLGID" ColumnName="FRLGID" />
+          <ScalarProperty Name="TBTHCAID" ColumnName="TBTHCAID" />
+          <ScalarProperty Name="TBFRCAID" ColumnName="TBFRCAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALFOURCOAPROJ">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALFOURCOAPROJ">
+        <MappingFragment StoreEntitySet="TRIALBALFOURCOAPROJ">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="FRCLBAL" ColumnName="FRCLBAL" />
+          <ScalarProperty Name="FRCRAMT" ColumnName="FRCRAMT" />
+          <ScalarProperty Name="FRDRAMT" ColumnName="FRDRAMT" />
+          <ScalarProperty Name="FROPBAL" ColumnName="FROPBAL" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="FRNAT" ColumnName="FRNAT" />
+          <ScalarProperty Name="FRACCLVL" ColumnName="FRACCLVL" />
+          <ScalarProperty Name="FRADDTP" ColumnName="FRADDTP" />
+          <ScalarProperty Name="FRRPTTAG" ColumnName="FRRPTTAG" />
+          <ScalarProperty Name="FRTBSEQ" ColumnName="FRTBSEQ" />
+          <ScalarProperty Name="FRNMSH" ColumnName="FRNMSH" />
+          <ScalarProperty Name="FRLGID" ColumnName="FRLGID" />
+          <ScalarProperty Name="TBTHPJID" ColumnName="TBTHPJID" />
+          <ScalarProperty Name="TBFRPJID" ColumnName="TBFRPJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALMST">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALMST">
+        <MappingFragment StoreEntitySet="TRIALBALMST">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="RPTTAG" ColumnName="RPTTAG" />
+          <ScalarProperty Name="TBMSEQ" ColumnName="TBMSEQ" />
+          <ScalarProperty Name="NMSH" ColumnName="NMSH" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="TBMID" ColumnName="TBMID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALONECOA">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALONECOA">
+        <MappingFragment StoreEntitySet="TRIALBALONECOA">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="ONCLBAL" ColumnName="ONCLBAL" />
+          <ScalarProperty Name="ONCRAMT" ColumnName="ONCRAMT" />
+          <ScalarProperty Name="ONDRAMT" ColumnName="ONDRAMT" />
+          <ScalarProperty Name="ONOPBAL" ColumnName="ONOPBAL" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="ONNAT" ColumnName="ONNAT" />
+          <ScalarProperty Name="ONACCLVL" ColumnName="ONACCLVL" />
+          <ScalarProperty Name="ONADDTP" ColumnName="ONADDTP" />
+          <ScalarProperty Name="ONRPTTAG" ColumnName="ONRPTTAG" />
+          <ScalarProperty Name="ONTBSEQ" ColumnName="ONTBSEQ" />
+          <ScalarProperty Name="ONNMSH" ColumnName="ONNMSH" />
+          <ScalarProperty Name="ONLGID" ColumnName="ONLGID" />
+          <ScalarProperty Name="TBONCAID" ColumnName="TBONCAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALONECOAPROJ">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALONECOAPROJ">
+        <MappingFragment StoreEntitySet="TRIALBALONECOAPROJ">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="ONCLBAL" ColumnName="ONCLBAL" />
+          <ScalarProperty Name="ONCRAMT" ColumnName="ONCRAMT" />
+          <ScalarProperty Name="ONDRAMT" ColumnName="ONDRAMT" />
+          <ScalarProperty Name="ONOPBAL" ColumnName="ONOPBAL" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="ONNAT" ColumnName="ONNAT" />
+          <ScalarProperty Name="ONACCLVL" ColumnName="ONACCLVL" />
+          <ScalarProperty Name="ONADDTP" ColumnName="ONADDTP" />
+          <ScalarProperty Name="ONRPTTAG" ColumnName="ONRPTTAG" />
+          <ScalarProperty Name="ONTBSEQ" ColumnName="ONTBSEQ" />
+          <ScalarProperty Name="ONNMSH" ColumnName="ONNMSH" />
+          <ScalarProperty Name="ONLGID" ColumnName="ONLGID" />
+          <ScalarProperty Name="TBONPJID" ColumnName="TBONPJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALTHREECOA">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALTHREECOA">
+        <MappingFragment StoreEntitySet="TRIALBALTHREECOA">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="THCLBAL" ColumnName="THCLBAL" />
+          <ScalarProperty Name="THCRAMT" ColumnName="THCRAMT" />
+          <ScalarProperty Name="THDRAMT" ColumnName="THDRAMT" />
+          <ScalarProperty Name="THOPBAL" ColumnName="THOPBAL" />
+          <ScalarProperty Name="THNAT" ColumnName="THNAT" />
+          <ScalarProperty Name="THACCLVL" ColumnName="THACCLVL" />
+          <ScalarProperty Name="THADDTP" ColumnName="THADDTP" />
+          <ScalarProperty Name="THRPTTAG" ColumnName="THRPTTAG" />
+          <ScalarProperty Name="THTBSEQ" ColumnName="THTBSEQ" />
+          <ScalarProperty Name="THNMSH" ColumnName="THNMSH" />
+          <ScalarProperty Name="THLGID" ColumnName="THLGID" />
+          <ScalarProperty Name="TBTWCAID" ColumnName="TBTWCAID" />
+          <ScalarProperty Name="TBTHCAID" ColumnName="TBTHCAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALTHREECOAPROJ">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALTHREECOAPROJ">
+        <MappingFragment StoreEntitySet="TRIALBALTHREECOAPROJ">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="THCLBAL" ColumnName="THCLBAL" />
+          <ScalarProperty Name="THCRAMT" ColumnName="THCRAMT" />
+          <ScalarProperty Name="THDRAMT" ColumnName="THDRAMT" />
+          <ScalarProperty Name="THOPBAL" ColumnName="THOPBAL" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="THNAT" ColumnName="THNAT" />
+          <ScalarProperty Name="THACCLVL" ColumnName="THACCLVL" />
+          <ScalarProperty Name="THADDTP" ColumnName="THADDTP" />
+          <ScalarProperty Name="THRPTTAG" ColumnName="THRPTTAG" />
+          <ScalarProperty Name="THTBSEQ" ColumnName="THTBSEQ" />
+          <ScalarProperty Name="THNMSH" ColumnName="THNMSH" />
+          <ScalarProperty Name="THLGID" ColumnName="THLGID" />
+          <ScalarProperty Name="TBTWPJID" ColumnName="TBTWPJID" />
+          <ScalarProperty Name="TBTHPJID" ColumnName="TBTHPJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALTWOCOA">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALTWOCOA">
+        <MappingFragment StoreEntitySet="TRIALBALTWOCOA">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="TWCLBAL" ColumnName="TWCLBAL" />
+          <ScalarProperty Name="TWCRAMT" ColumnName="TWCRAMT" />
+          <ScalarProperty Name="TWDRAMT" ColumnName="TWDRAMT" />
+          <ScalarProperty Name="TWOPBAL" ColumnName="TWOPBAL" />
+          <ScalarProperty Name="TWNAT" ColumnName="TWNAT" />
+          <ScalarProperty Name="TWACCLVL" ColumnName="TWACCLVL" />
+          <ScalarProperty Name="TWADDTP" ColumnName="TWADDTP" />
+          <ScalarProperty Name="TWRPTTAG" ColumnName="TWRPTTAG" />
+          <ScalarProperty Name="TWTBSEQ" ColumnName="TWTBSEQ" />
+          <ScalarProperty Name="TWNMSH" ColumnName="TWNMSH" />
+          <ScalarProperty Name="TWLGID" ColumnName="TWLGID" />
+          <ScalarProperty Name="TBONCAID" ColumnName="TBONCAID" />
+          <ScalarProperty Name="TBTWCAID" ColumnName="TBTWCAID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TRIALBALTWOCOAPROJ">
+      <EntityTypeMapping TypeName="EubOracle1Model.TRIALBALTWOCOAPROJ">
+        <MappingFragment StoreEntitySet="TRIALBALTWOCOAPROJ">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="TWCLBAL" ColumnName="TWCLBAL" />
+          <ScalarProperty Name="TWCRAMT" ColumnName="TWCRAMT" />
+          <ScalarProperty Name="TWDRAMT" ColumnName="TWDRAMT" />
+          <ScalarProperty Name="TWOPBAL" ColumnName="TWOPBAL" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="TWNAT" ColumnName="TWNAT" />
+          <ScalarProperty Name="TWACCLVL" ColumnName="TWACCLVL" />
+          <ScalarProperty Name="TWADDTP" ColumnName="TWADDTP" />
+          <ScalarProperty Name="TWRPTTAG" ColumnName="TWRPTTAG" />
+          <ScalarProperty Name="TWTBSEQ" ColumnName="TWTBSEQ" />
+          <ScalarProperty Name="TWNMSH" ColumnName="TWNMSH" />
+          <ScalarProperty Name="TWLGID" ColumnName="TWLGID" />
+          <ScalarProperty Name="TBONPJID" ColumnName="TBONPJID" />
+          <ScalarProperty Name="TBTWPJID" ColumnName="TBTWPJID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USER_GROUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.USER_GROUP">
+        <MappingFragment StoreEntitySet="USER_GROUP">
+          <ScalarProperty Name="GP_NAME" ColumnName="GP_NAME" />
+          <ScalarProperty Name="GP_ID" ColumnName="GP_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USER_GROUP_MAP">
+      <EntityTypeMapping TypeName="EubOracle1Model.USER_GROUP_MAP">
+        <MappingFragment StoreEntitySet="USER_GROUP_MAP">
+          <ScalarProperty Name="USER_TYPE" ColumnName="USER_TYPE" />
+          <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="GP_ID" ColumnName="GP_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USER_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.USER_INFO">
+        <MappingFragment StoreEntitySet="USER_INFO">
+          <ScalarProperty Name="CPASSWORD" ColumnName="CPASSWORD" />
+          <ScalarProperty Name="EMP_ID" ColumnName="EMP_ID" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SL_NO" ColumnName="SL_NO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USER_LOGON">
+      <EntityTypeMapping TypeName="EubOracle1Model.USER_LOGON">
+        <MappingFragment StoreEntitySet="USER_LOGON">
+          <ScalarProperty Name="CPASSWORD" ColumnName="CPASSWORD" />
+          <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USERS">
+      <EntityTypeMapping TypeName="EubOracle1Model.USERS">
+        <MappingFragment StoreEntitySet="USERS">
+          <ScalarProperty Name="USER_STATUS" ColumnName="USER_STATUS" />
+          <ScalarProperty Name="USER_PASSWORD" ColumnName="USER_PASSWORD" />
+          <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCMONTHCLOSE">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCMONTHCLOSE">
+        <MappingFragment StoreEntitySet="ACCMONTHCLOSE">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CRAMT" ColumnName="CRAMT" />
+          <ScalarProperty Name="DRAMT" ColumnName="DRAMT" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="MONDT" ColumnName="MONDT" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCMONTHCLOSEBACKUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCMONTHCLOSEBACKUP">
+        <MappingFragment StoreEntitySet="ACCMONTHCLOSEBACKUP">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CRAMT" ColumnName="CRAMT" />
+          <ScalarProperty Name="DRAMT" ColumnName="DRAMT" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="MONDT" ColumnName="MONDT" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCYEARCLOSE">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCYEARCLOSE">
+        <MappingFragment StoreEntitySet="ACCYEARCLOSE">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CRAMT" ColumnName="CRAMT" />
+          <ScalarProperty Name="DRAMT" ColumnName="DRAMT" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="YARDT" ColumnName="YARDT" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ACCYEARCLOSEBACKUP">
+      <EntityTypeMapping TypeName="EubOracle1Model.ACCYEARCLOSEBACKUP">
+        <MappingFragment StoreEntitySet="ACCYEARCLOSEBACKUP">
+          <ScalarProperty Name="ACTDT" ColumnName="ACTDT" />
+          <ScalarProperty Name="ACTTP" ColumnName="ACTTP" />
+          <ScalarProperty Name="DBUSRNM" ColumnName="DBUSRNM" />
+          <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+          <ScalarProperty Name="PRJID" ColumnName="PRJID" />
+          <ScalarProperty Name="COMPID" ColumnName="COMPID" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="CRAMT" ColumnName="CRAMT" />
+          <ScalarProperty Name="DRAMT" ColumnName="DRAMT" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="YARDT" ColumnName="YARDT" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_D_CT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_D_CT">
+        <MappingFragment StoreEntitySet="ATTMARK_D_CT">
+          <ScalarProperty Name="Pk" ColumnName="Pk" />
+          <ScalarProperty Name="GRADEPOINT" ColumnName="GRADEPOINT" />
+          <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ATTENDANCE" ColumnName="ATTENDANCE" />
+          <ScalarProperty Name="FINAL_40" ColumnName="FINAL_40" />
+          <ScalarProperty Name="MID_TERM" ColumnName="MID_TERM" />
+          <ScalarProperty Name="ASSIGNMENT" ColumnName="ASSIGNMENT" />
+          <ScalarProperty Name="ORAL_TEST" ColumnName="ORAL_TEST" />
+          <ScalarProperty Name="CT_3" ColumnName="CT_3" />
+          <ScalarProperty Name="CT_2" ColumnName="CT_2" />
+          <ScalarProperty Name="CT_1" ColumnName="CT_1" />
+          <ScalarProperty Name="CLASS_PERF" ColumnName="CLASS_PERF" />
+          <ScalarProperty Name="TOTAL_MARK" ColumnName="TOTAL_MARK" />
+          <ScalarProperty Name="FINAL" ColumnName="FINAL" />
+          <ScalarProperty Name="TEST2" ColumnName="TEST2" />
+          <ScalarProperty Name="TEST1" ColumnName="TEST1" />
+          <ScalarProperty Name="PRO_ASS" ColumnName="PRO_ASS" />
+          <ScalarProperty Name="CLASS_ATTN" ColumnName="CLASS_ATTN" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_D_CW">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_D_CW">
+        <MappingFragment StoreEntitySet="ATTMARK_D_CW">
+          <ScalarProperty Name="GRADEPOINT" ColumnName="GRADEPOINT" />
+          <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ATTENDANCE" ColumnName="ATTENDANCE" />
+          <ScalarProperty Name="FINAL_40" ColumnName="FINAL_40" />
+          <ScalarProperty Name="MID_TERM" ColumnName="MID_TERM" />
+          <ScalarProperty Name="ASSIGNMENT" ColumnName="ASSIGNMENT" />
+          <ScalarProperty Name="ORAL_TEST" ColumnName="ORAL_TEST" />
+          <ScalarProperty Name="CT_3" ColumnName="CT_3" />
+          <ScalarProperty Name="CT_2" ColumnName="CT_2" />
+          <ScalarProperty Name="CT_1" ColumnName="CT_1" />
+          <ScalarProperty Name="CLASS_PERF" ColumnName="CLASS_PERF" />
+          <ScalarProperty Name="TOTAL_MARK" ColumnName="TOTAL_MARK" />
+          <ScalarProperty Name="FINAL" ColumnName="FINAL" />
+          <ScalarProperty Name="TEST2" ColumnName="TEST2" />
+          <ScalarProperty Name="TEST1" ColumnName="TEST1" />
+          <ScalarProperty Name="PRO_ASS" ColumnName="PRO_ASS" />
+          <ScalarProperty Name="CLASS_ATTN" ColumnName="CLASS_ATTN" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_D22">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_D22">
+        <MappingFragment StoreEntitySet="ATTMARK_D22">
+          <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ATTENDANCE" ColumnName="ATTENDANCE" />
+          <ScalarProperty Name="FINAL_40" ColumnName="FINAL_40" />
+          <ScalarProperty Name="MID_TERM" ColumnName="MID_TERM" />
+          <ScalarProperty Name="ASSIGNMENT" ColumnName="ASSIGNMENT" />
+          <ScalarProperty Name="ORAL_TEST" ColumnName="ORAL_TEST" />
+          <ScalarProperty Name="CT_3" ColumnName="CT_3" />
+          <ScalarProperty Name="CT_2" ColumnName="CT_2" />
+          <ScalarProperty Name="CT_1" ColumnName="CT_1" />
+          <ScalarProperty Name="CLASS_PERF" ColumnName="CLASS_PERF" />
+          <ScalarProperty Name="TOTAL_MARK" ColumnName="TOTAL_MARK" />
+          <ScalarProperty Name="FINAL" ColumnName="FINAL" />
+          <ScalarProperty Name="TEST2" ColumnName="TEST2" />
+          <ScalarProperty Name="TEST1" ColumnName="TEST1" />
+          <ScalarProperty Name="PRO_ASS" ColumnName="PRO_ASS" />
+          <ScalarProperty Name="CLASS_ATTN" ColumnName="CLASS_ATTN" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_DT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_DT">
+        <MappingFragment StoreEntitySet="ATTMARK_DT">
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="ATTENDANCE" ColumnName="ATTENDANCE" />
+          <ScalarProperty Name="FINAL_40" ColumnName="FINAL_40" />
+          <ScalarProperty Name="MID_TERM" ColumnName="MID_TERM" />
+          <ScalarProperty Name="ASSIGNMENT" ColumnName="ASSIGNMENT" />
+          <ScalarProperty Name="ORAL_TEST" ColumnName="ORAL_TEST" />
+          <ScalarProperty Name="CT_3" ColumnName="CT_3" />
+          <ScalarProperty Name="CT_2" ColumnName="CT_2" />
+          <ScalarProperty Name="CT_1" ColumnName="CT_1" />
+          <ScalarProperty Name="CLASS_PERF" ColumnName="CLASS_PERF" />
+          <ScalarProperty Name="TOTAL_MARK" ColumnName="TOTAL_MARK" />
+          <ScalarProperty Name="FINAL" ColumnName="FINAL" />
+          <ScalarProperty Name="TEST2" ColumnName="TEST2" />
+          <ScalarProperty Name="TEST1" ColumnName="TEST1" />
+          <ScalarProperty Name="PRO_ASS" ColumnName="PRO_ASS" />
+          <ScalarProperty Name="CLASS_ATTN" ColumnName="CLASS_ATTN" />
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_M">
+        <MappingFragment StoreEntitySet="ATTMARK_M">
+          <ScalarProperty Name="CTYPE" ColumnName="CTYPE" />
+          <ScalarProperty Name="MSTATUS" ColumnName="MSTATUS" />
+          <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+          <ScalarProperty Name="COURSE_TEACHER_NAME" ColumnName="COURSE_TEACHER_NAME" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="COURSE_TITLE" ColumnName="COURSE_TITLE" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_M22">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_M22">
+        <MappingFragment StoreEntitySet="ATTMARK_M22">
+          <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+          <ScalarProperty Name="COURSE_TEACHER_NAME" ColumnName="COURSE_TEACHER_NAME" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="COURSE_TITLE" ColumnName="COURSE_TITLE" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ATTMARK_MT">
+      <EntityTypeMapping TypeName="EubOracle1Model.ATTMARK_MT">
+        <MappingFragment StoreEntitySet="ATTMARK_MT">
+          <ScalarProperty Name="COURSE_TEACHER_NAME" ColumnName="COURSE_TEACHER_NAME" />
+          <ScalarProperty Name="PROGRAM1_ID" ColumnName="PROGRAM1_ID" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="COURSE_TITLE" ColumnName="COURSE_TITLE" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CHART">
+      <EntityTypeMapping TypeName="EubOracle1Model.CHART">
+        <MappingFragment StoreEntitySet="CHART">
+          <ScalarProperty Name="NATURE" ColumnName="NATURE" />
+          <ScalarProperty Name="DRCR" ColumnName="DRCR" />
+          <ScalarProperty Name="ACCLVL" ColumnName="ACCLVL" />
+          <ScalarProperty Name="PTFLAG" ColumnName="PTFLAG" />
+          <ScalarProperty Name="RFACCNO" ColumnName="RFACCNO" />
+          <ScalarProperty Name="ACCNM" ColumnName="ACCNM" />
+          <ScalarProperty Name="ACCNO" ColumnName="ACCNO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COURSEMAP_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.COURSEMAP_D">
+        <MappingFragment StoreEntitySet="COURSEMAP_D">
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CURRENT_SEMESTER">
+      <EntityTypeMapping TypeName="EubOracle1Model.CURRENT_SEMESTER">
+        <MappingFragment StoreEntitySet="CURRENT_SEMESTER">
+          <ScalarProperty Name="SEMESTER_ID" ColumnName="SEMESTER_ID" />
+          <ScalarProperty Name="PROGRAM_DETAILS" ColumnName="PROGRAM_DETAILS" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="INSTRUCTOR">
+      <EntityTypeMapping TypeName="EubOracle1Model.INSTRUCTOR">
+        <MappingFragment StoreEntitySet="INSTRUCTOR">
+          <ScalarProperty Name="MAILING_ADDRESS2" ColumnName="MAILING_ADDRESS2" />
+          <ScalarProperty Name="MAILING_ADDRESS3" ColumnName="MAILING_ADDRESS3" />
+          <ScalarProperty Name="PHONE2" ColumnName="PHONE2" />
+          <ScalarProperty Name="MOBILE3" ColumnName="MOBILE3" />
+          <ScalarProperty Name="MOBILE2" ColumnName="MOBILE2" />
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="NID" ColumnName="NID" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="ADMISSION_TYPE" ColumnName="ADMISSION_TYPE" />
+          <ScalarProperty Name="F_CELL" ColumnName="F_CELL" />
+          <ScalarProperty Name="M_CELL" ColumnName="M_CELL" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="THANA" ColumnName="THANA" />
+          <ScalarProperty Name="DISTRICT" ColumnName="DISTRICT" />
+          <ScalarProperty Name="COUNTRY_OF_BIRTH" ColumnName="COUNTRY_OF_BIRTH" />
+          <ScalarProperty Name="LG" ColumnName="LG" />
+          <ScalarProperty Name="RG" ColumnName="RG" />
+          <ScalarProperty Name="GADDRESS" ColumnName="GADDRESS" />
+          <ScalarProperty Name="GPHONE" ColumnName="GPHONE" />
+          <ScalarProperty Name="GMOBILE" ColumnName="GMOBILE" />
+          <ScalarProperty Name="GEMAIL" ColumnName="GEMAIL" />
+          <ScalarProperty Name="HIDE" ColumnName="HIDE" />
+          <ScalarProperty Name="WAIVER_AMOUNT" ColumnName="WAIVER_AMOUNT" />
+          <ScalarProperty Name="EACH_SEMESTER_FEE" ColumnName="EACH_SEMESTER_FEE" />
+          <ScalarProperty Name="ADMISSION_FEE" ColumnName="ADMISSION_FEE" />
+          <ScalarProperty Name="TOTAL_SEMESTER" ColumnName="TOTAL_SEMESTER" />
+          <ScalarProperty Name="TOTAL_COURSE_FEE" ColumnName="TOTAL_COURSE_FEE" />
+          <ScalarProperty Name="STSESSION" ColumnName="STSESSION" />
+          <ScalarProperty Name="PROGRAM" ColumnName="PROGRAM" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ADMISSION_DATE" ColumnName="ADMISSION_DATE" />
+          <ScalarProperty Name="SEMESTER_ID" ColumnName="SEMESTER_ID" />
+          <ScalarProperty Name="PROGRAM_ID" ColumnName="PROGRAM_ID" />
+          <ScalarProperty Name="REASON_OF_AID" ColumnName="REASON_OF_AID" />
+          <ScalarProperty Name="AID_PERCENT" ColumnName="AID_PERCENT" />
+          <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+          <ScalarProperty Name="SECENDARY_MAJOR" ColumnName="SECENDARY_MAJOR" />
+          <ScalarProperty Name="PRIMARY_MAJOR" ColumnName="PRIMARY_MAJOR" />
+          <ScalarProperty Name="NATIONALITY" ColumnName="NATIONALITY" />
+          <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="MOTHER_NAME" ColumnName="MOTHER_NAME" />
+          <ScalarProperty Name="RELIGION" ColumnName="RELIGION" />
+          <ScalarProperty Name="SEX" ColumnName="SEX" />
+          <ScalarProperty Name="MOBILE" ColumnName="MOBILE" />
+          <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="PARMANENT_ADDRERSS" ColumnName="PARMANENT_ADDRERSS" />
+          <ScalarProperty Name="MAILING_ADDRESS" ColumnName="MAILING_ADDRESS" />
+          <ScalarProperty Name="FATHER_NAME" ColumnName="FATHER_NAME" />
+          <ScalarProperty Name="NNAME" ColumnName="NNAME" />
+          <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+          <ScalarProperty Name="MNAME" ColumnName="MNAME" />
+          <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LOOKUP_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.LOOKUP_D">
+        <MappingFragment StoreEntitySet="LOOKUP_D">
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="AUTHORISE_MANPOWER" ColumnName="AUTHORISE_MANPOWER" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="LOOK_SNAME" ColumnName="LOOK_SNAME" />
+          <ScalarProperty Name="LOOK_NAME" ColumnName="LOOK_NAME" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+          <ScalarProperty Name="GID" ColumnName="GID" />
+          <ScalarProperty Name="SL_NO" ColumnName="SL_NO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LOOKUP_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.LOOKUP_M">
+        <MappingFragment StoreEntitySet="LOOKUP_M">
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="TAB_SNAME" ColumnName="TAB_SNAME" />
+          <ScalarProperty Name="TAB_NAME" ColumnName="TAB_NAME" />
+          <ScalarProperty Name="LGID" ColumnName="LGID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MARK_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.MARK_D">
+        <MappingFragment StoreEntitySet="MARK_D">
+          <ScalarProperty Name="SID" ColumnName="SID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="GPA" ColumnName="GPA" />
+          <ScalarProperty Name="GRADE" ColumnName="GRADE" />
+          <ScalarProperty Name="MARK" ColumnName="MARK" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MARK_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.MARK_M">
+        <MappingFragment StoreEntitySet="MARK_M">
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OFFER_COURSE_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.OFFER_COURSE_D">
+        <MappingFragment StoreEntitySet="OFFER_COURSE_D">
+          <ScalarProperty Name="OFFER_MID" ColumnName="OFFER_MID" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="PROGRAM_CODE" ColumnName="PROGRAM_CODE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OFFER_COURSE_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.OFFER_COURSE_M">
+        <MappingFragment StoreEntitySet="OFFER_COURSE_M">
+          <ScalarProperty Name="OFFER_MID" ColumnName="OFFER_MID" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="PROGRM_CODE" ColumnName="PROGRM_CODE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OFFER_D">
+      <EntityTypeMapping TypeName="EubOracle1Model.OFFER_D">
+        <MappingFragment StoreEntitySet="OFFER_D">
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="DAYS_CODE" ColumnName="DAYS_CODE" />
+          <ScalarProperty Name="TIME_SCHEDULE_CODE" ColumnName="TIME_SCHEDULE_CODE" />
+          <ScalarProperty Name="ROOM_CODE" ColumnName="ROOM_CODE" />
+          <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+          <ScalarProperty Name="ROOM_NO" ColumnName="ROOM_NO" />
+          <ScalarProperty Name="DAY" ColumnName="DAY" />
+          <ScalarProperty Name="TIME_SCHEDULE" ColumnName="TIME_SCHEDULE" />
+          <ScalarProperty Name="INSTRUCTOR_ID" ColumnName="INSTRUCTOR_ID" />
+          <ScalarProperty Name="INSTRUCTOR_NAME" ColumnName="INSTRUCTOR_NAME" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OFFER_M">
+      <EntityTypeMapping TypeName="EubOracle1Model.OFFER_M">
+        <MappingFragment StoreEntitySet="OFFER_M">
+          <ScalarProperty Name="BATCH" ColumnName="BATCH" />
+          <ScalarProperty Name="WAIVER_ON_SEMESTER_RESULT" ColumnName="WAIVER_ON_SEMESTER_RESULT" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="GROUP_ID" ColumnName="GROUP_ID" />
+          <ScalarProperty Name="TOTAL_SEMESTER_TK" ColumnName="TOTAL_SEMESTER_TK" />
+          <ScalarProperty Name="FEES_PAID" ColumnName="FEES_PAID" />
+          <ScalarProperty Name="FEES_DEU_TK" ColumnName="FEES_DEU_TK" />
+          <ScalarProperty Name="REGISTRATION_ID" ColumnName="REGISTRATION_ID" />
+          <ScalarProperty Name="FEES_DEU" ColumnName="FEES_DEU" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="ADMISSON_FEE" ColumnName="ADMISSON_FEE" />
+          <ScalarProperty Name="LIBRARY_FEE" ColumnName="LIBRARY_FEE" />
+          <ScalarProperty Name="LAB_FEE" ColumnName="LAB_FEE" />
+          <ScalarProperty Name="DEV_FEE" ColumnName="DEV_FEE" />
+          <ScalarProperty Name="WAIVER_AMT" ColumnName="WAIVER_AMT" />
+          <ScalarProperty Name="SPECIAL_DISCOUNT" ColumnName="SPECIAL_DISCOUNT" />
+          <ScalarProperty Name="REG_FEE" ColumnName="REG_FEE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="REG_DT">
+      <EntityTypeMapping TypeName="EubOracle1Model.REG_DT">
+        <MappingFragment StoreEntitySet="REG_DT">
+          <ScalarProperty Name="RRID" ColumnName="RRID" />
+          <ScalarProperty Name="INSTRUCTOR_NAME" ColumnName="INSTRUCTOR_NAME" />
+          <ScalarProperty Name="DAY" ColumnName="DAY" />
+          <ScalarProperty Name="TIME_SCHEDULE" ColumnName="TIME_SCHEDULE" />
+          <ScalarProperty Name="INSTRUCTOR_ID" ColumnName="INSTRUCTOR_ID" />
+          <ScalarProperty Name="ROOM_NO" ColumnName="ROOM_NO" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="AC_LG_ID" ColumnName="AC_LG_ID" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="PCH" ColumnName="PCH" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="COURSE_CODE" ColumnName="COURSE_CODE" />
+          <ScalarProperty Name="ACTION_DT" ColumnName="ACTION_DT" />
+          <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="RID" ColumnName="RID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TUTION_INFO">
+      <EntityTypeMapping TypeName="EubOracle1Model.TUTION_INFO">
+        <MappingFragment StoreEntitySet="TUTION_INFO">
+          <ScalarProperty Name="SEMESTER_FEE" ColumnName="SEMESTER_FEE" />
+          <ScalarProperty Name="WAIVER_AMT" ColumnName="WAIVER_AMT" />
+          <ScalarProperty Name="MRNO" ColumnName="MRNO" />
+          <ScalarProperty Name="CTYPE" ColumnName="CTYPE" />
+          <ScalarProperty Name="COLLECTION_AMOUNT" ColumnName="COLLECTION_AMOUNT" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="REG_FEE" ColumnName="REG_FEE" />
+          <ScalarProperty Name="ADMISSION_FEE" ColumnName="ADMISSION_FEE" />
+          <ScalarProperty Name="TUTION_FEE" ColumnName="TUTION_FEE" />
+          <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+          <ScalarProperty Name="SEMESTER_ID" ColumnName="SEMESTER_ID" />
+          <ScalarProperty Name="REG_DATE" ColumnName="REG_DATE" />
+          <ScalarProperty Name="STUDENT_ID" ColumnName="STUDENT_ID" />
+          <ScalarProperty Name="TUTION_INFO_ID" ColumnName="TUTION_INFO_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="SFUSERSGROUPING" TypeName="EubOracle1Model.SFUSERSGROUPING" StoreEntitySet="SFUSERSGROUPING">
+      <EndProperty Name="SFUSERS">
+        <ScalarProperty Name="SFUSRID" ColumnName="SFUSRID" />
+      </EndProperty>
+      <EndProperty Name="SFUSERSGROUP">
+        <ScalarProperty Name="SFUSRGRPID" ColumnName="SFUSRGRPID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,24 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<Inv_ProductCategory>
+
+@{
+    //ViewBag.Title = "Purchase Print";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+}
+
+@Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_ProductCategoryPrint.cshtml", Model)
+
+
+@section ScriptSection
+{
+    <script>
+        window.onload = function () {
+            window.print();
+        }
+    </script>
+
+}

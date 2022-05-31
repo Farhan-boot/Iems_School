@@ -1,0 +1,143 @@
+﻿
+<!--File:General_Floor List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Floor List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var FloorId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getFloorByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorById", area = "Admin" });
+    var getFloorDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorDataExtra", area = "Admin" });
+    var saveFloorUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "SaveFloor", area = "Admin" });
+    var deleteFloorByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetDeleteFloorById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedFloorUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "FloorApi", action = "GetPagedFloor", area = "Admin"});
+    var getAllFloorUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetAllFloor", area = "Admin" });
+    var saveFloorListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "SaveFloorList", area = "Admin" });
+    var getFloorListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorListDataExtra", area = "Admin" });
+
+    var editFloorByIdPageUrl = Url.Action("FloorAddEdit", "Floor", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewFloor = "getNewFloor";
+    var saveFloor = "saveFloor";
+    var deleteFloorById = "deleteFloorById";
+    var deleteFloorByObj = "deleteFloorByObj";
+    //for list
+    var searchFloorList = "searchFloorList";
+    var getPagedFloorList = "getPagedFloorList";
+    var getAllFloorList = "getAllFloorList";
+    var saveFloorList = "saveFloorList";
+    var getFloorListExtraData = "getFloorListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Floor/FloorList.js"></script>
+}
+
+
+<div ng-controller="FloorListCtrl"
+     ng-init="Init(
+      '@getPagedFloorUrl'
+     ,'@deleteFloorByIdUrl'
+     ,'@getFloorListDataExtraUrl'
+     ,'@saveFloorListUrl'
+     ,'@getFloorByIdUrl'
+     ,'@getFloorDataExtraUrl'
+     ,'@saveFloorUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Floor </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchFloorList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editFloorByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchFloorList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Floor</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in FloorList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Floor.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">{{row.@General_Floor.Property_FloorNo}}</td>
+                    <td class="text-center">{{row.@General_Floor.Property_Name}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editFloorByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteFloorById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

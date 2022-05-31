@@ -1,0 +1,555 @@
+﻿
+<!--File:Acnt_PaymentGateway Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Payment Gateway";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var PaymentGatewayId = (string) id == null?"0":(string)id;
+
+    //Acnt_PaymentGateway WebApi Single Row link   
+    var getPaymentGatewayByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayApi", action = "GetPaymentGatewayById", area = "Accounts" });
+    var getPaymentGatewayDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayApi", action = "GetPaymentGatewayDataExtra", area = "Accounts" });
+    var savePaymentGatewayUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayApi", action = "SavePaymentGateway", area = "Accounts" });
+    var deletePaymentGatewayByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayApi", action = "GetDeletePaymentGatewayById", area = "Accounts" });
+    var getPaymentGatewaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayApi", action = "GetPaymentGatewaySettings", area = "Accounts" });
+
+    //Acnt_PaymentGatewayProgramMap List Url
+    var deletePaymentGatewayProgramMapByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayProgramMapApi", action = "GetDeletePaymentGatewayProgramMapById", area = "Accounts" });
+    var getPagedPaymentGatewayProgramMapUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayProgramMapApi", action = "GetPagedPaymentGatewayProgramMap", area = "Accounts" });
+    var getPaymentGatewayProgramMapListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayProgramMapApi", action = "GetPaymentGatewayProgramMapListDataExtra", area = "Accounts" });
+
+    //Acnt_PaymentGateway Add/Edit
+    var getPaymentGatewayProgramMapByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayProgramMapApi", action = "GetPaymentGatewayProgramMapById", area = "Accounts" });
+    var savePaymentGatewayProgramMapUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentGatewayProgramMapApi", action = "SavePaymentGatewayProgramMap", area = "Accounts" });
+
+    var listPaymentGatewayPageUrl = Url.Action("PaymentGatewayList", "PaymentGateway", new { area = "Accounts" });
+
+    //Acnt_PaymentGateway Angular Functions
+    string getPaymentGatewayById="getPaymentGatewayById";
+    var savePaymentGateway = "savePaymentGateway";
+    var getNewPaymentGateway = "getNewPaymentGateway";
+    var refreshPage = "loadPage()";
+    string deletePaymentGatewayById="deletePaymentGatewayById";
+    string loadPaymentGatewayExtraData="loadPaymentGatewayExtraData";
+    var getPaymentGatewaySettings = "getPaymentGatewaySettings";
+    string getPaymentGatewayProgramMapById = "getPaymentGatewayProgramMapById";
+    string loadPaymentGatewayProgramMapExtraData = "loadPaymentGatewayProgramMapExtraData";
+    var getNewPaymentGatewayProgramMap = "getNewPaymentGatewayProgramMap";
+    var savePaymentGatewayProgramMap = "savePaymentGatewayProgramMap";
+    var deletePaymentGatewayProgramMapById = "deletePaymentGatewayProgramMapById";
+    var deletePaymentGatewayProgramMapByObj = "deletePaymentGatewayProgramMapByObj";
+    //for list
+    var searchPaymentGatewayProgramMapList = "searchPaymentGatewayProgramMapList";
+    var getPagedPaymentGatewayProgramMapList = "getPagedPaymentGatewayProgramMapList";
+    var getAllPaymentGatewayProgramMapList = "getAllPaymentGatewayProgramMapList";
+    var savePaymentGatewayProgramMapList = "savePaymentGatewayProgramMapList";
+    var getPaymentGatewayProgramMapListExtraData = "getPaymentGatewayProgramMapListExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/PaymentGateway/PaymentGatewayAddEdit.js"></script>
+}
+
+<div id="PaymentGatewayAddEdit" class="row" ng-controller="PaymentGatewayAddEditCtrl" ng-init="Init(
+      '@PaymentGatewayId'
+      ,'@getPaymentGatewayByIdUrl'
+      ,'@getPaymentGatewayDataExtraUrl'
+      ,'@savePaymentGatewayUrl'
+      ,'@deletePaymentGatewayByIdUrl'
+       ,'@getPaymentGatewaySettingsUrl'
+       ,'@getPagedPaymentGatewayProgramMapUrl'
+     ,'@getPaymentGatewayProgramMapListDataExtraUrl'
+     ,'@deletePaymentGatewayProgramMapByIdUrl'
+     ,'@getPaymentGatewayProgramMapByIdUrl'
+     ,'@savePaymentGatewayProgramMapUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+      <div class="widget" >
+          <div class="widget-header bordered-bottom bordered-sky ">
+              <i class="widget-icon fa fa-edit bold  "></i>
+              <span class="widget-caption ">
+                  Add/Edit
+                  <strong ng-show="PaymentGateway.@Acnt_PaymentGateway.Property_Name!=''">{{(PaymentGateway.@Acnt_PaymentGateway.Property_Name)}}</strong>
+              </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                  <span class="input-icon">
+                      <input type="text" ng-model="PaymentGatewayId" ng-Enter="@(getPaymentGatewayById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                      <i class="glyphicon glyphicon-search blue"></i>
+                  </span>
+                  
+              </div>
+              <div class="widget-buttons no-padding-left">
+                  <button ng-click="@(getNewPaymentGateway)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                  <a href="@(listPaymentGatewayPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                  <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+              </div>
+          </div><!--Widget Header end-->
+          <div class="widget-body">
+              <div class="row">
+                  <div class="col-md-6 table-form">
+                      <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                          <tbody>
+                          <tr>
+                              <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel">Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="150" required="" />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel">Logo Url <span class="red glyphicon glyphicon-asterisk"></span></td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_LogoUrl" class="form-control" placeholder="Enter Logo Url" maxlength="255" required="" />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Logo Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          @*<tr>
+                                <td class="fieldlabel">Setting Json <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_SettingJson" class="form-control" placeholder="Enter Setting Json"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Setting Json." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                          <tr>
+                              <td class="fieldlabel">Action Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_ActionUrl" class="form-control" placeholder="Enter Action Url"   />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Action Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel">Is Percent Gateway Charge </td>
+                              <td class="fieldarea">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_IsPercentGatewayCharge"  />
+                                  </label>
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Percent Gateway Charge if required." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                        
+                          <tr>
+                              <td class="fieldlabel">Gateway Charge </td>
+                              <td class="fieldarea">
+                                  <input type="number" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_GatewayCharge" class="form-control" placeholder="Enter Gateway Charge"   />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Gateway Charge." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <!--dropdown option for EnumList-->
+                          <tr>
+                              <td class="fieldlabel">Active Status </td>
+                              <td class="fieldarea">
+                                  <select ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_ActiveStatusEnumId" ng-options="option.Id as option.Name for option in ActiveStatusEnumList" title="Select Active Status" ng-init="" class="form-control" >
+                                      <option value="" label="" class="">---Select One---</option>   
+                                  </select>
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Active Status." data-toggle="tooltip"></i></span></td> 
+                          </tr>
+                          <!--dropdown option for EnumList-->
+                          <tr>
+                              <td class="fieldlabel">Type </td>
+                              <td class="fieldarea">
+                                  <select ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_TypeEnumId" ng-options="option.Id as option.Name for option in TypeEnumList" title="Select Type" ng-init="" class="form-control" >
+                                      <option value="" label="" class="">---Select One---</option>   
+                                  </select>
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Type." data-toggle="tooltip"></i></span></td> 
+                          </tr>
+                          @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                          <tr>
+                              <td class="fieldlabel">Voucher Prefix </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_VoucherPrefix" class="form-control" placeholder="Enter Voucher Prefix" maxlength="50"  />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Voucher Prefix." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                   
+                          <tr>
+                              <td class="fieldlabel">Official Bank </td>
+                              <td class="fieldarea">
+                                  <select ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_BankId"
+                                          ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control select-inline">
+                                      <option value="" label="" class="">---Select One---</option>
+                                  </select>
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Official Bank." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                  
+
+                          </tbody>
+                      </table>
+                  </div><!--Col end-->
+                  <div class="col-md-6 table-form">
+                      <table ng-show="PaymentGateway.@Acnt_PaymentGateway.Property_TypeEnumId == @((int)Acnt_PaymentGateway.TypeEnum.Rocket)" class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                          <tbody>
+                          <tr>
+                              <td colspan="3" class="fieldlabel pull-left">Setting Json <span class="red glyphicon glyphicon-asterisk"></span></td>
+                          </tr>
+                          <tr>
+                              <td colspan="3" class="fieldarea">
+                                  <textarea rows="23" type="text" ng-model="PaymentGateway.@Acnt_PaymentGateway.Property_SettingJson" class="form-control" placeholder="Enter Setting Json" required="">No default settings available for Rocket.</textarea>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                      <table ng-show="PaymentGateway.@Acnt_PaymentGateway.Property_TypeEnumId == @((int)Acnt_PaymentGateway.TypeEnum.bKash)" class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                          <tbody>
+                          <tr>
+                              <td class="fieldlabel"> Create Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.createURL" class="form-control" placeholder="Enter Create Url."  />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Create Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Execute Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.executeURL" class="form-control" placeholder="Enter Execute Url." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Execute Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Token Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.tokenURL" class="form-control" placeholder="Enter Token Url." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Token Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> QueryUrl Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.queryUrl" class="form-control" placeholder="Enter QueryUrl Url." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter QueryUrl Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Search Transaction Url </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.searchTrnxUrl" class="form-control" placeholder="Enter Search Transaction Url." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Search Transaction Url." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Script </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.script" class="form-control" placeholder="Enter Script." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Script." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> App Key </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.app_key" class="form-control" placeholder="Enter App Key." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter App Key." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> App Secret </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.app_secret" class="form-control" placeholder="Enter App Secret." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter App Secret." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> User Name </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.username" class="form-control" placeholder="Enter User Name." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Name." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Password </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.BkashConfig.password" class="form-control" placeholder="Enter Password." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Password." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          </tbody>
+                      </table>
+                      <table ng-show="PaymentGateway.@Acnt_PaymentGateway.Property_TypeEnumId == @((int)Acnt_PaymentGateway.TypeEnum.Nagad)" class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                          <tbody>
+                              <tr>
+                                  <td class="fieldlabel"> Merchant Private Key </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.marchentPrivateKey" class="form-control" placeholder="Enter Marchent Private Key." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Marchent Private Key." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Nagad Public Key </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.nagadPublicKey" class="form-control" placeholder="Enter Nagad Public Key." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Nagad Public Key." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Merchant Id </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.MerchantId" class="form-control" placeholder="Enter Merchant Id." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Merchant Id." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Initialize API </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.InitializeAPI" class="form-control" placeholder="Enter Initialize API." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Initialize API." data-toggle="tooltip"></i></span></td>
+                              </tr>
+
+                              <tr>
+                                  <td class="fieldlabel"> Api Version </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.ApiVersion" class="form-control" placeholder="Enter Api Version." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Api Version." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Check Out API </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.CheckOutAPI" class="form-control" placeholder="Enter Check Out API." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Check Out API." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Verification API </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.VerificationAPI" class="form-control" placeholder="Enter Verification API." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Verification API." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                              <tr>
+                                  <td class="fieldlabel"> Callback Url </td>
+                                  <td class="fieldarea">
+                                      <input type="text" ng-model="PaymentGateway.NagadConfig.CallBackUrl" class="form-control" placeholder="Enter CallBack Url." />
+                                  </td>
+                                  <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter CallBack Url." data-toggle="tooltip"></i></span></td>
+                              </tr>
+                          <tr>
+                              <td class="fieldlabel"> Web Api Initiate </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.NagadConfig.WebApiInitiate" class="form-control" placeholder="Enter Web Api Initiate." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter The Core API's Initiate api.'" data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          <tr>
+                              <td class="fieldlabel"> Web Api Checking </td>
+                              <td class="fieldarea">
+                                  <input type="text" ng-model="PaymentGateway.NagadConfig.WebApiChecking" class="form-control" placeholder="Enter Web Api Checking." />
+                              </td>
+                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Enter The Core API's Checking API." data-toggle="tooltip"></i></span></td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div><!--Row end-->
+          </div><!--Widget Body end-->
+          <div class="widget-footer text-center">
+              <div class="row">
+                  <div class="col-md-12 text-center">
+                      <button ng-click="@(savePaymentGateway)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                  </div>
+              </div>
+                
+              <div ng-show="PaymentGatewayId !=0">
+                  <div class="widget-header bordered-bottom bordered-sky ">
+                      <i class="widget-icon fa fa-list bold  "></i>
+                      <span class="widget-caption ">Manage Program Mapping </span>
+                      <div class="widget-buttons no-padding-left">
+                          <button ng-click="@(getNewPaymentGatewayProgramMap)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+                          <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                      </div>
+                  </div>
+
+                  <table class="table table-striped table-bordered table-hover">
+                      <thead class="bordered-blue">
+                          <tr>
+                              <th class="text-center" style="display:none">
+                                  <input type="checkbox" ng-click="selectAll($event)">
+                              </th>
+                              <th class="text-center">SN</th>
+                              <!--th class="text-center">Gateway Id</th-->
+                              <th class="text-center">Program</th>
+                              <th class="text-center">Internal Bank</th>
+                              <th class="text-center">Voucher Prefix</th>
+                              <th class="text-center">Remark</th>
+                              <th class="text-center">Is Enable</th>
+                              @*<th class="text-center">History</th>
+                              <th class="text-center">Is Active</th>
+                              <th class="text-center">Is Deleted</th>*@
+                              <th class="text-center no-print">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                          <tr ng-repeat="row in PaymentGatewayProgramMapList">
+                              <td class="text-center" style="display:none">
+                                  <input type="checkbox" ng-model="row.@Acnt_PaymentGatewayProgramMap.Property_IsSelected" />
+                              </td>
+                              <td class="text-center">{{$index+1}}</td>
+                              <!--td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_GatewayId}}</td-->
+                              <td class="">
+                                  <select ng-disabled="true" ng-model="row.@Acnt_PaymentGatewayProgramMap.Property_ProgramId"
+                                          ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                      <option value="" label="" class="">---Select One---</option>
+                                  </select>
+                              </td>
+                              <td class="">
+                                  <select ng-disabled="true" ng-model="row.@Acnt_PaymentGatewayProgramMap.Property_InternalBankId"
+                                          ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control select-inline">
+                                      <option value="" label="" class="">---Select One---</option>
+                                  </select>
+                              </td>
+                              <td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_VoucherPrefix}}</td>
+                              <td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_Remark}}</td>
+                              <td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_IsEnable}}</td>
+                              @*<td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_History}}</td>
+                              <td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_IsActive}}</td>
+                              <td class="">{{row.@Acnt_PaymentGatewayProgramMap.Property_IsDeleted}}</td>*@
+                              <td class="text-center no-print">
+                                  <button ng-click="@(getPaymentGatewayProgramMapById)(row.Id)" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</button>
+                                  <button ng-click="@(deletePaymentGatewayProgramMapById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+
+              </div>
+          </div>
+      </div>
+          <div class="modal fade" id="ProgramMappingModal" tabindex="-1" role="dialog" aria-labelledby="ProgramMappingModal">
+              <div class="modal-dialog modal-m" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="">Add/Edit Program Map</h4>
+                      </div>
+                      <div class="modal-body">
+                          <div class="row">
+                              <div class="col-md-12 table-form">
+                                  <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                      <tbody>
+                                          <tr>
+                                              <td class="fieldlabel">Program</td>
+                                              <td class="fieldarea">
+                                                  <select ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_ProgramId"
+                                                          ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                                      <option value="" label="" class="">---Select One---</option>
+                                                  </select>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Program Id." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="fieldlabel">Internal Bank</td>
+                                              <td class="fieldarea">
+                                                  <select ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_InternalBankId"
+                                                          ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control select-inline">
+                                                      <option value="" label="" class="">---Select One---</option>
+                                                  </select>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Internal Bank Id." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="fieldlabel">Voucher Prefix </td>
+                                              <td class="fieldarea">
+                                                  <input type="text" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_VoucherPrefix" class="form-control" placeholder="Enter Voucher Prefix" maxlength="50" />
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Voucher Prefix." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="fieldlabel">Remark </td>
+                                              <td class="fieldarea">
+                                                  <textarea type="text" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_Remark" class="form-control" placeholder="Enter Remark">
+                                                  </textarea>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+
+                                          <tr>
+                                              <td class="fieldlabel">Is Enable </td>
+                                              <td class="fieldarea">
+                                                  <label class="checkbox-inline">
+                                                      <input type="checkbox" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_IsEnable" />
+                                                  </label>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Enable if required." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+
+                                          @*<tr>
+                                              <td class="fieldlabel">History </td>
+                                              <td class="fieldarea">
+                                                  <input type="text" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_History" class="form-control" placeholder="Enter History" />
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                                          </tr>*@
+                                          <tr>
+                                              <td class="fieldlabel">Is Active </td>
+                                              <td class="fieldarea">
+                                                  <label class="checkbox-inline">
+                                                      <input type="checkbox" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_IsActive" />
+                                                  </label>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Active if required." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+
+                                          @*<tr>
+                                              <td class="fieldlabel">Is Deleted </td>
+                                              <td class="fieldarea">
+                                                  <label class="checkbox-inline">
+                                                      <input type="checkbox" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_IsDeleted" />
+                                                  </label>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                          </tr>*@
+                                      <tr>
+                                              <td class="fieldlabel">Payment Gateway </td>
+                                              <td class="fieldarea">
+                                                  <select ng-disabled ="true" ng-model="PaymentGatewayProgramMap.@Acnt_PaymentGatewayProgramMap.Property_GatewayId"
+                                                          ng-options="option.Id as option.Name for option in PaymentGatewayList " ng-init="" class="form-control select-inline">
+                                                      <option value="" label="" class="">---Select One---</option>
+                                                  </select>
+                                              </td>
+                                              <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Payment Gateway." data-toggle="tooltip"></i></span></td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div><!--Col end-->
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          @*"*@
+                          <button ng-click="@(savePaymentGatewayProgramMap)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save </button>
+                          <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

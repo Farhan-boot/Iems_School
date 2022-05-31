@@ -1,0 +1,244 @@
+﻿<!--File:General_Room List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Models
+@{
+    ViewBag.Title = "Room Status";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RoomId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomById", area = "Admin" });
+    var getRoomDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomDataExtra", area = "Admin" });
+    var saveRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoom", area = "Admin" });
+    var deleteRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetDeleteRoomById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetAllRoom", area = "Admin" });
+    var getAllRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetAllRoom", area = "Admin" });
+    var saveRoomListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoomList", area = "Admin" });
+    var getRoomListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomListDataExtra", area = "Admin" });
+
+    var editRoomByIdPageUrl = Url.Action("RoomAddEdit", "Room", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewRoom = "getNewRoom";
+    var saveRoom = "saveRoom";
+    var deleteRoomById = "deleteRoomById";
+    var deleteRoomByObj = "deleteRoomByObj";
+    //for list
+    var searchRoomList = "searchRoomList";
+    var getPagedRoomList = "getPagedRoomList";
+    var getAllRoomList = "getAllRoomList";
+    var saveRoomList = "saveRoomList";
+    var getRoomListExtraData = "getRoomListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Room/RoomStatus.js?v=1"></script>
+}
+
+
+<div ng-controller="RoomStatusCtrl"
+     ng-init="Init(
+      '@getPagedRoomUrl'
+     ,'@deleteRoomByIdUrl'
+     ,'@getRoomListDataExtraUrl'
+     ,'@saveRoomListUrl'
+     ,'@getRoomByIdUrl'
+     ,'@getRoomDataExtraUrl'
+     ,'@saveRoomUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-left bordered-blueberry">
+            <i class="widget-icon fa fa-cog"></i>
+            <span  class="widget-caption">Search Control Panel</span>
+            <div class="widget-buttons buttons-bordered">
+                <button ng-click="@(searchRoomList)()" class="btn btn-info btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body bordered-left bordered-blue ">
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedCampusId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select All Campus---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedBuildingId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name for option in BuildingList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select All Building---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedFloorId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name for option in FloorList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select All Floor---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedDepartmentId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name+' ('+option.ShortName+')' group by option.Type for option in DepartmentList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select All Department---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedTypeEnumId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name for option in TypeEnumList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select Type---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <select ng-model="SelectedStatusEnumId" ng-change="@(searchRoomList)()"
+                            ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control input-sm ">
+                        <option value="" label="" class="">---Select Status---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="SearchRoomNo" ng-Enter="@(searchRoomList)()" class="form-control input-sm " placeholder="Search Room No." style="">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="SearchRoomName" ng-Enter="@(searchRoomList)()" class="form-control input-sm " placeholder="Search Room Name" style="">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="row form-horizontal">
+                <div class="col-sm-5">
+                    <label class="col-sm-5 control-label">Start Date Time</label>
+                    <div class="col-sm-7 input-group">
+                        <span  class="input-icon icon-right">
+                            <input type="text" ng-model="StartDateTime" class="form-control input-sm datetimepicker">
+                            <i class="fa fa-clock-o success circular"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <label class="col-sm-5 control-label">End Date Time</label>
+                    <div class="col-sm-7 input-group">
+                        <span  class="input-icon icon-right">
+                            <input type="text" ng-model="EndDateTime" class="form-control input-sm datetimepicker">
+                            <i class="fa fa-clock-o success circular"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                    <button ng-click="@(searchRoomList)()" class="btn btn-info btn-sm"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .empty {
+            border: 1px solid #6bb571;
+            color: #095f10 !important;
+        }
+
+            .empty .small-box-footer {
+                color: #095f10 !important;
+            }
+
+            .empty .icon {
+                color: rgb(107, 181, 113) !important;
+                top: 5px;
+                right: 5px;
+                font-size: 70px;
+            }
+
+        .full {
+            border: 1px solid #af0808 !important;
+            color: #af0808 !important;
+        }
+
+            .full .small-box-footer {
+                color: #af0808 !important;
+            }
+
+            .full .icon {
+                color: rgb(183, 82, 82) !important;
+                top: 5px;
+                right: 5px;
+                font-size: 70px;
+            }
+
+        .small-box .icon {
+            top: 5px;
+            right: 5px;
+            font-size: 70px;
+        }
+
+        .small-box:hover .icon {
+            font-size: 75px;
+        }
+        /*'bg-darkorange' : 'bg-green-o'*/
+    </style>
+    <div class="widget" ng-repeat="building in BuildingList">
+        <div class="widget-header bordered-bottom bordered-top bordered-azure">
+            <i class="widget-icon fa fa-building-o"></i>
+            <span  class="widget-caption" style="font-weight: bold!important">{{building.@General_Building.Property_Name}}</span>
+            <div class="widget-buttons buttons-bordered">
+                <span  class=""><i class="fa fa-university"></i> {{building.CampusName}} Campus</span>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-lg-3 col-xs-3" ng-repeat="row in RoomList | filter: { @General_Room.Property_BuildingId : building.Id }">
+                    <a href="#" class="small-box " data-toggle="modal" data-target="#modal-status" style=""
+                       ng-click="getRoomInformation(row)"
+                       ng-class="row.@General_Room.Property_IsSelected ? 'full' : 'empty'">
+                        <div class="small-box-footer">
+                            Capacity&nbsp;<i class="fa fa-arrow-circle-right"></i>&nbsp;Regular-{{row.@General_Room.Property_CapacityRegular}}&nbsp;&nbsp;Exam-{{row.@General_Room.Property_CapacityAdmission}}
+                        </div>
+                        <div class="inner">
+                            <h3>{{row.@General_Room.Property_RoomNo}}</h3>
+                            <h4 class="no-margin">{{row.@General_Room.Property_Name}}</h4>
+                            <small><span ><em>{{row.General_FloorJson.@General_Floor.Property_Name}}</em></span><span  class="pull-right">{{row.@General_Room.Property_Type}}</span></small>
+                        </div>
+                        <div class="icon">
+                            <i ng-show="row.@General_Room.Property_IsSelected" class="fa fa-times-circle-o"></i>
+                            <i ng-hide="row.@General_Room.Property_IsSelected" class="fa fa-check-circle-o"></i>
+                        </div>
+                        <div class="small-box-footer">
+                            {{row.HR_DepartmentJson.@HR_Department.Property_ShortName}}&nbsp;<i class="fa fa-arrow-circle-right"></i>&nbsp;<span  ng-hide="row.@General_Room.Property_IsShareable">Not </span>Shareable
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!--Modal Templates-->
+            <div id="modal-status" class="modal modal-message fade" style="display: none;" aria-hidden="true"
+                ng-class="CurrentRoom.@General_Room.Property_IsSelected ? 'modal-danger' : 'modal-success'">
+                <div class="modal-dialog modal-lg" style="width: auto; margin-left: 10%; margin-right: 10%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <i ng-show="CurrentRoom.@General_Room.Property_IsSelected" class="fa fa-times-circle"></i>
+                            <i ng-hide="CurrentRoom.@General_Room.Property_IsSelected" class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="modal-title">
+                            <span  ng-show="CurrentRoom.@General_Room.Property_IsSelected" class="text-danger">This Room is currently Occupied</span>
+                            <span  ng-hide="CurrentRoom.@General_Room.Property_IsSelected" class="text-success">This Room is currently Vacant and Ready</span>
+                        </div>
+                        <div class="modal-body" ng-show="CurrentRoom.@General_Room.Property_IsSelected">
+                            <h2 ng-repeat="row in ClassRoutineList | filter: { @Aca_ClassRoutine.Property_RoomId : CurrentRoom.@General_Room.Property_Id }">
+                                {{row.RoutineDetails}}
+                            </h2>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" ng-class="CurrentRoom.@General_Room.Property_IsSelected ? 'btn-danger' : 'btn-success'" data-dismiss="modal">OK</button>
+                        </div>
+                    </div> <!-- / .modal-content -->
+                </div> <!-- / .modal-dialog -->
+            </div>
+            <!--End Modal Templates-->
+        </div>
+    </div>
+</div>
+

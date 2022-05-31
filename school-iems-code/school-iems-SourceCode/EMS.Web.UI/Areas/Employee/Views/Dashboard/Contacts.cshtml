@@ -1,0 +1,156 @@
+﻿@using EMS.CoreLibrary
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Employee Contact Information";
+    var employees = HttpUtil.DbContext.User_Employee
+        .Include("User_Account")
+   
+        .Include("User_Account.User_ContactNumber")
+         .Include("User_Account.User_ContactEmail")
+        .Include("HR_Department")
+        .Include("HR_Position")
+        .Where(x => x.User_Account.UserStatusEnumId == (byte)User_Account.UserStatusEnum.Active
+        && x.Id != 1
+        && x.User_Account.IsApproved)
+        .OrderBy(x => x.EmployeeCategoryEnumId)
+        .ThenBy(x => x.JobClassEnumId)
+        .ThenBy(x => x.HR_Position.Priority)
+        .ToList();
+
+    var depts = employees.Select(x => x.HR_Department).Distinct()
+        .OrderBy(x => x.ParentDeptId)
+        .ThenBy(x => x.Priority);
+}
+
+<div class="widget">
+    <div class="widget-header bordered-bottom bordered-blue">
+        <span  class="widget-caption">Select Your Office/Faculty/Dept</span>
+
+        <div class="widget-buttons">
+            <a href="#" data-toggle="maximize">
+                <i class="fa fa-expand blue"></i>
+            </a>
+            @*<a href="#" data-toggle="collapse">
+                    <i class="fa fa-minus warning"></i>
+                </a>
+                <a href="#" data-toggle="dispose">
+                    <i class="fa fa-times danger"></i>
+                </a>*@
+        </div>
+    </div>
+
+    <div class="widget-body no-padding">
+        <div class="widget-main ">
+            <div class="panel-group accordion" id="AccordionContact">
+                <div class="panel panel-default">
+                    @{
+                        int count = 0;
+                        foreach (var dept in depts)
+                        {
+                            count++;
+                            <div class="panel-heading">
+                                <a class="accordion-toggle collapsed  bordered-sky bordered-bottom" style="color: -white" 
+                                   data-parent="#AccordionContact" data-toggle="collapse" href="#Accordion-@count" aria-expanded="false">
+                                    <div class="text-center" style="font-weight: bold">
+                                        <i class="fa success fa-plus pull-left"></i> @dept.Name (@dept.ShortName)
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="panel-collapse collapse" id="Accordion-@count" aria-expanded="false" style="height: 0px;">
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-striped pb-after">
+                                        <tr>
+                                            <th class="text-center">Post / Position</th>
+                                            <th class="text-center">Rank / Designation </th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center" style="width: 100px">Personal Mobile</th>
+                                            <th class="text-center" style="width: 100px">Office Mobile</th>
+                                            <th class="text-center" style="width: 77px">Office Intercom</th>
+                                            <th class="text-center" style="">Email</th>
+                                        </tr>
+                                        @foreach (var emp in employees.Where(x => x.User_Account.DepartmentId == dept.Id))
+                                        {
+                                            //    var personalMobile = string.Empty;
+                                            //    var userContactNumber = emp.User_Account.User_ContactNumber
+                                            //.FirstOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.PersonalMobile);
+                                            //    if (userContactNumber != null)
+                                            //    {
+                                            //        personalMobile = userContactNumber.ContactNumber;
+                                            //    }
+                                            //    var officeMobile = string.Empty;
+                                            //    userContactNumber = emp.User_Account.User_ContactNumber
+                                            //.FirstOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.OfficeMobile);
+                                            //    if (userContactNumber != null)
+                                            //    {
+                                            //        officeMobile = userContactNumber.ContactNumber;
+                                            //    }
+                                            //    var officeIntercom = string.Empty;
+                                            //    userContactNumber = emp.User_Account.User_ContactNumber
+                                            //.FirstOrDefault(x => x.ContactNumberTypeEnumId == (byte)User_ContactNumber.ContactNumberTypeEnum.OfficeIntercom);
+                                            //    if (userContactNumber != null)
+                                            //    {
+                                            //        officeIntercom = userContactNumber.ContactNumber;
+                                            //    }
+
+                                            //    var presonalEmail = string.Empty;
+                                            //    var userEmail = emp.User_Account.User_ContactEmail.ToList();
+                                            //    ;
+                                            //    if (userEmail.Count>0 )
+                                            //    {
+                                            //        foreach (var email in userEmail)
+                                            //        {
+                                            //            if (email.ContactEmail.IsValidEmail())
+                                            //            {
+                                            //                presonalEmail += email.ContactEmail + "; ";
+                                            //            }
+
+                                            //        }
+
+                                            //    }
+
+
+                                            <tr>
+                                                <td class="text-center">
+                                                    @if (emp.HR_Position != null)
+                    {
+                        <span > @emp.HR_Position.Name </span> 
+                                                        /// HR / Employee / EmployeeAddEdit /? id = 201611071408576718
+                                                    }
+                                                    else
+                                                    {
+                                                        <span >&nbsp;</span>
+                                                    }
+                                                </td>
+                                                <td class="text-right">
+                                                    @if (emp.HR_Position != null)
+                                                    {
+                                                        <strong>@emp.HR_Position.Name</strong>
+                                                    }
+                                                    
+
+                                                </td>
+                                                <td class="text-uppercase">
+                                                    @emp.User_Account.FullName
+                                                </td>
+                                                <td class="text-center">@emp.User_Account.UserMobile</td>
+                                                <td class="text-center">@emp.User_Account.UserMobile2</td>
+                                                <td class="text-center">@emp.User_Account.EmergencyMobile</td>
+                                                <td class="text-center">@emp.User_Account.UserEmail</td>
+                                                
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

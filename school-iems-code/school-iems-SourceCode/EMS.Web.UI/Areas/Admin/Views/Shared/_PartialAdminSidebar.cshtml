@@ -1,0 +1,693 @@
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+    <li>
+        <a  title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "Admin"})">
+            <i class="menu-icon fa fa-home"></i>
+            <span class="menu-text">@currentArea Home</span>
+        </a>
+    </li>
+
+    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanView)
+                                        || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanAdd)
+                                        || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text">Department Management</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("DepartmentAddEdit", "Department", new { id = 0, area = "Admin" })">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanView)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanAdd)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.Department.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("DepartmentList", "Department", new { area = "Admin" })">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-university"></i>
+                <span class="menu-text">Campus Room Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanView)
+        || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanAdd)
+        || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanEdit))
+                {
+                    <li>
+                        <a href="#" class="menu-dropdown">
+                            <i class="menu-icon fa fa-university"></i>
+                            <span class="menu-text">Campus Mgt.</span>
+                            <i class="menu-expand"></i>
+                        </a>
+                        <ul class="submenu" style="display: none;">
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanAdd))
+                {
+                                <li>
+                                    <a href="@Url.Action("CampusAddEdit", "Campus", new { id = 0, area = "Admin" })">
+                                        <i class="menu-icon fa fa-plus"></i>
+                                        <span class="menu-text">Add New</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanView)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanAdd)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Campus.CanEdit))
+                            {
+                                <li>
+                                    <a href="@Url.Action("CampusList", "Campus", new { area = "Admin" })">
+                                        <i class="menu-icon fa fa-list"></i>
+                                        <span class="menu-text">List</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanView)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanAdd)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanEdit))
+                {
+                    <li>
+                        <a href="#" class="menu-dropdown">
+                            <i class="menu-icon fa fa-building-o"></i>
+                            <span class="menu-text">Building Mgt.</span>
+                            <i class="menu-expand"></i>
+                        </a>
+                        <ul class="submenu" style="display: none;">
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanAdd))
+                {
+                                <li>
+                                    <a href="@Url.Action("BuildingAddEdit", "Building", new { id = 0, area = "Admin" })">
+                                        <i class="menu-icon fa fa-plus"></i>
+                                        <span class="menu-text">Add New</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanView)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanAdd)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Building.CanEdit))
+                            {
+                                <li>
+                                    <a href="@Url.Action("BuildingList", "Building", new { area = "Admin" })">
+                                        <i class="menu-icon fa fa-list"></i>
+                                        <span class="menu-text">List</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanView)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanAdd)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanEdit))
+                {
+                    <li>
+                        <a href="#" class="menu-dropdown">
+                            <i class="menu-icon fa fa-building"></i>
+                            <span class="menu-text">Floor Mgt.</span>
+                            <i class="menu-expand"></i>
+                        </a>
+                        <ul class="submenu" style="display: none;">
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanAdd))
+                {
+                                <li>
+                                    <a href="@Url.Action("FloorAddEdit", "Floor", new { id = 0, area = "Admin" })">
+                                        <i class="menu-icon fa fa-plus"></i>
+                                        <span class="menu-text">Add New</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanView)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanAdd)
+    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Floor.CanEdit))
+                            {
+                                <li>
+                                    <a href="@Url.Action("FloorList", "Floor", new { area = "Admin" })">
+                                        <i class="menu-icon fa fa-list"></i>
+                                        <span class="menu-text">List</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanView)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanAdd)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanEdit))
+                {
+                    <li>
+                        <a href="#" class="menu-dropdown">
+                            <i class="menu-icon fa fa-cog"></i>
+                            <span class="menu-text">Room Mgt.</span>
+                            <i class="menu-expand"></i>
+                        </a>
+                        <ul class="submenu" style="display: none;">
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanAdd))
+                            {
+                                <li>
+                                    <a href="@Url.Action("RoomAddEdit", "Room", new { id = 0, area = "Admin" })">
+                                        <i class="menu-icon fa fa-plus"></i>
+                                        <span class="menu-text">Add New</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanView)
+                    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanAdd)
+                    || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Room.CanEdit))
+                            {
+                                <li>
+                                    <a href="@Url.Action("RoomList", "Room", new {area = "Admin"})">
+                                        <i class="menu-icon fa fa-list"></i>
+                                        <span class="menu-text">List</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("RoomStatus", "Room", new { area = "Admin" })">
+                                        <i class="menu-icon fa fa-list"></i>
+                                        <span class="menu-text">Allotment Status</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-users"></i>
+                <span class="menu-text"> User Management</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanAdd))
+                {
+                    <li>
+                        <a href="@Url.Action("Update", "User", new {id = 0, area = "Admin"})">
+                            <i class="menu-icon fa fa-plus"></i>
+                            <span class="menu-text">Add New User</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanView)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanAdd)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanEdit))
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "User", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">User List</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanAdd))
+                {
+                    <li>
+                        <a href="@Url.Action("RoleUpdate", "User", new {id = 0, area = "Admin"})">
+                            <i class="menu-icon fa fa-plus"></i>
+                            <span class="menu-text">Add New Role</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanView)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanAdd)
+|| PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+                {
+                    <li>
+                        <a href="@Url.Action("RoleList", "User", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Role List</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.AuditManager.CanViewLoginAudit)
+                        || PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.AuditManager.CanViewPasswordChangeAudit)
+                      )
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-universal-access"></i>
+                    <span class="menu-text"> User Access Control</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    <li>
+                        <a href="@Url.Action("LoginAuditList", "LoginAudit", new { area = "Admin" })">
+                            <span class="menu-text">Login Audit</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("PassResetList", "PassReset", new { area = "Admin" })">
+                            <span class="menu-text">Pass Reset Audit</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+        
+    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.SiteSettingsManager.CanEdit))
+    {
+        <li>
+            <a href="@Url.Action("SiteSettingsAddEdit", "SiteSettingsManager", new {area = "Admin"})">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text">Edit SiteSetting</span>
+            </a>
+        </li>
+    }
+    <li>
+        <a href="@Url.Action("RollAssignedReport", "User", new {area = "Admin"})">
+            <i class="menu-icon fa fa-universal-access"></i>
+            <span class="menu-text">Roll Assigned Report</span>
+        </a>
+    </li>
+    <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text">General Options</span>
+                <i class="menu-expand"></i>
+            </a>
+        <ul class="submenu" style="display: none;">
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Organization</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("OrganizationAddEdit", "Organization", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Organization.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("OrganizationList", "Organization", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </li>
+        }
+            
+
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-location-arrow"></i>
+                <span class="menu-text">Study Level & Term</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.SemesterManager.StudyLevelTerm.CanView))
+                {
+                    <li>
+                        <a href="@Url.Action("StudyLevelList", "StudyLevel", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Study Level</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.SemesterManager.StudyLevelTerm.CanView))
+                {
+                    <li>
+                        <a href="@Url.Action("StudyTermList", "StudyTerm", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Study Term</span>
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-location-arrow"></i>
+                <span class="menu-text">Cr. Trns. Institute</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.CreditTransferInstitute.CanAdd))
+                {
+                    <li>
+                        <a href="@Url.Action("CreditTransferInstituteAddEdit", "CreditTransferInstitute", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">Add New</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.CreditTransferInstitute.CanView)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdminArea.CreditTransferInstitute.CanAdd)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdminArea.CreditTransferInstitute.CanEdit))
+                {
+                    <li>
+                        <a href="@Url.Action("CreditTransferInstituteList", "CreditTransferInstitute", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">List</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+
+
+
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Division Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("DivisionAddEdit", "Division", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Division.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("DivisionList", "Division", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+
+
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">District Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("DistrictAddEdit", "District", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.District.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("DistrictList", "District", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Police Station Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("PoliceStationAddEdit", "PoliceStation", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PoliceStation.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("PoliceStationList", "PoliceStation", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Post Office Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("PostOfficeAddEdit", "PostOffice", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.PostOffice.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("PostOfficeList", "PostOffice", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Country</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("CountryAddEdit", "Country", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Country.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("CountryList", "Country", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </li>
+        }
+
+
+
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Student Quota Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("StudentQuotaNameAddEdit", "StudentQuotaName", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentQuotaName.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("StudentQuotaNameList", "StudentQuotaName", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanEdit))
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Parents Job Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanAdd))
+                    {
+                        <li>
+                            <a href="@Url.Action("ParentsPrimaryJobTypeAddEdit", "ParentsPrimaryJobType", new {id = 0, area = "Admin"})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanAdd)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.ParentsPrimaryJobType.CanEdit))
+                    {
+                        <li>
+                            <a href="@Url.Action("ParentsPrimaryJobTypeList", "ParentsPrimaryJobType", new {area = "Admin"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-location-arrow"></i>
+                <span class="menu-text">Relationship Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Relationship.CanAdd))
+                {
+                    <li>
+                        <a href="@Url.Action("RelationshipAddEdit", "Relationship", new {id = 0, area = "Admin"})">
+                            <i class="menu-icon fa fa-plus"></i>
+                            <span class="menu-text">Add New</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.Relationship.CanView)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Relationship.CanAdd)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdminArea.Relationship.CanEdit))
+                {
+                    <li>
+                        <a href="@Url.Action("RelationshipList", "Relationship", new {area = "Admin"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">List</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+        </ul>
+
+            <ul class="submenu" style="display: none;"></ul>
+
+        </li>
+
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+
+</div>

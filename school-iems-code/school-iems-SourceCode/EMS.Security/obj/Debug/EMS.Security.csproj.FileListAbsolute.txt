@@ -1,0 +1,6 @@
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\bin\Debug\EMS.Security.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\bin\Debug\EMS.Security.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\obj\Debug\EMS.Security.csproj.AssemblyReference.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\obj\Debug\EMS.Security.csproj.CoreCompileInputs.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\obj\Debug\EMS.Security.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Security\obj\Debug\EMS.Security.pdb

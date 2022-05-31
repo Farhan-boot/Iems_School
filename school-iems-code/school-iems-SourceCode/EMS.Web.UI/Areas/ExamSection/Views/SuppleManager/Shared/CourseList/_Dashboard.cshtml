@@ -1,0 +1,130 @@
+﻿<div class="widget">
+<div class="widget-header bordered-bottom bordered-green">
+    <i class="widget-icon fa fa-files-o"></i>
+    <span class="widget-caption">
+        Summary of: {{SelectedExam.Name}}
+    </span>
+    <div class="widget-buttons buttons-bordered">
+        <button ng-click="onChangeExam()"
+            class="btn btn-xs btn-info">
+            <i class="fa fa-refresh"></i> Refresh
+        </button>
+    </div>
+</div>
+    <div class="widget-body">
+        
+        <table class="table table-striped table-bordered">
+            <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="width: 31px;">Ser</th>
+                    <th class="text-center">Program</th>
+                    <th class="text-center">Batch</th>
+                    <th class="text-center">Semester</th>
+                    <th class="text-center">Course</th>
+                    <th class="text-center">Class</th>
+                    <th class="text-center">Examiner</th>
+                    <th class="text-center">Referred</th>
+                    <th class="text-center">Backlog</th>
+                    <th class="text-center">Approved</th>
+                    <th class="text-center">Pending</th>
+                    <th class="text-center">Disapproved</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in SuppleExamSummary">
+                <td class="text-center" style="vertical-align: middle;">{{$index+1}}</td>
+                <td style="vertical-align: middle;">
+                    <span title="{{row.ProgramName}}">{{row.ProgramShortTitle}}</span>
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalBatch}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalSemester}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalCourse}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalClass}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalExaminer}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalReferred}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    {{row.TotalBacklog}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-success">
+                        {{row.TotalApproved}}
+                    </span>
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-warning">
+                        {{row.TotalPending}}
+                    </span>
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-danger">
+                        {{row.TotalDisapproved}}
+                    </span>
+                </td>
+
+            </tr>
+
+            <tr>
+               
+                <td class="text-right text-bold" colspan="2" style="vertical-align: middle;">
+                    Grand Total
+                </td>
+                
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalBatch'}}
+                </td>
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalSemester'}}
+                </td>
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalCourse'}}
+                </td>
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalClass'}}
+                </td>
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalExaminer'}}
+                </td>
+
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalReferred'}}
+                </td>
+                <td class="text-center text-bold" style="vertical-align: middle;">
+                    {{SuppleExamSummary| total:'TotalBacklog'}}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-success text-bold">
+                        {{SuppleExamSummary| total:'TotalApproved'}}
+                    </span>
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-warning text-bold">
+                        {{SuppleExamSummary| total:'TotalPending'}}
+                    </span>
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <span class="badge badge-danger text-bold">
+                        {{SuppleExamSummary| total:'TotalDisapproved'}}
+                    </span>
+                </td>
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,235 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Program Manager";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ProgramId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getProgramByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetProgramById", area = "Academic" });
+    var getProgramDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetProgramDataExtra", area = "Academic" });
+    var saveProgramUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "SaveProgram", area = "Academic" });
+    var deleteProgramByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetDeleteProgramById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedProgramUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetPagedProgram", area = "Academic" });
+    var getAllProgramUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetAllProgram", area = "Academic" });
+    var saveProgramListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "SaveProgramList", area = "Academic" });
+    var getProgramListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramApi", action = "GetProgramListDataExtra", area = "Academic" });
+
+    //Angular Function Name
+    var getNewProgram = "getNewProgram";
+    string getProgramById = "getProgramById";
+    var saveProgram = "saveProgram";
+    var deleteProgramById = "deleteProgramById";
+    var deleteProgramByObj = "deleteProgramByObj";
+    string loadProgramExtraData = "loadProgramExtraData";
+    //for list
+    var searchProgramList = "searchProgramList";
+    var getPagedProgramList = "getPagedProgramList";
+    var getAllProgramList = "getAllProgramList";
+    var saveProgramList = "saveProgramList";
+    var getProgramListExtraData = "getProgramListExtraData";
+
+    var refreshPage = "loadPage()";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ProgramManager/Index.js?v=3"></script>
+}
+<div ng-controller="ProgramManagerCtrl"
+     ng-init="Init(
+        '@ProgramId'
+        ,'@getPagedProgramUrl'
+        ,'@getProgramDataExtraUrl'
+        ,'@saveProgramUrl'
+        ,'@getProgramByIdUrl'
+        ,'@deleteProgramByIdUrl'
+     );">
+    <div id="progress" ng-show="IsLoading" style="display: block; position: fixed; top: 0; background: rgba(255, 255, 255, 0.75); right: 0; width: 100%; height: 100%; z-index: 500; text-align: center; padding: 20% 10%; color: #3bad29;">
+        <i class="fa fa-refresh fa-spin fa-5x fa-fw margin-bottom" style="font-size: 100px;"></i>
+    </div>
+    <div class="widget-header">
+        <span class="widget-caption form-inline" style="margin-left: 3px">
+            <select ng-model="SelectedDurationEnumId" ng-change="@(searchProgramList)()"
+                    ng-options="option.Id as option.Name for option in SemesterDurationEnumList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">---Any Duration---</option>
+            </select>
+        </span>
+        <span class="widget-caption form-inline " style="margin-left: 3px">
+            <select ng-model="CreditTypeSystemEnumId" ng-change="@(searchProgramList)()"
+                    ng-options="option.Id as option.Name for option in CreditTypeSystemEnumList " ng-init="" class="form-control input-xs ">
+                <option value="" label="" class="">---Any Credit System---</option>
+            </select>
+        </span>
+        <div class="widget-buttons buttons-bordered  no-padding-right">
+            <span  class="input-icon">
+                <input type="text" ng-model="SearchText" ng-Enter="@(searchProgramList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                <i class="glyphicon glyphicon-search blue"></i>
+            </span>
+        </div>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="@(getNewProgram)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+        </div>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="@(refreshPage)()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+        </div>
+    </div>
+    <div class="widget-body no-padding">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="table-footer no-print">
+                    @OptionControl()
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Code</th>
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.ProgramManager.CanDelete))
+                            {
+                                <th class="text-center no-print">Action</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in ProgramList" ng-click="editProgram($index)" ng-class="{ 'active': $index == selectedProgramIndex }">
+                            <td class="text-center">{{$index+1}}</td>
+                            @*<td>{{row.@Aca_Program.Property_Id}}</td>*@
+                            <td>{{row.@Aca_Program.Property_Name}}</td>
+                            <td class="text-center">{{row.@Aca_Program.Property_Code}}</td>
+                            @*<td class="text-center">{{row.@Aca_Program.Property_UgcCode}}</td>*@
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.ProgramManager.CanDelete))
+                            {
+                                <td class="text-center">
+                                    <button ng-click="@(deleteProgramById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer no-print">
+                    @OptionControl()
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#ProgramDetails">Program Details</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="ProgramDetails" class="tab-pane in active">
+                            <div class="row">
+                                <div class="col-sm-12 form-group">
+
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Program ID (Auto Generated) </label>
+                                            <input disabled="" type="text" ng-model="Program.@Aca_Program.Property_Id" class="form-control" placeholder="Auto Generate" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label> Code <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="text" ng-model="Program.@Aca_Program.Property_Code" class="form-control" placeholder="Enter Code" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label> Program Type <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="Program.@Aca_Program.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Class Timing <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="Program.@Aca_Program.Property_ClassTimingGroupEnumId" ng-options="option.Id as option.Name for option in ClassTimingGroupEnumList" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Language <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="Program.@Aca_Program.Property_LanguageMediumEnumId"
+                                                    ng-options="option.Id as option.Name for option in LanguageEnumList"
+                                                    class="form-control">
+                                                <option value="" label="">---Select Language---</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Is Enable</label><br />
+                                            <input type="radio" ng-model="Program.@Aca_Program.Property_IsEnable" class="form-control radio-inline" ng-value="true" /> Yes
+                                            <input type="radio" ng-model="Program.@Aca_Program.Property_IsEnable" class="form-control radio-inline" ng-value="false" /> No
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Program.@Aca_Program.Property_Name" class="form-control" placeholder="Enter Name" maxlength="128" required="" />
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Short Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Program.@Aca_Program.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Short Title <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Program.@Aca_Program.Property_ShortTitle" class="form-control" placeholder="Enter Short Title" maxlength="50" required="" />
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Description <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <textarea ng-model="Program.@Aca_Program.Property_Description" class="form-control" placeholder="Enter Description" maxlength="256" required=""></textarea>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Official Certificate Title <span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Program.@Aca_Program.Property_OfficialCertificateTitle" class="form-control" placeholder="Enter Official Certificate Title" maxlength="256" required="" />
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>Default Class Section Range<span class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="number" ng-model="Program.@Aca_Program.Property_DefaultClassSectionRange" class="form-control" placeholder="Enter Default Class Section Range" required="" />
+                                </div>
+                            </div>
+                            <div class="footer text-center">
+                                <button ng-click="saveProgram()" class="btn btn-lg btn-success"><span  class="fa fa-save"></span> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}

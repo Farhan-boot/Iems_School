@@ -1,0 +1,63 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@model System.Collections.Generic.List<EMS.DataAccess.Data.UAC_RoleUserMap>
+
+@{
+    ViewBag.Title = "User List in Role";
+}
+@if (Model != null && Model.Count != 0)
+{
+    var index = 1;
+    <h6 class="row-title before-azure">Role : <strong>@Model.First().UAC_Role.Name</strong></h6>
+    <table class="table table-bordered">
+        <tr>
+            <th class="text-center">SN</th>
+            <th class="text-center">Username</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Dept</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Account Approved?</th>
+            @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanEdit))
+            {
+                <th class="text-center">Action</th>
+            }
+        </tr>
+        @foreach (var uacRoleUserMap in Model)
+        {
+            <tr>
+                <td class="text-center">@index</td>
+                <td class="text-center">@uacRoleUserMap.User_Account.UserName</td>
+                <td>@uacRoleUserMap.User_Account.FullName</td>
+                <td class="text-center">
+                    @if (uacRoleUserMap.User_Account.UserTypeEnumId == (byte) User_Account.UserTypeEnum.Employee)
+                    {
+                        <span>@uacRoleUserMap.User_Account.HR_Department.ShortName</span>
+                    }
+                    else if (uacRoleUserMap.User_Account.UserTypeEnumId == (byte) User_Account.UserTypeEnum.Student)
+                    {
+                        <span >@uacRoleUserMap.User_Account.HR_Department.ShortName</span>
+                    }
+                    else
+                    {
+                        <span >N/A</span>
+                    }
+                </td>
+                <td class="text-center">@uacRoleUserMap.User_Account.UserStatus </td>
+                <td class="text-center">@uacRoleUserMap.User_Account.IsApproved </td>
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanEdit))
+                {
+                    <td class="text-center">
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserAccess.CanEdit))
+                        {
+                            <a target="_blank" href="@Url.Action("Update", "User", new {area = "Admin", id = uacRoleUserMap.UserId})#role" class="btn btn-primary btn-xs">
+                                <i class="fa fa-edit"></i>&nbsp;Edit User Role
+                            </a>
+                        }
+                    </td>
+                }
+            </tr>
+            index++;
+        }
+    </table>
+}

@@ -1,0 +1,491 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Curriculum Manager";
+
+
+    // Angular Properties
+    //var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    //var CurriculumId = (string)id == null ? "0" : (string)id;
+    //var CurriculumCourseId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row 
+    var getCurriculumByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumById", area = "Academic" });
+    var getCurriculumDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumDataExtra", area = "Academic" });
+    var saveCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "SaveCurriculum", area = "Academic" });
+    var deleteCurriculumByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetDeleteCurriculumById", area = "Academic" });
+
+    var getCurriculumCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseById", area = "Academic" });
+    var getCurriculumCourseDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseDataExtra", area = "Academic" });
+    var saveCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "SaveCurriculumCourse", area = "Academic" });
+    var deleteCurriculumCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetDeleteCurriculumCourseById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetPagedCurriculum", area = "Academic" });
+    var getAllCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetAllCurriculum", area = "Academic" });
+    var saveCurriculumListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "SaveCurriculumList", area = "Academic" });
+    var getCurriculumListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumListDataExtra", area = "Academic" });
+
+    var editCurriculumByIdPageUrl = Url.Action("CurriculumAddEdit", "Curriculum", new { area = "Academic" });
+
+    var getPagedCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetPagedCurriculumCourse", area = "Academic" });
+    var getAllCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetAllCurriculumCourse", area = "Academic" });
+    var saveCurriculumCourseListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "SaveCurriculumCourseList", area = "Academic" });
+    var getCurriculumCourseListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseListDataExtra", area = "Academic" });
+
+    var editCurriculumCourseByIdPageUrl = Url.Action("CurriculumCourseAddEdit", "CurriculumCourse", new { area = "Academic" });
+
+    //Angular Function Name
+    var getNewCurriculum = "getNewCurriculum";
+    var saveCurriculum = "saveCurriculum";
+    var deleteCurriculumById = "deleteCurriculumById";
+    var deleteCurriculumByObj = "deleteCurriculumByObj";
+    //for list
+    var searchCurriculumList = "searchCurriculumList";
+    var getPagedCurriculumList = "getPagedCurriculumList";
+    var getAllCurriculumList = "getAllCurriculumList";
+    var saveCurriculumList = "saveCurriculumList";
+    var getCurriculumListExtraData = "getCurriculumListExtraData";
+
+    var refreshPage = "loadPage()";
+
+    var getNewCurriculumCourse = "getNewCurriculumCourse";
+    var saveCurriculumCourse = "saveCurriculumCourse";
+    var deleteCurriculumCourseById = "deleteCurriculumCourseById";
+    var deleteCurriculumCourseByObj = "deleteCurriculumCourseByObj";
+    //for list
+    var searchCurriculumCourseList = "searchCurriculumCourseList";
+    var getPagedCurriculumCourseList = "getPagedCurriculumCourseList";
+    var getAllCurriculumCourseList = "getAllCurriculumCourseList";
+    var saveCurriculumCourseList = "saveCurriculumCourseList";
+    var getCurriculumCourseListExtraData = "getCurriculumCourseListExtraData";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/CurriculumManager/Index.js"></script>
+}
+<div ng-controller="CurriculumManagerCtrl"
+     ng-init="Init(
+     '@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumApi", action = "GetCurriculumById", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumApi", action = "GetPagedCurriculum", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumApi", action = "GetCurriculumDataExtra", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumCourseApi", action = "GetCurriculumCourseById", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumCourseApi", action = "GetPagedCurriculumCourse", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumCourseApi", action = "GetCurriculumCourseDataExtra", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumApi", action = "SaveCurriculum", area = "Academic"})'
+     ,'@Url.HttpRouteUrl("DefaultApi", new {controller = "CurriculumCourseApi", action = "SaveCurriculumCourse", area = "Academic"})'
+     ,'@deleteCurriculumByIdUrl'
+     ,'@deleteCurriculumCourseByIdUrl'
+     );">
+    <div class="tabbable">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active">
+                <a data-toggle="tab" href="#Curriculum" aria-expanded="false">
+                    Curriculum
+                </a>
+            </li>
+            <li class="tab-blue">
+                <a data-toggle="tab" href="#CurriculumCourses" aria-expanded="true">
+                    Curriculum Courses
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content no-padding">
+            <div id="Curriculum" class="tab-pane active">
+                <div class="widget-header">
+                    <span  class="widget-caption form-inline">
+                        <span  class="text-info">Select Program</span>
+                        <select ng-model="SearchByProgramId" ng-change="searchCurriculum()" ng-options="option.Id as option.Name for option in ProgramList" class="form-control input-xs" required>
+                            <option value="" label="">---Select All Program---</option>
+                        </select>
+                    </span>
+                    <div class="widget-buttons buttons-bordered">
+                        <button ng-click="getNewCurriculum()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="widget-buttons buttons-bordered">
+                        <button ng-click="refreshCurriculum()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center">SN</th>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-center">Short Name</th>
+                                    <th class="text-center">Credit</th>
+                                    <th class="text-center">Semester</th>
+                                    @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.CurriculumManager.Curriculum.CanDelete))
+                                    {
+                                        <th class="text-center no-print">Action</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in CurriculumPagedList" ng-click="editCurriculum($index)" ng-class="{ 'active': $index == selectedCurriculumIndex }">
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="text-center">{{row.@Aca_Curriculum.Property_CurriculumNo}}</td>
+                                    <td>{{row.@Aca_Curriculum.Property_ShortName}}</td>
+                                    <td class="text-right">{{row.@Aca_Curriculum.Property_TotalCredit}}</td>
+                                    <td class="text-center">{{row.@Aca_Curriculum.Property_TotalSemester}}</td>
+                                    @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.CurriculumManager.Curriculum.CanDelete))
+                                    {
+                                        <td class="text-center">
+                                            <button ng-click="@(deleteCurriculumById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTabCurriculum">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#CurriculumDetails">Curriculum Details</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="CurriculumDetails" class="tab-pane in active">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Curriculum ID (Auto Generated) </label>
+                                            <input ng-disabled="true" type="text" ng-model="Curriculum.@Aca_Curriculum.Property_Id" class="form-control" placeholder="Enter ID" required="" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Curriculum No. </label>
+                                            <input ng-disabled="true" type="number" ng-model="Curriculum.@Aca_Curriculum.Property_CurriculumNo" class="form-control" placeholder="Enter Curriculum No." />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Department <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-change="changeDepartment()" ng-model="Curriculum.@Aca_Curriculum.Property_DepartmentId" ng-options="option.Id as option.ShortName for option in DepartmentList" ng-init="" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Program <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-change="generateName()" ng-model="Curriculum.@Aca_Curriculum.Property_ProgramId" ng-options="option.Id as option.ShortTitle for option in FilterProgramList" ng-init="" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Session <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input ng-change="generateName()" type="text" ng-model="Curriculum.@Aca_Curriculum.Property_Session" class="form-control" placeholder="Enter Session" maxlength="10" required="" />
+                                        </div>
+                                        <div class="col-sm-12 form-group">
+                                            <label>Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="text" ng-model="Curriculum.@Aca_Curriculum.Property_Name" class="form-control" placeholder="Enter Name" maxlength="128" required="" />
+                                        </div>
+                                        <div class="col-sm-8 form-group">
+                                            <label>Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="text" ng-model="Curriculum.@Aca_Curriculum.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Total Semesters <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input  type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalSemester" class="form-control" placeholder="Enter Total Semester" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Grading Policy <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="Curriculum.@Aca_Curriculum.Property_GradingPolicyId" ng-options="option.Id as option.Name for option in GradingPolicyList" ng-init="" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Total Credits <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalCredit" class="form-control" placeholder="Enter Total Credit" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Total Courses </label>
+                                            <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalCourse" class="form-control" placeholder="Enter Total Course" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Graduation Credits</label>
+                                            <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_CreditRequireForGraduation" class="form-control" placeholder="Enter Credit Require For Graduation" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Graduation Courses</label>
+                                            <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_CourseRequireForGraduation" class="form-control" placeholder="Enter Course Require For Graduation" />
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <input type="checkbox" ng-model="Curriculum.@Aca_Curriculum.Property_IsValid" /> Is Valid 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <input type="checkbox" ng-model="Curriculum.@Aca_Curriculum.Property_IsOffering" /> Is Offering 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 form-group">
+                                            <label>Description <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <textarea ng-model="Curriculum.@Aca_Curriculum.Property_Description" class="form-control" placeholder="Enter Description" required=""></textarea>
+                                        </div>
+
+                                    </div>
+                                    <div class="footer text-center">
+                                        <button ng-click="saveCurriculum()" class="btn btn-lg btn-success"><span  class="fa fa-save"></span> Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="CurriculumCourses" class="tab-pane">
+                <div class="widget-header">
+                    <span  class="widget-caption form-inline">
+                        <span  class="text-info">Select Curriculum </span>
+                        <select ng-model="SearchByCurriculumId" ng-change="searchCurriculumCourse()" ng-options="option.Id as option.ShortName for option in CurriculumList" class="form-control input-xs" required>
+                            <option value="" label="">---Select All Curriculum---</option>
+                        </select>
+                    </span>
+                    <div class="widget-buttons buttons-bordered">
+                        <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#copyCurriculumCoursesModal"><i class="fa fa-copy"></i> Copy From Other</button>
+                    </div>
+                    <div class="widget-buttons buttons-bordered">
+                        <button ng-click="getNewCurriculumCourse()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="widget-buttons buttons-bordered">
+                        <button ng-click="refreshCurriculumCourse()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="copyCurriculumCoursesModal" tabindex="-1" role="dialog" aria-labelledby="copyCurriculumCoursesModal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="copyCurriculumCoursesModalLabel">Import/Copy Courses from other Curriculum</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-inline">
+                                    <label>Select Curriculum </label>
+                                    <select ng-model="SearchByCurriculumId" ng-options="option.Id as option.ShortName for option in CurriculumList" class="form-control" required></select>
+                                </div>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead class="bordered-blue">
+                                        <tr>
+                                            <th class="text-center">
+                                                <input type="checkbox" ng-model="SelectAllImportCourses" ng-click="selectAllImportCourse()" class="form-control">
+                                                <label>Select All</label>
+                                            </th>
+                                            <th class="text-center">SN</th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Level Term</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in ImportCourseList" ng-click="selectImportCourse($index)" ng-class="{ 'active': $index == selectedImportCourseIndex }">
+                                            <td class="text-center">
+                                                <input type="checkbox" ng-model="row.Id" ng-click="selectImportCourse($index)" class="form-control">
+                                            </td>
+                                            <td class="text-center">{{$index+1}}</td>
+                                            <td class="text-center">{{row.Code}}</td>
+                                            <td>{{row.Name}}</td>
+                                            <td>{{row.StudyLevelTermId}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="no-print">
+                                        <tr>
+                                            <td colspan="5">
+                                                @OptionControl()
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                                <button type="button" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal End -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center">SN</th>
+                                    <th class="text-center">Course Code</th>
+                                    <th class="text-center">Course Name</th>
+                                    <th class="text-center">Level Term</th>
+                                    @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.CurriculumManager.CurriculumCourse.CanDelete))
+                                    {
+                                        <th class="text-center no-print">Action</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in CurriculumCourseList" ng-click="editCurriculumCourse($index)" ng-class="{ 'active': $index == selectedCurriculumCourseIndex }">
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="text-center">{{row.@Aca_CurriculumCourse.Property_Code}}</td>
+                                    <td>{{row.@Aca_CurriculumCourse.Property_Name}}</td>
+                                    <td class="text-center">{{row.LevelTermName}}</td>
+                                    @if (PermissionUtil.HasPermission(PermissionCollection.AcademicArea.CurriculumManager.CurriculumCourse.CanDelete))
+                                    {
+                                        <td class="text-center">
+                                            <button ng-click="@(deleteCurriculumCourseById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTabCourseDetails">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#CourseDetails">Course Details</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="CourseDetails" class="tab-pane in active">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>ID (Auto Generated) </label>
+                                            <input ng-disabled="true" type="text" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_Id" class="form-control" placeholder="Enter ID" required="" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Course Code <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="text" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_Code" class="form-control" placeholder="Enter Course Code" maxlength="128" required="" />
+                                        </div>
+                                        <div class="col-sm-12 form-group">
+                                            <label>Course Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <input type="text" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_Name" class="form-control" placeholder="Enter Course Name" maxlength="256" required="" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Short Name </label>
+                                            <input type="text" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_ShortName" class="form-control" placeholder="Enter Course Short Name" maxlength="256" required="" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label> Curriculum <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CurriculumId" ng-options="option.Id as option.ShortName for option in CurriculumList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-3 form-group">
+                                            <label>Credit Hours </label>
+                                            <input type="number" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CreditLoad" class="form-control" placeholder="Enter Credit Hours" />
+                                        </div>
+                                        <div class="col-sm-3 form-group">
+                                            <label>Contact Hours </label>
+                                            <input type="number" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CreditHour" class="form-control" placeholder="Enter Contact Hours" />
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label> Course Category <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CourseCategoryEnumId" ng-options="option.Id as option.Name for option in CourseCategoryEnumList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Level Term <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_StudyLevelTermId" ng-options="option.Id as option.Name for option in StudyLevelTermList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label> Credit Type  </label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CreditTypeEnumId" ng-options="option.Id as option.Name for option in CreditTypeEnumList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label> Course Status  </label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label> Course Type <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_CourseTypeEnumId" ng-options="option.Id as option.Name for option in CourseTypeEnumList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-8 form-group">
+                                            <label> Elective Group  </label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_ElectiveGroupId" ng-options="option.Id as option.Name for option in ElectiveGroupList" class="form-control" required>
+                                                <option value="">None</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Offered Department <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_OfferedByDepartmentId" ng-options="option.Id as option.Name for option in DepartmentList" class="form-control" required></select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <input type="checkbox" ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_IsDepartmental" /> Is Departmental
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 form-group">
+                                            <label>Description</label>
+                                            <textarea ng-model="CurriculumCourse.@Aca_CurriculumCourse.Property_Description" class="form-control" placeholder="Enter Course Description" required=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="footer text-center">
+                                        <button ng-click="saveCurriculumCourse()" class="btn btn-lg btn-success"><span  class="fa fa-save"></span> Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper  OptionControlCurriculumCourse()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline text-center">
+                <div class="form-group">
+                    <label ng-hide="totalCurriculumCourseServerItems==0">(Showing {{totalCurriculumCourseServerItems*(CurriculumCoursePageNo-1)+1}}-{{totalCurriculumCourseServerItems*CurriculumCoursePageNo}} of {{totalCurriculumCourseItems}})</label>
+                    <label ng-show="totalCurriculumCourseServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changeCurriculumCoursePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changeCurriculumCoursePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalCurriculumCourseItems/CurriculumCoursePageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,81 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Objects
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@*@model EMS.Framework.Objects.ReportHeaderFooterModel*@
+
+@{
+    ReportHeaderFooterModel ReportModel = ViewBag.ReportModel;
+
+    if (ReportModel == null)
+    {
+        ReportModel = new ReportHeaderFooterModel();
+    }
+
+    if (ReportModel.Title == "")
+    {
+        ReportModel.Title = ViewBag.Title;
+    }
+}
+<div>
+    <table class="" style="width: 100%">
+        <tbody>
+            <tr>
+                <td style="width: 70px" class="left-area">
+                    @(new HtmlString(ReportModel.HtmlLeftArea))
+                </td>
+                <td style="">
+                    <div class="margin-bottom-5" style="text-align: center">
+                        <div class="title-text-bold institute-name">@ReportModel.InstituteName</div>
+                        <div class="address">@ReportModel.InstituteAddress</div>
+                        <div class="text-bold report-title">
+                            @ReportModel.Title
+                        </div>
+                        <span class="report-subtitle"> @ReportModel.Subtitle</span>
+                        @if (ReportModel.Subtitle != "")
+                        {
+                            <div>
+                            </div>
+                        }
+                    </div>
+                </td>
+                <td style="width: 70px; text-align: right;" class="right-area">
+                    @(new HtmlString(ReportModel.HtmlRightArea))
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width: 100%;">
+        <tbody>
+            <tr style="">
+                <td style="text-align: left;">Printed at: @DateTime.Now.ToString("dd/MM/yyyy hh:mm tt ")</td>
+                <td>@ReportModel.ReportNo</td>
+                <td style="text-align: right;">Printed by: @HttpUtil.Profile.Name</td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="border-top: 1px solid black; margin-top: 5px;"></div>
+</div>
+
+
+<style>
+    .title-text-bold {
+        font-size: 13px !important;
+        font-weight: bold;
+    }
+
+    .institute-name {
+        font-size: 16px !important;
+    }
+
+    .address {
+         font-size: 14px !important;
+    }
+
+    .report-title {
+         font-size: 12px !important;
+    }
+
+    .report-subtitle {
+    }
+</style>

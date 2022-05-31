@@ -1,0 +1,902 @@
+﻿@model dynamic
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+@*@Html.Partial("_PartialUnderConstructionMessage")*@
+
+
+
+<div class="page-body">
+    <!-- widget on -->
+    
+
+    <style>
+        .bold {
+            font-weight: bold !important;
+        }
+
+        .new-widget-header {
+            position: relative;
+            min-height: 40px;
+            background: #fff;
+            box-shadow: 0 0 4px rgba(0,0,0,.3);
+            color: #555;
+            padding-left: 12px;
+            text-align: left;
+            border-color: #11a9cc !important;
+            border-bottom: 3px solid #fff;
+            height: 70px;
+        }
+
+        .new-widget-style {
+            color: deepskyblue;
+            font-weight: bold;
+            font-size: 25px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .f-12 {
+            font-size: 12px !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .pad-rit-35 {
+            padding-right: 35px;
+        }
+
+        .no-margin {
+            margin: 0px 0 !important;
+        }
+
+        .right-border {
+            border-right: 1px solid #eee !important;
+            width: 72px !important;
+        }
+
+        .stats-col {
+            border-right: none !important;
+        }
+
+        .bor-bot {
+            border-bottom: 1px solid #eee !important;
+        }
+
+        .well {
+            margin-bottom: 0px !important;
+            box-shadow: none !important;
+        }
+
+        .bordered-blue {
+            width: 355px;
+        }
+
+        .bordered-warning {
+            width: 355px;
+        }
+
+        .header {
+            /* padding: 0px !important; */
+        }
+
+        .newheader {
+            padding-left: 35px !important;
+        }
+
+        .nav-tabs.nav-justified > li {
+            display: table-cell;
+            width: 150px;
+        }
+
+        .tab-content {
+            padding: 0px 0px !important;
+        }
+
+        .table thead.bordered-palegreen > tr > th {
+            border-bottom: 2px solid #afafaf;
+        }
+    </style>
+
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-6 col-xs-12">
+            <div class="widget">
+                <div class="new-widget-header bordered-bottom bordered-sky">
+                    <span class="new-widget-style">Undergradute Admission Program - 2019</span>
+                </div>
+                <!--Widget Header-->
+                <div class="widget-body" style="height: auto !important;">
+
+                    <div class="profile-container">
+                        <div class="profile-header row">
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 profile-stats ">
+                                <div class="row">
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin no-margin">
+                                        <div class="stats-value f-12 right-border">284</div>
+                                        <div class="stats-title f-12 right-border">FOLLOWING</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">803</div>
+                                        <div class="stats-title f-12 right-border">FOLLOWERS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin text-center">
+                                        <div class="stats-value f-12 right-border pad-rit-35 ">1207</div>
+                                        <div class="stats-title f-12 right-border pad-rit-35">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin text-center">
+                                        <div class="stats-value f-12 right-border pad-rit-35">1207</div>
+                                        <div class="stats-title f-12 right-border pad-rit-35">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col no-margin">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                </div>
+
+                                <div class="row ">
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">284</div>
+                                        <div class="stats-title f-12 right-border">FOLLOWING</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">803</div>
+                                        <div class="stats-title f-12 right-border">FOLLOWERS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border pad-rit-35">1207</div>
+                                        <div class="stats-title f-12 right-border pad-rit-35">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border pad-rit-35">1207</div>
+                                        <div class="stats-title f-12 right-border pad-rit-35">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 stats-col inlinestats-col bor-bot">
+                                        <div class="stats-value f-12 right-border">1207</div>
+                                        <div class="stats-title f-12 right-border">POSTS</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="sparkline-preview">
+                                <div class="row">
+                                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-6 col-xs-12">
+                                                <div class="well with-header ">
+                                                    <div class="header bordered-blue text-center" style="font-size: 15px; padding-left: 50px !important;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="bordered-blue text-center" style="font-size: 15px; padding-top: 20px;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-lg-4 col-sm-6 col-xs-12">
+                                                <div class="well with-header ">
+                                                    <div class="header bordered-warning" style="text-align: center;font-size: 15px; padding-left: 50px !important;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="bordered-blue text-center" style="font-size: 15px; padding-top: 20px;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-6 col-xs-12">
+                                                <div class="well with-header ">
+                                                    <div class="header bordered-pink" style="text-align: center;font-size: 15px; padding-left: 70px !important;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="bordered-blue text-center" style="font-size: 15px; padding-top: 20px;">
+                                                        <span> Admission Submission</span> </br>
+                                                        <span style="font-weight:bold;"> 20/09/2016</span>
+                                                        <span style="font-weight:bold;">
+                                                            12:00:00
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="widget" style="margin-left: 14px; margin-right: 13px; margin-top: 20px;">
+                            <div class="widget-header bg-blue">
+                                <i class="widget-icon fa fa-arrow-down"></i>
+                                <span class="widget-caption">Department Wise Admission</span>
+                                <div class="widget-buttons">
+                                    <a href="#" data-toggle="config">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                    <a href="#" data-toggle="maximize">
+                                        <i class="fa fa-expand"></i>
+                                    </a>
+                                    <a href="#" data-toggle="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </a>
+                                    <a href="#" data-toggle="dispose">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                                <!--Widget Buttons-->
+                            </div>
+                            <!--Widget Header-->
+                            <div class="widget-body" style="padding:0px !important;">
+                                <div class="well" style="padding:0px !important;">
+                                    <div class="tabbable">
+                                        <ul class="nav nav-tabs nav-justified" id="myTab10">
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#home10">
+                                                    Details By Date
+                                                </a>
+                                            </li>
+
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#profile10">
+                                                    Dept. Summary
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#profile10">
+                                                    Admited By Date
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#profile10">
+                                                    PreRegistration
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div id="home10" class="tab-pane in active">
+
+                                                <div class="flip-scroll" style="margin-top: 6px !important;">
+                                                    <table class="table table-bordered table-striped table-condensed flip-content">
+                                                        <thead class="flip-content bordered-palegreen">
+                                                            <tr style="background-image:linear-gradient(to bottom,#bfd3e6 0,#fafafa 100%); ">
+                                                                <th style=" width 100px;">
+                                                                    Date
+                                                                </th>
+                                                                <th>
+                                                                    CE
+                                                                </th>
+                                                                <th>
+                                                                    EEE
+                                                                </th>
+                                                                <th>
+                                                                    TE
+                                                                </th>
+                                                                <th>
+                                                                    CSE
+                                                                </th>
+                                                                <th>
+                                                                    BBA
+                                                                </th>
+                                                                <th>
+                                                                    MBA
+                                                                </th>
+                                                                <th>
+                                                                    LAW
+                                                                </th>
+                                                                <th>
+                                                                    ENG
+                                                                </th>
+                                                                <th>
+                                                                    THM
+                                                                </th>
+                                                                <th>
+                                                                    ECO
+                                                                </th>
+                                                                <th>
+                                                                    MIPE
+                                                                </th>
+                                                                <th style="text-align: center; width: 100px;">
+                                                                    Total
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    10/02/2019
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td style="text-align:center;">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    11/02/2019
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td style="text-align:center;">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    12/02/2019
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td style="text-align:center;">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    13/02/2019
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td>
+                                                                    10
+                                                                </td>
+                                                                <td style="text-align:center;">
+                                                                    10
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div id="profile10" class="tab-pane">
+
+
+
+                                                <div class="flip-scroll" style="margin-top: 6px !important;">
+                                                    <table class="table table-striped table-bordered table-hover"
+                                                           style=" width 440px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="background-image: linear-gradient(to bottom,#bfd3e6 0,#fafafa 100%);">
+                                                                    <i class="fa fa-briefcase"></i>
+                                                                    Department
+                                                                </th>
+                                                                <th class="hidden-xs" style="background-image: linear-gradient(to bottom,#bfd3e6 0,#fafafa 100%);">
+                                                                    <i class="fa fa-user"></i> Admited
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc Civil Eng. (Regular)
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc Civil Eng. (Diploma Holders)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc EEE (Regular)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc EEE (Diploma Holders)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc Textile Eng. (Regular)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc Textile Eng.(Diploma Holders)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc CSE (Regular)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    B.Sc CSE (Diploma Holders)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    BBA (4 Years)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    MBA (2 Years)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    MBA (BBA Graduate)
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    EMBA
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    LLB (Hons) 4 Years
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    LLM (1 Year)
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    BA (Hons) in English
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MA in English (2 Years)
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MA in English (1 Year)
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    Tourism & Hospitality Mgt.
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    BSS (Hons. in Economics)
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MSS in Economics (2 year)
+
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MSS in Economics (1 year)
+
+
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MGDS (1 year)
+
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    B.Sc in MIPE
+
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    MBA in Engineering Management
+
+
+
+                                                                </td>
+                                                                <td class="hidden-xs">
+                                                                    10
+                                                                </td>
+
+                                                            </tr>
+
+
+
+
+                                                            <tr style="font-weight:bold; ">
+                                                                <td style="text-align:right;">
+                                                                    Total
+                                                                </td>
+                                                                <td>
+                                                                    1222
+                                                                </td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div id="dropdown10" class="tab-pane">
+                                                <p>
+                                                    Etsy mixtape wayfarers, ethical wes anderson tofu
+                                                    before they sold out mcsweeney's organic lomo retro
+                                                    fanny pack lo-fi farm-to-table readymade.
+                                                </p>
+                                            </div>
+
+                                            <div id="dropdown20" class="tab-pane">
+                                                <p>
+                                                    Trust fund seitan letterpress, keytar raw denim
+                                                    keffiyeh etsy art party before they sold out master
+                                                    cleanse gluten-free squid scenester freegan cosby
+                                                    sweater. Fanny pack portland seitan DIY, art party
+                                                    locavore wolf cliche high life echo park Austin.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Widget Body-->
+                        </div>
+
+                    </div>
+                    <!--Widget table-->
+
+
+
+
+
+
+
+                </div>
+
+
+                <!--Widget Body-->
+            </div>
+            <!--Widget-->
+        </div>
+    </div>
+
+    <!-- widget off -->
+
+
+</div>

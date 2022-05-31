@@ -1,0 +1,89 @@
+﻿
+
+
+
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Facade.BasicAccountingArea;
+@using EMS.DataAccess;
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+
+
+@model EMS.Framework.Objects.MvcModelResult<ReportController.DayBookModel>
+
+@{
+    ViewBag.Title = "Receipt Payment Manager";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+    //WebApi link
+    var getReceiptPaymentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ReceiptPaymentApi", action = "GetReceiptPaymentDataExtra", area = "BasicAccounting" });
+
+    var receiptPaymentPrintUrl = Url.Action("ReceiptPaymentPrint", "Report", new { area = "BasicAccounting" });
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Report/ReceiptPaymentManager.js"></script>
+
+}
+
+<div ng-controller="ReceiptPaymentCtrl" ng-init="Init(
+     '@getReceiptPaymentDataExtraUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b>Receipt Payment Manager </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered" style="width: 500px">
+                        <tbody>
+                            <tr>
+                                <td style="width: 95px;">
+                                    Select Branch:
+                                </td>
+                                <td colspan="3" style="width: 160px;">
+                                    <select ng-model="BranchId" ng-change="onChangeFilter()"
+                                            ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                                        <option value="" label="" class="">---Select All Branch---</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 72px;">Start Date:</td>
+                                <td style="width: 105px">
+                                    <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                                </td>
+                                <td style="width: 66px;">End Date:</td>
+                                <td style="width: 105px">
+                                    <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                                </td>
+                            </tr>
+                        <tr>
+                                <td colspan="4" style="padding-left: 5px; text-align: center;">
+                                    <a class="btn btn-info btn-xs" target="_blank" href="@receiptPaymentPrintUrl?branchId={{BranchId}}&startDate={{StartDate|date:'dd-MM-yyyy'}}&endDate={{EndDate|date:'dd-MM-yyyy'}}"> Print Report </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .IncludeParameter input {
+        vertical-align: middle;
+    }
+</style>
+
+
+
+
+
+
+

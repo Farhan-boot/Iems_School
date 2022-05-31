@@ -1,0 +1,741 @@
+﻿<!--File:Aca_Class List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Offered Course (Class) List";
+    //Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademicReport.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+
+    var semesterId = Request.QueryString["semesterId"] == null ? "0" : Request.QueryString["semesterId"];
+    var programId = Request.QueryString["programId"] == null ? "0" : Request.QueryString["programId"];
+    var levelTermId = Request.QueryString["levelTermId"] == null ? "-1" : Request.QueryString["levelTermId"];
+    var studentBatchId = Request.QueryString["studentBatchId"] == null ? "-1" : Request.QueryString["studentBatchId"];
+
+    var msg = Request.QueryString["msg"] == null ? "false" : Request.QueryString["msg"];
+
+    //WebApi link for single row
+    var getClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassById", area = "Academic" });
+    var getClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassDataExtra", area = "Academic" });
+    var saveClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClass", area = "Academic" });
+    var deleteClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetDeleteClassById", area = "Academic" });
+    var deleteForceClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetDeleteForceClassById", area = "Academic" });
+    var getTrashUnTrashClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetTrashUnTrashClassById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetPagedClass", area = "Academic" });
+    var getAllClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetAllClass", area = "Academic" });
+    var saveClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClassList", area = "Academic" });
+    var getClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetClassListDataExtra", area = "Academic" });
+    var getOfferAnotherSectionByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetOfferAnotherSectionByClassId", area = "Academic" });
+    var getOfferedFromPreviousSemesterUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "GetOfferedFromPreviousSemester", area = "Academic" });
+
+
+    var editClassByIdPageUrl = Url.Action("ClassAddEdit", "ClassManager", new { area = "Academic" });
+    var addBulkClassUrl = Url.Action("BulkCourseOfferingManger", "ClassManager", new { area = "Academic" });
+    var printAllAttendanceByClassIdPageUrl = Url.Action("PrintAllAttendance", "ClassManager", new { area = "Academic" });
+    var classTestMarksByClassIdPageUrl = Url.Action("ClassTestMarks", "ClassManager", new { area = "Academic" });
+
+    var getGenerateClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+    var printOnlyFinalGradeSheetUrl = Url.Action("PrintOnlyFinalGradeSheet", "ClassManagement", new { area = "Employee" });
+    var print30PercentTheoryExamMarkUrl = Url.Action("Print30PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+
+    var getTeacherUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ClassApi", action = "GetTeacherList", area = "Academic"});
+    var saveClassTeacherUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassApi", action = "SaveClassTeacherList", area = "Academic" });
+
+    var canForceDelete = PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.OfferedClass.CanForceDelete);
+    var canTrashUnTrash = PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.OfferedClass.CanTrashUnTrash);
+
+
+    //Angular Function Name
+    var getNewClass = "getNewClass";
+    var saveClass = "saveClass";
+    var deleteClassById = "deleteClassById";
+    var deleteForceClassById = "deleteForceClassById";
+    var deleteClassByObj = "deleteClassByObj";
+    var getOfferedFromPreviousSemesterModal = "getOfferedFromPreviousSemesterModal";
+
+    //for list
+    var searchClassList = "searchClassList";
+    var getPagedClassList = "getPagedClassList";
+    var getAllClassList = "getAllClassList";
+    var saveClassList = "saveClassList";
+    var getClassListExtraData = "getClassListExtraData";
+    var getOfferAnotherSectionModal = "getOfferAnotherSectionModal";
+
+
+    var refreshPage = "searchClassList()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ClassManager/ClassList.js?v=11"></script>
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+            collapseSidebar();
+        });
+    </script>
+}
+
+
+<div ng-controller="ClassListCtrl"
+     ng-init="Init(
+    '@semesterId'
+    ,'@programId'
+    ,'@levelTermId'
+    ,'@studentBatchId'
+    ,'@msg'
+      ,'@getPagedClassUrl'
+     ,'@deleteClassByIdUrl'
+     ,'@deleteForceClassByIdUrl'
+     ,'@getClassListDataExtraUrl'
+     ,'@saveClassListUrl'
+     ,'@getClassByIdUrl'
+     ,'@getClassDataExtraUrl'
+     ,'@saveClassUrl'
+    ,'@getOfferAnotherSectionByClassIdUrl'
+    ,'@getOfferedFromPreviousSemesterUrl'
+    ,'@getTeacherUrl'
+    ,'@saveClassTeacherUrl'
+    ,'@getTrashUnTrashClassByIdUrl'
+     )">
+    @section ReportHeaderSection
+{
+        @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+    }
+
+    <div class="widget">
+        <div class="text-center show-on-print">
+            <div><span class="text-bold">Program:</span> {{SelectedProgramName}}</div>
+            <div><span class="text-bold">Semester:</span> {{SelectedSemesterName}}</div>
+            <div><span class="text-bold">Category:</span> {{CourseListCategory}}</div>
+        </div>
+
+        <div class="widget-header bordered-bottom bordered-sky hide-on-print">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Class </span>
+
+            @*<div class="widget-buttons buttons-bordered no-padding-right">
+                    <span class="widget-caption form-inline">
+                        <span >Select Curriculum Course</span>
+                        <select ng-model="SelectedDurationEnumId"
+                                ng-options="option.Id as option.Name for option in SemesterDurationEnumList " ng-init="" class="form-control input-xs ">
+                            <option value="" label="" class="">---Any Duration---</option>
+                        </select>
+                    </span>
+                </div>*@
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    @*<span >Select Curriculum Course</span>*@
+                    <select ng-model="SelectedProgramId" ng-change="programFilter()"
+                            ng-options="option.Id as option.ShortName for option in ProgramList" ng-init="" class="form-control input-xs ">
+                    </select>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <select ng-model="SelectedSemesterId" ng-change="semesterFilter()"
+                            ng-options="option.Id as option.Name for option in SemesterList | filter:{SemesterDurationEnumId:selectedProgram.SemesterDurationEnumId}" ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Semester---</option>
+                    </select>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+
+                    @* | filter:{SemesterDurationEnumId:selectedProgram.SemesterDurationEnumId} *@
+                    <select ng-model="SelectedStudyLevelTermId" ng-change="levelTermChange()"
+                            ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Level Term---</option>
+                    </select>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <select ng-model="SelectedDeptBatchId" ng-change="deptBatchChange()" class="form-control input-xs ">
+                        <option value="-1">---Select All Continuing Batch---</option>
+                        <option value="0" style="color: red">---Undefined---</option>
+                        <option ng-repeat="option in DeptBatchList" ng-value="option.Id">{{option.Name}}</option>
+                    </select>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right  hidden">
+                <span class="widget-caption form-inline">
+                    @*<span >Select Curriculum Course</span>*@
+                    <select ng-model="SelectedDepartmentId" @*ng-change="@(searchClassList)()"*@
+                            ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control input-xs "></select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right hidden">
+                <span class="widget-caption form-inline">
+
+                    <select ng-model="SelectedSemesterId" @*ng-change="@(searchClassList)()"*@
+                            ng-options="option.Id as option.Name for option in SemesterLevelTermList " ng-init="" class="form-control input-xs ">
+                        @*<option value="" label="" class="">---Select All Semester---</option>*@
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right hidden">
+                <span class="widget-caption form-inline">
+                    @*<span >Select Campus</span>*@
+                    <select ng-model="SelectedCampusId" @*ng-change="@(searchClassList)()"*@
+                            ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Campus---</option>
+                    </select>
+                </span>
+            </div>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchClassList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search by code" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <button ng-click="@(searchClassList)()" class="btn btn-success btn-xs"><i class="fa fa-refresh"></i>Load Classes</button>
+                <a target="_blank" href="@editClassByIdPageUrl?id=0&SemesterId={{SelectedSemesterId}}&ProgramId={{SelectedProgramId}}&LevelTermId={{SelectedStudyLevelTermId}}&BatchId={{SelectedDeptBatchId}}" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Offer New</a>
+                <a target="_blank" href="@addBulkClassUrl?semesterId={{SelectedSemesterId}}&programId={{SelectedProgramId}}&levelTermId={{SelectedStudyLevelTermId}}&BatchId={{SelectedDeptBatchId}}" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Offer Bulk Classes</a>
+                <div class="btn-group">
+                    <a class="btn btn-info btn-xs" href="#">Action</a>
+                    <a class="btn btn-blue btn-xs dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                    
+                    <ul class="dropdown-menu dropdown-blue pull-left">
+                        <li>
+                            <a href="" ng-click="@(getOfferedFromPreviousSemesterModal)()"><i class="fa fa-plus"></i>Offer From Previous Semester</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <div class="widget-body no-padding" style="">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div class="tabbable">
+            <ul class="nav nav-tabs hide-on-print">
+                <li class="tab-danger active">
+                    <a data-toggle="tab" href="#AllCourses" ng-click="onChangeCourseListCategory('All Courses')" aria-expanded="true">
+                        All Courses <span class="badge badge-success">{{ClassList.length}}</span>
+                    </a>
+                </li>
+                <li class="tab-blue">
+                    <a data-toggle="tab" href="#AssignFaculty" aria-expanded="true">
+                        Assign Faculty <span class="badge badge-success">{{ClassList.length}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content no-padding OfferedCourse">
+
+
+                <div class="tab-pane active" id="AllCourses">
+                    <div class="table-footer no-print">
+                        @OptionControl(refreshPage)
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center" style="display: none">
+                                <input type="checkbox" ng-click="selectAll($event)">
+                            </th>
+                            <th class="text-center" style="width: 31px;">Ser</th>
+                            <th class="text-center">Offered Courses</th>
+                            <th class="text-center">Faculty</th>
+                            <th class="text-center">Class Routine</th>
+                            <th class="text-center no-print" style="width: 140px;">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in ClassList">
+                            <td class="text-center" style="display: none">
+                                <input type="checkbox" ng-model="row.@Aca_Class.Property_IsSelected"/>
+                            </td>
+                            <td class="text-center" style="vertical-align: middle;">{{$index+1}}</td>
+                            <td class="">
+                                <strong>{{row.@Aca_Class.Property_Code}} {{row.@Aca_Class.Property_Name}}</strong><br/>
+                                @*Class No: {{row.@Aca_Class.Property_ClassNo}}, Class Section: {{row.ClassSectionName}}*@ {{row.LevelTerm}}, Status: {{row.@Aca_Class.Property_Status}}, Students: {{row.TotalStudent}}/{{row.@Aca_Class.Property_RegularCapacity}}<br/>
+                                <em>
+                                    {{row.CurriculumShortName}}, Cr: {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditLoad|number:2}}, @*Co.Hr: {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditHour|number:2}},*@
+                                    {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseCategory}}@*, {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseType}}*@<span ng-show="row.@Aca_Class.Property_StudentBatchId!=null">, Batch-{{row.@Aca_Class.Property_StudentBatchId}}</span>
+                                </em>
+                            </td>
+                            <td class="">
+                                <ol class="no-margin" ng-show="row.TotalFaculty>0" style="-webkit-padding-start: 20px;">
+                                    <li ng-repeat="faculty in row.Aca_ClassTakenByEmployeeJsonList">
+                                        <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{faculty.@User_Employee.Property_UserId}}&empId={{faculty.EmployeeId}}#Classes" target="_blank" title="click to view profile"> {{faculty.FullName}}</a>
+                                        @*<a href="@Url.Action("EmployeeAddEdit", "Employee", new {area = "HR"})?id={{faculty.EmployeeId}}" target="_blank" title="click to view profile"> {{faculty.FullName}}</a>*@
+                                    </li>
+                                </ol>
+                                <span class="badge badge-danger graded" ng-hide="row.TotalFaculty>0">Faculty is not allotted</span>
+                            </td>
+                            <td class="text-center">
+                                <ul class="no-margin list-unstyled" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                    <li ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                        <strong>{{cr.RoutineDetails}}</strong><br/>
+                                        <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null">{{cr.General_RoomJson.RoomDetails}}</em>
+                                        <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null">N/A</em>
+                                    </li>
+                                </ul>
+                                <span class="badge badge-danger graded" ng-hide="row.Aca_ClassRoutineJsonList.length>0">Not Available</span>
+                            </td>
+                            <td class="text-center no-print" style="vertical-align: middle;">
+
+                                <a target="_blank" ng-show="!isShowTrashedClass" href="@(editClassByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                                @if (canTrashUnTrash)
+                                {
+                                    <button ng-click="getTrashUnTrashClassById(row,true)" ng-show="!isShowTrashedClass" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <button ng-click="getTrashUnTrashClassById(row,false)" ng-show="isShowTrashedClass" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-undo"></i>
+                                    </button>
+                                }
+                                
+                                @if (canForceDelete)
+                                {
+                                    <button ng-click="@(deleteForceClassById)(row)" ng-show="isShowTrashedClass" class="btn btn-xs btn-danger">
+                                        Delete Force
+                                    </button>
+                                }
+                                <button style="margin: 3px" ng-click="openClassHistory(row.@Aca_Class.Property_History)" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> </button>
+
+                                <div class="widget-buttons" ng-show="!isShowTrashedClass">
+                                    <div class="btn-group">
+                                        <a class="btn btn-blue btn-sm " href="#">Action</a>
+                                        <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                        <ul class="dropdown-menu dropdown-blue pull-left">
+                                            <li>
+                                                <a target="_blank" href="@(print30PercentTheoryExamMarkUrl)/?classId={{row.Id}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> All Continuous Assessment</a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank" href="@getGenerateClassResult/?classId={{row.Id}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> Full Final Grade Sheet</a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank" href="@printOnlyFinalGradeSheetUrl/?classId={{row.Id}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> Only Term-Final Grade Sheet</a>
+                                            </li>
+
+                                            <li>
+                                                <a target="_blank" href="@(printAllAttendanceByClassIdPageUrl)/?classId={{row.Id}}"><i class="fa fa-eye"></i> Student Online Attendances</a>
+
+                                            </li>
+                                            <li>
+                                                @*<a target="_blank" href="@(printAllAttendanceByClassIdPageUrl)/?classId={{row.Id}}"><i class="fa fa-eye"></i> Student Attendances</a>*@
+                                                <a target="_blank" href="@Url.Action("PrintManualAttendanceSheet", "ClassAttendanceManager", new {area = "Employee"})?classId={{row.Id}}"><i class="fa fa-print"></i> Print Attendance Sheet</a>
+                                            </li>
+                                            @*<li>
+                                                            <a target="_blank" href="@(classTestMarksByClassIdPageUrl)/?classId={{row.Id}}" ><i class="fa fa-eye"></i> CT Marks</a>
+                                                        </li>*@
+
+                                            <li>
+                                                <a ng-click="@getOfferAnotherSectionModal (row.Id)"><i class="fa fa-cogs"></i> Offer Another Section</a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="@(deleteClassById)(row)" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControl(refreshPage)
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="AssignFaculty">
+                    <div class="table-footer no-print">
+                        @OptionControl(refreshPage)
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center" style="display: none">
+                                <input type="checkbox" ng-click="selectAll($event)">
+                            </th>
+                            <th class="text-center" style="width: 31px;">Ser</th>
+                            <th class="text-center">Offered Courses</th>
+                            <th class="text-center">Faculty</th>
+                            <th class="text-center no-print" style="width: 140px;">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in ClassList">
+                            <td class="text-center" style="display: none">
+                                <input type="checkbox" ng-model="row.@Aca_Class.Property_IsSelected"/>
+                            </td>
+                            <td class="text-center" style="vertical-align: middle;">{{$index+1}}</td>
+                            <td class="">
+                                <a target="_blank" href="@(editClassByIdPageUrl)/?id={{row.Id}}"><strong>{{row.@Aca_Class.Property_Code}} {{row.@Aca_Class.Property_Name}}</strong></a><br/>
+                                @*Class No: {{row.@Aca_Class.Property_ClassNo}}, Class Section: {{row.ClassSectionName}}*@ {{row.LevelTerm}}, Status: {{row.@Aca_Class.Property_Status}}, Students: {{row.TotalStudent}}/{{row.@Aca_Class.Property_RegularCapacity}}<br/>
+                                <em>
+                                    {{row.CurriculumShortName}}, Cr : {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditLoad|number:2}}, @*Co.Hr: {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditHour|number:2}},*@
+                                    {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseCategory}}@*, {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseType}}*@<span ng-show="row.@Aca_Class.Property_StudentBatchId!=null">, Batch-{{row.@Aca_Class.Property_StudentBatchId}}</span>
+                                </em>
+                            </td>
+                            <td class="">
+                                <ol class="no-margin" ng-show="row.TotalFaculty>0" style="-webkit-padding-start: 20px;">
+                                    <li ng-repeat="faculty in row.Aca_ClassTakenByEmployeeJsonList">
+                                        <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{faculty.@User_Employee.Property_UserId}}&empId={{faculty.EmployeeId}}#Classes" target="_blank" title="click to view profile"> {{faculty.FullName}}</a>
+                                        @*<a href="@Url.Action("EmployeeAddEdit", "Employee", new {area = "HR"})?id={{faculty.EmployeeId}}" target="_blank" title="click to view profile"> {{faculty.FullName}}</a>*@
+                                    </li>
+                                </ol>
+                                <span class="badge badge-danger graded" ng-hide="row.TotalFaculty>0">Faculty is not allotted</span>
+                            </td>
+                            <td class="text-center no-print" style="vertical-align: middle;">
+                                <button ng-click="searchTeachers(@((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty),row.@Aca_Class.Property_Id)"
+                                        type="button" class="btn btn-xs btn-success"
+                                        data-toggle="modal" data-target="#addCourseTeachersModal">
+                                    <i class="fa fa-user-plus"></i> Add New Faculty
+                                </button>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControl(refreshPage)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    @section ReportFooterSection
+{
+        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+    }
+
+    <!--Offer Another Section Modal -->
+    <div class="modal fade" id="OfferAnotherSectionModal" tabindex="-1" role="dialog" aria-labelledby="OfferAnotherSectionModal">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">Offer Another Section</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Number Of Section
+                                            <span style="font-size: 9px;">(Max 10)</span>
+                                        </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="NumberOfSection" class="form-control" placeholder="Enter Number of Section" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Number of Section." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button ng-click="getOfferAnotherSectionByClassId ()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Create Class Section (s)</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Offer Another Section Modal End -->
+    <!--Class Offered From Previous Semester Modal -->
+    <div class="modal fade" id="OfferedFromPreviousSemesterModal" tabindex="-1" role="dialog" aria-labelledby="OfferedFromPreviousSemesterModal">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">Offer From Previous Semester</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Source Semester
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="SourceSemesterId"
+                                                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                                                <option value="" label="" class="">---Select Source Semester---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Source Semester." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Destination Semester
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="DestinationSemesterId"
+                                                    ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                                                <option value="" label="" class="">---Select Destination Semester---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Destination Semester." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Program
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="SelectedProgramId"
+                                                    ng-options="option.Id as option.ShortName for option in ProgramList " ng-init="" class="form-control input-xs "></select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button ng-click="getOfferedFromPreviousSemester ()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Create Class Section (s)</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Class Offered From Previous Semester Modal End -->
+    <!-- Add Course Teacher Modal -->
+    <div class="modal fade" id="addCourseTeachersModal" tabindex="-1" role="dialog" aria-labelledby="addCourseTeachersModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addCourseTeachersModalLabel">Add Faculty in this Course</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-inline">
+                        <span class="text-info">Select : </span>
+                        <span>Department </span>
+                        <div class="widget-buttons no-padding-left form-inline">
+                            <select ng-change="getTeacherList(@((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty))" ng-model="SearchTeachersByDepartmentId" ng-options="option.Id as option.Name group by option.Type  for option in AllDepartmentList" class="form-control input-xs">
+                                <option value="">---Select Department---</option>
+                            </select>
+                        </div>
+                        <select ng-change="getTeacherList(@((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty))" ng-model="SearchTeachersByDepartmentId" ng-options="option.Id as option.Name for option in AllDepartmentList" class="form-control input-xs" required>
+                            <option value="">---Select Department---</option>
+                        </select>
+                        @*<select ng-model="SearchTeacherCampusId"
+                            ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs" style="width: 105px;"></select>*@
+
+                        <button ng-click="getTeacherList(@((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty))" class="btn btn-xs btn-primary"><i class="fa fa-search"></i> Search</button>
+                        <button type="button"
+                                ng-click="addClassTeachers(
+                                                    @((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty),
+                                                    @((byte) Aca_ClassTakenByEmployee.SectionEnum.BothSection),
+                                                    @((byte) Aca_ClassTakenByEmployee.StatusEnum.Active)
+                                                    )"
+                                class="btn btn-xs btn-success pull-right">
+                            <i class="fa fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div class="form-group no-margin">
+                        <div class="input-icon icon-right input-group-xs">
+                            <input ng-model="searchAddFaculty" class="form-control input-xs" id="searchAddFaculty" type="text" placeholder="type to search from below list" autocomplete="on">
+                            <i class="white fa fa-times bg-purple" ng-click="searchAddFaculty='';"></i>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center">
+                                    @*<input type="checkbox" ng-model="SelectAllTeachers" ng-change="selectAllTeachers()" class="form-control">*@
+                                </th>
+                                <th class="text-center">SN</th>
+                                <th class="text-center">User ID</th>
+                                <th class="text-center">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in TeacherList|filter:searchAddFaculty" ng-class="{ 'success': row.IsAlreadyAdded }">
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           ng-hide="row.IsAlreadyAdded"
+                                           ng-disabled="row.IsAlreadyAdded"
+                                           ng-model="row.IsSelected"
+                                           ng-change="selectTeacher(row)"
+                                           class="form-control">
+                                </td>
+                                <td class="text-center">{{$index+1}}</td>
+                                <td>{{row.UserName}}</td>
+                                <td>
+                                    <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{row.@User_Employee.Property_UserId}}&empId={{row.@User_Employee.Property_Id}}#Classes" target="_blank" title="click to view profile"> {{row.FullName}}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button type="button"
+                            ng-click="addClassTeachers(
+                                                @((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty),
+                                                @((byte) Aca_ClassTakenByEmployee.SectionEnum.BothSection),
+                                                @((byte) Aca_ClassTakenByEmployee.StatusEnum.Active)
+                                                )"
+                            class="btn btn-success">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Add Course Teacher Modal End -->
+    
+<!--History Modal Start-->
+<div class="modal fade" id="classHistoryModal" tabindex="-1" role="dialog" aria-labelledby="classHistoryModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="classHistoryModalLabel"> History</h4>
+            </div>
+            <div class="modal-body">
+                <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                    <div class="row">
+                        <div class="col-md-12 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td style="text-align: left;padding: 5px !important;" ng-bind-html="renderHtml(ClassHistoryMsg)"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning text-center" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--History Modal End-->
+
+</div>
+
+@helper  OptionControl(string refreshPage)
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                    <label style="margin-left: 30px;">
+                        <input ng-model="isShowTrashedClass"
+                               ng-change="getClassList()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                        <span style="color: #e74b37;">Show Deleted Class Only</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+@helper  OptionControlOthers()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerOthersItems==0">Showing {{totalServerOthersItems*(OthersPageNo-1)+1}} to {{totalServerOthersItems*OthersPageNo}} of {{totalOthersItems}} </label>
+                    <label ng-show="totalServerOthersItems==0" class="text-danger">No Data Found!</label>
+                    <label style="margin-left: 30px;">
+                        <input ng-model="isShowTrashedClass"
+                               ng-change="getClassList()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                        <span style="color: #e74b37;">Show Deleted Class Only</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="OthersPageSize" ng-enter="changeOthersPageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="OthersPageNo" ng-enter="changeOthersPageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalOthersItems/OthersPageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prevOthers()" ng-hide="totalOthersItems == 0 || OthersPageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="nextOthers()" ng-hide="totalOthersItems == 0 || OthersPageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section StyleSection
+{
+    <style>
+        .report-container tbody tr {
+            font-size: 13px;
+        }
+
+        .show-on-print {
+            display: none;
+        }
+
+        @@media print {
+            .show-on-print {
+                display: block;
+            }
+        }
+    </style>
+
+}

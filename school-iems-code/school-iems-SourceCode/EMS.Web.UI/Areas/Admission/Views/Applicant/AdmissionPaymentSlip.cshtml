@@ -1,0 +1,8 @@
+﻿@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+
+@{
+    ViewBag.Title="Admission Payment Slip";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+}
+@Html.Partial("~/Areas/Admission/Views/Applicant/Print/_AdmissionPaymentSlip.cshtml", Model)

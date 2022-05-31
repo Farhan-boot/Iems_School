@@ -1,0 +1,153 @@
+﻿
+<!--File:HR_SalaryTemplateDetails Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Salary Template Details";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var SalaryTemplateDetailsId = (string) id == null?"0":(string)id;
+    
+    //HR_SalaryTemplateDetails WebApi Single Row link   
+    var getSalaryTemplateDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "GetSalaryTemplateDetailsById", area = "HR" });
+    var getSalaryTemplateDetailsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "GetSalaryTemplateDetailsDataExtra", area = "HR" });
+    var saveSalaryTemplateDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "SaveSalaryTemplateDetails", area = "HR" });
+    var deleteSalaryTemplateDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "GetDeleteSalaryTemplateDetailsById", area = "HR" });
+
+    //HR_SalaryTemplateDetails WebApi List link 
+    var getPagedSalaryTemplateDetailsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "SalaryTemplateDetailsApi", action = "GetPagedSalaryTemplateDetails", area = "HR"});
+    var getAllSalaryTemplateDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "GetAllSalaryTemplateDetails", area = "HR" });
+    var saveSalaryTemplateDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "SaveSalaryTemplateDetailsList", area = "HR" });
+    var getSalaryTemplateDetailsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalaryTemplateDetailsApi", action = "GetSalaryTemplateDetailsListDataExtra", area = "HR" });
+
+    var editSalaryTemplateDetailsByIdPageUrl = Url.Action("SalaryTemplateDetailsAddEdit", "SalaryTemplateDetails", new { area = "HR" });
+    var listSalaryTemplateDetailsPageUrl = Url.Action("SalaryTemplateDetailsList", "SalaryTemplateDetails", new { area = "HR" });
+    
+    //HR_SalaryTemplateDetails Angular Functions
+    string getSalaryTemplateDetailsById="getSalaryTemplateDetailsById";
+    var saveSalaryTemplateDetails = "saveSalaryTemplateDetails";
+    var getNewSalaryTemplateDetails = "getNewSalaryTemplateDetails";
+    var refreshPage = "loadPage()";
+    string deleteSalaryTemplateDetailsById="deleteSalaryTemplateDetailsById";
+    string loadSalaryTemplateDetailsExtraData="loadSalaryTemplateDetailsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/SalaryTemplateDetails/SalaryTemplateDetailsAddEdit.js"></script>
+}
+
+<div id="SalaryTemplateDetailsAddEdit" class="row" ng-controller="SalaryTemplateDetailsAddEditCtrl" ng-init="Init(
+      '@SalaryTemplateDetailsId'
+      ,'@getSalaryTemplateDetailsByIdUrl'
+      ,'@getSalaryTemplateDetailsDataExtraUrl'
+      ,'@saveSalaryTemplateDetailsUrl'
+      ,'@deleteSalaryTemplateDetailsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="SalaryTemplateDetailsId" ng-Enter="@(getSalaryTemplateDetailsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewSalaryTemplateDetails)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listSalaryTemplateDetailsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Salary Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_SalaryTypeEnumId" ng-options="option.Id as option.Name for option in SalaryTypeEnumList" title="Select Salary Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Salary Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Category Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_CategoryTypeEnumId" ng-options="option.Id as option.Name for option in CategoryTypeEnumList" title="Select Category Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Category Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                   
+                         <tr>
+                            <td class="fieldlabel">Salary Template Details </td>
+                            <td class="fieldarea">
+                                <select ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_ParentId"
+                                        ng-options="option.Id as option.Name for option in SalaryTemplateDetailsList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Salary Template Details." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Salary Template </td>
+                            <td class="fieldarea">
+                                <select ng-model="SalaryTemplateDetails.@HR_SalaryTemplateDetails.Property_SalaryTemplateId"
+                                        ng-options="option.Id as option.Name for option in SalaryTemplateList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Salary Template." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveSalaryTemplateDetails)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

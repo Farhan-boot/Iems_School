@@ -1,0 +1,150 @@
+﻿
+<!--File:Inv_PurchaseRequisition Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Purchase Requisition";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var PurchaseRequisitionId = (string) id == null?"0":(string)id;
+    
+    //Inv_PurchaseRequisition WebApi Single Row link   
+    var getPurchaseRequisitionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "GetPurchaseRequisitionById", area = "Inventory" });
+    var getPurchaseRequisitionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "GetPurchaseRequisitionDataExtra", area = "Inventory" });
+    var savePurchaseRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "SavePurchaseRequisition", area = "Inventory" });
+    var deletePurchaseRequisitionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "GetDeletePurchaseRequisitionById", area = "Inventory" });
+
+    //Inv_PurchaseRequisition WebApi List link 
+    var getPagedPurchaseRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "PurchaseRequisitionApi", action = "GetPagedPurchaseRequisition", area = "Inventory"});
+    var getAllPurchaseRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "GetAllPurchaseRequisition", area = "Inventory" });
+    var savePurchaseRequisitionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "SavePurchaseRequisitionList", area = "Inventory" });
+    var getPurchaseRequisitionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PurchaseRequisitionApi", action = "GetPurchaseRequisitionListDataExtra", area = "Inventory" });
+
+    var editPurchaseRequisitionByIdPageUrl = Url.Action("PurchaseRequisitionAddEdit", "PurchaseRequisition", new { area = "Inventory" });
+    var listPurchaseRequisitionPageUrl = Url.Action("PurchaseRequisitionList", "PurchaseRequisition", new { area = "Inventory" });
+    
+    //Inv_PurchaseRequisition Angular Functions
+    string getPurchaseRequisitionById="getPurchaseRequisitionById";
+    var savePurchaseRequisition = "savePurchaseRequisition";
+    var getNewPurchaseRequisition = "getNewPurchaseRequisition";
+    var refreshPage = "loadPage()";
+    string deletePurchaseRequisitionById="deletePurchaseRequisitionById";
+    string loadPurchaseRequisitionExtraData="loadPurchaseRequisitionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/PurchaseRequisition/PurchaseRequisitionAddEdit.js"></script>
+}
+
+<div id="PurchaseRequisitionAddEdit" class="row" ng-controller="PurchaseRequisitionAddEditCtrl" ng-init="Init(
+      '@PurchaseRequisitionId'
+      ,'@getPurchaseRequisitionByIdUrl'
+      ,'@getPurchaseRequisitionDataExtraUrl'
+      ,'@savePurchaseRequisitionUrl'
+      ,'@deletePurchaseRequisitionByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="PurchaseRequisition.@Inv_PurchaseRequisition.Property_Name!=''">{{(PurchaseRequisition.@Inv_PurchaseRequisition.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="PurchaseRequisitionId" ng-Enter="@(getPurchaseRequisitionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewPurchaseRequisition)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listPurchaseRequisitionPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Requisition Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_RequisitionDate" class="form-control date-picker" placeholder="Enter Requisition Date" datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Requisition By User Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_RequisitionByUserId" class="form-control" placeholder="Enter Requisition By User Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition By User Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Status </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_Status" class="form-control" placeholder="Enter Status"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Status." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             <tr>
+                                <td class="fieldlabel">Purpose </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_Purpose" class="form-control" placeholder="Enter Purpose" maxlength="500"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Purpose." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_Remarks" class="form-control" placeholder="Enter Remarks" maxlength="500"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Approved By User Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_ApprovedByUserId" class="form-control" placeholder="Enter Approved By User Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved By User Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="PurchaseRequisition.@Inv_PurchaseRequisition.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(savePurchaseRequisition)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

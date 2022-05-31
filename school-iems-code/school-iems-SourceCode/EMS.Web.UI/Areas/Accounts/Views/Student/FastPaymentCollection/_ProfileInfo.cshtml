@@ -1,0 +1,74 @@
+﻿@using EMS.DataAccess.Data
+
+
+@{
+    //Angular Property
+    string ProgramShortTitle = "ProgramShortTitle";
+}
+
+<table class="table table-hover table-striped table-bordered std-info-table" style="color: #555555;">
+    <tbody>
+        <tr role="row">
+            <td style="width: 133px;" class="text-bold">ID:</td>
+            <td class="text-bold">
+                <a target="_blank" ng-href="@Url.Action("StudentProfile", "Student", new {area = "Admission"})/?id={{Student.@User_Student.Property_UserId}}#Package-Information">
+                    {{Student.@User_Account.Property_UserName}}
+                   
+                </a>
+
+            </td>
+            <td style="width: 160px;"> Total Package Amount: @*Tuition Fee:*@</td>
+            <td>{{PackageDetails.TotalPayableAfterDiscount|number:2}} @*{{PackageDetails.TutionFeeAfterDiscount|number:2}}*@</td>
+         
+
+        </tr>
+        <tr role="row">
+            <td>Student Name:</td>
+            <td>
+                <a target="_blank" ng-href="@Url.Action("StudentProfile", "Student", new {area = "Admission"})/?id={{Student.@User_Student.Property_UserId}}#Package-Information">
+                    {{Student.@User_Account.Property_FullName}}
+                </a>
+            </td>
+            <td>Net Payable Bill: @*Fixed Cost:*@</td>
+            <td>{{SemesterDebitList.TotalDebitAmount|number:2}} @*{{PackageDetails.TotalFixedCostAfterDiscount|number:2}}*@</td>
+        </tr>
+        <tr role="row">
+            <td>Program:</td>
+            <td>{{Student.@ProgramShortTitle}}</td>
+            <td>Net Paid:  </td>
+            <td>{{SemesterDebitList.TotalCreditAmount|number:2}}  </td>
+        </tr>
+        <tr role="row">
+            <td>Total Credit:</td>
+            <td>{{PackageDetails.TotalCredit|number:1}}
+               <span ng-show="Student.@User_Student.Property_CreditTransfer>0">(Transfer Credit: {{Student.@User_Student.Property_CreditTransfer}})</span>
+            </td>
+            @*<td>Bill Excluded Package:</td>
+            <td>{{SemesterDebitList.DebitExcludedPackageAmount|number:2}}</td>*@
+            <td>Package Due: </td>
+            <td>
+                {{((SemesterDebitList.DebitExcludedPackageAmount+PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.WaiverAmount)-SemesterDebitList.TotalCreditAmount)|number:2}}
+                @*{{(SemesterDebitList.DebitExcludedPackageAmount+PackageDetails.TotalPayableAfterDiscount)|number:2}}*@
+            </td>
+        </tr>
+        <tr role="row">
+            <td>Total Semester:</td>
+            <td>{{PackageDetails.TotalSemester}}</td>
+            <td>Net Due/Balance on Overall Bill: </td>
+            <td><b>{{SemesterDebitList.TotalBalance|number:2}}</b></td>
+        </tr>
+        <tr role="row">
+            @*<td>Total Discount:</td>
+            <td>{{PackageDetails.TotalDiscount}}</td>*@
+            <td>@*Per-Credit Fee:*@</td>
+            <td>  @*{{Student.@User_Student.Property_PerCreditFee}}*@</td>
+          
+            @*<td>Total Bill Paid:</td>
+            <td>{{SemesterDebitList.TotalCreditAmount|number:2}}</td>*@
+            <td> </td>
+            <td>@*{{SemesterDebitList.TotalBalance|number:2}}*@
+                
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,163 @@
+﻿<!--File:General_Room Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Add/Edit Room";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RoomId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomById", area = "Admin" });
+    var getRoomDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomDataExtra", area = "Admin" });
+    var saveRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoom", area = "Admin" });
+    var deleteRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetDeleteRoomById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetPagedRoom", area = "Admin" });
+    var getAllRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetAllRoom", area = "Admin" });
+    var saveRoomListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoomList", area = "Admin" });
+    var getRoomListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomListDataExtra", area = "Admin" });
+
+    var editRoomByIdPageUrl = Url.Action("RoomAddEdit", "Room", new { area = "Admin" });
+    var listRoomPageUrl = Url.Action("RoomList", "Room", new { area = "Admin" });
+
+    // Angular Functions
+    string getRoomById = "getRoomById";
+    var saveRoom = "saveRoom";
+    var getNewRoom = "getNewRoom";
+    var refreshPage = "loadPage()";
+    string deleteRoomById = "deleteRoomById";
+    string loadRoomExtraData = "loadRoomExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Room/RoomAddEdit.js"></script>
+}
+
+<div id="RoomAddEdit" class="row" ng-controller="RoomAddEditCtrl" ng-init="Init(
+      '@RoomId'
+      ,'@getRoomByIdUrl'
+      ,'@getRoomDataExtraUrl'
+      ,'@saveRoomUrl'
+      ,'@deleteRoomByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    <strong ng-show="Room.@General_Room.Property_RoomNo!=''">{{(Room.@General_Room.Property_RoomNo)}}</strong>-<strong ng-show="Room.@General_Room.Property_Name!=''">{{(Room.@General_Room.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="RoomId" ng-Enter="@(getRoomById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewRoom)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listRoomPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Order No </label>
+                        <input type="number" ng-model="Room.@General_Room.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Room No <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Room.@General_Room.Property_RoomNo" class="form-control" placeholder="Enter Room No" maxlength="50" required="" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Room.@General_Room.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required=""/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Type <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="Room.@General_Room.Property_TypeEnumId" ng-options="option.Id as option.Name for option in TypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Status <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="Room.@General_Room.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Floor <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="Room.@General_Room.Property_FloorId"
+                                ng-options="option.Id as option.Name for option in FloorList " ng-init="" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Campus Building <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="Room.@General_Room.Property_BuildingId"
+                                ng-options="option.Id as option.Name group by option.CampusShortName for option in BuildingList " ng-init="" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Capacity (Regular)</label>
+                        <input type="number" ng-model="Room.@General_Room.Property_CapacityRegular" class="form-control" placeholder="Enter Capacity Regular" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Capacity (Exam)</label>
+                        <input type="number" ng-model="Room.@General_Room.Property_CapacityAdmission" class="form-control" placeholder="Enter Capacity Admission" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Length (in feet)</label>
+                        <div class="input-group">
+                            <input type="number" ng-model="Room.@General_Room.Property_Length" class="form-control" placeholder="Enter Length" />
+                            <span  class="input-group-addon">ft.</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Width (in feet)</label>
+                        <div class="input-group">
+                            <input type="number" ng-model="Room.@General_Room.Property_Width" class="form-control" placeholder="Enter Width" />
+                            <span  class="input-group-addon">ft.</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Owner Department <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="Room.@General_Room.Property_DepartmentId"
+                                ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="control-label">Shareable</label>
+                        <div class="checkbox">
+                            <input class="checkbox-slider slider-icon yesno colored-success" type="checkbox" ng-model="Room.@General_Room.Property_IsShareable">
+                            <span  class="text"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Total Area Space</label>
+                        <div class="input-group">
+                            <input type="number" ng-model="Room.@General_Room.Property_Length * Room.@General_Room.Property_Width" 
+                                   class="form-control" ng-disabled="true" />
+                            <span  class="input-group-addon">sq. ft.</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Per Person Area Space</label>
+                        <div class="input-group">
+                            <input type="number" ng-model="(Room.@General_Room.Property_Length * Room.@General_Room.Property_Width)/Room.@General_Room.Property_CapacityRegular" 
+                                   class="form-control" ng-disabled="true" />
+                            <span  class="input-group-addon">sq. ft.</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Remarks</label>
+                        <textarea ng-model="Room.@General_Room.Property_Remarks" class="form-control" placeholder="Enter Remarks" required=""></textarea>
+                    </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveRoom)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

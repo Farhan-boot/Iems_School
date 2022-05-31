@@ -1,0 +1,169 @@
+﻿@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Bulk Offered Course";
+    // Angular Properties
+    var semesterId = Request.QueryString["semesterId"] == null?"0": Request.QueryString["semesterId"];
+    var programId = Request.QueryString["programId"] == null?"0": Request.QueryString["programId"];
+    var levelTermId = Request.QueryString["levelTermId"] == null?"0": Request.QueryString["levelTermId"];
+    var batchId = Request.QueryString["batchId"] == null?"0": Request.QueryString["batchId"];
+
+    //web api
+    var getBulkCourseOfferingExtraDataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BulkCourseOfferingMangerApi", action = "GetBulkCourseOfferingDataExtra", area = "Academic" });
+    var onChangeProgramGetCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BulkCourseOfferingMangerApi", action = "GetCurriculumByProgramId", area = "Academic" });
+
+    var getOfferAbleCourseListUrl =  Url.HttpRouteUrl("DefaultApi", new { controller = "BulkCourseOfferingMangerApi", action = "GetOfferAbleCourseList", area = "Academic" });
+
+    var saveBulkCourseOfferingUrl =  Url.HttpRouteUrl("DefaultApi", new { controller = "BulkCourseOfferingMangerApi", action = "SaveBulkClass", area = "Academic" });
+
+
+    var offerCourseUrl = Url.Action("ClassList", "ClassManager", new { area = "Academic" });
+    // Angular Functions
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ClassManager/BulkCourseOfferingManger.js?v=2.7"></script>
+    <script>
+            $(document).ready(function () {
+                //console.log("ready!");
+                collapseSidebar();
+            });
+    </script>
+}
+
+<div id="BulkCourseOfferingAddEdit" class="row" ng-controller="BulkCourseOfferingAddEditCtrl" ng-init="Init(
+     '@semesterId'
+    ,'@programId'
+    ,'@levelTermId'
+    ,'@batchId'
+    ,'@getBulkCourseOfferingExtraDataUrl'
+    ,'@onChangeProgramGetCurriculumUrl'
+    ,'@getOfferAbleCourseListUrl'
+    ,'@saveBulkCourseOfferingUrl'
+    ,'@offerCourseUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Offer Bulk Courses
+                </span>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Semester </label>
+                        <select ng-model="selectedSemesterId"
+                                ng-change="semesterFilter()"
+                                ng-options="option.Id as option.Name for option in SemesterList" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Program </label>
+                        <select ng-model="selectedProgramId"
+                                ng-options="option.Id as option.ShortTitle for option in ProgramList | filter:{SemesterDurationEnumId:SelectedSemesterDurationEnumId}"
+                                ng-change="onChangeProgramGetCurriculum()"
+                                ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Curriculum / Syllabus </label>
+                        <select ng-model="selectedCurriculumId"
+                                ng-options="option.Id as option.ShortName for option in CurriculumList" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label"> Level Term </label>
+                        <select ng-model="selectedLevelTermId"
+                                ng-options="option.Id as option.Name for option in StudyLevelTermList" ng-init="" class="form-control">
+                            <option value="" label="" class="">---All Level Term---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label"> Continuing Batch </label>
+                        <select ng-model="SelectedBatchId"
+                                ng-options="option.Id as option.Name for option in DeptBatchList" ng-init="" class="form-control">
+                            <option value="" label="" class="" style="color: red">---Undefined---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 text-center">
+                        <button ng-click="getBulkCourseOfferingById()" class="btn btn-primary"><span class="fa fa-save"></span> Get Course List </button>
+                    </div>
+                </div>
+            </div><!--Widget Body end-->
+
+            <div ng-show="OfferAbleCourseList.length >0" class="widget-body">
+                <table class="table">
+                    <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">
+                                <input type="checkbox" ng-click="selectAll($event)" />
+                            </th>
+                            <th class="text-center">#SL</th>
+                            <th @*class="text-center"*@>Course Title</th>
+                            <th class="text-center"> Batch</th>
+                            <th class="text-center">Level Term <span style="color: red;font-weight: bold">*</span></th>
+                            <th class="text-center">Mark Distribution <span style="color: red;font-weight: bold">*</span></th>
+                            <th class="text-center">
+                                <button ng-show="IsShowMinusSign" ng-click="minusSectionCount()" class="btn btn-xs btn-danger"><i class="fa fa-minus"></i></button>
+                                <button ng-click="addSectionCount()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button><br />
+                                Section Count <span style="color: red;font-weight: bold">*</span>
+                            </th>
+                            <th class="text-center">Available Sit</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tr @*class="text-center"*@ ng-repeat="row in OfferAbleCourseList track by $index">
+                        <td><input type="checkbox" ng-change="IsCourseOfferAble()" ng-model="row.IsSelected"/></td>
+                        <td>{{$index+1}}</td>
+                        <td>{{row.CurriculumCourseName}}</td>
+                        <td>
+                            <select ng-model="row.DeptBatchId"
+                                    ng-options="option.Id as option.Name for option in DeptBatchList" ng-init="" class="form-control">
+                                <option value="" label="" class="" style="color: red">---Undefined---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="row.LevelTermId"
+                                    ng-options="option.Id as option.Name for option in StudyLevelTermList" ng-init="" class="form-control">
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="row.MarkDistributionId"
+                                    ng-options="option.Id as option.Name for option in row.MarkDistributionList" ng-init="" class="form-control">
+                                <option value="" label="" class="">---Select Mark Distribution---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input style="width: 100px" type="number" ng-model="row.SectionCount" placeholder="Enter Section Count."/>
+                        </td>
+                        <td>
+                            <input style="width: 85px" type="number" ng-model="row.AvailableSit" placeholder="Enter Available Sit."/>
+                        </td>
+                        <td>
+                            <button ng-click="addNewClass($index,row)" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div ng-show="OfferAbleCourseList.length >0" class="widget-footer text-center">
+                <span style="margin: 5px; font-weight: bold;color: red"><input ng-model="IsConfirmed" type="checkbox" /> Confirm {{SelectedSemester.Name}} Semester?</span> <br/>
+                <button ng-disabled="!(IsConfirmed && IsOfferAble)" ng-click="saveBulkCourseOffering()" class="btn btn-success"><span class="fa fa-save"></span> Offer Courses </button>
+            </div>
+        </div>
+    </div>
+</div>

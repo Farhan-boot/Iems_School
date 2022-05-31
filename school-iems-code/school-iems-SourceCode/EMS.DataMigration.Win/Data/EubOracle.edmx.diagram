@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b2f7af4a18be43549db3d47eb0876156" Name="Diagram1" ZoomLevel="77">
+        <EntityTypeShape EntityType="EubOracle1Model.AC_GROUP" Width="1.5" PointX="14.5" PointY="2" />
+        <EntityTypeShape EntityType="EubOracle1Model.AC_LEDGER" Width="1.5" PointX="19" PointY="1.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.AC_SUB_GROUP" Width="1.5" PointX="16.75" PointY="2" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCBUYER" Width="1.5" PointX="21.75" PointY="1.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCCHARTOFACCOUNT" Width="1.5" PointX="8.25" PointY="50.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCCOMPANY" Width="1.5" PointX="3" PointY="41.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCCOMPANYGROUP" Width="1.5" PointX="0.75" PointY="44.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCLOCATION" Width="1.5" PointX="6" PointY="18.625" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCORDER" Width="1.5" PointX="24" PointY="1" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCPROJECT" Width="1.5" PointX="6" PointY="54.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCSUBLEDGER" Width="1.5" PointX="5.25" PointY="28.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCTRANDTL" Width="1.5" PointX="8.75" PointY="14.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCTRANMST" Width="1.5" PointX="11.25" PointY="42.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ADMISSION_INFO" Width="1.5" PointX="0.75" PointY="17.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTENDANCE_D" Width="1.5" PointX="20" PointY="12.5" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTENDANCE_M" Width="1.5" PointX="17.75" PointY="15.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_D" Width="1.5" PointX="9.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_M_CT" Width="1.5" PointX="5.75" PointY="14.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_M_CW" Width="1.5" PointX="14.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.AUTHOR" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.BALSHEETDDTL" Width="1.5" PointX="2.75" PointY="17.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.BALSHEETDTL" Width="1.5" PointX="7.5" PointY="24" />
+        <EntityTypeShape EntityType="EubOracle1Model.BALSHEETMST" Width="1.5" PointX="5.25" PointY="24" />
+        <EntityTypeShape EntityType="EubOracle1Model.BOOK_INFO" Width="1.5" PointX="21.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.BOOK_LEND_INFO" Width="1.5" PointX="10.25" PointY="10.5" />
+        <EntityTypeShape EntityType="EubOracle1Model.BUDGETDTL" Width="1.5" PointX="10.5" PointY="51.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.BUDGETMST" Width="1.5" PointX="8.25" PointY="44.5" />
+        <EntityTypeShape EntityType="EubOracle1Model.BUDGETRPTDDTL" Width="1.5" PointX="9.75" PointY="67" />
+        <EntityTypeShape EntityType="EubOracle1Model.BUDGETRPTDTL" Width="1.5" PointX="7.5" PointY="66.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.BUDGETRPTMST" Width="1.5" PointX="5.25" PointY="66.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.CARD" Width="1.5" PointX="16.75" PointY="8" />
+        <EntityTypeShape EntityType="EubOracle1Model.CASHFLOWDTL" Width="1.5" PointX="7.5" PointY="32.625" />
+        <EntityTypeShape EntityType="EubOracle1Model.CASHFLOWMST" Width="1.5" PointX="5.25" PointY="32.5" />
+        <EntityTypeShape EntityType="EubOracle1Model.CIRD_INFO" Width="1.5" PointX="22.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COLL_INFO_D" Width="1.5" PointX="14.75" PointY="22.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COLL_INFO_M" Width="1.5" PointX="22.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COLL_INFO_M_DELETE" Width="1.5" PointX="22.75" PointY="21.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COLL_INFO_MD" Width="1.5" PointX="23.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COURSEMAP_M" Width="1.5" PointX="16.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.DEPARTMENT" Width="1.5" PointX="10" PointY="5.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.DESIGNATION" Width="1.5" PointX="5.75" PointY="11.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.DISTRICT" Width="1.5" PointX="7.75" PointY="1.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.EDUCATION" Width="1.5" PointX="24.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.EMP_INFO" Width="1.5" PointX="8" PointY="10" />
+        <EntityTypeShape EntityType="EubOracle1Model.FACULTY" Width="1.5" PointX="7.75" PointY="5.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.FIND" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.INCOMEDDTL" Width="1.5" PointX="9.75" PointY="83.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.INCOMEDTL" Width="1.5" PointX="7.5" PointY="83.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.INCOMEMST" Width="1.5" PointX="5.25" PointY="83.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.INTERTRANSMAP" Width="1.5" PointX="24.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.LEND_INFO_D" Width="1.5" PointX="16.75" PointY="24.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.LEND_INFO_M" Width="1.5" PointX="24.75" PointY="19.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.LOANTRANS" Width="1.5" PointX="5.25" PointY="96.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.LOOKUPDTL" Width="1.5" PointX="3" PointY="14" />
+        <EntityTypeShape EntityType="EubOracle1Model.LOOKUPMST" Width="1.5" PointX="0.75" PointY="14.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.MEMBER_INFO" Width="1.5" PointX="19" PointY="7" />
+        <EntityTypeShape EntityType="EubOracle1Model.MENU_INFO" Width="1.5" PointX="2.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.MENU_MODULE" Width="1.5" PointX="2.75" PointY="21.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.PROGRAM" Width="1.5" PointX="14.5" PointY="6.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.PROGRAM1" Width="1.5" PointX="12.25" PointY="5.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.PUBLISHER" Width="1.5" PointX="24.75" PointY="23.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.RATIODTL" Width="1.5" PointX="7.5" PointY="92.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.RATIOMST" Width="1.5" PointX="5.25" PointY="92.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.REG_D" Width="1.5" PointX="25.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.REG_M" Width="1.5" PointX="26.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.RETURN_INFO" Width="1.5" PointX="11.75" PointY="26.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.SFGRPPRIVILEGE" Width="1.5" PointX="5.25" PointY="4.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.SFMODULE" Width="1.5" PointX="0.75" PointY="3.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.SFSUBMODULE" Width="1.5" PointX="3" PointY="7" />
+        <EntityTypeShape EntityType="EubOracle1Model.SFUSERS" Width="1.5" PointX="5.25" PointY="1.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.SFUSERSGROUP" Width="1.5" PointX="3" PointY="4.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.STUDENT" Width="1.5" PointX="26.75" PointY="18.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.SUBJECT" Width="1.5" PointX="26.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.T_EDUCATION" Width="1.5" PointX="15" PointY="18.125" />
+        <EntityTypeShape EntityType="EubOracle1Model.TEACHER" Width="1.5" PointX="12.75" PointY="14.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.THANA" Width="1.5" PointX="10" PointY="1" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALDTL" Width="1.5" PointX="7.5" PointY="62.875" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALFIVECOA" Width="1.5" PointX="14.25" PointY="87.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALFIVECOAPROJ" Width="1.5" PointX="14.25" PointY="102.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALFOURCOA" Width="1.5" PointX="12" PointY="87.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALFOURCOAPROJ" Width="1.5" PointX="12" PointY="102.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALMST" Width="1.5" PointX="5.25" PointY="62.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALONECOA" Width="1.5" PointX="5.25" PointY="87.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALONECOAPROJ" Width="1.5" PointX="5.25" PointY="102.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALTHREECOA" Width="1.5" PointX="9.75" PointY="87.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALTHREECOAPROJ" Width="1.5" PointX="9.75" PointY="102.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALTWOCOA" Width="1.5" PointX="7.5" PointY="87.375" />
+        <EntityTypeShape EntityType="EubOracle1Model.TRIALBALTWOCOAPROJ" Width="1.5" PointX="7.5" PointY="102.25" />
+        <EntityTypeShape EntityType="EubOracle1Model.USER_GROUP" Width="1.5" PointX="0.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.USER_GROUP_MAP" Width="1.5" PointX="27.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.USER_INFO" Width="1.5" PointX="27.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.USER_LOGON" Width="1.5" PointX="13.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.USERS" Width="1.5" PointX="18.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCMONTHCLOSE" Width="1.5" PointX="5.25" PointY="39.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCMONTHCLOSEBACKUP" Width="1.5" PointX="8.25" PointY="39.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCYEARCLOSE" Width="1.5" PointX="5.25" PointY="44.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ACCYEARCLOSEBACKUP" Width="1.5" PointX="5.25" PointY="49.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_D_CT" Width="1.5" PointX="20.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_D_CW" Width="1.5" PointX="22.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_D22" Width="1.5" PointX="28.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_DT" Width="1.5" PointX="28.75" PointY="16.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_M" Width="1.5" PointX="28.75" PointY="23.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_M22" Width="1.5" PointX="28.75" PointY="28.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.ATTMARK_MT" Width="1.5" PointX="7.75" PointY="28.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.CHART" Width="1.5" PointX="29.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.COURSEMAP_D" Width="1.5" PointX="29.75" PointY="4.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.CURRENT_SEMESTER" Width="1.5" PointX="15.75" PointY="29.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.INSTRUCTOR" Width="1.5" PointX="30.75" PointY="7.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.LOOKUP_D" Width="1.5" PointX="0.75" PointY="30.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.LOOKUP_M" Width="1.5" PointX="17.75" PointY="30.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.MARK_D" Width="1.5" PointX="30.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.MARK_M" Width="1.5" PointX="30.75" PointY="24.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.OFFER_COURSE_D" Width="1.5" PointX="30.75" PointY="27.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.OFFER_COURSE_M" Width="1.5" PointX="30.75" PointY="30.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.OFFER_D" Width="1.5" PointX="31.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.OFFER_M" Width="1.5" PointX="24.75" PointY="31.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.REG_DT" Width="1.5" PointX="32.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EubOracle1Model.TUTION_INFO" Width="1.5" PointX="9.75" PointY="32.75" />
+        <AssociationConnector Association="EubOracle1Model.AC_GP_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.AC_GROUP_FK" />
+        <AssociationConnector Association="EubOracle1Model.AC_SG_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKORDBUYID" />
+        <AssociationConnector Association="EubOracle1Model.FKCOACOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKCOALOCID" />
+        <AssociationConnector Association="EubOracle1Model.FKCOAPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKBGRPMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKBSMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKBUDMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKCFMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKCOMPCOMPGPID" />
+        <AssociationConnector Association="EubOracle1Model.FKINMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKLOANCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKMONCBAKCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKMONCCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKRATIOMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKSUBACCCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBONCACOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBONCAPJCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKTRAMSTCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKYARCBAKCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKYARCCOMPID" />
+        <AssociationConnector Association="EubOracle1Model.FKBUDMSTLOCID" />
+        <AssociationConnector Association="EubOracle1Model.FKTRAMSTLOCID" />
+        <AssociationConnector Association="EubOracle1Model.FKBUDMSTPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKMONCBAKPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKMONCPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKTRAMSTPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKYARCBAKPRJID" />
+        <AssociationConnector Association="EubOracle1Model.FKYARCPRJID" />
+        <AssociationConnector Association="EubOracle1Model.ATTENDANCE_M_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKBSDTLBSMID" />
+        <AssociationConnector Association="EubOracle1Model.EMP_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKBUDDTLBUDMID" />
+        <AssociationConnector Association="EubOracle1Model.FKBGRPDDTLBGRPDID" />
+        <AssociationConnector Association="EubOracle1Model.FKBGRPDTLBGRPMID" />
+        <AssociationConnector Association="EubOracle1Model.CARD_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKCFDTLCFMID" />
+        <AssociationConnector Association="EubOracle1Model.DEPARTMENT_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FACULTY_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.EMP_INFO_DESIG_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKTHADISTID" />
+        <AssociationConnector Association="EubOracle1Model.FKINDDTLINDID" />
+        <AssociationConnector Association="EubOracle1Model.FKINDTLINMID" />
+        <AssociationConnector Association="EubOracle1Model.FKLOOKDTLLKMCD" />
+        <AssociationConnector Association="EubOracle1Model.PROGRAM1_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKRATIODTLRATMID" />
+        <AssociationConnector Association="EubOracle1Model.FKGRPPRVMODUID" />
+        <AssociationConnector Association="EubOracle1Model.FKGRPPRVSBMODUID" />
+        <AssociationConnector Association="EubOracle1Model.FKGRPPRVSFUSRGRPID" />
+        <AssociationConnector Association="EubOracle1Model.FKSUBMODUMODUID" />
+        <AssociationConnector Association="EubOracle1Model.T_EDUCATION_ID_FK" />
+        <AssociationConnector Association="EubOracle1Model.FKTBDTLTBMID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBFVCATBFRID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBFVCAPJTBFRPJID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBFRCATBTHID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBFRCAPJTBTHPJID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBTWCATBONID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBTWCAPJTBONPJID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBTHCATBTWCAID" />
+        <AssociationConnector Association="EubOracle1Model.FKTBTHCAPJTBTWPJID" />
+        <AssociationConnector Association="EubOracle1Model.SFUSERSGROUPING" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

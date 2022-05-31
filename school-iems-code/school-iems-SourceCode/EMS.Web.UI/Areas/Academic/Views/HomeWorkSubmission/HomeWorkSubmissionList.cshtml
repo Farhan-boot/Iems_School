@@ -1,0 +1,186 @@
+﻿
+<!--File:Aca_HomeWorkSubmission List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Academic: Home Work Submission List";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var HomeWorkSubmissionId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getHomeWorkSubmissionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionById", area = "Academic" });
+    var getHomeWorkSubmissionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionDataExtra", area = "Academic" });
+    var saveHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "SaveHomeWorkSubmission", area = "Academic" });
+    var deleteHomeWorkSubmissionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetDeleteHomeWorkSubmissionById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "HomeWorkSubmissionApi", action = "GetPagedHomeWorkSubmission", area = "Academic"});
+    var getAllHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetAllHomeWorkSubmission", area = "Academic" });
+    var saveHomeWorkSubmissionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "SaveHomeWorkSubmissionList", area = "Academic" });
+    var getHomeWorkSubmissionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionListDataExtra", area = "Academic" });
+
+    var editHomeWorkSubmissionByIdPageUrl = Url.Action("HomeWorkSubmissionAddEdit", "HomeWorkSubmission", new { area = "Academic" });
+
+    //Angular Function Name
+    var getNewHomeWorkSubmission = "getNewHomeWorkSubmission";
+    var saveHomeWorkSubmission = "saveHomeWorkSubmission";
+    var deleteHomeWorkSubmissionById = "deleteHomeWorkSubmissionById";
+    var deleteHomeWorkSubmissionByObj = "deleteHomeWorkSubmissionByObj";
+    //for list
+    var searchHomeWorkSubmissionList = "searchHomeWorkSubmissionList";
+    var getPagedHomeWorkSubmissionList = "getPagedHomeWorkSubmissionList";
+    var getAllHomeWorkSubmissionList = "getAllHomeWorkSubmissionList";
+    var saveHomeWorkSubmissionList = "saveHomeWorkSubmissionList";
+    var getHomeWorkSubmissionListExtraData = "getHomeWorkSubmissionListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/HomeWorkSubmission/HomeWorkSubmissionList.js"></script>
+}
+
+
+<div ng-controller="HomeWorkSubmissionListCtrl"
+     ng-init="Init(
+      '@getPagedHomeWorkSubmissionUrl'
+     ,'@deleteHomeWorkSubmissionByIdUrl'
+     ,'@getHomeWorkSubmissionListDataExtraUrl'
+     ,'@saveHomeWorkSubmissionListUrl'
+     ,'@getHomeWorkSubmissionByIdUrl'
+     ,'@getHomeWorkSubmissionDataExtraUrl'
+     ,'@saveHomeWorkSubmissionUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Home Work Submission </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Homework</span>*@
+                     <select ng-model="SelectedHomeworkId" ng-change="@(searchHomeWorkSubmissionList)()" 
+                        ng-options="option.Id as option.Name for option in HomeWorkList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Homework---</option>
+                     </select>
+                </span>
+              </div>       
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Student</span>*@
+                     <select ng-model="SelectedStudentId" ng-change="@(searchHomeWorkSubmissionList)()" 
+                        ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Student---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchHomeWorkSubmissionList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editHomeWorkSubmissionByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchHomeWorkSubmissionList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <!--th class="text-center">Homework Id</th-->
+                    <th class="text-center">Homework Key</th>
+                    <!--th class="text-center">Student Id</th-->
+                    <th class="text-center">Submission Date</th>
+                    <!--th class="text-center">Submission Status Enum Id</th-->
+                    <th class="text-center">Submission Status</th>
+                    <th class="text-center">Checked</th>
+                    <th class="text-center">Teacher Id</th>
+                    <th class="text-center">Feedback</th>
+                    <th class="text-center">Remark</th>
+                    <th class="text-center">History</th>
+                    <th class="text-center">Is Deleted</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in HomeWorkSubmissionList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Aca_HomeWorkSubmission.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <!--td class="">{{row.@Aca_HomeWorkSubmission.Property_HomeworkId}}</td-->
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_HomeworkKey}}</td>
+                    <!--td class="">{{row.@Aca_HomeWorkSubmission.Property_StudentId}}</td-->
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_SubmissionDate}}</td>
+                    <!--td class="">{{row.@Aca_HomeWorkSubmission.Property_SubmissionStatusEnumId}}</td-->
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_SubmissionStatus}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_Checked}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_TeacherId}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_Feedback}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_Remark}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_History}}</td>
+                    <td class="">{{row.@Aca_HomeWorkSubmission.Property_IsDeleted}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editHomeWorkSubmissionByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteHomeWorkSubmissionById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

@@ -1,0 +1,111 @@
+
+<div class="row">
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+                <tr>
+                    <td class="fieldlabel">Institute Logo Color Solo </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.InstituteLogoColorSolo" class="form-control" placeholder="Enter Institute Logo Color Solo" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Institute Logo Color Solo." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                <tr>
+                    <td class="fieldlabel">Institute Logo Color Short </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.InstituteLogoColorShort" class="form-control" placeholder="Enter Institute Logo Color Short" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Institute Logo Color Short." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Institute Logo Color Full </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.InstituteLogoColorFull" class="form-control" placeholder="Enter Institute Logo Color Full" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Institute Logo Color Full." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+
+                <tr>
+                    <td class="fieldlabel">Institute Logo Black White Solo </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.InstituteLogoBlackWhiteSolo" class="form-control" placeholder="Enter Institute Logo Black White Solo " required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Institute Logo Black White Solo ." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Institute Logo fav icon </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="SiteSettings.InstituteLogofavicon" class="form-control" placeholder="Enter Institute Logo fav icon" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Institute Logo fav icon." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Default SmsGateway Id </td>
+                <td class="fieldarea">
+                    <input type="number" ng-model="SiteSettings.DefaultSmsGatewayId" class="form-control" placeholder="Enter Default SmsGateway Id" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default SmsGateway Id." data-toggle="tooltip"></i></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                    <td class="fieldlabel">Default Error Email Smtp Id </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="SiteSettings.DefaultErrorEmailSmtpId" class="form-control" placeholder="Enter Default Error Email Smtp Id" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default Error Email Smtp Id." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Default Info Email Smtp Id </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="SiteSettings.DefaultInfoEmailSmtpId" class="form-control" placeholder="Enter Default Info Email Smtp Id" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default Info Email Smtp Id." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Sent Sms To Parent On Absent Attendance</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.IsSentSmsToParentOnAbsentAttendance" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.IsSentSmsToParentOnAbsentAttendance" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Sent Sms To Parent On Absent Attendance." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Sent Email To Parent On Absent Attendance </td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.IsSentEmailToParentOnAbsentAttendance" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.IsSentEmailToParentOnAbsentAttendance" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Sent Email To Parent On Absent Attendance ." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Sent Sms To Student On Class Material Upload</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.IsSentSmsToStudentOnClassMaterialUpload" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.IsSentSmsToStudentOnClassMaterialUpload" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Sent Sms To Student On Class Material Upload." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Sent Email To Student On Class Material Upload </td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.IsSentEmalToStudentOnClassMaterialUpload" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.IsSentEmalToStudentOnClassMaterialUpload" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Sent Email To Student On Class Material Upload." data-toggle="tooltip"></i></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+
+
+</div>
+

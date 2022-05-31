@@ -1,0 +1,136 @@
+﻿<!--File:Aca_Curriculum Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Add/Edit Curriculum";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CurriculumId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getCurriculumByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumById", area = "Academic" });
+    var getCurriculumDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumDataExtra", area = "Academic" });
+    var saveCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "SaveCurriculum", area = "Academic" });
+    var deleteCurriculumByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetDeleteCurriculumById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetPagedCurriculum", area = "Academic" });
+    var getAllCurriculumUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetAllCurriculum", area = "Academic" });
+    var saveCurriculumListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "SaveCurriculumList", area = "Academic" });
+    var getCurriculumListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumApi", action = "GetCurriculumListDataExtra", area = "Academic" });
+
+    var editCurriculumByIdPageUrl = Url.Action("CurriculumAddEdit", "Curriculum", new { area = "Academic" });
+    var listCurriculumPageUrl = Url.Action("CurriculumList", "Curriculum", new { area = "Academic" });
+
+    // Angular Functions
+    string getCurriculumById = "getCurriculumById";
+    var saveCurriculum = "saveCurriculum";
+    var getNewCurriculum = "getNewCurriculum";
+    var refreshPage = "loadPage()";
+    string deleteCurriculumById = "deleteCurriculumById";
+    string loadCurriculumExtraData = "loadCurriculumExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/Curriculum/CurriculumAddEdit.js"></script>
+}
+<div id="CurriculumAddEdit" class="row" ng-controller="CurriculumAddEditCtrl" ng-init="Init(
+      '@CurriculumId'
+      ,'@getCurriculumByIdUrl'
+      ,'@getCurriculumDataExtraUrl'
+      ,'@saveCurriculumUrl'
+      ,'@deleteCurriculumByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">Add/Edit <strong ng-show="Curriculum.@Aca_Curriculum.Property_ShortName!=''">{{(Curriculum.@Aca_Curriculum.Property_ShortName)}}</strong></span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="CurriculumId" ng-Enter="@(getCurriculumById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewCurriculum)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listCurriculumPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Program <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-change="generateName()" ng-model="Curriculum.@Aca_Curriculum.Property_ProgramId"
+                                ng-options="option.Id as option.ShortTitle for option in ProgramList" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Start Year </label>
+                        <input ng-change="generateName()" type="number" ng-model="Curriculum.@Aca_Curriculum.Property_Year" class="form-control" placeholder="Enter Year" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label>Session <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input  type="text" ng-model="Curriculum.@Aca_Curriculum.Property_Session" class="form-control" placeholder="Enter Session" maxlength="255" required="" />
+                    </div>
+                    
+                    <div class="col-sm-7 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Curriculum.@Aca_Curriculum.Property_Name" class="form-control" placeholder="Enter Name" maxlength="128" required="" />
+                    </div>
+                    <div class="col-sm-5 form-group">
+                        <label class="control-label">Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Curriculum.@Aca_Curriculum.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                    </div>
+
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Total Semester </label>
+                        <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalSemester" class="form-control" placeholder="Enter Total Semester" />
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Total Credit </label>
+                        <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalCredit" class="form-control" placeholder="Enter Total Credit" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Credit Require For Graduation </label>
+                        <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_CreditRequireForGraduation" class="form-control" placeholder="Enter Credit Require For Graduation" />
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Total Course </label>
+                        <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_TotalCourse" class="form-control" placeholder="Enter Total Course" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Course Require For Graduation </label>
+                        <input type="number" ng-model="Curriculum.@Aca_Curriculum.Property_CourseRequireForGraduation" class="form-control" placeholder="Enter Course Require For Graduation"/>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Grading Policy </label>
+                        <select ng-model="Curriculum.@Aca_Curriculum.Property_GradingPolicyId"
+                                ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="Curriculum.@Aca_Curriculum.Property_IsValid" /> Valid
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="Curriculum.@Aca_Curriculum.Property_IsOffering" /> Offering
+                        </div>
+                    </div>
+                    <div class="col-sm-8 form-group">
+                        <label class="control-label">Description </label>
+                        <textarea ng-model="Curriculum.@Aca_Curriculum.Property_Description" class="form-control" placeholder="Enter Description" required=""></textarea>
+                    </div>
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveCurriculum)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

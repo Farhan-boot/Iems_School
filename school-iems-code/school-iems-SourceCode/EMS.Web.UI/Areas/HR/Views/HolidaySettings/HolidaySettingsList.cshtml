@@ -1,0 +1,169 @@
+﻿
+<!--File:HR_HolidaySettings List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Holiday Settings List";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var HolidaySettingsId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getHolidaySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsById", area = "HR" });
+    var getHolidaySettingsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsDataExtra", area = "HR" });
+    var saveHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "SaveHolidaySettings", area = "HR" });
+    var deleteHolidaySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetDeleteHolidaySettingsById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "HolidaySettingsApi", action = "GetPagedHolidaySettings", area = "HR"});
+    var getAllHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetAllHolidaySettings", area = "HR" });
+    var saveHolidaySettingsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "SaveHolidaySettingsList", area = "HR" });
+    var getHolidaySettingsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsListDataExtra", area = "HR" });
+
+    var editHolidaySettingsByIdPageUrl = Url.Action("HolidaySettingsAddEdit", "HolidaySettings", new { area = "HR" });
+
+    //Angular Function Name
+    var getNewHolidaySettings = "getNewHolidaySettings";
+    var saveHolidaySettings = "saveHolidaySettings";
+    var deleteHolidaySettingsById = "deleteHolidaySettingsById";
+    var deleteHolidaySettingsByObj = "deleteHolidaySettingsByObj";
+    //for list
+    var searchHolidaySettingsList = "searchHolidaySettingsList";
+    var getPagedHolidaySettingsList = "getPagedHolidaySettingsList";
+    var getAllHolidaySettingsList = "getAllHolidaySettingsList";
+    var saveHolidaySettingsList = "saveHolidaySettingsList";
+    var getHolidaySettingsListExtraData = "getHolidaySettingsListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/HolidaySettings/HolidaySettingsList.js"></script>
+}
+
+
+<div ng-controller="HolidaySettingsListCtrl"
+     ng-init="Init(
+      '@getPagedHolidaySettingsUrl'
+     ,'@deleteHolidaySettingsByIdUrl'
+     ,'@getHolidaySettingsListDataExtraUrl'
+     ,'@saveHolidaySettingsListUrl'
+     ,'@getHolidaySettingsByIdUrl'
+     ,'@getHolidaySettingsDataExtraUrl'
+     ,'@saveHolidaySettingsUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Holiday Settings </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Calendar Year</span>*@
+                     <select ng-model="SelectedCalendarYearId" ng-change="@(searchHolidaySettingsList)()" 
+                        ng-options="option.Id as option.Name for option in CalendarYearList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Calendar Year---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchHolidaySettingsList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editHolidaySettingsByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchHolidaySettingsList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Start Date</th>
+                    <th class="text-center">End Date</th>
+                    <!--th class="text-center">Calendar Year Id</th-->
+                    <!--th class="text-center">Working Day Type Enum Id</th-->
+                    <th class="text-center">Working Day Type</th>
+                    <th class="text-center">Is Half Day</th>
+                    <th class="text-center">Is Deleted</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in HolidaySettingsList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@HR_HolidaySettings.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@HR_HolidaySettings.Property_Name}}</td>
+                    <td class="">{{row.@HR_HolidaySettings.Property_StartDate}}</td>
+                    <td class="">{{row.@HR_HolidaySettings.Property_EndDate}}</td>
+                    <!--td class="">{{row.@HR_HolidaySettings.Property_CalendarYearId}}</td-->
+                    <!--td class="">{{row.@HR_HolidaySettings.Property_WorkingDayTypeEnumId}}</td-->
+                    <td class="">{{row.@HR_HolidaySettings.Property_WorkingDayType}}</td>
+                    <td class="">{{row.@HR_HolidaySettings.Property_IsHalfDay}}</td>
+                    <td class="">{{row.@HR_HolidaySettings.Property_IsDeleted}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editHolidaySettingsByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteHolidaySettingsById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

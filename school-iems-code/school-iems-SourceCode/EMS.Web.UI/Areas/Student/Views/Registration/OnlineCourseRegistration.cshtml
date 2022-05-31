@@ -1,0 +1,56 @@
+﻿@model EMS.Framework.Objects.MvcModelResult<bool>
+@{
+    //Here The Model isOpenCreditRegistration if it is true then the registration will be open credit.
+    ViewBag.Title = "Online Course Registration";
+
+}
+@section ScriptSection
+{ 
+    @if (Model.Data)
+    {
+        <script src="~/Areas/Student/Views/Registration/Shared/_OpenCreditRegistration.js"></script>
+    }
+    else
+    {
+        <script src="~/Areas/Student/Views/Registration/Shared/_CloseCreditRegistration.js?v=1"></script>
+    }
+    
+}
+@section StyleSection
+{
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet" />
+    <style>
+        .select2-results li {
+            border-bottom: 1px solid #b3b3b3;
+        }
+
+        @@media screen and (max-width: 600px) {
+            .select2-container {
+                max-width: 186px !important;
+            }
+        }
+    </style>
+}
+
+@if (Model.HasError)
+{
+    <div class="alert alert-danger">
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention: </strong> <span>@Html.Raw(Model.ErrorHtml)</span>
+    </div>
+}
+else
+{
+    if(Model.Data)
+    {
+        @Html.Partial("~/Areas/Student/Views/Registration/Shared/_OpenCreditRegistration.cshtml")
+    }
+    else
+    {
+        @Html.Partial("~/Areas/Student/Views/Registration/Shared/_CloseCreditRegistration.cshtml")
+    }
+}
+
+
+

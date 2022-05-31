@@ -1,0 +1,32 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+
+
+@{
+    ViewBag.Title = "Admission Report";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmissionReport.cshtml";
+    var ReportModel=new ReportHeaderFooterModel() {Title = "Admission Summary" };
+    ViewBag.ReportModel = ReportModel;
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/AdmissionReport/Shared/_AdmissionSummary.js"></script>
+}
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+
+@Html.Partial("~/Areas/Admission/Views/AdmissionReport/Shared/_AdmissionSummary.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

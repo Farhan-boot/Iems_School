@@ -1,0 +1,8 @@
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\bin\Debug\EMS.MARC.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\bin\Debug\EMS.MARC.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.csproj.AssemblyReference.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.Properties.Resources.resources
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.csproj.GenerateResource.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.csproj.CoreCompileInputs.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.MARC\obj\Debug\EMS.MARC.pdb

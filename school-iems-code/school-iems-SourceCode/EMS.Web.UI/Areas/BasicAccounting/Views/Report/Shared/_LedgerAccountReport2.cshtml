@@ -1,0 +1,251 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Web.Jsons.Custom.BasicAccounting
+@model EMS.Framework.Objects.MvcModelResult<LedgerTransactionJson>
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+
+
+    //Narration
+    var narration = Request.QueryString["narration"];
+    bool IsShowNarration = narration.IsValid() && narration == "true" ? true : false;
+
+    //Details
+    var dtl = Request.QueryString["dtl"];
+    bool IsShowDetails = dtl.IsValid() && dtl == "true" ? true : false;
+
+    //Code Name
+    var code = Request.QueryString["code"];
+    bool IsShowCodeName = code.IsValid() && code == "true" ? true : false;
+
+    var ledgerTrans = Model.Data;
+    var startDate = Model.DataBag.StartDate;
+    var endDate = Model.DataBag.EndDate;
+
+    <div class="main-body" style="background-color: white !important; padding-bottom: 20px;">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 15px;">
+            <div style="font-size: 20px;">Ledger: @ledgerTrans.LedgerParentCode-@ledgerTrans.LedgerName</div>
+            <div> @startDate.ToString("dd/MM/yyyy") to @endDate.ToString("dd/MM/yyyy")</div>
+        </div>
+        
+        <div>
+            <table class="table-bordered table-border voucher-table" width="100%">
+                <thead>
+                <tr class="voucher-table-thead">
+                    <th class="text-center" style="width: 90px;">Date</th>
+                    <th class="text-center" style="width: auto;">Particulars</th>
+                    <th class="text-center" style="min-width: 90px;">Voucher No</th>
+                    <th class="text-center" style="min-width: 90px;">Cheq. No</th>
+                    <th class="text-center" style="min-width: 90px;">Cheq. Date</th>
+                    @*<th class="text-center">Voucher Type</th>*@
+                    <th class="text-center" style="min-width: 80px;">Debit</th>
+                    <th class="text-center" style="min-width: 80px;">Credit</th>
+                    <th class="text-center" style="min-width: 80px;">Balance</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="7" style="padding-top: 10px; border: none !important;"></td>
+                </tr>
+                <tr>
+                    <td class="text-center text-bold">@startDate.ToString("dd/MM/yyyy")</td>
+                    <td class="text-bold" colspan="4">Opening Balance</td>
+                    <td class="text-center text-bold">
+                        @if (ledgerTrans.PeriodOpeningDebitBalance != 0)
+                        {
+                            <span>@ledgerTrans.PeriodOpeningDebitBalance</span>
+                        }
+                    </td>
+                    <td class="text-center text-bold">
+                        @if (ledgerTrans.PeriodOpeningCreditBalance != 0)
+                        {
+                            <span>@ledgerTrans.PeriodOpeningCreditBalance</span>
+                        }
+                    </td>
+                    <td class="text-center text-bold">
+                        @*@{
+                            double openingBalance = ledgerTrans.PeriodOpeningDebitBalance - ledgerTrans.PeriodOpeningCreditBalance;
+                            double currentBalance = openingBalance;
+                        }
+                        @if (openingBalance != 0)
+                        {
+                            <span>@openingBalance</span>
+                        }*@
+                    </td>
+
+                </tr>
+               
+                @foreach (var voucher in ledgerTrans.VoucherJsonList)
+                {
+                    <tr>
+                        <td class="text-center">@voucher.Date.ToString("dd/MM/yyyy")</td>
+                        <td class="text-left" style="padding: 0px 3px;">@voucher.Narration</td>
+                        <td class="text-center">@voucher.VoucherNo</td>
+                        <td class="text-center">@voucher.ChequeNo</td>
+                        <td class="text-center">@voucher.ChequeDate</td>
+                        @*<td class="text-center">@voucher.VoucherType</td>*@
+                        <td class="text-center">
+                            @if (voucher.SelectedLedgerDrAmount != 0)
+                            {
+                                <span>@voucher.SelectedLedgerDrAmount</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (voucher.SelectedLedgerCrAmount != 0)
+                            {
+                                <span>@voucher.SelectedLedgerCrAmount</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <span>@voucher.SelectedLedgerBalance</span> <span>@voucher.BalanceType</span>
+                        </td>
+                    </tr>
+                }
+                    
+                <tr>
+                    <td class="text-bold text-right" colspan="5">Current Total:</td>
+                    <td class="text-bold text-center">
+                        @if (ledgerTrans.PeriodTotalDebitAmount != 0)
+                        {
+                            <span>@ledgerTrans.PeriodTotalDebitAmount</span>
+                        }
+                    </td>
+                    <td class="text-bold text-center">
+                        @if (ledgerTrans.PeriodTotalCreditAmount != 0)
+                        {
+                            <span>@ledgerTrans.PeriodTotalCreditAmount</span>
+                        }
+                    </td>
+                    <td></td>
+                </tr>
+                    <tr>
+                        <td class="text-bold text-right" colspan="5">Closing Balance:</td>
+                        <td class="text-bold text-center">
+                            @if (ledgerTrans.PeriodClosingDebitBalance > 0)
+                            {
+                                <span>@ledgerTrans.PeriodClosingDebitBalance</span>
+                            }
+                        </td>
+                        <td class="text-bold text-center">
+                            @if (ledgerTrans.PeriodClosingCreditBalance>0)
+                            {
+                                <span>@ledgerTrans.PeriodClosingCreditBalance</span>
+                            }
+                        </td>
+                        <td class="text-bold text-center">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+
+<style>
+    .main-body {
+        width: 8.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+    .text-top {
+        vertical-align: text-top;
+    }
+    .text-center {
+        text-align: center !important;
+    }
+    .text-right {
+        text-align: right !important;
+    }
+
+
+    .voucher-dlt-table thead > tr >th {
+        line-height: normal;
+        padding: 0px;
+    }
+    .voucher-dlt-table thead > tr >th, .voucher-dlt-table tbody > tr >td {
+        font-size: 11px !important;
+    }
+
+    .voucher-table-thead  > th {
+        line-height: normal;
+        border: 1px solid black !important;
+    }
+
+
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #a09f9f;
+    }
+    @@media print {
+
+        .main-body table {
+            border: none !important;
+        }
+        .voucher-dlt-table thead > tr >th {
+            line-height: normal;
+            padding: 1px;
+        }
+        .voucher-dlt-table thead > tr >th, .voucher-dlt-table tbody > tr >td {
+            font-size: 11px !important;
+        }
+
+        .voucher-table-thead  > th {
+            line-height: normal;
+            border: 1px solid black !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border:none !important;
+        }
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 0.5px solid #a09f9f !important;
+        }
+    }
+</style>

@@ -1,0 +1,166 @@
+
+<div class="row">
+    <!--Col start-->
+<div class="col-md-6 table-form">
+    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+        <tbody>
+            <tr>
+                <td class="fieldlabel">Is Auto Class Section</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoClassSection" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoClassSection" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Auto Class Section." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Auto Allocate Syllabus</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoAllocateSyllabus" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoAllocateSyllabus" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Auto Allocate Syllabus." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Enable Remark Input</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableRemarkInput" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableRemarkInput" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Remark Input." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Is Enable Mobile Input</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableMobileInput" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableMobileInput" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Mobile Input." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Enable Previous Education Input</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnablePreviousEducationInput" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnablePreviousEducationInput" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Previous Education Input." data-toggle="tooltip"></i></span></td>
+            </tr>
+        <tr>
+            <td class="fieldlabel">Default Class Section Range </td>
+            <td class="fieldarea">
+                <input type="number" ng-model="SiteSettings.DefaultClassSectionRange" class="form-control" placeholder="Enter Default Class Section Range " required="" />
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default Class Section Range ." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Student Id Generate Type </td>
+            <td class="fieldarea">
+                <select ng-model="SiteSettings.StudentIdGenerateType" ng-options="option.Id as option.Name for option in StudentIdGenerateTypeEnumList" title="Select Type" ng-init="" class="form-control">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+                @*<input type="number" ng-model="SiteSettings.SuppleExamFeeParticularId" class="form-control" placeholder="Enter Supple Exam Fee Particular Id" required=""/>*@
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Id Generate Type." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">UGC University Code </td>
+            <td class="fieldarea">
+                <input type="text" ng-model="SiteSettings.AddNewApplicantFormSettings.UgcVersityCode" class="form-control" placeholder="Enter UGC versity Code." required="" />
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Here to generate UGC unique id this will be in the first position." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Is Auto Generate UGC ID</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoGenerateUgcId" class="radio-inline" ng-value="true" /> Yes
+                <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsAutoGenerateUgcId" class="radio-inline" ng-value="false" /> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="if this is selected than ugc id will be generated automatically. Other wise it will be same as username and class roll no." data-toggle="tooltip"></i></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+
+                <tr>
+                    <td class="fieldlabel">Is Enable Email Input</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableEmailInput" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableEmailInput" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Email Input." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Enable Enroll Type Selection</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableEnrollTypeSelection" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableEnrollTypeSelection" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Enroll Type Selection." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                <tr>
+                    <td class="fieldlabel">Is Enable Dept Batch Selection</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableDeptBatchSelection" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableDeptBatchSelection" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Dept BatchS election." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Enable Campus Selection</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableCampusSelection" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableCampusSelection" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Campus Selection." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Is Enable Auto Registration</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableAutoRegistration" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableAutoRegistration" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Auto Registration." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Enable Auto Course Offering</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableAutoCourseOffering" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableAutoCourseOffering" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="It will enable auto course offering while admission if no course is offered." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">Is Enable Semester Wise Scholarship Input</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableSemesterWiseScholarshipInput" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.AddNewApplicantFormSettings.IsEnableSemesterWiseScholarshipInput" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Semester Wise Scholarship Input." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Student ID Serial Digit Count </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.StudentIdSerialDigitCount" class="form-control" placeholder="Enter Student Id Serial Digit Count" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Id Serial Digit Count." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                <tr>
+                    <td class="fieldlabel">Total Student ID Length </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="SiteSettings.TotalStudentIdLength" class="form-control" placeholder="Enter Total Student Id Length " required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Student Id Length ." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div><!--Col end-->
+</div>
+

@@ -1,0 +1,138 @@
+﻿
+<!--File:UAC_PassReset List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Password Reset List";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var PassResetId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getPassResetByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "GetPassResetById", area = "Admin" });
+    var getPassResetDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "GetPassResetDataExtra", area = "Admin" });
+    var savePassResetUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "SavePassReset", area = "Admin" });
+    var deletePassResetByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "GetDeletePassResetById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedPassResetUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "PassResetApi", action = "GetPagedPassReset", area = "Admin"});
+    var getAllPassResetUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "GetAllPassReset", area = "Admin" });
+    var savePassResetListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "SavePassResetList", area = "Admin" });
+    var getPassResetListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PassResetApi", action = "GetPassResetListDataExtra", area = "Admin" });
+
+    var editPassResetByIdPageUrl = Url.Action("PassResetAddEdit", "PassReset", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewPassReset = "getNewPassReset";
+    var savePassReset = "savePassReset";
+    var deletePassResetById = "deletePassResetById";
+    var deletePassResetByObj = "deletePassResetByObj";
+    //for list
+    var searchPassResetList = "searchPassResetList";
+    var getPagedPassResetList = "getPagedPassResetList";
+    var getAllPassResetList = "getAllPassResetList";
+    var savePassResetList = "savePassResetList";
+    var loadPassResetListExtraData = "loadPassResetListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/PassReset/PassResetList.js"></script>
+}
+
+
+<div ng-controller="PassResetListCtrl"
+     ng-init="Init(
+      '@getPagedPassResetUrl'
+     ,'@deletePassResetByIdUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Pass Reset </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchPassResetList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editPassResetByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">User Id</th>
+                    <th class="text-center">Request Date</th>
+                    <th class="text-center">Request By</th>
+                    <th class="text-center">Code</th>
+                    <th class="text-center">Valid Hours</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Reset Date</th>
+                    <th class="text-center">Reset By</th>
+                    <th class="text-center">From Ip</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="row in PassResetList">
+                    <td>{{$index+1}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_UserId}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_RequestDate | date:'medium'}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_RequestById}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_Code}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_ValidHours}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_Type}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_Status}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_ResetDate | date:'medium'}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_ResetById}}</td>
+                    <td class="">{{row.@UAC_PassReset.Property_FromIp}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

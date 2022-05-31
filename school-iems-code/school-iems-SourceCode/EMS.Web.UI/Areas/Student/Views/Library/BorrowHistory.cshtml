@@ -1,0 +1,76 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Borrow History";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div id="main-content">
+        <div>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="text-align: left;">
+                            <h4> Borrow History</h4>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">#</th>
+                        <th style="text-align: center">Title</th>
+                        <th style="text-align: center">Edition</th>
+                        <th style="text-align: center">Barcode</th>
+                        <th style="text-align: center">Borrowed On</th>
+                        <th style="text-align: center">Expected Return On</th>
+                        <th style="text-align: center">Returned On</th>
+                        <th style="text-align: center">Fine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: right">1</td>
+                        <td>Sun Java 2 </td>
+                        <td style="text-align: center">1st ed.</td>
+                        <td style="text-align: center">0000009661 </td>
+                        <td style="width: 15% ; text-align: center">05-Oct-2011 </td>
+                        <td style="width: 15% ; text-align: center">12-Oct-2011 </td>
+                        <td style="width: 15% ; text-align: center">11-Oct-2011 </td>
+                        <td style="text-align: right">0 </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">2</td>
+                        <td>Java </td>
+                        <td style="text-align: center">1st ed.</td>
+                        <td style="text-align: center">0000000321 </td>
+                        <td style="width: 15% ; text-align: center">17-Nov-2011 </td>
+                        <td style="width: 15% ; text-align: center">24-Nov-2011 </td>
+                        <td style="width: 15% ; text-align: center">27-Nov-2011 </td>
+                        <td style="text-align: right">10 </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">3</td>
+                        <td>Network Routing Basics Understanding Ip Routing In Cisco Systems </td>
+                        <td style="text-align: center">1st</td>
+                        <td style="text-align: center">0000020181 </td>
+                        <td style="width: 15% ; text-align: center">07-Feb-2012 </td>
+                        <td style="width: 15% ; text-align: center">14-Feb-2012 </td>
+                        <td style="width: 15% ; text-align: center">12-Feb-2012 </td>
+                        <td style="text-align: right">0 </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

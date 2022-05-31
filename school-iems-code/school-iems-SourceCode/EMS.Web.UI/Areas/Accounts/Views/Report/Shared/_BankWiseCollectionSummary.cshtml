@@ -1,0 +1,143 @@
+﻿
+<!--File:Acnt_StdTransaction List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+
+
+    //WebApi link for List
+    var getBankWiseCollectionSummaryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentCollectionReportApi", action = "GetBankWiseCollectionSummaryDataExtra", area = "Accounts" });
+    var getBankWiseCollectionSummaryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentCollectionReportApi", action = "GetBankWiseCollectionSummary", area = "Accounts" });
+    //Angular Function Name
+}
+
+
+<div ng-controller="BankWiseCollectionSummaryCtrl"
+     ng-init="Init(
+      '@getBankWiseCollectionSummaryDataExtraUrl'
+      ,'@getBankWiseCollectionSummaryUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="widget">
+        <div class="widget-body no-padding" style="overflow: auto">
+            <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;" colspan="12"><strong>Report of Bank Wise Collection Summary</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="width: 25px;">Bank: </td>
+                        <td>
+                            <select ng-model="SelectedBank"
+                                    ng-options="option as option.Name for option in OfficialBankList" title="Select Bank" class="form-control">
+                                <option value="" label="" class="">All Bank</option>
+                            </select>
+                        </td>
+                        <td style="width: 72px;">Start Date:</td>
+                        <td>
+                            <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                        </td>
+                        <td style="width: 66px;">End Date:</td>
+                        <td>
+                            <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                        </td>
+                    </tr>
+                    <tr class="hide-on-print">
+                        <td style="text-align: center;" colspan="12">
+                            <button class="btn btn-info" ng-click="getBankWiseCollectionSummary()">
+                                View Report
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+            <div ng-hide="Report.length==0" class="main-body" style="background-color: white;">
+                <table style="width: 100%" class="table-bordered table-border">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th  ng-repeat="bank in Report.BankWiseTotalCollectionList">{{bank.Name}}</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="trans in Report.PerDayCollectionList">
+                        <td class="text-center">
+                            <div>{{trans.Date |date:'dd/M/yyyy'}}</div>
+                        </td>
+                        <td ng-repeat="bank in trans.BankList"
+                            class="text-right">
+                            {{bank.Amount |number:2}}
+                        </td>
+                        <td class="text-right text-bold">
+                            {{trans.TotalAmount |number:2}}
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr class="text-bold">
+                        <td class="text-right text-bold">Total:</td>
+                        <td ng-repeat="bank in Report.BankWiseTotalCollectionList" class="text-right text-bold">{{bank.TotalAmount|number:2}}</td>
+                        <td class="text-right text-bold">{{Report.TotalAmount|number:2}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+</style>

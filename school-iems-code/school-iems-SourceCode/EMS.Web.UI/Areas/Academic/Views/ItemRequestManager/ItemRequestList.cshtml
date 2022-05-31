@@ -1,0 +1,300 @@
+﻿
+
+        <!--File:ItemRequestList List View-->
+        <div id="ItemRequestList" class="row ng-scope" ng-controller="ItemRequestListCtrl" ng-init="Init(
+      );">
+
+            <div class="col-lg-12 col-sm-12 col-xs-12 voucher-entry-form">
+                <div ng-hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed ng-binding ng-hide">
+                    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                    <i class="fa-fw fa fa-warning"></i>
+                    <strong>Attention Please!</strong>
+                </div>
+                <div class="">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky ">
+                            <i class="widget-icon fa fa-edit bold  "></i>
+                            <span class="widget-caption ">
+                                List
+
+                            </span>
+                            <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                                <span class="input-icon">
+                                    <input type="text" ng-model="VoucherId" ng-enter="getVoucherById()" class="form-control input-xs  ng-pristine ng-untouched ng-valid" id="glyphicon-search" placeholder="Search">
+                                    <i class="glyphicon glyphicon-search blue"></i>
+                                </span>
+
+                            </div>
+                            <div class="widget-buttons no-padding-left">
+                                <button ng-click="getNewVoucher()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                                <a href="/BasicAccounting/Voucher/VoucherList" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                                <button ng-click="loadPage()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                            </div>
+                        </div><!--Widget Header end-->
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-md-8 table-form">
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="fieldlabel">Person Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="ItemRequestList.PersonNameId" ng-options="" ng-init="" class="form-control select-inline ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                        <option value="0" label="Jesy">Jesy</option>
+                                                        <option value="1" label="Jitu">Jitu</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Voucher Type." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Item <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="ItemRequestList.ItemId" ng-options="" ng-init="" class="form-control select-inline ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                        <option value="0" label="Football">Football</option>
+                                                        <option value="1" label="Cricket">Cricket</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Voucher Type." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Catagory <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="ItemRequestList.CatagoryId" ng-options="" ng-init="" class="form-control select-inline ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                        <option value="0" label="Football">Sports </option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Voucher Type." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Ishu Date <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <input type="text" ng-model="ItemRequestList.IshuDate" class="form-control date-picker ng-valid ng-valid-datetime ng-valid-min ng-valid-max ng-touched ng-dirty ng-valid-parse" placeholder="Enter Ishu Date" datetime="dd/MM/yyyy">
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Ishu Date." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Return Date <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea">
+                                                    <input type="text" ng-model="ItemRequestList.ReturnDate" class="form-control date-picker ng-valid ng-valid-datetime ng-valid-min ng-valid-max ng-touched ng-dirty ng-valid-parse" placeholder="Enter Return Date" datetime="dd/MM/yyyy">
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Ishu Date." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+
+                                    <div class="col-md-12 text-center">
+                                        <button ng-click="searchItemRequest()" class="btn btn-md btn-success"><span class="fa fa-search"></span> Search</button>
+                                    </div>
+
+                                </div><!--Col end-->
+                              
+                            </div><!--Row end-->
+                        </div><!--Widget Body end-->
+
+
+                        <div class="widget-body no-padding" style="overflow:auto">
+                            <div class="table-footer no-print">
+                                <div class="row no-print">
+                                    <div class="col-sm-4">
+                                        <div class="form-inline pull-left">
+                                            <div class="form-group">
+                                                <label ng-hide="totalServerItems==0" class="ng-binding">(Showing 1-11 of 11)</label>
+                                                <label ng-show="totalServerItems==0" class="text-danger ng-hide">No Data Found!</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-inline pull-right">
+                                            <div class="form-group">
+                                                <label>Page Size</label>
+                                                <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt ng-valid ng-valid-min ng-dirty ng-touched" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Page No.</label>
+                                                <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt ng-pristine ng-untouched ng-valid ng-valid-min" autocomplete="on" placeholder="Page No" type="number" min="1">
+                                                <label class="ng-binding">of 0</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center" style="display:none">
+                                            <input type="checkbox" ng-click="selectAll($event)">
+                                        </th>
+                                        <th class="text-center">SN</th>
+                                        <th class="text-center">Person Name</th>
+                                        <th class="text-center">Ishu Date</th>
+                                        <th class="text-center">Item</th>
+                                        <th class="text-center">Catagory</th>
+                                        <th class="text-center">Return Date</th>
+                                        <th class="text-center">Unit Type</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <!-- ngRepeat: row in GradingPolicyOptionList | orderBy:'SerNo' -->
+                                    <tr class="ng-scope">
+                                        <td class="text-center" style="display:none">
+                                            <input type="checkbox" ng-model="row.IsSelected" class="ng-pristine ng-untouched ng-valid">
+                                        </td>
+                                        <td class="text-center ng-binding">1</td>
+                                        <td class="ng-binding">Farhan</td>
+                                        <td class="ng-binding">10/10/2022</td>
+                                        <td class="ng-binding">Cricket Bat</td>
+                                        <td class="ng-binding">Sports</td>
+                                        <td class="ng-binding">10/12/2023</td>
+                                        <td class="ng-binding">Pic</td>
+                                        <td class="ng-binding">10</td>
+                                      
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Action</a>
+                                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-primary" style="min-width:120px">
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassResultComponent/Print30PercentTheoryExamMark/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Pending</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassManagement/GenerateClassResult/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Accepted</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassManagement/PrintOnlyFinalGradeSheet/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Rejected</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr><!-- end ngRepeat: row in GradingPolicyOptionList | orderBy:'SerNo' -->
+                                    <tr class="ng-scope">
+                                        <td class="text-center" style="display:none">
+                                            <input type="checkbox" ng-model="row.IsSelected" class="ng-pristine ng-untouched ng-valid">
+                                        </td>
+                                        <td class="text-center ng-binding">2</td>
+                                        <td class="ng-binding">Sakib</td>
+                                        <td class="ng-binding">10/10/2022</td>
+                                        <td class="ng-binding">Foot ball</td>
+                                        <td class="ng-binding">Sports</td>
+                                        <td class="ng-binding">10/12/2023</td>
+                                        <td class="ng-binding">Pic</td>
+                                        <td class="ng-binding">15</td>
+                                       
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Action</a>
+                                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-primary" style="min-width:120px">
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassResultComponent/Print30PercentTheoryExamMark/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Pending</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassManagement/GenerateClassResult/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Accepted</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-show="RegularSectionAB.length>=0" target="_blank" href="/Employee/ClassManagement/PrintOnlyFinalGradeSheet/?classId={{ClassId}}&examType={{0}}"><i class="fa fa-print"></i> Rejected</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr><!-- end ngRepeat: row in GradingPolicyOptionList | orderBy:'SerNo' -->
+
+                                </tbody>
+                            </table>
+                            <div class="table-footer no-print">
+                                <div class="row no-print">
+                                    <div class="col-sm-4">
+                                        <div class="form-inline pull-left">
+                                            <div class="form-group">
+                                                <label ng-hide="totalServerItems==0" class="ng-binding">(Showing 1-11 of 11)</label>
+                                                <label ng-show="totalServerItems==0" class="text-danger ng-hide">No Data Found!</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-inline pull-right">
+                                            <div class="form-group">
+                                                <label>Page Size</label>
+                                                <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt ng-valid ng-valid-min ng-dirty ng-valid-number ng-touched" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Page No.</label>
+                                                <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt ng-pristine ng-untouched ng-valid ng-valid-min" autocomplete="on" placeholder="Page No" type="number" min="1">
+                                                <label class="ng-binding">of 0</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div><!--view permission end-->
+            </div>
+        </div><!--controller end-->
+
+
+        <style>
+
+            .voucher-entry-form input,
+            .voucher-entry-form optgroup,
+            .voucher-entry-form select,
+            .voucher-entry-form textarea {
+                height: 25px !important;
+                font-size: 12px;
+            }
+
+            .text-dropdown-toggle .dropdown-menu li a:hover {
+                background: #1884e6;
+                color: #fff;
+            }
+
+            .text-dropdown {
+                max-height: 115px;
+                overflow-y: auto;
+                font-size: 13px;
+                padding: 6px 12px;
+                width: 100%;
+                line-height: 1.42857143;
+                background-image: none;
+            }
+
+            .text-dropdown-toggle ul {
+                max-height: 115px !important;
+                padding: 0px !important;
+                overflow-x: hidden !important;
+            }
+
+                .text-dropdown-toggle ul li a {
+                    padding-left: 0px !important;
+                    padding-right: 0px !important;
+                    padding: 2px 10px !important;
+                }
+        </style>
+
+
+
+
+

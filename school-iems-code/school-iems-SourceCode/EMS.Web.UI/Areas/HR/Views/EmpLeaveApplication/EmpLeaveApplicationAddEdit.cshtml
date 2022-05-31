@@ -1,0 +1,203 @@
+﻿
+<!--File:HR_EmpLeaveApplication Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Emp Leave Application";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var EmpLeaveApplicationId = (string) id == null?"0":(string)id;
+    
+    //HR_EmpLeaveApplication WebApi Single Row link   
+    var getEmpLeaveApplicationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "GetEmpLeaveApplicationById", area = "HR" });
+    var getEmpLeaveApplicationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "GetEmpLeaveApplicationDataExtra", area = "HR" });
+    var saveEmpLeaveApplicationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "SaveEmpLeaveApplication", area = "HR" });
+    var deleteEmpLeaveApplicationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "GetDeleteEmpLeaveApplicationById", area = "HR" });
+
+    //HR_EmpLeaveApplication WebApi List link 
+    var getPagedEmpLeaveApplicationUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "EmpLeaveApplicationApi", action = "GetPagedEmpLeaveApplication", area = "HR"});
+    var getAllEmpLeaveApplicationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "GetAllEmpLeaveApplication", area = "HR" });
+    var saveEmpLeaveApplicationListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "SaveEmpLeaveApplicationList", area = "HR" });
+    var getEmpLeaveApplicationListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveApplicationApi", action = "GetEmpLeaveApplicationListDataExtra", area = "HR" });
+
+    var editEmpLeaveApplicationByIdPageUrl = Url.Action("EmpLeaveApplicationAddEdit", "EmpLeaveApplication", new { area = "HR" });
+    var listEmpLeaveApplicationPageUrl = Url.Action("EmpLeaveApplicationList", "EmpLeaveApplication", new { area = "HR" });
+    
+    //HR_EmpLeaveApplication Angular Functions
+    string getEmpLeaveApplicationById="getEmpLeaveApplicationById";
+    var saveEmpLeaveApplication = "saveEmpLeaveApplication";
+    var getNewEmpLeaveApplication = "getNewEmpLeaveApplication";
+    var refreshPage = "loadPage()";
+    string deleteEmpLeaveApplicationById="deleteEmpLeaveApplicationById";
+    string loadEmpLeaveApplicationExtraData="loadEmpLeaveApplicationExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/EmpLeaveApplication/EmpLeaveApplicationAddEdit.js"></script>
+}
+
+<div id="EmpLeaveApplicationAddEdit" class="row" ng-controller="EmpLeaveApplicationAddEditCtrl" ng-init="Init(
+      '@EmpLeaveApplicationId'
+      ,'@getEmpLeaveApplicationByIdUrl'
+      ,'@getEmpLeaveApplicationDataExtraUrl'
+      ,'@saveEmpLeaveApplicationUrl'
+      ,'@deleteEmpLeaveApplicationByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_Name!=''">{{(EmpLeaveApplication.@HR_EmpLeaveApplication.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="EmpLeaveApplicationId" ng-Enter="@(getEmpLeaveApplicationById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewEmpLeaveApplication)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listEmpLeaveApplicationPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Leave Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveTypeEnumId" ng-options="option.Id as option.Name for option in LeaveTypeEnumList" title="Select Leave Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Leave Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Leave From </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveFrom" class="form-control" placeholder="Enter Leave From"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Leave From." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Leave Till </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveTill" class="form-control" placeholder="Enter Leave Till"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Leave Till." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Leave Hour </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveHour" class="form-control" placeholder="Enter Leave Hour"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Leave Hour." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Leave Reason <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveReason" class="form-control" placeholder="Enter Leave Reason"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Leave Reason." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Status </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_Remarks" class="form-control" placeholder="Enter Remarks"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Emp Leave Allocation Settings </td>
+                            <td class="fieldarea">
+                                <select ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_LeaveAllocationSettingsId"
+                                        ng-options="option.Id as option.Name for option in EmpLeaveAllocationSettingsList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Emp Leave Allocation Settings." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Employee </td>
+                            <td class="fieldarea">
+                                <select ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_EmployeeId"
+                                        ng-options="option.Id as option.Name for option in EmployeeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Employee </td>
+                            <td class="fieldarea">
+                                <select ng-model="EmpLeaveApplication.@HR_EmpLeaveApplication.Property_RecommendByEmployeeId"
+                                        ng-options="option.Id as option.Name for option in EmployeeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveEmpLeaveApplication)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Student List";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/Student/_StudentList.js?v=6"></script>
+    <!--For exporting html table-->
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+    @*<script src="~/assets/custom/lib/TableExport/jquery.base64.js"></script>*@
+    @*<!--For exporting html table to PNG format-->
+        <script src="~/assets/custom/lib/TableExport/html2canvas.js"></script>
+        <!--For exporting html table data into PDF format-->
+        <script src="~/assets/custom/lib/TableExport/jspdf/sprintf.js"></script>
+        <script src="~/assets/custom/lib/TableExport/jspdf/jspdf.js"></script>
+        <script src="~/assets/custom/lib/TableExport/jspdf/base64.js"></script>*@
+}
+
+@Html.Partial("~/Areas/Academic/Views/Student/_StudentList.cshtml");

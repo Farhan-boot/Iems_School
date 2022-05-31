@@ -1,0 +1,142 @@
+﻿
+<!--File:Acnt_ScholarshipType Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Scholarship Type";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ScholarshipTypeId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getScholarshipTypeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "GetScholarshipTypeById", area = "Accounts" });
+    var getScholarshipTypeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "GetScholarshipTypeDataExtra", area = "Accounts" });
+    var saveScholarshipTypeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "SaveScholarshipType", area = "Accounts" });
+    var deleteScholarshipTypeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "GetDeleteScholarshipTypeById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedScholarshipTypeUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ScholarshipTypeApi", action = "GetPagedScholarshipType", area = "Accounts"});
+    var getAllScholarshipTypeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "GetAllScholarshipType", area = "Accounts" });
+    var saveScholarshipTypeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "SaveScholarshipTypeList", area = "Accounts" });
+    var getScholarshipTypeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ScholarshipTypeApi", action = "GetScholarshipTypeListDataExtra", area = "Accounts" });
+
+    var editScholarshipTypeByIdPageUrl = Url.Action("ScholarshipTypeAddEdit", "ScholarshipType", new { area = "Accounts" });
+    var listScholarshipTypePageUrl = Url.Action("ScholarshipTypeList", "ScholarshipType", new { area = "Accounts" });
+    
+    // Angular Functions
+    string getScholarshipTypeById="getScholarshipTypeById";
+    var saveScholarshipType = "saveScholarshipType";
+    var getNewScholarshipType = "getNewScholarshipType";
+    var refreshPage = "loadPage()";
+    string deleteScholarshipTypeById="deleteScholarshipTypeById";
+    string loadScholarshipTypeExtraData="loadScholarshipTypeExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/ScholarshipType/ScholarshipTypeAddEdit.js"></script>
+}
+
+<div id="ScholarshipTypeAddEdit" class="row" ng-controller="ScholarshipTypeAddEditCtrl" ng-init="Init(
+      '@ScholarshipTypeId'
+      ,'@getScholarshipTypeByIdUrl'
+      ,'@getScholarshipTypeDataExtraUrl'
+      ,'@saveScholarshipTypeUrl'
+      ,'@deleteScholarshipTypeByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="ScholarshipType.@Acnt_ScholarshipType.Property_Name!=''">{{(ScholarshipType.@Acnt_ScholarshipType.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ScholarshipTypeId" ng-Enter="@(getScholarshipTypeById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewScholarshipType)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listScholarshipTypePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             @*<tr>
+                                <td class="fieldlabel">Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_Id" class="form-control" placeholder="Enter Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Id." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Percent Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_PercentAmount" class="form-control" placeholder="Enter Percent Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Percent Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Real Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_RealAmount" class="form-control" placeholder="Enter Real Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Real Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Status </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ScholarshipType.@Acnt_ScholarshipType.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveScholarshipType)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

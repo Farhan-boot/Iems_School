@@ -1,0 +1,159 @@
+﻿
+<!--File:HR_Department List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Department List";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DepartmentId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getDepartmentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentById", area = "Admin" });
+    var getDepartmentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentDataExtra", area = "Admin" });
+    var saveDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "SaveDepartment", area = "Admin" });
+    var deleteDepartmentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDeleteDepartmentById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "DepartmentApi", action = "GetPagedDepartment", area = "Admin"});
+    var getAllDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetAllDepartment", area = "Admin" });
+    var saveDepartmentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "SaveDepartmentList", area = "Admin" });
+    var getDepartmentListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentListDataExtra", area = "Admin" });
+
+    var editDepartmentByIdPageUrl = Url.Action("DepartmentAddEdit", "Department", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewDepartment = "getNewDepartment";
+    var saveDepartment = "saveDepartment";
+    var deleteDepartmentById = "deleteDepartmentById";
+    var deleteDepartmentByObj = "deleteDepartmentByObj";
+    //for list
+    var searchDepartmentList = "searchDepartmentList";
+    var getPagedDepartmentList = "getPagedDepartmentList";
+    var getAllDepartmentList = "getAllDepartmentList";
+    var saveDepartmentList = "saveDepartmentList";
+    var getDepartmentListExtraData = "getDepartmentListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Department/DepartmentList.js"></script>
+}
+
+
+<div ng-controller="DepartmentListCtrl"
+     ng-init="Init(
+      '@getPagedDepartmentUrl'
+     ,'@deleteDepartmentByIdUrl'
+     ,'@getDepartmentListDataExtraUrl'
+     ,'@saveDepartmentListUrl'
+     ,'@getDepartmentByIdUrl'
+     ,'@getDepartmentDataExtraUrl'
+     ,'@saveDepartmentUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Department </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Org</span>*@
+                     <select ng-model="SelectedOrgId" ng-change="@(searchDepartmentList)()" 
+                        ng-options="option.Id as option.Name for option in OrganizationList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Org---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchDepartmentList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editDepartmentByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Website</th>
+                    <th class="text-center">Founded</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in DepartmentList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@HR_Department.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@HR_Department.Property_Name}}</td>
+                    <td class="">{{row.@HR_Department.Property_ShortName}}</td>
+                    <td class="">{{row.@HR_Department.Property_DepartmentNo}}</td>
+                    <td class="">{{row.@HR_Department.Property_Email}}</td>
+                    <td class="">{{row.@HR_Department.Property_Website}}</td>
+                    <td class="">{{row.@HR_Department.Property_Founded | date:'yyyy'}}</td>
+                    <td class="">{{row.@HR_Department.Property_Type}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editDepartmentByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteDepartmentById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

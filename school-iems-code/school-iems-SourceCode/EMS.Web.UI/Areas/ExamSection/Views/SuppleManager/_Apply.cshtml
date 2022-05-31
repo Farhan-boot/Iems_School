@@ -1,0 +1,525 @@
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+
+    // Angular Properties
+
+    var un = Request.QueryString["un"];//ViewContext.RouteData.Values["id"];
+    var SearchUserName = (string)un == null ? "" : (string)un;
+
+    var examId = Request.QueryString["examId"];//ViewContext.RouteData.Values["id"];
+    var urlExamId = (string)examId == null ? "" : (string)examId;
+
+    //WebApi link for single row
+    var getStudentByUserNameUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "SuppleApplyApi", action = "GetStudentByUserName", area = "ExamSection" });
+    var getSuppleApplyDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleApplyApi", action = "GetSuppleApplyDataExtra", area = "ExamSection" });
+    var getSuppleCourseListByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleApplyApi", action = "GetSuppleCourseListByStudentId", area = "ExamSection" });
+    var saveSuppleTakenByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleApplyApi", action = "SaveSuppleTakenByStudent", area = "ExamSection" });
+
+
+    var gradeDetailReportBySemesterUrl = Url.Action("GradeDetailReportBySemester", "TranscriptAndCertificate", new {area = "Academic" });
+
+    //Angular Object
+    string StudentId = "StudentId";
+
+    //Angular list
+    string ExamList = "ExamList";
+    string SemesterList = "SemesterList";
+    string CourseList = "CourseList";
+    string CauseOfAbsenceEnumList = "CauseOfAbsenceEnumList";
+    string StatusEnumList = "StatusEnumList";
+    string RegistrationStatusEnumList = "RegistrationStatusEnumList";
+
+
+    //Angular Function Name
+    var getStudentByUserName = "getStudentByUserName";
+    var saveSuppleTakenByStudent = "saveSuppleTakenByStudent";
+    var editSuppleCourse = "editSuppleCourse";
+    string onChangeExam = "onChangeExam()";
+    var refreshPage = "loadPage()";
+    var getSuppleCourseListByStudentId = "getSuppleCourseListByStudentId";
+    var onChangeIsCheckedAllExam = "onChangeIsCheckedAllExam";
+
+}
+
+
+<div ng-controller="SuppleApplyCollection"
+     class="std-payment-collection-form"
+     ng-init="Init(
+       '@SearchUserName'
+        ,'@urlExamId'
+       ,'@getStudentByUserNameUrl'
+       ,'@getSuppleApplyDataExtraUrl'
+       ,'@getSuppleCourseListByStudentIdUrl'
+        ,'@saveSuppleTakenByStudentUrl'
+     )">
+
+<div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> {{ErrorMsg}}
+</div>
+
+<div ng-Hide="!HasWarning" class="alert alert-warning fade in radius-bordered alert-shadowed">
+    <button ng-click="HasWarning=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> {{WarningMessage}}
+</div>
+
+    <div @*ng-show="Student!=null"*@ class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="float: left">
+                <span class="input-icon">
+                    <input ng-blur="SearchUserName===''?SearchUserName=Student.@User_Account.Property_UserName:SearchUserName"
+                    ng-focus="temp=SearchUserName;Student.@User_Account.Property_UserName==SearchUserName?SearchUserName='':SearchUserName;"
+                    ng-model="SearchUserName"
+                    ng-Enter="@(getStudentByUserName)()" 
+                           type="text" id="SearchByStdId"
+                           class="form-control input-xs " placeholder="Search by Student ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div  ng-show="Student!=null"
+                class="widget-buttons buttons-bordered no-padding-right" style="float: left">
+                <span>Select @SiteSettings.Instance.SuppleExamViewName Exam</span>
+            </div>
+            <div ng-show="Student!=null"
+                class="widget-buttons buttons-bordered no-padding-right" style="float: left">
+                <select ng-model="SelectedExamId"
+                    ng-change="@(onChangeExam)() "
+                    ng-options="option.Id as option.Name for option in @ExamList" 
+                        class="form-control select-inline exam-dropdwon">
+                </select>
+            </div>
+            @*<div ng-show="Student!=null"
+                class="widget-buttons no-padding-right" style="float: left;">
+                <input ng-model="isCheckedAllExam"
+                   ng-change="@(onChangeIsCheckedAllExam)()"
+                       type="checkbox" style="margin-top: 0px !important;vertical-align: middle;width: 13px;" />
+                <span style="font-size: 9px;">Get All Exam</span>
+            </div>*@
+        </div>
+    <div ng-show="Student!=null"
+        class="widget-body supple-view well with-header" style="padding-top: 0px !important;">
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-12 table-form">
+                    @*Start Profile Information*@
+                    <table class="table table-hover table-striped table-bordered std-info-table" style="color: #555555;">
+                        <tbody>
+                            <tr>
+                                <td class="text-bold" colspan="2" style="text-align: center;">
+                                    Student Information
+                                </td>
+                            </tr>
+                            <tr role="row">
+                                <td style="width: 133px;" class="text-bold">ID:</td>
+                                <td class="text-bold text-left">
+                                    <a target="_blank"
+                                       ng-href="@Url.Action("StudentAddEdit", "Student", new {area = "Academic"})/?id={{Student.@User_Student.Property_UserId}}#Package-Information">
+                                        {{Student.@User_Account.Property_UserName}}
+                                      
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr role="row">
+                                <td>Student Name:</td>
+                                <td class="text-left">
+                                    <a target="_blank"
+                                        ng-href="@Url.Action("StudentAddEdit", "Student", new {area = "Academic"})/?id={{Student.@User_Student.Property_UserId}}#Package-Information" >
+                                        {{Student.@User_Account.Property_FullName}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr role="row">
+                                <td>Program:</td>
+                                <td class="text-left">
+                                    {{Student.ProgramShortTitle}}
+                                </td>
+                            </tr>
+                            <tr role="row">
+                                <td>Mobile No:</td>
+                                <td class="text-left">
+                                    {{Student.@User_Account.Property_UserMobile}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @*End Profile Information*@
+                </div>
+
+
+                <div class="col-md-12">
+                    <div class="no-padding">
+                        <div class="widget-main fast-payment-collection-tabs">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs" id="myTab9">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#courses-items" aria-expanded="true">
+                                            <i class="fa fa-check" style="color: #65b951;"></i>
+                                            Courses ({{(@CourseList@*| filter:{IsDeleted:false}*@).length}})
+                                        </a>
+                                    </li>
+                                    @*<li class="tab-red">
+                                        <a data-toggle="tab" href="#trash" aria-expanded="true">
+                                            <i class="fa fa-trash" style="color: #d73d32;"></i>Trash $1$({{(@StudentTransactionList| filter:{IsDeleted: true}).length}})#1#
+                                        </a>
+                                    </li>*@
+                                    <li style="float: right !important; border: none !important; margin-top: 9px !important; padding-right: 4px !important;">
+                                        <button ng-click="@(getSuppleCourseListByStudentId)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                                    </li>
+                                </ul>
+                                
+                                <div class="tab-content no-padding">
+                                    <div id="courses-items" class="tab-pane active">
+                                        <table class="table table-hover table-striped table-bordered fast-payment-collection">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-bold" colspan="8" style="text-align: center;">
+                                                        Applicable of {{SelectedExam.Name}}
+                                                    </td>
+                                                </tr>
+                                                <tr role="row" class="text-bold" style="color: #555555;">
+                                                    <td class="text-center" style="width: 40px;">
+                                                        SN
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        Course
+                                                    </td>
+
+                                                    @*<td class="text-center" style="width: 120px;" title="Registration Semester">
+                                                        $1$Attendance Semester#1#
+                                                        Reg. Semester
+                                                    </td>*@
+                                                    <td class="text-center" style="width: 220px;">
+                                                        Cause of Absence
+                                                    </td>
+                                                    <td class="text-center" style="width: 220px;">
+                                                        Remarks
+                                                    </td>
+                                                    @*<td class="text-center" style="width: 75px;">
+                                                        Type
+                                                    </td>*@
+                                                    <td class="text-center" style="width: 100px;">
+                                                        Exam Fee(Tk)
+                                                    </td>
+                                                    <td class="text-center" style="width: 95px;">
+                                                        Status
+                                                    </td>
+                                                    <td class="text-center" style="width: 100px;">
+                                                        Action
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody>
+                                            <tr 
+                                                ng-repeat="row in @CourseList"
+                                                 ng-class="{@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied):'bg-white'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved):'bg-green'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending):'bg-yellow'
+                                                , @((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved):'bg-red'}
+                                                [row.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId]">
+                                                    <td class="text-center vertical-middle">{{$index+1}}</td>
+                                                    <td class="text-bold">
+                                                        <a ng-href="@(gradeDetailReportBySemesterUrl)?stdId={{@StudentId}}#classId-{{row.@Aca_ClassTakenByStudent.Property_ClassId}}"
+                                                           target="_blank"
+                                                        >
+                                                            {{row.ClassInfoJson.Code}}: {{row.ClassInfoJson.ClassName}}
+                                                        </a>
+                                                        
+                                                        <div class="course-detail">
+                                                            Grade: {{row.Grade}} | {{row.RegSemesterName}} | {{row.@Aca_SuppleTakenByStudent.Property_EnrollType}}
+                                                        </div>
+                                                       
+                                                    </td>
+                                                <td class="text-center vertical-middle">
+                                                    <div ng-show="row.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId!=@((byte)Aca_SuppleTakenByStudent.CauseOfAbsenceEnum.Unknown)">
+                                                        <select ng-model="row.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId"
+                                                                ng-disabled="true"
+                                                                ng-change="onChangeCauseOfAbsence(row)"
+                                                                ng-options="option.Id as option.Name for option in @CauseOfAbsenceEnumList"
+                                                                class="form-control select-inline">
+                                                            <option style="padding: 10px" value="" label="" class="">---Select One---</option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-show="row.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId==@((byte)Aca_SuppleTakenByStudent.CauseOfAbsenceEnum.OverlappingOfExam)"
+                                                            style="margin-top: 5px;">
+                                                            <select ng-model="row.@Aca_SuppleTakenByStudent.Property_ClashExamClassId"
+                                                                    ng-options="option.Id as option.Code+': '+option.Name for option in row.PossibleClashExamClassList"
+                                                                    ng-disabled="true"
+                                                                    class="form-control select-inline"
+                                                                    style="font-size: 11px;">
+                                                                <option style="padding: 10px" value="" label="" class="">---Select Overlapping Course---</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                <td class="vertical-middle">
+                                                    <div>
+                                                        {{row.@Aca_SuppleTakenByStudent.Property_Remark}}
+                                                    </div>
+                                                </td>
+                                                   
+                                                <td class="text-center vertical-middle">
+                                                    <div>{{row.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount}}</div>
+                                                </td>
+                                                    <td class="text-center vertical-middle">{{row.@Aca_SuppleTakenByStudent.Property_RegistrationStatus}}</td>
+                                                    <td class="text-center vertical-middle">
+                                                        <button ng-click="editSuppleCourseModalShow(row)"
+                                                                @*ng-show="row.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied)"*@
+                                                                class="btn btn-default btn-info btn-xs">
+                                                            Process
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    @*<div id="trash" class="tab-pane">
+                                       
+                                    </div>*@
+                                </div>
+                            </div>
+
+                        </div><!--Widget Body end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Supple Course Modal Start -->
+<div class="modal fade" id="editSuppleCourseModal" tabindex="-1" role="dialog" aria-labelledby="editSuppleCourseModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    Supple Exam Processing: {{SelectedExam.Name}}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="margin: 10px 5px; font-weight: bold; font-size: 15px;">
+                                {{SuppleCourse.ClassInfoJson.Code}}: {{SuppleCourse.ClassInfoJson.ClassName}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 table-form">
+                            <!-- <input type="hidden" name="token" value=""> -->
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Appeared Semester:</td>
+                                    <td class="fieldarea">
+                                        <div class="course-detail" style="padding-left: 12px;">
+                                            <div style="font-weight: bold; font-size: 13px;">
+                                                {{SuppleCourse.RegSemesterName}}
+                                            </div>
+                                            <a ng-href="@(gradeDetailReportBySemesterUrl)?stdId={{@StudentId}}#classId-{{SuppleCourse.@Aca_ClassTakenByStudent.Property_ClassId}}"
+                                               target="_blank">
+                                                Grade: {{SuppleCourse.Grade}}
+                                            </a>
+                                            | {{SuppleCourse.@Aca_SuppleTakenByStudent.Property_EnrollType}}
+                                        </div>
+                                    </td>
+                                    <td class="fieldarea-tooltip">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Status:</td>
+                                    <td class="fieldarea">
+                                        <select ng-model="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId"
+                                                ng-disabled="true"
+                                                ng-options="option.Id as option.Name for option in @RegistrationStatusEnumList"
+                                                class="form-control select-inline">
+                                            <option style="padding: 10px" value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip">
+                                        <span><i class="fa fa-question-circle" data-title="Enter Registration Status" data-toggle="tooltip"></i></span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Cause of Absence:<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <select ng-model="SuppleCourse.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId"
+                                                ng-change="onChangeCauseOfAbsence(SuppleCourse)"
+                                                ng-disabled="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                                                ng-options="option.Id as option.Name for option in @CauseOfAbsenceEnumList"
+                                                class="form-control select-inline">
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Cause of Absence" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId==@((byte) Aca_SuppleTakenByStudent.CauseOfAbsenceEnum.OverlappingOfExam)">
+                                    <td class="fieldlabel">Overlapping Course:<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <select ng-model="SuppleCourse.@Aca_SuppleTakenByStudent.Property_ClashExamClassId"
+                                                ng-disabled="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                                                ng-options="option.Id as option.Code+': '+option.Name for option in SuppleCourse.PossibleClashExamClassList"
+                                                class="form-control select-inline"
+                                                style="font-size: 11px;">
+                                            <option style="padding: 10px" value="" label="" class="">---Select Overlapping Course---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Overlapping Course" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Exam Fee:<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input ng-model="SuppleCourse.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount"
+                                               ng-disabled="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                                               type="text"
+                                               class="form-control  input-inline" placeholder="Exam Fee">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Exam Fee" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Remark:
+                                        <span ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_CauseOfAbsenceEnumId==@((byte) Aca_SuppleTakenByStudent.CauseOfAbsenceEnum.Others)" 
+                                              class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input ng-model="SuppleCourse.@Aca_SuppleTakenByStudent.Property_Remark"
+                                               ng-disabled="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                                               type="text" class="form-control  input-inline" placeholder="remark">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Date Created:</td>
+                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                        {{SuppleCourse.@Aca_SuppleTakenByStudent.Property_CreateDate|date:'dd/MM/yyyy h:mm a'}}
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Transaction Type" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Created By:</td>
+                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                        {{SuppleCourse.CreateByName}}
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Date Updated:</td>
+                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                        {{SuppleCourse.@Aca_SuppleTakenByStudent.Property_LastChanged|date:'dd/MM/yyyy h:mm a'}}
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Updated By:</td>
+                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                        {{SuppleCourse.LastChangedByName}}
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div ng-Hide="!HasError"
+                                 style="text-align: left; margin: 10px 2px;"
+                                 class="alert alert-danger fade in radius-bordered alert-shadowed">
+                                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                                <i class="fa-fw fa fa-warning"></i>
+                                <strong>Attention Please!</strong> {{ErrorMsg}}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <button ng-click="@(editSuppleCourse)(@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved))"
+                        ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending)"
+                        type="button" class="btn btn-success">
+                        <span class="fa fa fa-check-circle"></span>
+                        Approve
+                    </button>
+                    <button ng-click="@(editSuppleCourse)(@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending))"
+                        ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Canceled)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved)"
+                        type="button" class="btn btn-success">
+                        <span class="fa fa fa-check-circle"></span>
+                        Apply
+                    </button>
+                    <button ng-click="@(editSuppleCourse)(@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved))"
+                            ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Canceled)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved)"
+                            type="button" class="btn btn-success">
+                        <span class="fa fa fa-check-circle"></span>
+                        Apply & Confirm
+                    </button>
+                    <button ng-click="@(editSuppleCourse)(@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved))" 
+                            ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                            type="button" class="btn btn-danger">
+                        <span class="fa fa fa-times-circle"></span>
+                        Disapprove
+                    </button>
+                    <button ng-click="@(editSuppleCourse)(@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Canceled))"
+                        ng-show="SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending)
+                            || SuppleCourse.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId==@((byte)Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved)"
+                        type="button" class="btn btn-danger">
+                        <span class="fa fa fa-trash"></span>
+                        Cancel Application
+                    </button>
+                    
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: left">
+                <div class="header bg-blue" style="padding: 0 10px;">
+                    History
+                </div>
+                <div ng-bind-html="renderHtml(SuppleCourse.@Aca_SuppleTakenByStudent.Property_History)"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@* Edit Supple Course Modal End *@
+</div>
+<style>
+
+    .supple-view.well {
+        padding: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .course-detail {
+        font-size: 12px;
+        font-weight: normal;
+    }
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+    .vertical-middle {
+        vertical-align: middle !important;
+    }
+    .exam-dropdwon {
+        height: 25px !important;
+    }
+</style>

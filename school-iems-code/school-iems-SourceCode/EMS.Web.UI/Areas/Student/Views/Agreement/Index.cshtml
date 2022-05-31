@@ -1,0 +1,25 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Agreements";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>Guardian Information Agreement</h4>
+                    <p>Apply for Guardian Information Agreement.</p>
+                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

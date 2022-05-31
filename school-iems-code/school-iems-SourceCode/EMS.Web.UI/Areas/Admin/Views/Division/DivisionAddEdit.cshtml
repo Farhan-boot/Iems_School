@@ -1,0 +1,153 @@
+﻿<!--File:General_Division Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Division";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DivisionId = (string)id == null ? "0" : (string)id;
+
+    //General_Division WebApi Single Row link
+    var getDivisionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetDivisionById", area = "Admin" });
+    var getDivisionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetDivisionDataExtra", area = "Admin" });
+    var saveDivisionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "SaveDivision", area = "Admin" });
+    var deleteDivisionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetDeleteDivisionById", area = "Admin" });
+
+    //General_Division WebApi List link
+    var getPagedDivisionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetPagedDivision", area = "Admin" });
+    var getAllDivisionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetAllDivision", area = "Admin" });
+    var saveDivisionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "SaveDivisionList", area = "Admin" });
+    var getDivisionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DivisionApi", action = "GetDivisionListDataExtra", area = "Admin" });
+
+    var editDivisionByIdPageUrl = Url.Action("DivisionAddEdit", "Division", new { area = "Admin" });
+    var listDivisionPageUrl = Url.Action("DivisionList", "Division", new { area = "Admin" });
+
+    //General_Division Angular Functions
+    string getDivisionById = "getDivisionById";
+    var saveDivision = "saveDivision";
+    var getNewDivision = "getNewDivision";
+    var refreshPage = "loadPage()";
+    string deleteDivisionById = "deleteDivisionById";
+    string loadDivisionExtraData = "loadDivisionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Division/DivisionAddEdit.js"></script>
+}
+
+<div id="DivisionAddEdit" class="row" ng-controller="DivisionAddEditCtrl" ng-init="Init(
+      '@DivisionId'
+      ,'@getDivisionByIdUrl'
+      ,'@getDivisionDataExtraUrl'
+      ,'@saveDivisionUrl'
+      ,'@deleteDivisionByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="Division.@General_Division.Property_Name!=''">{{(Division.@General_Division.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="DivisionId" ng-Enter="@(getDivisionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewDivision)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listDivisionPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Division.@General_Division.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Division No </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="Division.@General_Division.Property_DivisionNo" class="form-control" placeholder="Enter Division No" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Division No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Order No </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="Division.@General_Division.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Deleted </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Division.@General_Division.Property_IsDeleted" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Active </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Division.@General_Division.Property_IsActive" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Active if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Created By Id </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Division.@General_Division.Property_CreatedById" class="form-control" placeholder="Enter Created By Id" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Created By Id." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Country </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Division.@General_Division.Property_CountryId"
+                                                    ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Country." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(saveDivision)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

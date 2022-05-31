@@ -1,0 +1,19 @@
+﻿@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+
+@{
+    Layout = "~/Areas/Student/Views/Shared/_LayoutStudentReport.cshtml";
+}
+
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/Student/Views/Reports/_GradesBySemester.cshtml", Model)
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

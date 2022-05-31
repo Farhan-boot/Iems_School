@@ -1,0 +1,444 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@using EMS.Web.UI.Areas.ExamSection.Controllers
+@model List<TabulationManagerController.StudentWiseResult>
+@{
+
+    //List<User_Student> studentList = Model;
+    List<TabulationManagerController.StudentWiseResult> studentWiseResultList = Model;
+
+    List<Aca_CurriculumCourse> courseList = ViewBag.CourseList;
+    TabulationManagerController.TabulationModel tabulationModel = ViewBag.TabulationModel;
+
+    var theoryCourseListForFinalTerm = tabulationModel.CourseInfo.TheoryCourseListForFinalTerm;
+    var nonTheoryCourseListForFinalTerm = tabulationModel.CourseInfo.NonTheoryCourseListForFinalTerm;
+    var referredCourseList = tabulationModel.CourseInfo.ReferredCourseList;
+    var backlogCourseList = tabulationModel.CourseInfo.BacklogCourseList;
+
+    var studentProfileUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+    var classResultSheetUrl = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+    var gradeDetailReportBySemesterWithSuppleUrl= Url.Action("GradeDetailReportBySemesterWithSupple", "TranscriptAndCertificate", new { area = "Academic" });
+
+
+}
+<table  border="1" cellpadding="5" cellspacing="0" bordercolor="#000000" style="border-collapse: collapse;" width="100%" id="AutoNumber1" bordercolordark="#666666" bordercolorlight="#999999">
+<!-- Colum Titles -->
+
+<tbody>
+<tr>
+    
+    <td></td>
+    @{
+        //FINAL EXAMINATION
+        var totalFinalTermCourse = theoryCourseListForFinalTerm.Count + nonTheoryCourseListForFinalTerm.Count;
+        if (totalFinalTermCourse>0)
+        {
+            <td colspan="@(totalFinalTermCourse)" style="text-align: center;">FINAL EXAMINATION</td>
+        }
+
+        //CLEARANCE/IMPROVEMENT
+        if (referredCourseList.Count>0)
+        {
+            <td colspan="@(referredCourseList.Count)" style="text-align: center;">CLEARANCE/IMPROVEMENT</td>
+        }
+
+        //Backlog
+        if (tabulationModel.MaxBacklogCourseFound > 0)
+        {
+            <td colspan="@(tabulationModel.MaxBacklogCourseFound *3)" style="text-align: center;">BACKLOG</td>
+        }
+        <td colspan="3" style="text-align: center;">Semester Credit</td>
+
+    }
+</tr>
+<tr>
+    <td></td>
+    @{
+        // Theory Course List For Final Term
+        if (theoryCourseListForFinalTerm.Count>0)
+        {
+            <td colspan="@theoryCourseListForFinalTerm.Count" style="text-align: center;">THEORY</td>
+        }
+
+        //Non Theory Course List For Final Term
+        if (nonTheoryCourseListForFinalTerm.Count > 0)
+        {
+            <td colspan="@nonTheoryCourseListForFinalTerm.Count" style="text-align: center;">SESSIONAL</td>
+        }
+
+        //Referred Course List
+        if (referredCourseList.Count > 0)
+        {
+            <td colspan="@referredCourseList.Count" style="text-align: center;">THEORY</td>
+        }
+
+        //Backlog CourseList
+        if (tabulationModel.MaxBacklogCourseFound > 0)
+        {
+            for (int i = 1; i <= tabulationModel.MaxBacklogCourseFound; i++)
+            {
+                <td colspan="3" style="text-align: center;">Course @i</td>
+            }
+        }
+
+    }
+
+    <td colspan="3" style="text-align: center;">@tabulationModel.TotalFinalExaminationCredit</td>
+
+</tr>
+<tr bgcolor="#e2e2e2" align="center">
+    <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Student ID</font></td>
+    
+    @{
+        //Theory Course List For Final Term
+        if (theoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in theoryCourseListForFinalTerm)
+            {
+                <td colspan="1">
+                    <div style="margin: -6px -8px; padding: 3px">@course.Code</div>
+                </td>
+            }
+        }
+
+        //Non Theory Course List For Final Term
+        if (nonTheoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in nonTheoryCourseListForFinalTerm)
+            {
+                <td colspan="1">
+                    <div style="margin: -6px -8px; padding: 3px">@course.Code</div>
+                </td>
+            }
+        }
+
+        // Referred Course List
+        if (referredCourseList.Count > 0)
+        {
+            foreach (var course in referredCourseList)
+            {
+                <td colspan="1">
+                    <div style="margin: -6px -8px; padding: 3px">@course.Code</div>
+                </td>
+            }
+        }
+
+        //Backlog CourseList
+        if (tabulationModel.MaxBacklogCourseFound > 0)
+        {
+            for (int i = 1; i <= tabulationModel.MaxBacklogCourseFound; i++)
+            {
+                <td rowspan="3" style="text-align: center;">Course No.</td>
+                <td rowspan="3" style="text-align: center; transform: rotate(-90deg);">Credit</td>
+                <td rowspan="3" style="text-align: center; transform: rotate(-90deg);">Grade</td>
+            }
+        }
+
+
+    }
+
+
+    <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Reg.<br> Credit</font></td>
+    <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Earned<br> Credit</font></td>
+    <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">GPA</font></td>
+
+    @*<td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Results</font></td>
+    <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Remarks</font></td>
+    <td rowspan="3" class="hide-on-print"><font face="Arial, Arial, Helvetica" size="2">Mark Fail</font></td>*@
+</tr>
+
+
+<!-- Credits -->
+<tr bgcolor="#e2e2e2" align="center">
+    @{
+        //Theory Course List For Final Term
+        if (theoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in theoryCourseListForFinalTerm)
+            {
+                <td colspan="1" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2">
+                    <font face="Arial, Arial, Helvetica" size="2">@*&nbsp;Cr.Hr:*@ @course.CreditLoad.ToString("f2")</font>
+                </td>
+            }
+        }
+
+        //Non Theory Course List For Final Term
+        if (nonTheoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in nonTheoryCourseListForFinalTerm)
+            {
+                <td colspan="1" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2">
+                    <font face="Arial, Arial, Helvetica" size="2">@*&nbsp;Cr.Hr:*@ @course.CreditLoad.ToString("f2")</font>
+                </td>
+            }
+        }
+
+
+        //Referred Course List
+        if (referredCourseList.Count > 0)
+        {
+            foreach (var course in referredCourseList)
+            {
+                <td colspan="1" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2">
+                    <font face="Arial, Arial, Helvetica" size="2">@*&nbsp;Cr.Hr:*@ @course.CreditLoad.ToString("f2")</font>
+                </td>
+            }
+        }
+    }
+</tr>
+<tr>
+
+    @{
+        // Theory Course List For Final Term
+        if (theoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in theoryCourseListForFinalTerm)
+            {
+                <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade</font></td>
+            }
+        }
+
+        // Non Theory Course List For Final Term
+        if (nonTheoryCourseListForFinalTerm.Count > 0)
+        {
+            foreach (var course in nonTheoryCourseListForFinalTerm)
+            {
+                <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade</font></td>
+            }
+        }
+
+        // Non Theory Course List For Final Term
+        if (referredCourseList.Count > 0)
+        {
+            foreach (var course in referredCourseList)
+            {
+                <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade</font></td>
+            }
+        }
+    }
+
+
+</tr>
+<tr bgcolor="#e2e2e2" align="center">
+    @*<td><font face="Arial, Arial, Helvetica" size="2">No</font></td>
+            <td><font face="Arial, Arial, Helvetica" size="2">Session</font></td>*@
+</tr>
+
+<!-- Student List Contents -->
+
+@{
+    if (studentWiseResultList != null && studentWiseResultList.Count > 0)
+    {
+        foreach (var std in studentWiseResultList)
+        {
+
+            <tr align="center">
+              
+                <td>
+                    <a href="@studentProfileUrl?id=@std.Student.UserId&stdId=@std.Student.Id&un=@std.Student.ClassRollNo#ResultManagement" target="_blank">
+                        <font face="Arial, Arial, Helvetica" size="2">@std.Student.ClassRollNo</font>
+                    </a>
+                </td>
+                @{
+                    var regYear = "";
+                    if (std.Student.ClassRollNo.ToString().Length >= 4)
+                    {
+                        regYear = std.Student.ClassRollNo.ToString().Substring(0, 4);
+                    }
+                }
+
+                @*<td>
+                            <font face="Arial, Arial, Helvetica" size="2"> @regYear </font>
+                        </td>*@
+
+
+                @*Course Result Start*@
+
+                @{
+                    // Theory Result List
+                    List<CourseResult> theoryResultList = std.TheoryResultList.ToList();
+                    if (theoryResultList.Count > 0)
+                    {
+                        foreach (var course in theoryResultList)
+                        {
+                            <td align="center">
+                                <a href="@classResultSheetUrl?classId=@course.ClassId&examType=0" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color" title="@course.CourseCode (@course.Credit)">&nbsp;@course.Grade</font>
+                                </a>
+                            </td>
+                        }
+                    }
+
+
+                    // Non Theory Result List
+                    List<CourseResult> nonTheoryResultList = std.NonTheoryResultList.ToList();
+                    if (nonTheoryResultList.Count > 0)
+                    {
+                        foreach (var course in nonTheoryResultList)
+                        {
+                            <td align="center">
+                                
+                                @{
+                                    string thisClassResultSheetUrl = "#";
+                                    if (course.ClassId.IsValid()&& course.ClassId!="0")
+                                    {
+                                        thisClassResultSheetUrl = classResultSheetUrl+"?classId="+course.ClassId+"&examType=0";
+                                    }
+
+                                }
+                                <a href="@thisClassResultSheetUrl" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color" title="@course.CourseCode (@course.Credit)">&nbsp;@course.Grade</font>
+                                </a>
+                            </td>
+                        }
+                    }
+
+                    // Referred Result List
+                    List<CourseResult> referredResultList = std.ReferredResultList.ToList();
+                    if (referredResultList.Count > 0)
+                    {
+                        foreach (var course in referredResultList)
+                        {
+
+                            <td align="center">
+                                <a href="@gradeDetailReportBySemesterWithSuppleUrl?stdId=@std.Student.Id" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color" title="@course.CourseCode (@course.Credit)">&nbsp;@course.Grade</font>
+                                </a>
+                            </td>
+                        }
+                    }
+
+                    // Backlog Result List
+                    List<CourseResult> backlogResultList = std.BacklogResultList.ToList();
+                    if (backlogResultList.Count > 0)
+                    {
+                        foreach (var course in backlogResultList)
+                        {
+                            <td align="center">
+                                <a href="@gradeDetailReportBySemesterWithSuppleUrl?stdId=@std.Student.Id" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.CourseCode</font>
+                                </a>
+                                
+                                
+                            </td>
+                            <td align="center">
+                                
+                                <a href="@gradeDetailReportBySemesterWithSuppleUrl?stdId=@std.Student.Id" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;
+                                        @if (course.Credit != null)
+                                        {
+                                            float credit = course.Credit ?? 0.0F;
+                                            <span>@credit.ToString("f2")</span>
+                                        }
+                                    </font>
+                                </a>
+                                
+                            </td>
+                            <td align="center">
+                                <a href="@gradeDetailReportBySemesterWithSuppleUrl?stdId=@std.Student.Id" target="_blank">
+                                    <font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.Grade</font>
+                                </a>
+                            </td>
+                        }
+                    }
+                }
+
+                @*Course Result End*@
+                @{
+                    Aca_SemesterResult semesterResult = Aca_SemesterResult.GetNewForTabulation(0); //std.DataBag.SemesterResult;
+
+                }
+               
+                <td align="center"><font face="Arial, Arial, Helvetica" size="2">@std.TotalRegCredit</font></td>
+                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">@std.TotalEarnedCredit</font></td>
+                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">@std.GPA.ToString("f2")</font></td>
+
+                @{
+                    string refSpan = "block";
+                    string failSpan = "block";
+                    if (semesterResult.IsLevelDrop)
+                    {
+                        refSpan = "none";
+                        failSpan = "block";
+
+                    }
+                    else
+                    {
+                        refSpan = "block";
+                        failSpan = "none";
+                    }
+                }
+
+
+
+                @*<td align="center">
+
+                    <font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">
+
+                        <span id="ref-ResultType-@semesterResult.StudentId"
+                              style="display: @refSpan;">
+                            @semesterResult.ResultType
+                        </span>
+
+                        <span id="fail-ResultType-@semesterResult.StudentId"
+                              style="display: @failSpan;">
+                            @Aca_SemesterResult.ResultTypeEnum.Failed
+                        </span>
+
+
+                    </font>
+
+                </td>*@
+
+                @*<td align="center">
+                    <font face="Arial, Arial, Helvetica" size="1" color="@semesterResult.Color">
+
+
+                        <span id="ref-remark-@semesterResult.StudentId"
+                              style="display: @refSpan;">
+                            @Html.Raw(semesterResult.Remark)
+                        </span>
+                        <span id="fail-remark-@semesterResult.StudentId"
+                              style="display: @failSpan;">
+                            Failed in @(semesterResult.TotalFailedInNonTheory + semesterResult.TotalFailedInTheory) courses
+                        </span>
+
+                        $1$Ref in<br>CE 102,<br><br>#1#
+                    </font>
+                </td>*@
+
+                @*<td align="center" class="hide-on-print">
+                    @if (semesterResult.Id > 0 && (semesterResult.TotalFailedInTheory > 0 || semesterResult.TotalFailedInNonTheory > 0))
+                    {
+                        <font face="Arial, Arial, Helvetica" size="1" color="@semesterResult.Color">
+                            T:@semesterResult.TotalFailedInTheory,L:@semesterResult.TotalFailedInNonTheory
+                            <input id="checked-@semesterResult.StudentId"
+                                   checked="@semesterResult.IsLevelDrop"
+                                   onclick="onChangeIsLevelDropByStudentId(@semesterResult.StudentId, @semesterResult.SemesterId, this.checked)"
+                                   type="checkbox"/> Mark Fail
+
+
+                        </font>
+                        <div id="message-@semesterResult.StudentId" style="color: red; font-size: 8px; display: none;"></div>
+                    }
+                </td>*@
+            </tr>
+
+        }
+    }}
+
+@*Student Info Ind*@
+
+</tbody>
+</table>
+
+
+<style>
+    a {
+        color: black;
+        text-decoration: none;
+    }
+</style>
+

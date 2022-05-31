@@ -1,0 +1,288 @@
+﻿<!--File:Temp_ResultBlockUnblock List View-->
+@using System.Security.Policy
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Result Block Unblock Manager";
+    Layout = "~/Areas/ExamSection/Views/Shared/_LayoutExamSection.cshtml";
+
+     // Angular Properties
+     var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ResultBlockUnblockId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getResultBlockUnblockByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetResultBlockUnblockById", area = "ExamSection" });
+    var getResultBlockUnblockDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetResultBlockUnblockDataExtra", area = "ExamSection" });
+    var saveResultBlockUnblockUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "SaveResultBlockUnblock", area = "ExamSection" });
+    var deleteResultBlockUnblockByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetDeleteResultBlockUnblockById", area = "ExamSection" });
+
+    //WebApi link for List
+    var getPagedResultBlockUnblockUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetPagedResultBlockUnblock", area = "ExamSection" });
+    var getAllResultBlockUnblockUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetAllResultBlockUnblock", area = "ExamSection" });
+    var saveResultBlockUnblockListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "SaveResultBlockUnblockList", area = "ExamSection" });
+    var getResultBlockUnblockListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ResultBlockUnblockApi", action = "GetResultBlockUnblockListDataExtra", area = "ExamSection" });
+
+    //var editResultBlockUnblockByIdPageUrl = Url.Action("ResultBlockUnblockAddEdit", "ResultBlockUnblock", new { area = "ExamSection" });
+
+    //Angular Function Name
+    var getNewResultBlockUnblock = "getNewResultBlockUnblock";
+    var saveResultBlockUnblock = "saveResultBlockUnblock";
+    var deleteResultBlockUnblockById = "deleteResultBlockUnblockById";
+    var deleteResultBlockUnblockByObj = "deleteResultBlockUnblockByObj";
+    //for list
+    var searchResultBlockUnblockList = "searchResultBlockUnblockList";
+    var getPagedResultBlockUnblockList = "getPagedResultBlockUnblockList";
+    var getAllResultBlockUnblockList = "getAllResultBlockUnblockList";
+    var saveResultBlockUnblockList = "saveResultBlockUnblockList";
+    var getResultBlockUnblockListExtraData = "getResultBlockUnblockListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/ResultBlockUnblock/ResultBlockUnblockManager.js"></script>
+}
+
+
+<div ng-controller="ResultBlockUnblockListCtrl"
+     ng-init="Init(
+      '@getPagedResultBlockUnblockUrl'
+     ,'@deleteResultBlockUnblockByIdUrl'
+     ,'@getResultBlockUnblockListDataExtraUrl'
+     ,'@saveResultBlockUnblockListUrl'
+     ,'@getResultBlockUnblockByIdUrl'
+     ,'@getResultBlockUnblockDataExtraUrl'
+     ,'@saveResultBlockUnblockUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-list bold  "></i>
+                    <span class="widget-caption ">Result Block Unblock Add/Edit </span>
+                </div>
+                <div class="widget-body" style="overflow: auto">
+                    <div style="text-align: right; margin-bottom: 10px;">
+                        <button ng-click="addNew()"
+                            class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel">Exam <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_ExamId"
+                                            ng-options="option.Id as option.Name for option in ExamList " ng-init="" class="form-control select-inline">
+                                        <option value="" label="" class="">Select Exam</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Exam." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Type <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_TypeEnumId" ng-options="option.Id as option.Name for option in TypeEnumList" title="Select Program Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">Select Type</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel"> Reason <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_ReasonTypeEnumId" ng-options="option.Id as option.Name for option in ReasonTypeEnumList" title="Select Program Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">Select Reason</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Reason Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Student User Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ResultBlockUnblock.StudentUserName" class="form-control" placeholder="Enter User Name" maxlength="50" required=""/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Remark</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_Remark" class="form-control" placeholder="Enter Remerk" maxlength="50" required=""/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remerk." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">
+                                    <button ng-show="ResultBlockUnblock.Id>0"
+                                        ng-click="@(saveResultBlockUnblock)()" class="btn btn-warning"><span class="fa fa-save"></span> Update</button>
+                                    <button ng-hide="ResultBlockUnblock.Id>0"
+                                        ng-click="@(saveResultBlockUnblock)()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-list bold  "></i>
+                    <span class="widget-caption ">Result Block Unblock List</span>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        @*<span class="input-icon">
+                            <input type="text" ng-model="SearchText" ng-Enter="@(searchResultBlockUnblockList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>*@
+                    </div>
+                    @*<div class="widget-buttons no-padding-left">
+                        <a target="_blank" href="@editResultBlockUnblockByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                        <button ng-click="@(searchResultBlockUnblockList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>*@
+                </div>
+                <div class="widget-body" style="overflow: auto">
+                    <div style="margin-bottom: 15px; text-align: center;">
+                        {{StudentUserNameForSearch}}
+                        <table class="table table-striped table-bordered table-hover" style="width: 415px; margin: 0 auto;">
+                            <thead>
+                            <tr>
+                                <th class="text-center" colspan="2">Selected Filter</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-show="StudentUserNameForSearch == null">
+                                <td class="text-bold text-right" style="width: 150px;">Exam: </td>
+                                <td class="text-left">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_ExamId"
+                                            ng-disabled="true"
+                                            ng-options="option.Id as option.Name for option in ExamList " ng-init="" class="form-control select-inline">
+                                        <option value="" label="" class="">Select Exam</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr ng-show="StudentUserNameForSearch == null">
+                                <td class="text-bold text-right">Type: </td>
+                                <td class="text-left">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_TypeEnumId"
+                                            ng-disabled="true"
+                                            ng-options="option.Id as option.Name for option in TypeEnumList" title="Select Program Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">Select Type</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr ng-show="StudentUserNameForSearch == null">
+                                <td class="text-bold text-right">Reason: </td>
+                                <td class="text-left">
+                                    <select ng-model="ResultBlockUnblock.@Aca_ResultBlockUnblock.Property_ReasonTypeEnumId"
+                                            ng-disabled="true"
+                                            ng-options="option.Id as option.Name for option in ReasonTypeEnumList" title="Select Program Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">Select Reason</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-bold text-right">Student User Name: </td>
+                                <td>
+                                    <input style="width: 200px;" type="text" ng-model="StudentUserNameForSearch" class="form-control" placeholder="Enter User Name" maxlength="50" required=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button 
+                                        ng-click="getResultBlockUnblockList()"
+                                        class="btn btn-default btn-azure btn-xs">
+                                        <i class="fa fa-search"></i>
+                                        Search
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center">
+                                        <input type="checkbox" ng-click="selectAll($event)">
+                                    </th>
+                                    <th class="text-center">SN</th>
+                                    <th class="text-center">Student ID</th>
+                                    <th class="text-center">Full Name</th>
+                                    <th class="text-center">Reason</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center no-print">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-repeat="row in ResultBlockUnblockList">
+                                    <td class="text-center">
+                                        <input type="checkbox" ng-model="row.@Aca_ResultBlockUnblock.Property_IsSelected" />
+                                    </td>
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="">{{row.StudentUserName}}</td>
+                                    <td class="">{{row.StudentFullName}}</td>
+                                    <td class="">{{row.@Aca_ResultBlockUnblock.Property_ReasonType}}</td>
+                                    <td class="">{{row.@Aca_ResultBlockUnblock.Property_Type}}</td>
+                                    <td class="text-center no-print">
+                                        <button ng-click="resultBlockUnblockEdit(row)" class="btn btn-info btn-xs"><i class="fa fa-edit"></i>Edit</button>
+                                        @*<a target="_blank" href="@(editResultBlockUnblockByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>*@
+                                        @*<button ng-click="@(deleteResultBlockUnblockById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>*@
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="table-footer no-print">
+                            @OptionControl()
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

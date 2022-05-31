@@ -1,0 +1,142 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    string removeUploadedPhoto = "removeUploadedPhoto";
+    string uploadProfilePic = "uploadProfilePic";
+    string selectedProfilePhotoOnChange = "selectedProfilePhotoOnChange";
+}
+
+<div class="widget-body" id="StudentAddEdit">
+    <div class="row profile-container ">
+        <div class="col-sm-3 text-center">
+            <img style="height: 200px; width: 200px" ng-show="Account.@User_Account.Property_ProfilePictureImageUrl != null" ng-src="{{Account.ProfilePictureBase64}}" alt="@HttpUtil.Profile.Name" class="header-avatar">
+            <img id="profilePhoto" style="height: 200px; width: 200px" ng-show="Account.@User_Account.Property_ProfilePictureImageUrl == null" src="/assets/img/avatars/BlankPerson.png" alt="@HttpUtil.Profile.Name" class="header-avatar">
+            @*<input type="file" name="fileToUpload" id="fileToUpload">*@
+            <br/>
+            @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanRemoveProfilePicture))
+            {
+                <button ng-hide="Account.@User_Account.Property_ProfilePictureImageUrl == null" style="margin: 10px" ng-click="@(removeUploadedPhoto)()" class="btn btn-danger shiny"><i class="fa fa-trash"></i> Remove </button>
+            }
+            
+            @*<button id="isPhotoUploadAble" style="margin: 10px; text-align: center" ng-click="@(uploadProfilePic)()" class="btn btn-success shiny"><i class="fa fa-upload"></i> Upload</button>*@
+            
+            @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanUploadProfilePicture))
+            {
+                <input ng-show="Account.@User_Account.Property_ProfilePictureImageUrl == null" id="photoUploader"
+                       onchange="angular.element(this).scope().@(selectedProfilePhotoOnChange)(this)"
+                       ng-change="@(selectedProfilePhotoOnChange)()" ng-model="Account.@User_Account.Property_ProfilePictureImageUrl"
+                       type="file" ngf-pattern="'.jpg'"
+                       ngf-accept="'.jpg'"
+                       accept=".jpg"
+                       ngf-max-files="1"
+                       style="width: 150px; font-size: 10px"/>
+            }
+            
+        </div>
+
+        <div class="col-sm-5">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <th>:</th>
+                    <th>{{Account.@User_Account.Property_FullName | uppercase}}</th>
+                </tr>
+                <tr>
+                    <td>Class Roll</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Student.Property_ClassRollNo}}</td>
+                </tr>
+                <tr>
+                    <td>Registration No</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Student.Property_RegistrationNo | uppercase}}</td>
+                </tr>
+                <tr>
+                    <td>Username</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Account.Property_UserName}}</td>
+                </tr>
+
+                <tr>
+                    <td>Date of Birth</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Account.Property_DateOfBirth | date:'yyyy, dd MMMM, EEEE'}}</td>
+                </tr>
+                <tr>
+                    <td>Admission Date</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Account.Property_JoiningDate | date:'yyyy, dd MMMM'}}</td>
+                </tr>
+                <tr>
+                    <td>CGPA</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Student.Property_CGPA}}</td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <table class="table table-bordered">
+                <tr>
+                    <td>Department</td>
+                    <td>:</td>
+                    <td>
+                        <select ng-model="Account.@User_Account.Property_DepartmentId"
+                                ng-options="option.Id as option.Name for option in DepartmentList " ng-init="" class="form-control" disabled="disabled"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Program</td>
+                    <td>:</td>
+                    <td>
+                        <select ng-model="Account.@User_Student.Property_ProgramId"
+                                ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control" disabled="disabled"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Curriculum</td>
+                    <td>:</td>
+                    <td>
+                        <select ng-model="Account.@User_Student.Property_CurriculumId"
+                                ng-options="option.Id as option.Name for option in CurriculumList " ng-init="" class="form-control" disabled="disabled"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Level Term</td>
+                    <td>:</td>
+                    <td>
+                        <b>
+                            <select ng-model="Account.@User_Student.Property_LevelTermId"
+                                    ng-options="option.Id as option.Name for option in StudyLevelList " ng-init="" class="form-control" style="display: inline-block !important;" disabled="disabled"></select> 
+                            @*<select ng-model="Obj.Student.@User_Student.Property_TermId"
+                                ng-options="option.Id as option.Name for option in StudyTermList " ng-init="" class="form-control" style="display: inline-block !important;" disabled="disabled"></select>*@
+                        </b>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dept Batch</td>
+                    <td>:</td>
+                    <td>
+                        <select ng-model="Account.@User_Student.Property_ContinuingBatchId"
+                                ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control" disabled="disabled"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Credit Completed</td>
+                    <td>:</td>
+                    <td>{{Account.@User_Student.Property_CreditCompleted}}</td>
+                </tr>
+
+
+                @*<tr>
+        <td>Nationality</td>
+        <td>:</td>
+        <td>{{Account.Nationality | uppercase}}</td>
+    </tr>*@
+            </table>
+        </div>
+    </div>
+
+</div>

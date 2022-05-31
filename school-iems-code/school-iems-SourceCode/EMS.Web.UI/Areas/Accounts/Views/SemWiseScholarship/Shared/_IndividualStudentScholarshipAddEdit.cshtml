@@ -1,0 +1,227 @@
+﻿@using EMS.DataAccess.Data
+<div class="row">
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td class="fieldlabel">Student Name (ID)</td>
+                <td class="fieldarea">
+                    {{StudentScholarship.StudentFullName}} ({{StudentScholarship.StudentUserName}})
+                </td>
+                <td class="fieldarea-tooltip">
+                    
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Program </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_ProgramId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in ProgramList" title="" ng-init="" class="form-control">
+                        <option value="" label="" class="">All Program</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Scholarship Name </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_NameParticularId"
+                            ng-change="onChangeScholarshipParticularName(StudentScholarship.@Acnt_SemWiseScholarship.Property_NameParticularId)"
+                            ng-options="option.Id as option.Name for option in ScholarshipParticularNameList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Scholarship Category </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId" ng-options="option.Id as option.Name for option in DiscountCategoryEnumList" title="Select Discount Category" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Discount Category." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr ng-show="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId==@((byte) Acnt_SemWiseScholarship.DiscountCategoryEnum.DiscountOnSpecificParticular)">
+                <td class="fieldlabel">Specific Particular Name </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DependOnParticularId"
+                            ng-options="option.Id as option.Name for option in ParticularNameList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Percent Amount </td>
+                <td class="fieldarea">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"/>
+                    </label>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Percent Amount if required." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Amount </td>
+                <td class="fieldarea">
+                    <input type="number" ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_Amount" class="form-control" placeholder="Enter Amount"/>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <!--dropdown option for EnumList-->
+
+            <tr>
+                <td class="fieldlabel">Start Semester </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_StartSemesterId"
+                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">End Semester </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">Continuing</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+            </tr>
+            
+            <tr>
+                <td class="fieldlabel">Is Allow Max Only </td>
+                <td class="fieldarea">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAllowMaxOnly" />
+                    </label>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Allow Max Only if required." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Auto Renew Next Semester On Result </td>
+                <td class="fieldarea">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAutoRenewNextSemesterOnResult" />
+                    </label>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Auto Renew Next Semester On Result if required." data-toggle="tooltip"></i></span></td>
+            </tr>
+           
+            <tr>
+                <td class="fieldlabel">Remark </td>
+                <td class="fieldarea">
+                    <textarea type="text" ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_Remark" class="form-control" placeholder="Enter Remark"></textarea>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            @*<tr>
+                <td class="fieldlabel">History </td>
+                <td class="fieldarea">
+                    {{StudentScholarship.@Acnt_SemWiseScholarship.Property_History}}
+                </td>
+                <td class="fieldarea-tooltip">
+                   
+                </td>
+            </tr>*@
+
+
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+                
+                <tr>
+                    <td class="fieldlabel">Scholarship Condition Type</td>
+                    <td class="fieldarea">
+                        <select ng-model="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId"
+                                ng-options="option.Id as option.Name for option in ScholarshipConditionTypeEnumList" title="Select Scholarship Condition Type" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Scholarship Category." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                    <td class="fieldlabel">Scholarship Type</td>
+                    <td class="fieldarea">
+                        <select ng-model="StudentScholarship.SettingsJsonObj.ScholarshipTypeEnumId"
+                                ng-options="option.Id as option.Name for option in ScholarshipTypeEnumList" title="Select Scholarship Type Enum List" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td>
+                </tr>
+            
+
+            <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Previous Semester Minimum Fresh Credit Reg For 4M</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="StudentScholarship.SettingsJsonObj.PreviousSemesterMinimumFreshCreditRegFor4M" class="form-control" placeholder="Enter Minimum Fresh CreditReg For 4M." />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Previous Semester Minimum Fresh Credit Registration For 4M." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Previous Semester Minimum Fresh Credit Reg For 6M</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="StudentScholarship.SettingsJsonObj.PreviousSemesterMinimumFreshCreditRegFor6M" class="form-control" placeholder="Enter Minimum Fresh CreditReg For 6M." />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Previous Semester Minimum Fresh Credit Registration For 6M.." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+
+                <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Minimum GPA Last Semester</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="StudentScholarship.SettingsJsonObj.MinimumGPALastSemester" class="form-control" placeholder="Enter Minimum GPA Last Semester." />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Minimum GPA Last Semester." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Minimum CGPA</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="StudentScholarship.SettingsJsonObj.MinimumCGPA" class="form-control" placeholder="Enter Minimum CGPA." />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Minimum CGPA." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Is Check Any Drop</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="StudentScholarship.SettingsJsonObj.IsCheckAnyDrop" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="StudentScholarship.SettingsJsonObj.IsCheckAnyDrop" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Drop." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr ng-hide="StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==3
+                               || StudentScholarship.SettingsJsonObj.ScholarshipConditionTypeEnumId==5">
+                    <td class="fieldlabel">Is Check Any Fail </td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="StudentScholarship.SettingsJsonObj.IsCheckAnyFail" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="StudentScholarship.SettingsJsonObj.IsCheckAnyFail" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Fail." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div><!--Row end-->
+
+
+

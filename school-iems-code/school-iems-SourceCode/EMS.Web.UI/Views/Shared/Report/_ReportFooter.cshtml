@@ -1,0 +1,37 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Objects
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    ReportHeaderFooterModel ReportModel = ViewBag.ReportModel;
+    if (ReportModel == null)
+    {
+        ReportModel = new ReportHeaderFooterModel();
+    }
+
+    if (ReportModel.Title == "")
+    {
+        ReportModel.Title = ViewBag.Title;
+    }
+}
+<div>
+    <table style="width: 100%; margin-top: 5px">
+        <tbody>
+            <tr style="color: gray !important;">
+                <td>Developed By: @SiteSettings.PoweredBy</td>
+
+                <td style="text-align: right;">
+                  
+                        @SiteSettings.Instance.InstituteCreditPrefix @SiteSettings.Instance.InstituteCredit
+                
+                </td>
+
+
+            </tr>
+            @*<tr>
+                    <td></td>
+                    <td style="text-align: right; padding-bottom: 5px;"> by:</td>
+                </tr>*@
+        </tbody>
+    </table>
+</div>

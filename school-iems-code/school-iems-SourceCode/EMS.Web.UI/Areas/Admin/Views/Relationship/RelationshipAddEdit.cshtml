@@ -1,0 +1,142 @@
+﻿
+<!--File:User_Relationship Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Relationship";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RelationshipId = (string) id == null?"0":(string)id;
+    
+    //User_Relationship WebApi Single Row link   
+    var getRelationshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "GetRelationshipById", area = "Admin" });
+    var getRelationshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "GetRelationshipDataExtra", area = "Admin" });
+    var saveRelationshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "SaveRelationship", area = "Admin" });
+    var deleteRelationshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "GetDeleteRelationshipById", area = "Admin" });
+
+    //User_Relationship WebApi List link 
+    var getPagedRelationshipUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RelationshipApi", action = "GetPagedRelationship", area = "Admin"});
+    var getAllRelationshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "GetAllRelationship", area = "Admin" });
+    var saveRelationshipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "SaveRelationshipList", area = "Admin" });
+    var getRelationshipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RelationshipApi", action = "GetRelationshipListDataExtra", area = "Admin" });
+
+    var editRelationshipByIdPageUrl = Url.Action("RelationshipAddEdit", "Relationship", new { area = "Admin" });
+    var listRelationshipPageUrl = Url.Action("RelationshipList", "Relationship", new { area = "Admin" });
+    
+    //User_Relationship Angular Functions
+    string getRelationshipById="getRelationshipById";
+    var saveRelationship = "saveRelationship";
+    var getNewRelationship = "getNewRelationship";
+    var refreshPage = "loadPage()";
+    string deleteRelationshipById="deleteRelationshipById";
+    string loadRelationshipExtraData="loadRelationshipExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Relationship/RelationshipAddEdit.js"></script>
+}
+
+<div id="RelationshipAddEdit" class="row" ng-controller="RelationshipAddEditCtrl" ng-init="Init(
+      '@RelationshipId'
+      ,'@getRelationshipByIdUrl'
+      ,'@getRelationshipDataExtraUrl'
+      ,'@saveRelationshipUrl'
+      ,'@deleteRelationshipByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Relationship.@User_Relationship.Property_Name!=''">{{(Relationship.@User_Relationship.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="RelationshipId" ng-Enter="@(getRelationshipById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewRelationship)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listRelationshipPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Relationship.@User_Relationship.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Gender </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="Relationship.@User_Relationship.Property_GenderEnumId" ng-options="option.Id as option.Name for option in GenderEnumList" title="Select Gender" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Gender." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Relationship.@User_Relationship.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Active </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Relationship.@User_Relationship.Property_IsActive"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Active if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Relationship.@User_Relationship.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveRelationship)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

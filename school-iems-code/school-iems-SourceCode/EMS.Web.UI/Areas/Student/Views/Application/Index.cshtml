@@ -1,0 +1,213 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Applications";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div class="tabbable">
+        <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Pending</a></li>
+            <li><a href="#tab2" data-toggle="tab">Archived</a></li>
+            <li><a href="#tab3" data-toggle="tab">New</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <div id="PendingProcesses">
+                    <h5>Pending Application(s)</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference No</th>
+                                        <th>Application Type</th>
+                                        <th>Apply Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            4956
+                                        </td>
+                                        <td>Student Address Change Request </td>
+                                        <td>3/11/2014 6:19:16 PM</td>
+                                        <td>Applied</td>
+                                        <td><a href="#" class="btn btn-sm btn-danger">Cancel</a></td>
+                                        <td><a href="#" class="btn btn-sm btn-info">Print</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div id="PendingOtherApplication">
+
+
+
+                    <h5>Convocation Attendant Confirmation Application(s)</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Convocation</th>
+                                        <th>Submission Date</th>
+                                        <th>Current Status</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>14<sup>th</sup> Convocation</td>
+                                        <td>1/29/2014 5:17:05 PM</td>
+                                        <td>OnProcess</td>
+                                        <td><a href="#" class="btn btn-sm btn-primary">Edit</a></td>
+                                        <td><a href="#" class="btn btn-sm btn-info">Print</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <div id="ArchivedProcesses">
+
+
+                </div>
+                <div id="ArchivedConvocationApplication">
+                    <h5>Convocation Application(s)</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Convocation</th>
+                                        <th>Applied For</th>
+                                        <th>Submission Date</th>
+                                        <th>Current Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>14<sup>th</sup> Convocation</td>
+                                        <td>Convocation </td>
+                                        <td>9/2/2013 12:08:40 PM</td>
+                                        <td>Main_Certificate_Collected</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab3">
+                <div class="row">
+                    <div class="margin5">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Convocation Application</h4>
+                                    <p>Apply for current convocation.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Convocation Attendance</h4>
+                                    <p>Apply for Convocation Attendance.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Probation Semester Extension</h4>
+                                    <p>Apply for one semester extension if you are in probation.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Address Change</h4>
+                                    <p>Apply for Address Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Major Change</h4>
+                                    <p>Apply for Major Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Curriculum Change</h4>
+                                    <p>Apply for Curriculum Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Department Change</h4>
+                                    <p>Apply for Department Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Program Change</h4>
+                                    <p>Apply for Program Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4>Name Change</h4>
+                                    <p>Apply for Name Change.</p>
+                                    <p><a href="#" class="btn btn-primary" role="button">Apply</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

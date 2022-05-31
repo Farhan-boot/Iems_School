@@ -1,0 +1,624 @@
+﻿@using System.Data.Entity
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Admit Card";
+    Layout = null;
+    User_Account user = HttpUtil.DbContext.User_Account.Find(HttpUtil.Profile.UserId);
+
+    bool IsProfileRegistered = true;// !user.IsApproved;
+
+    User_Student student = HttpUtil.DbContext.User_Student.Include(x=>x.User_Account).SingleOrDefault(x => x.UserId == user.Id);
+
+    User_ContactAddress permanentAddress = HttpUtil.DbContext.User_ContactAddress.SingleOrDefault(x => x.UserId == user.Id && x.ContactAddressTypeEnumId == (int)User_ContactAddress.ContactAddressTypeEnum.Permanent);
+    User_ContactAddress presentAddress = HttpUtil.DbContext.User_ContactAddress.SingleOrDefault(x => x.UserId == user.Id && x.ContactAddressTypeEnumId == (int)User_ContactAddress.ContactAddressTypeEnum.Present);
+    User_Education ssc = HttpUtil.DbContext.User_Education.SingleOrDefault(x => x.UserId == user.Id & x.DegreeEquivalentEnumId == (int)User_Education.DegreeEquivalentEnum.Ssc10YearEquivalent);
+    User_Education hsc = HttpUtil.DbContext.User_Education.SingleOrDefault(x => x.UserId == user.Id & x.DegreeEquivalentEnumId == (int)User_Education.DegreeEquivalentEnum.Hsc12YearEquivalent);
+    HR_Department dept = HttpUtil.DbContext.HR_Department.Find(user.DepartmentId);
+
+    Aca_StudyLevelTerm levelTerm = HttpUtil.DbContext.Aca_StudyLevelTerm.FirstOrDefault(
+        x => x.Id == student.LevelTermId );
+
+    Aca_Semester presentSemester = HttpUtil.DbContext.Aca_Semester
+    .Include("Aca_Exam")
+    .SingleOrDefault(x => x.StatusEnumId == (byte)Aca_Semester.StatusEnum.Ongoing);
+
+
+    Aca_Exam exam = presentSemester.Aca_Exam.FirstOrDefault(x=>x.ExamType==Aca_Exam.ExamTypeEnum.FinalTerm);
+
+    List<Aca_ClassTakenByStudent> courses = HttpUtil.DbContext.Aca_ClassTakenByStudent
+
+        .Include("Aca_Class")
+        .Include("Aca_Class.Aca_CurriculumCourse")
+        .Include("Aca_Class.Aca_CurriculumCourse.Aca_Curriculum")
+        .Include("Aca_Class.Aca_Semester")
+        .Include("Aca_Class.Aca_StudyLevelTerm")
+        .Where(x => x.StudentId == HttpUtil.Profile.StudentId
+        && x.Aca_Class.SemesterId == presentSemester.Id
+        && (x.RegistrationStatusEnumId == (byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.FreshRegistration 
+            || x.RegistrationStatusEnumId == (byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.RetakeRegistration
+            || x.RegistrationStatusEnumId == (byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.ImprovementRegistration
+            )
+        && x.StatusEnumId == (byte)Aca_ClassTakenByStudent.StatusEnum.Valid
+        )
+        .OrderByDescending(x => x.Aca_Class.Aca_Semester.Name)
+        .ThenByDescending(x => x.Aca_Class.Aca_StudyLevelTerm.TermId)
+        .ThenBy(x => x.Aca_Class.Code)
+        .ToList();
+
+    if (permanentAddress == null)
+    {
+        permanentAddress = User_ContactAddress.GetNew();
+    }
+    if (presentAddress == null)
+    {
+        presentAddress = User_ContactAddress.GetNew();
+    }
+    if (ssc == null)
+    {
+        ssc = User_Education.GetNew();
+    }
+    if (hsc == null)
+    {
+        hsc = User_Education.GetNew();
+    }
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15" />
+    <title>Admit Card</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="~/Areas/Student/Views/Reports/AdmitCard.css" rel="stylesheet" />
+    <style type="text/css">
+        th {
+            background-color: #009933;
+        }
+
+        .start-page-head {
+            color: #009933;
+            font-weight: bold;
+        }
+
+        a, a:hover, .div_head div, .information span, #attachment, span.header2:hover, span.selected, a.l-active {
+            color: #009933;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            width: 670px;
+            margin: 0 auto;
+        }
+
+        .photo {
+            border: 1px solid black;
+            width: 110px;
+            height: 115px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .htd {
+            vertical-align: top;
+            width: 37%;
+        }
+
+        table, tr, td, p, div, li, ol {
+            font-size: 8pt;
+            color: black;
+        }
+
+        table {
+            width: 99%;
+        }
+
+        .instruction {
+            list-style-type: decimal;
+            color: black;
+            font-size: 1.33em;
+        }
+
+        .instruction li {
+            padding-bottom: 20px;
+            font-size: 1.10em;
+            text-align: justify;
+        }
+
+        .dotline {
+            line-height: 40%;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+    </style>
+</head>
+@if (!IsProfileRegistered)
+{
+    <body style="background-color: lavender">
+        <h4 class="row-title before-success" style="color: red; text-align: center; margin: 20px;padding: 9px 10px 9px 8px;border-radius: 0 2px 2px 0;box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);background-color: white">
+            <b>
+                Sorry! Your Online <a href="@Url.Action("Edit", "Profile", new {area = "Student"})" class="" style="color: blue;">Profile Registration</a> is pending. Please confirm your Profile Information to get Term Result/Registration/Admid Card/Certificate/Transcript.
+            </b>
+            <br />
+            <b style="color: black">
+                <a href="@Url.Action("Edit", "Profile", new {area = "Student"})" class="" style="color: blue;">Click Here </a> to compleate your Profile Registration.
+            </b>
+        </h4>
+    </body>
+
+}
+else
+{
+    <body onload="javascript:print();">
+        <div id="main-container">
+            <div id="firstPage">
+                <div>
+                    <h3 style="text-align: center;padding: 8px;font-size: 1.5em;">@(EMS.Framework.Settings.SiteSettings.Instance.InstituteName)</h3>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="htd">
+                                    <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" class="photo" alt="PP size photograph (Attested by Dean/HOD)" />
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" class="logo" />
+                                </td>
+                                <td class="htd">
+                                    <table style="width: auto;float: right;" border="1"><tbody><tr><td>Exam Roll No: <br />(Will be filled up by The Controller of Exam)&nbsp;&nbsp;</td></tr></tbody></table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">(FOR Institute)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 style="text-align: center; text-decoration: underline;padding: 8px;">APPLICATION FORM FOR APPEARING IN THE EXAM</h3>
+                    <p>
+                        BSC in .. ..<b>@dept.Name&nbsp;(@dept.ShortName)</b> .. ..
+                        <b>@levelTerm.Name</b> .. ..
+                        Exam .. .. <b>Final</b> .. ..
+                        Month .. .. <b>@(exam.StartDateOfTermFinalExam.ToString("MMMM"))-@(exam.EndDateOfTermFinalExam.ToString("MMMM"))</b> .. ..
+                        Year .. .. <b>@exam.StartDateOfTermFinalExam.ToString("yyyy")</b>.
+                    </p>
+                </div>
+                &nbsp;
+                <div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="margin: 0;padding: 0;">
+                                    <table style="float: left;width: auto;margin: 0;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding:5px 7px;">
+                                                    Name of the Dept: <b>@dept.ShortName</b>
+                                                    <br />Student ID No: <b>@student.ClassRollNo</b>
+                                                    <br />Academic Session (Exam): <b>@exam.AcademicSession</b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="margin: 0;padding: 0;">
+                                    <table style="float: right;width: auto;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding:5px 7px;">
+                                                    Bangladesh University of Professionals&nbsp;&nbsp;
+                                                    <br />Registration No: <b>@student.RegistrationNo</b>
+                                                    <br />Academic Session (Reg): <b>@student.RegistrationSession</b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 5px;">
+                        <b>Full Name of the Examine : @user.FullName.ToUpper()</b>
+                        <br /><b>Father's Name : @user.FatherName.ToUpper()</b>
+                        <br /><b>Mother's Name : @user.MotherName.ToUpper()</b>
+                        <br /><b>Guardian's/Husband's Name (If Necessary): @student?.User_Account?.EmergencyContactPersonName?.ToUpper()</b>
+                    </p>
+                    <h3 style="text-align: center;padding: 8px;">SUBJECTS AND COURSES / PAPERS OFFERED BY THE CANDIDATE (WITH TITLE)</h3>
+                    <table style="width: 99%;font-size: 8pt;">
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: top;">
+                                    <div style="float: left;padding: 3px;font-size: 8pt;">
+                                        <b>Non-departmental Courses</b>
+                                        <ol style="list-style-type: decimal;padding-left: 12px;padding-right: 0;">
+                                            @foreach (var course in courses.Where(x => x.Aca_Class.Aca_CurriculumCourse.IsDepartmental == false))
+                                            {
+                                                <li style="font-size: 8pt;">@course.Aca_Class.Aca_CurriculumCourse.Code : @course.Aca_Class.Aca_CurriculumCourse.Name</li>
+                                            }
+                                        </ol>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <div style="float: right;padding: 3px;font-size: 8pt;">
+                                        <b>Departmental Courses</b>
+                                        <ol style="list-style-type: decimal;padding-left: 12px;padding-right: 0;">
+                                            @foreach (var course in courses.Where(x => x.Aca_Class.Aca_CurriculumCourse.IsDepartmental == true))
+                                            {
+                                                <li style="font-size: 8pt;">@course.Aca_Class.Aca_CurriculumCourse.Code : @course.Aca_Class.Aca_CurriculumCourse.Name</li>
+                                            }
+                                        </ol>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div>
+                    <p>
+                        To
+                        <br />The Controller of Examinations
+                        <br />Bangladesh University of Professionals
+                        <br />Mirpur, Dhaka-1216
+                    </p>
+                    <p style="margin-top: 3px; text-align: justify;">
+                        Sir,
+                        <br />I would like to appear in the ensuring
+                        BSC in .. ..<b>@dept.Name&nbsp;(@dept.ShortName)</b> .. ..
+                        <b>@levelTerm.Name</b> .. ..
+                        Exam .. .. <b>Final</b> .. ..
+                        Month .. .. <b>@(exam.StartDateOfTermFinalExam.ToString("MMMM"))-@(exam.EndDateOfTermFinalExam.ToString("MMMM"))</b> .. ..
+                        Year .. .. <b>@DateTime.Now.Year</b>.
+                        I will pledge that I will abide by the decisions taken by syndicate or empowered officer regarding the exam.
+                    </p>
+                    <br />&nbsp;
+                    <p style="text-align: right;">
+                        .........................................<br />Examinee's Signature
+                    </p>
+                    <h3 style="text-decoration: underline; text-align: center;">CERTIFICATE</h3>
+                    <p style="text-align: justify;">
+                        This is to certify that, the aforesaid student's activities are satisfactory and I am recommending him/her to appear in the
+                        BSC in .. ..<b>@dept.Name&nbsp;(@dept.ShortName)</b> .. ..
+                        <b>@levelTerm.Name</b> .. ..
+                        Exam .. .. <b>Final</b> .. ..
+                        Month .. .. <b>@(exam.StartDateOfTermFinalExam.ToString("MMMM"))-@(exam.EndDateOfTermFinalExam.ToString("MMMM"))</b> .. ..
+                        Year .. .. <b>@DateTime.Now.Year</b>.
+                        I have also verified that, his/her offered subjects/papers are written correctly.
+                        Percentage of attendance in the class of this examinee is .. .. .. % (.. .. .. .. .. .. .. .. .. .. .. ..) .. .. .. .. .. .. .. .. .. .
+                    </p>
+                    <br />&nbsp;
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td>Date: </td>
+                                <td style="text-align: right;">
+
+                                    <span  class="dotline">.............................................................</span>
+                                    <br />Signature and Seal of Dean/HOD
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="page-break-after: always;"></div>
+
+
+
+            <div id="secondPage">
+                <br />
+                <p>
+                    1. <b>Permanent Address : @permanentAddress.Address1.ToTitleCase(), P.S: @permanentAddress.PoliceStation.ToTitleCase(), @permanentAddress.District.ToTitleCase()-@permanentAddress.PostOffice</b>
+                </p>
+                <br />
+                <p>
+                    1. <b>Present Address : @presentAddress.Address1.ToTitleCase(), P.S: @presentAddress.PoliceStation.ToTitleCase(), @presentAddress.District.ToTitleCase()-@presentAddress.PostOffice</b>
+                </p>
+                <br />
+                <p>3. <b>Date of birth:</b>(As per SSC certificate) .. .. @user.DateOfBirth.ToString("dd/MM/yyyy")</p>
+                <br />
+                <p>
+                    4. <b>Nationality: </b>@user.Nationality.ToTitleCase().. ..
+                    <b>Religion: </b>@user.Religion.. ..
+                    <b>Caste/Group: </b>.. ..
+                </p>
+                <br />
+                <p>
+                    5. <b>Educational Qualifications: </b>
+                </p>
+                <br />
+                <table border="1">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;">Exam Name</td>
+                            <td style="text-align: center;">Board/University</td>
+                            <td style="text-align: center;">Passing Year and Group</td>
+                            <td style="text-align: center;">Div/Class/CGPA</td>
+                            <td style="text-align: center;">Remarks</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">S.S.C/O-Level</td>
+                            @*if (ssc.EducationTypeEnumId == (int)User_Education.EducationTypeEnum.General)
+                            {
+                                <td style="text-align: center;">@ssc.Board.ToTitleCase()</td>
+                            }
+                            else*@
+                            {
+                                <td style="text-align: center;">@ssc?.InstitutionName.ToUpper()</td>
+                            }
+                            <td style="text-align: center;">@ssc?.YearOfPassing</td>
+                            <td style="text-align: center;">@ssc?.ObtainedGpaOrMarks</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">H.S.C/A-Level</td>
+                            @*@if (hsc.EducationTypeEnumId == (int)User_Education.EducationTypeEnum.General)
+                            {
+                                <td style="text-align: center;">@hsc.Board.ToTitleCase()</td>
+                            }
+                            else*@
+                            {
+                                <td style="text-align: center;">@hsc?.InstitutionName.ToUpper()</td>
+                            }
+                            <td style="text-align: center;">@hsc?.YearOfPassing</td>
+                            <td style="text-align: center;">@hsc?.ObtainedGpaOrMarks</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">Degree/Honors</td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p>6. If expelled from any exam of the university, duration of the punishment to be mentioned:</p>
+                <p>
+                    <b>Name of the Exam and Year : </b>.. .. .... .. <b>Exam Roll :</b>.. .. .. .. <b>Duration of the Punishment : </b>.. .. .. .. To .. ..
+                </p>
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <table style="width: 99%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="float: right;">
+                                    .......................................................................
+                                    <br />&nbsp;&nbsp;&nbsp; (Examinee's Signature and date)
+
+
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br />
+                <p style="text-align: justify;">
+                    This is to certify that the examinee has abided by the residential terms and conditions and s/he possesses good moral character.
+                    To the best of my knowledge all statements endorsed in the application form are true.
+                    The application may be allowed to appear in
+                    BSC in .. ..<b>@dept.Name&nbsp;(@dept.ShortName)</b> .. ..
+                    <b>@levelTerm.Name</b> .. ..
+                    Exam .. .. <b>Final</b> .. ..
+                    Month .. .. <b>@(exam.StartDateOfTermFinalExam.ToString("MMMM"))-@(exam.EndDateOfTermFinalExam.ToString("MMMM"))</b> .. ..
+                    Year .. .. <b>@DateTime.Now.Year</b>.
+                </p>
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <table style="width: 99%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div>
+
+                                    <span  class="dotline">..........................................................................</span>
+                                    <br />Signature and Seal of the Course Coordinator
+                                    <br />Date :
+                                </div>
+                            </td>
+                            <td>
+                                <div style="float: right;">
+
+                                    <span  class="dotline">......................................................................</span>
+                                    <br />Signature and Seal of Dean/HOD
+                                    <br />Date :
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />&nbsp;
+                <p>Dues, exam fees, marks sheet fees and other fees of the university amounting TK .. .. .. .. are deposited by the examinee.</p>
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <p>
+
+                    <span  class="dotline">.........................................................</span>
+                    <br />(Signature of Admission Officer)
+                    <br />Date :
+                </p>
+            </div>
+            <div style="page-break-after: always;"></div>
+
+
+
+
+            <div id="thirdPage">
+                <div>
+                    <h3 style="text-align: center;padding: 10px;font-size: 1.5em;">@(EMS.Framework.Settings.SiteSettings.Instance.InstituteName)</h3>
+                    <table style="width: 99%;">
+                        <tbody>
+                            <tr>
+                                <td class="htd">
+                                    <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" class="photo" alt="PP size photograph (Attested by Dean/HOD)" />
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoColorSolo)" class="logo" />
+                                </td>
+                                <td class="htd">
+                                    <table style="width: auto;float: right;" border="1"><tbody><tr><td>Exam Roll No: <br />(Will be filled up by The Controller of Exam)&nbsp;&nbsp;</td></tr></tbody></table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center;">(FOR Institute)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 style="text-align: center;padding: 10px;font-size: 1.25em;">ADMIT CARD</h3>
+                    <p>
+                        BSC in .. ..<b>@dept.Name&nbsp;(@dept.ShortName)</b> .. ..
+                        <b>@levelTerm.Name</b> .. ..
+                        Exam .. .. <b>Final</b> .. ..
+                        Month .. .. <b>@(exam.StartDateOfTermFinalExam.ToString("MMMM"))-@(exam.EndDateOfTermFinalExam.ToString("MMMM"))</b> .. ..
+                        Year .. .. <b>@DateTime.Now.Year</b>.
+                    </p>
+                </div>
+                <br />
+                <table style="width: 99%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table style="float: left;width: auto;" border="1">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 5px 7px;">
+                                                Name of the Dept: <b>@dept.ShortName</b>
+                                                <br />Student ID No: <b>@student.ClassRollNo</b>
+                                                <br />Academic Session (Exam): <b>@exam.AcademicSession</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>
+                                <table style="float: right;width: auto;" border="1">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 5px 7px;">
+                                                Bangladesh University of Professionals&nbsp;&nbsp;
+                                                <br />Registration No: <b>@student.RegistrationNo</b>
+                                                <br />Academic Session (Reg): <b>@student.RegistrationSession</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p>
+                    <b>Full Name of the Examine : @user.FullName.ToUpper()</b>
+                    <br /><b>Father's Name : @user.FatherName.ToUpper()</b>
+                    <br /><b>Mother's Name : @user.MotherName.ToUpper()</b>
+                    <br /><b>Guardian's/Husband's Name (If Necessary): @@student?.User_Account?.EmergencyContactPersonName?.ToUpper()</b>
+                </p>
+                <div>
+                    <h3 style="text-align: center;padding: 10px;">SUBJECTS AND COURSES / PAPERS OFFERED BY THE CANDIDATE (WITH TITLE)</h3>
+                    <table style="width: 99%;font-size: 8pt;">
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: top;">
+                                    <div style="float: left;padding: 3px;font-size: 8pt;">
+                                        <b>Non-departmental Courses</b>
+                                        <ol style="list-style-type: decimal;padding-left: 12px;padding-right: 0;">
+                                            @foreach (var course in courses.Where(x => x.Aca_Class.Aca_CurriculumCourse.IsDepartmental == false))
+                                            {
+                                                <li style="font-size: 8pt;">@course.Aca_Class.Aca_CurriculumCourse.Code : @course.Aca_Class.Aca_CurriculumCourse.Name</li>
+                                            }
+                                        </ol>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <div style="float: right;padding: 3px;font-size: 8pt;">
+                                        <b>Departmental Courses</b>
+                                        <ol style="list-style-type: decimal;padding-left: 12px;padding-right: 0;">
+                                            @foreach (var course in courses.Where(x => x.Aca_Class.Aca_CurriculumCourse.IsDepartmental == true))
+                                            {
+                                                <li style="font-size: 8pt;">@course.Aca_Class.Aca_CurriculumCourse.Code : @course.Aca_Class.Aca_CurriculumCourse.Name</li>
+                                            }
+                                        </ol>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br />&nbsp;
+                <p><span  class="dotline">..............................................</span><br />Signature of the examinee</p>
+                <br />&nbsp;
+                <br />&nbsp;
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Date of Commencement of the Exam:
+
+                                ........................................
+
+                                <br />(Will be filled up by Exam Controller Office)
+                            </td>
+                            <td>
+
+                                <span  class="dotline">..............................................</span><br />Controller of Examinations<br />@SiteSettings.Instance.InstituteName
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                &nbsp;
+                <div style="border-top: 1px solid black;">
+                    NB:
+                    <i>
+                        <br />1. The photo of the examinee will be attested by Dean/HOD with seal.
+                        <br />2. Audited information by Dean/HOD will be considered as final.
+                        <br />3. Corrections/ overwriting in the exam paper/course will not be allowed.
+                    </i>
+                </div>
+            </div>
+            <div style="page-break-after: always;"></div>
+
+            <div id="fourthPage" style="width: 600px; margin: 0 auto;">
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <br />&nbsp;
+                <h3 style="text-align: center; text-decoration: underline; font-size: 1.55em;">SPECIAL INSTRUCTIONS FOR THE EXAMINEE</h3>
+                <br />&nbsp;
+                <ol class="instruction">
+                    <li>No examinee will be allowed to enter the exam hall without the admit card issued by the Bangladesh University of Professionals</li>
+                    <li>Answer script without signature of the invigilator is not accepted.</li>
+                    <li>Exam schedule and place are to be known by the examinee at his / her own responsibility.</li>
+                    <li>Any article other than admit card, ID card, ink, pen, pencil, geometry box, calculator approved by concerned department (if necessary) and money with the examinee will be considered as illegal items in the exam hall.</li>
+                    <li>If there is any violation of exam law and order by any examinee in the exam center, necessary disciplinary action will be taken against him/her.</li>
+                    <li>Instructions imposed by invigilator and concerned officer in charge in the exam hall (if necessary) are to be strictly abided by the examinees.</li>
+                    <li>Printed instructions on the cover page of answer script are to be abided by the examinees.</li>
+                    <li>Smoking is strictly prohibited in the exam hall and is a punishable offence.</li>
+                    <li>Writing examinee's name in the answer script is strictly prohibited.</li>
+                    <li>Taking mobile phone and electronic devices of any kinds are not allowed in the exam hall.</li>
+                    <li>No examinee can leave the exam hall or submit the answer script before elapsing one hour from the commencement of the Exam.</li>
+                    <li>In no case, an examinee will be allowed to enter into the examination hall half an hour after the examination has commenced.</li>
+                </ol>
+            </div>
+        </div>
+
+    </body>
+}
+</html>

@@ -1,0 +1,570 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@using EMS.Framework.Permissions
+@using EMS.Web.UI.Areas.Employee.Controllers.WebApi
+@{
+
+
+    var editComponentMarkUrl = Url.Action("SubmitResultComponent", "ClassResultComponent", new { area = "Employee" });
+    //var editComponentMarkUrl = Url.Action("SubmitResultComponent", "ClassResultComponent", new { area = "Employee" });
+
+    //var getGenerateResultFromBreakdownUrl = Url.Action("GenerateResultFromBreakdown", "ClassResultComponent", new { area = "Employee" });
+    var scrutinizationUrl = Url.Action("ScrutinizationPanel", "ClassResultComponent", new { area = "Employee" });
+    var printFinalExamMarkUrl = Url.Action("Print70PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var print30PercentTheoryExamMarkUrl = Url.Action("Print30PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+
+    var editBreakdownMarkUrl = Url.Action("SubmitResultBreakdown", "ClassResultBreakdown", new { area = "Employee" });
+    //GenerateResultFromBreakdownByClassId
+    var getGenerateClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+    var printOnlyFinalGradeSheetUrl = Url.Action("PrintOnlyFinalGradeSheet", "ClassManagement", new { area = "Employee" });
+    var print100ClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+    var getSingleScreenMarkEntryUrl = Url.Action("SingleScreenMarkEntry", "ClassResultComponent", new { area = "Employee" });
+    var componentExcelUploadUrl = Url.Action("ResultComponentExcelUpload", "ClassResultComponent", new { area = "Employee" });
+
+    var getLockUnlockComponentSettingById = "getLockUnlockComponentSettingById";
+    var getLockUnlockBreakdownSettingById = "getLockUnlockBreakdownSettingById";
+    var getLockUnlockComponentScrutinizergById = "getLockUnlockComponentScrutinizergById";
+    var getLockUnlockClassResultSettingById = "getLockUnlockClassResultSettingById";
+    var getDeleteAllClassResultByResultClassSettingId = "getDeleteAllClassResultByResultClassSettingId";
+    var getDeleteResultClassSettingById = "getDeleteResultClassSettingById";
+    var getDeleteAllMarksByComponentSettingId = "getDeleteAllMarksByComponentSettingId";
+    var getDeleteComponentSettingById = "getDeleteComponentSettingById";
+    var getDeleteAllMarksByBreakdownSettingId = "getDeleteAllMarksByBreakdownSettingId";
+    var getDeleteBreakdownSettingById = "getDeleteBreakdownSettingById";
+
+    var getDeleteAllGradeComponentBreakdownMarksByClassId = "getDeleteAllGradeComponentBreakdownMarksByClassId";
+    var getDeleteAllMarkDistributionByClassId = "getDeleteAllMarkDistributionByClassId";
+
+
+}
+
+<div class="alert alert-danger" ng-show="RegularClassSetting.TotalStudent==0">
+    @*<button type="button" class="close" data-dismiss="alert">×</button>*@ <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention: </strong> <span >This class have no Enrolled Student, so you can't enter any mark.</span>
+</div>
+
+<div g-show="RegularClassSetting.TotalStudent>0">
+
+    <div class="widget" g-show="RegularFacultyComponent.length>0">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  ng-show="IsUgTheory" class="widget-caption "><b> Continuous Assessment: {{RegularFacultyComponent|total:'@Aca_ResultComponentSetting.Property_ConvertPercentage'}}% Mark </b></span>
+            <span  ng-show="!IsUgTheory" class="widget-caption "><b> Marks </b></span>
+            <div class="widget-buttons no-padding-left">
+                @*<button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Generate Result (Allowed)</button>*@
+                @*<button ng-show="IsUgTheory" class="btn btn-xs btn-darkorange"><i class="fa fa-print"></i>Submit & Print 30% Marks</button>*@
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">View & Print</a>
+                    <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-primary">
+                        <li>
+                            <a ng-show="RegularSectionAB.length>=0" target="_blank" href="@(print30PercentTheoryExamMarkUrl)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> All Continuous Assessment</a>
+                        </li>
+                        <li>
+                            <a ng-show="RegularSectionAB.length>=0" target="_blank" href="@print100ClassResult/?classId={{ClassId}}&examType={{@((int)Aca_Exam.ExamTypeEnum.FinalTerm)}}" ><i class="fa fa-print"></i> Full Final Grade Sheet</a>
+                        </li>
+                        <li>
+                            <a ng-show="RegularSectionAB.length>=0" target="_blank" href="@printOnlyFinalGradeSheetUrl/?classId={{ClassId}}&examType={{@((int)Aca_Exam.ExamTypeEnum.FinalTerm)}}" ><i class="fa fa-print"></i> Only Term-Final Grade Sheet</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Action</a>
+                    <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-primary">
+                        @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.ClassResultManager.ClassResult.CanDeleteMarks))
+                        {
+                            <li>
+                                <a ng-click="@(getDeleteAllGradeComponentBreakdownMarksByClassId)(@((byte)Aca_Exam.ExamTypeEnum.FinalTerm))" style="color: red;"><i class="fa fa-remove"></i> Delete All Component Marks And Grade</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a ng-click="@(getDeleteAllMarkDistributionByClassId)(@((byte)Aca_Exam.ExamTypeEnum.FinalTerm))" style="color: red;"><i class="fa fa-remove"></i> Delete All Mark Distribution</a>
+                            </li>
+                        }
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="widget-body ">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ser
+                                </th>
+                                <th class="text-center">
+                                    Area of Marking (Total Mark/Contributing %)
+                                </th>
+                                <th class="text-center">
+                                    Add/Edit/Delete Mark Settings
+                                </th>
+                                <th class="text-center">
+                                    Mark Updated By
+                                </th>
+                                <th class="text-center">
+                                    Enter Mark/ Generate Result
+                                </th>
+                                <th class="text-center">
+                                    Print
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="row in RegularFacultyComponent ">
+
+                            <tr>
+                                <td>{{$index+1}}</td>
+                                <td class="">
+                                    <b>{{row.@Aca_ResultComponentSetting.Property_Name}}</b>
+                                    [{{row.@Aca_ResultComponentSetting.Property_TestType}}]
+                                    (<b>{{row.@Aca_ResultComponentSetting.Property_TotalMark}}</b>/{{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}%
+                                    <span  ng-show="row.Aca_ResultComponentBreakdownSettingListJson.length>0">, Best Count:{{row.@Aca_ResultComponentSetting.Property_BestCount}}</span>
+                                    )
+
+                                </td>
+                                <td class="text-center">
+                                    @*<b>{{row.@Aca_ResultComponentSetting.Property_TotalMark}} ({{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}%)</b>*@
+                                    @*<button ng-click="editComponent(row)" type="button" class="btn btn-xs btn-primary no-shadow">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </button>
+                                        <button ng-click="getNewBreakdown(row)" type="button" class="btn btn-xs btn-primary no-shadow">
+                                            <i class="fa fa-plus"></i> Add Breakdown
+                                        </button>*@
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Select Task</a>
+                                        <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-primary">
+                                            <li>
+                                                <a href="javascript:void(0);"><i class="fa fa-edit"></i> Edit Mark Settings</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);"><i class="fa fa-plus"></i> Add Breakdown</a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="@(getDeleteAllMarksByComponentSettingId)(row.Id)"><i class="fa fa-trash"></i> Clear All Marks</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li style="color: red;">
+                                                <a ng-click="@(getDeleteComponentSettingById)(row.Id,RegularFacultyComponent,$index)" style="color: red;"><i class="fa fa-remove"></i> Delete This Component</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </td>
+                                <td class="text-center">
+
+                                    {{row.SubmitedFacultyName}}
+                                </td>
+                                <td>
+
+                                    <a target="_blank" href="@(editComponentMarkUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}"
+                                       ng-class="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer? 'shiny btn-warning':'btn-success'"
+                                       @*ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId == @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)"*@
+                                       type="button" class="btn btn-xs">
+                                        <span ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer "><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                                        <span ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer "><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>
+                                    </a>
+                                   
+
+
+                                    @*<a target="_blank" href="@(editComponentMarkUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}"
+                                       ng-class="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer? 'shiny btn-warning':'btn-success'"
+                                       ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId == @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" type="button" class="btn btn-xs">
+                                        <span  ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer "><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                                        <span  ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer "><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>
+                                    </a>
+                                    <a target="_blank" href="@(getGenerateResultFromBreakdownUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}"
+                                       ng-class="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer? 'shiny btn-warning':'btn-success'"
+                                       ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId!= @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" type="button" class="btn btn-xs">
+                                        <span  ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-lock"></i> View {{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}% Marks (Locked)</span>
+                                        <span  ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-gear"></i> Prepare {{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}% Marks (Allowed)</span>
+                                    </a>*@
+                                    <button ng-click="@(getLockUnlockComponentSettingById)(row,false)" ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs btn-danger">
+                                        <span  title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock</span>
+                                    </button>
+
+                                    <button ng-click="@(getLockUnlockComponentSettingById)(row,true)" ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs btn-success ">
+                                        <span  title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock It</span>
+                                    </button>
+
+                                    <a target="_blank" href="@(componentExcelUploadUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}&markTypeEnumId=@((byte)ClassResultComponentExcelUploadApiController.MarkTypeEnum.Component)"
+                                       ng-hide="row.Aca_ResultComponentBreakdownSettingListJson.length>0 || row.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                                       type="button" style="float: right;"
+                                       class="btn btn-xs btn-default">
+                                        <i class="fa fa-upload"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a target="_blank" href="@printFinalExamMarkUrl/?classId={{ClassId}}&componentSettingsId={{row.Id}}" class="btn btn-xs btn-primary shiny"><i class="fa fa-print btn-block"></i> Print Marks</a>
+                                </td>
+                            </tr>
+                            @*breakdown*@
+                            <tr ng-repeat="breakdown in row.Aca_ResultComponentBreakdownSettingListJson " class="margin5 element-result breakdown">
+                                <td></td>
+                                <td class="">
+                                    {{$index+1}}. <b>{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_Name}}</b>
+                                    (<b>{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_TotalMark}}</b>/{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_ConvertPercentage}}%)
+
+                                </td>
+                                <td class="text-center">
+
+
+                                    @*<button ng-click="editComponent(row)" type="button" class="btn btn-xs btn-primary no-shadow">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </button>*@
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Select Task</a>
+                                        <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-primary">
+                                            <li>
+                                                <a href="javascript:void(0);"><i class="fa fa-edit"></i> Edit Mark Settings</a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="@(getDeleteAllMarksByBreakdownSettingId)(breakdown.Id)"><i class="fa fa-trash"></i> Clear All Marks </a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li >
+                                                <a  ng-click="@(getDeleteBreakdownSettingById)(breakdown.Id,row.Aca_ResultComponentBreakdownSettingListJson,$index)" style="color: red;"><i class="fa fa-remove"></i> Delete This Breakdown</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {{breakdown.SubmitedFacultyName}}
+                                </td>
+                                <td>
+                                    <a ng-show="!breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" target="_blank" href="@(editBreakdownMarkUrl)/?classId={{ClassId}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs btn-success">
+                                        <span ><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>
+                                    </a>
+                                    <a ng-show="breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" target="_blank" href="@(editBreakdownMarkUrl)/?classId={{ClassId}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs shiny btn-warning">
+                                        <span ><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                                    </a>
+
+
+                                    <button ng-click="@(getLockUnlockBreakdownSettingById)(breakdown,false)" ng-show="breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" class="btn btn-xs btn-danger">
+                                        <span  title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock</span>
+                                    </button>
+
+                                    <button ng-click="@(getLockUnlockBreakdownSettingById)(breakdown,true)" ng-show="!breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" class="btn btn-xs btn-success">
+                                        <span  title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock It</span>
+                                    </button>
+                                    
+                                    <a ng-show="!breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" target="_blank" href="@(componentExcelUploadUrl)/?classId={{ClassId}}&breakdownSettingsId={{breakdown.Id}}&markTypeEnumId=@((byte)ClassResultComponentExcelUploadApiController.MarkTypeEnum.Breakdown)"
+                                       type="button"
+                                       style="float: right;"
+                                       class="btn btn-xs btn-default">
+                                        <i class="fa fa-upload"></i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+<div class="widget" ng-show="RegularSectionAB.length>0">
+    <div class="widget-header bordered-bottom bordered-sky ">
+        <i class="widget-icon fa fa-list bold  "></i>
+        <span  class="widget-caption "><b> Term Exam: {{RegularSectionAB|total:'@Aca_ResultComponentSetting.Property_ConvertPercentage'}}% Mark</b></span>
+
+        @*<div class="widget-buttons no-padding-left">
+                    <button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Generate Result (Allowed)</button>
+                    <button ng-click="" class="btn btn-xs btn-info"><i class="fa fa-print"></i> Print Marks</button>
+                </div>*@
+    </div>
+    <div class="widget-body">
+        <div class="row">
+            <!--text type-->
+            <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            Ser
+                        </th>
+                        <th class="text-center" style="padding: 4px;">
+                            Area of Marking <br/><span   style="font-size: 10px">(Total Mark/Contribute %)</span>
+                        </th>
+                        <th class="text-center">
+                            Add/Edit/Delete Mark Settings
+                        </th>
+                        <th class="text-center">
+                            Mark Updated By
+                        </th>
+                        <th class="text-center">
+                            Enter Mark
+                        </th>
+                        @*<th class="text-center"  style="width: 120px">
+                            Scrutinization
+                        </th>*@
+                        <th class="text-center" style="width: 105px">
+                            Print
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="row in RegularSectionAB ">
+
+                    <tr>
+                        <td>{{$index+1}}</td>
+                        <td class="">
+                            <b>{{row.@Aca_ResultComponentSetting.Property_Name}}</b>
+                            [{{row.@Aca_ResultComponentSetting.Property_TestType}}]
+                            (<b>{{row.@Aca_ResultComponentSetting.Property_TotalMark}}</b>/{{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}%<span  ng-show="row.Aca_ResultComponentBreakdownSettingListJson.length>0">, Best Count:{{row.@Aca_ResultComponentSetting.Property_BestCount}}</span>)
+
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Select Task</a>
+                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-primary">
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-edit"></i> Edit Mark Settings</a>
+                                    </li>
+                                    @*<li>
+                                                <a href="javascript:void(0);"><i class="fa fa-plus"></i> Add Breakdown</a>
+                                            </li>*@
+                                    <li>
+                                        <a ng-click="@(getDeleteAllMarksByComponentSettingId)(row.Id)"><i class="fa fa-trash"></i> Clear All Marks</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a ng-click="@(getDeleteComponentSettingById)(row.Id,RegularSectionAB,$index)" style="color: red;"><i class="fa fa-remove"></i> Delete This Component</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </td>
+                        <td class="text-center">
+                            {{row.SubmitedFacultyName}}
+                        </td>
+                        <td>
+                            <a target="_blank" href="@(editComponentMarkUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}"
+                               ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId == @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)">
+                                <span  ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs shiny btn-warning"><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                                <span  ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs btn-success"><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>
+                            </a>
+
+                            <button ng-click="@(getLockUnlockComponentSettingById)(row,false)" ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs btn-danger">
+                                <span    title="Unlock this Mark Sheet!" ><i class="fa fa-unlock"></i> Unlock Marks</span>
+                            </button>
+                            <button ng-click="@(getLockUnlockComponentSettingById)(row,true)" ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="btn btn-xs btn-success" >
+                                <span   title="Lock this Mark Sheet!" ><i class="fa fa-lock"></i> Lock Marks</span>
+                            </button>
+
+                            <a target="_blank" href="@(componentExcelUploadUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}&markTypeEnumId=@((byte)ClassResultComponentExcelUploadApiController.MarkTypeEnum.Component)"
+                               ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                               type="button"
+                               style="float: right;"
+                               class="btn btn-xs">
+                                <i class="fa fa-upload"></i>
+                            </a>
+
+                        </td>
+                        @*<td class="text-center">
+                            <a target="_blank" href="@(scrutinizationUrl)/?classId={{ClassId}}&componentSettingsId={{row.Id}}"
+                               type="button" class="btn btn-xs btn-block"
+                               ng-class="row.@Aca_ResultComponentSetting.Property_IsLockedScrutinizer? 'shiny btn-warning':'btn-success'"
+                               ng-show="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.MidTerm) || row.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm)">
+                                <span  ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedScrutinizer"><i class="fa fa-lock"></i> View Scrutiny (Locked)</span>
+                                <span  ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedScrutinizer"><i class="fa fa-edit"></i> Scrutinization (Allowed)</span>
+                            </a>
+                            <button ng-click="@(getLockUnlockComponentScrutinizergById)(row,false)" ng-show="row.@Aca_ResultComponentSetting.Property_IsLockedScrutinizer" class="btn btn-xs btn-danger btn-block">
+                                <span  title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock Scrutinizer</span>
+                            </button>
+                            <button ng-click="@(getLockUnlockComponentScrutinizergById)(row,true)" ng-show="!row.@Aca_ResultComponentSetting.Property_IsLockedScrutinizer" class="btn btn-xs btn-success btn-block">
+                                <span  title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock Scrutinizer</span>
+                            </button>
+                        </td>*@
+                        <td class="text-center">
+                            <a target="_blank" href="@printFinalExamMarkUrl/?classId={{ClassId}}&componentSettingsId={{row.Id}}" class="btn btn-xs btn-primary shiny"><i class="fa fa-print btn-block"></i> Print Marks</a>
+                        </td>
+                    </tr>
+                    @*breakdown*@
+                    <tr ng-repeat="breakdown in row.Aca_ResultComponentBreakdownSettingListJson " class="margin5 element-result breakdown">
+                        <td></td>
+                        <td class="">
+                            {{$index+1}}. <b>{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_Name}}</b>
+                            (<b>{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_TotalMark}}</b>/{{breakdown.@Aca_ResultComponentBreakdownSetting.Property_ConvertPercentage}}%)
+
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Select Task</a>
+                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-primary">
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-edit"></i> Edit Mark Settings</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-trash"></i> Clear All Marks</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="javascript:void(0);" style="color: red;"><i class="fa fa-remove"></i> Delete This Breakdown</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            {{breakdown.SubmitedFacultyName}}
+                        </td>
+                        <td>
+                            <a ng-show="!breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" target="_blank" href="@(editBreakdownMarkUrl)/?classId={{ClassId}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs btn-success">
+                                <span ><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>
+                            </a>
+                            <a ng-show="breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" target="_blank" href="@(editBreakdownMarkUrl)/?classId={{ClassId}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs shiny btn-warning">
+                                <span ><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                            </a>
+
+
+                            <button ng-click="@(getLockUnlockBreakdownSettingById)(breakdown,false)" ng-show="breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" class="btn btn-xs btn-danger">
+                                <span  title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock</span>
+                            </button>
+
+                            <button ng-click="@(getLockUnlockBreakdownSettingById)(breakdown,true)" ng-show="!breakdown.@Aca_ResultComponentBreakdownSetting.Property_IsLockedFaculty" class="btn btn-xs btn-success">
+                                <span  title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock It</span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+    
+<div class="widget">
+    <div class="widget-header bordered-bottom bordered-sky ">
+        <i class="widget-icon fa fa-list bold  "></i>
+        <span  class="widget-caption "><b> Final Grade/Marks: 100% of Total Mark</b></span>
+    </div>
+    <div class="widget-body">
+        <div class="row">
+            <!--text type-->
+            <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      
+                        <th class="text-center" style="padding: 4px;">
+                            Area of Marking <br/><span   style="font-size: 10px">(Total Mark/Contribute %)</span>
+                        </th>
+                        <th class="text-center">
+                            Add/Edit/Delete Mark Settings
+                        </th>
+                        <th class="text-center" style="">
+                          Generate/Print Final Grade Sheet
+                        </th>
+                     
+                    </tr>
+                    </thead>
+                    <tbody >
+
+                    <tr>
+                       
+                        <td class="">
+                            <b>{{RegularClassSetting.@Aca_ResultClassSetting.Property_Name}}</b>
+                            @*(<b>{{RegularClassSetting.@Aca_ResultClassSetting.Property_TotalMark}}</b>/{{RegularClassSetting.@Aca_ResultClassSetting.Property_ConvertPercentage}}%)*@
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Select Task</a>
+                                <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-primary">
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-edit"></i> Edit Mark Settings</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-plus"></i> Add Component</a>
+                                    </li>
+                                    <li>
+                                        <a ng-click="@(getDeleteAllClassResultByResultClassSettingId)()"><i class="fa fa-trash"></i> Delete All Marks</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a ng-click="@(getDeleteResultClassSettingById)()" style="color: red;"><i class="fa fa-remove"></i> Delete This Component</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </td>
+                        @*<td class="text-center">
+                            {{row.SubmitedFacultyName}}
+                        </td>*@
+                        <td class="text-center">
+                            
+                            <a target="_blank" href="@(getSingleScreenMarkEntryUrl)/?classId={{ClassId}}"
+                               class="btn btn-xs btn-success">
+                                <i class="fa fa-external-link"></i>
+                                Single Screen Mark Entry
+                            </a>
+
+                            <a target="_blank" href="@(getGenerateClassResult)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"
+                               class="btn btn-xs"
+                               ng-class="RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator? 'shiny btn-warning':'btn-success'">
+                                <span ng-show="RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator"><i class="fa fa-lock"></i> Full Gardes Sheet (Locked)</span>
+                                <span ng-show="!RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator"><i class="fa fa-edit"></i> Generate Final Gardes (Unlocked)</span>
+                            </a>
+                            <a target="_blank" href="@(printOnlyFinalGradeSheetUrl)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"
+                               class="btn btn-xs btn-info" ng-show="RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator">
+                                <span ng-show="RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator"><i class="fa fa-print"></i> Print Only Grades (Locked)</span>
+                                <span ng-show="!RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator"><i class="fa fa-edit"></i> Print Only Draft Grades (Unlocked)</span>
+                            </a>
+                            <button ng-click="@(getLockUnlockClassResultSettingById)(RegularClassSetting,false)" ng-show="RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator" class="btn btn-xs btn-danger">
+                                <span title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock Grade Sheet</span>
+                            </button>
+                            <button ng-click="@(getLockUnlockClassResultSettingById)(RegularClassSetting,true)" ng-show="!RegularClassSetting.@Aca_ResultClassSetting.Property_IsLockedTabulator" class="btn btn-xs btn-success">
+                                <span title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock Grade Sheet</span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>   
+
+@*<div class="text-align-center" g-show="!IsUgTheory">
+    <a style="" target="_blank" 
+       href="@(getGenerateClassResult)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.Regular)}}" 
+       class="btn btn-large btn-primary"><i class="fa fa-edit"></i> Prepare & Input Final Result (100% Marks)</a>
+        <br /><br />
+    </div>*@
+
+</div>

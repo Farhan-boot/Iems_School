@@ -1,0 +1,39 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Custom.BasicAccounting
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+
+@model EMS.Framework.Objects.MvcModelListResult<ReportController.TrialBalanceModel>
+
+@{
+    ViewBag.Title = "Trial Balance";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccountingReport.cshtml";
+
+    var ugc = Request.QueryString["isUgcReport"];//ViewContext.RouteData.Values["id"];
+    var isUgcReport = ugc == null ? false : (string)ugc == "true" ? true : false;
+}
+
+@section ScriptSection
+{
+
+    
+}
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@if (isUgcReport)
+{
+    @Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_TrialBalancePrintForUGC.cshtml", Model)
+}
+else
+{
+    @Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_TrialBalancePrint.cshtml", Model)
+}
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

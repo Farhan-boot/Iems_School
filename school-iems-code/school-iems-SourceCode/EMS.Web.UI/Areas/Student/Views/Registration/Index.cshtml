@@ -1,0 +1,261 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@{
+
+    //WebApi link for single row
+    //var testurl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetDate", area = "Employee" });
+    var getSemesterListByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseManagerApi", action = "GetStudentSemesterList", area = "Student" });
+    var getClassListBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseManagerApi", action = "GetStudentClassListBySemesterId", area = "Student" });
+
+
+    var printCourseRegistrationUrl = Url.Action("PrintCourseRegistration","Registration", new { area = "Student" });
+    var printPaySlipUrl = Url.Action("PrintPaySlip", "Registration", new { area = "Student" });
+    var viewPaymentDetailsBySemesterIdUrl = Url.Action("ViewPaymentDetailsBySemesterId", "Registration", new { area = "Student" });
+    var downloadCourseRegistrationPdfUrl = Url.Action("DownloadCourseRegistrationPdf","Registration",new {area="Student"});
+
+
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Registration/Index.js"></script>
+}
+@section StyleSection
+{
+    <style>
+        .assessment tr td {
+            padding: 0px 5px !important;
+            font-size: 11px!important;
+        }
+    </style>
+}
+
+<div class="row"
+     ng-controller="StudentRegistrationCtrl"
+     ng-init="Init(
+     '@getSemesterListByStudentUrl'
+     ,'@getClassListBySemesterIdUrl'
+    ,'@viewPaymentDetailsBySemesterIdUrl'
+     )">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        {{ErrorMsg}}
+        <div class="widget" ng-show="SemesterList!=null && SemesterList.length>0">
+            <div class="widget-header bordered-bottom bordered-sky" style="text-align: left;">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption "><b>Registered Courses of @*({{SelectedSemester.Name}})*@</b></span>
+                
+                
+                <div class="widget-buttons">
+                    <select ng-model="SelectedSemester" ng-change="onChangeSemester()"
+                            ng-options="option.Name for option in SemesterList" ng-init=""
+                            class="form-control input-sm" style="margin-top: 3px;"></select>
+                </div>
+
+                @if (SiteSettings.Instance.Student.BankPaymentSlipCanView)
+                {
+                    <a class="btn btn-blue btn-xs"
+                       href="@(printPaySlipUrl)/?semesterId={{SemesterId}}"
+                       target="_blank">
+                        <i class="fa fa-print"></i>Print Bank Payment Slip
+                    </a>
+                }
+                @if (SiteSettings.Instance.Student.SemesterWiseRegistrationCanPrint)
+                {
+                    <a class="btn btn-blue btn-xs"
+                       href="@(printCourseRegistrationUrl)/?semesterId={{SemesterId}}"
+                       target="_blank">
+                        <i class="fa fa-print"></i>Print Registration
+                    </a>
+                }
+                
+                
+            </div><!--Widget Header-->
+            <div class="widget-body no-padding">
+
+                <div id="teacherCourseList">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <table class="table table-bordered">
+                                <thead class="bordered-blueberry">
+                                <caption style="text-align: center;color: black">
+                                    <b>Registration Status: </b> <span class="label label-sky">{{RegStatus}}</span>
+                                    <span>
+                                        |Total Credit:<span class="badge badge-primary ng-binding">{{TotalCredits}}</span>|Total Course:<span class="badge badge-success ng-binding">{{TotalCourse}}</span>
+                                        |Total Theory:<span class="badge badge-purple ng-binding ">{{TotalTheory}}</span> |Total Lab:<span class="badge badge-magenta ng-binding ">{{TotalLab}}</span>
+                                    </span>
+                                    <div style="text-align: center"></div>
+
+                                </caption>
+                                <tr>
+                                    
+                                    <th class="text-center" style="width: 31px;">Ser</th>
+                                    <th>Title </th>
+                                    <th class="text-center">Faculty</th>
+                                    <th class="text-center">Class Routine</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @*SelectedSemester.Aca_ClassListJson*@
+                                    <tr ng-repeat="row in ClassList">
+                                        <td class="text-center">{{$index+1}}</td>
+
+                                        <td>
+
+                                            <a href="@Url.Action("CoursePane", "Course", new {area = "Student"})?id={{row.Id}}" target="_blank" title="click to view Attendance, Result, Course Material, Notice etc."><strong>{{row.@Aca_Class.Property_Code}}: {{row.@Aca_Class.Property_Name}}</strong></a>
+                                            <br />
+                                            @if (SiteSettings.Instance.Student.Class.AttendancesCanView)
+                                            {
+                                                <a href="@Url.Action("CoursePane","Course", new { area = "Student"})?id={{row.Id}}#Attendance" target="_blank" title="click to view Attendances">[Attendances]</a>
+                                            }
+                                            
+                                            @if (SiteSettings.Instance.Student.Class.ResultsCanView)
+                                            {
+                                                <a href="@Url.Action("CoursePane","Course", new { area = "Student"})?id={{row.Id}}#Results" target="_blank" title="click to view Results.">[Results]</a>
+                                            }
+                                            @if (SiteSettings.Instance.Student.Class.CourseMaterialsCanView)
+                                            {
+                                                <a href="@Url.Action("CoursePane","Course", new { area = "Student"})?id={{row.Id}}#CourseMaterials" target="_blank" title="click to view Course Materials.">[Course Materials]</a>
+                                            }
+                                            @if (SiteSettings.Instance.Student.Class.CourseNoticesCanView)
+                                            {
+                                                <a href="@Url.Action("CoursePane","Course", new { area = "Student"})?id={{row.Id}}#Notices" target="_blank" title="click to view Notices.">[Course Notices]</a>
+                                            }
+                                            
+                                            <br/>
+                                            @*<em>{{row.DepartmentShortName}} ({{row.SemesterLevelTerm}})</em>*@
+                           
+                                        </td>
+                                        <td>
+                                            <span ng-repeat="name in row.TeacherNameList" style="font-style: italic">
+                                                <span>{{$index+1}}. {{name}};</span>
+                                            </span>
+                                            <span class="badge badge-danger graded" ng-hide="row.TeacherNameList.length>0">Not Available</span>
+                                        </td>
+                                        <td style="font-size: 11px;">
+                                            <ul class="no-margin list-unstyled" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                                <li ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                    <strong>{{cr.RoutineDetails}}</strong>
+                                                    <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.General_RoomJson.RoomDetails}}</em>
+                                                    <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                                </li>
+                                            </ul>
+                                            <span class="badge badge-danger graded" ng-hide="row.Aca_ClassRoutineJsonList.length>0">Not Available</span>
+                                            @*<em>{{row.DepartmentShortName}} ({{row.SemesterLevelTerm}})</em>*@
+
+                                            @*<em>Cr.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditHour.ToString("F"), @course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>*@
+                                        </td>
+                                        <td class="text-center">
+                                            {{row.StudentRegistrationStatus}}
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @*<div class="col-md-3">
+                            <div class="widget">
+                                <div class="widget-header  bordered-blueberry bordered-left">
+                                    <span class="widget-caption">Payment Details</span>
+                                </div>
+                                <div class="widget-body  bordered-blue bordered-left">
+                                    <div class="payment-per-semester"></div>
+                                    <div style="text-align: center; padding-top: 10px;">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" style="margin: 0px 5px 0px 5px;">
+                                            <i class="fa fa-paypal"></i> Online Payment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                    
+                </div>
+            </div><!--Widget Body-->
+            
+        </div><!--Widget-->
+
+    </div>
+</div>
+
+@*
+        @{
+         List<Aca_ClassTakenByStudent> courses = HttpUtil.DbContext.Aca_ClassTakenByStudent
+            .Include("Aca_Class")
+            .Include("Aca_Class.Aca_CurriculumCourse")
+            .Include("Aca_Class.Aca_CurriculumCourse.Aca_Curriculum")
+            .Include("Aca_Class.Aca_SemesterLevelTerm")
+            .Include("Aca_Class.Aca_SemesterLevelTerm.Aca_StudyLevelTerm")
+            .Include("Aca_Class.Aca_ClassRoutine")
+            .Include("Aca_Class.Aca_ClassRoutine.General_Room")
+            .Include("Aca_Class.Aca_ClassRoutine.General_Room.General_Building")
+            .Include("Aca_Class.Aca_ClassRoutine.General_Room.General_Building.General_Campus")
+            .Where(x => x.StudentId == HttpUtil.Profile.Id && x.Aca_Class.Aca_Semester.Year == 2017)
+            .OrderByDescending(x => x.Aca_Class.Aca_SemesterLevelTerm.LevelTermId)
+            .ThenByDescending(x => x.Aca_Class.Aca_SemesterLevelTerm.Aca_StudyLevelTerm.TermId)
+            .ThenBy(x => x.Aca_Class.Code)
+            .ToList();
+        }
+
+        <div class="widget">
+        <div class="widget-header">
+            <i class="widget-icon fa fa-list"></i>
+            <span  class="widget-caption">Registered Course <span  class="badge badge-success">@courses.Count</span></span>
+            <div class="widget-buttons buttons-bordered">
+                <a href="@Url.Action("Index","Course", new { area = "Student" })" class="btn btn-primary btn-xs">All Courses</a>
+            </div>
+
+        </div>
+        <div class="widget-body no-padding">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th class="text-center">Course</th>
+                    <th class="text-center">Class Routine</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Level Term</th>
+                </tr>
+                @foreach (var course in courses)
+                {
+                    <tr>
+                        <td class="" style="vertical-align: middle;">
+                            <a href="@Url.Action("CoursePane","Course", new { area = "Student",id = course.Aca_Class.Id })" title="click to view Attendance, Result, Course Material, Notice etc."><strong>@course.Aca_Class.Code @course.Aca_Class.Name</strong></a><br />
+                            <a href="@Url.Action("CoursePane","Course", new { area = "Student",id = course.Aca_Class.Id })#Attendance" title="click to view Attendances">[Attendances]</a>
+                            <a href="@Url.Action("CoursePane","Course", new { area = "Student",id = course.Aca_Class.Id })#Results" title="click to view Results.">[Results]</a>
+                            <a href="@Url.Action("CoursePane","Course", new { area = "Student",id = course.Aca_Class.Id })#CourseMaterials" title="click to view Course Materials.">[Course Materials]</a>
+                            <a href="@Url.Action("CoursePane","Course", new { area = "Student",id = course.Aca_Class.Id })#Notices" title="click to view Notices.">[Course Notices]</a>
+                            <br/>
+                            <em>Cr.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditHour.ToString("F"), @course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>
+                        </td>
+                        <td class="" style="vertical-align: middle;">
+                            @if (course.Aca_Class.Aca_ClassRoutine.Count != 0)
+                            {
+                                <ul class="no-margin list-unstyled" style="-webkit-padding-start: 2px;">
+                                    @foreach (var x in course.Aca_Class.Aca_ClassRoutine)
+                                    {
+                                        <li>
+                                            @x.RoutineDetails<br />
+                                            @if (x.General_Room != null)
+                                            {
+                                                <em>@x.General_Room.RoomDetails</em>
+                                            }else
+                                            {
+                                                <em>Room: N/A</em>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span  class="badge badge-danger graded">Not Available</span>
+                            }
+                        </td>
+                        <td class="text-center" style="vertical-align: middle;"><span  class="badge badge-success">Valid</span></td>
+                        <td class="text-center" style="vertical-align: middle;">@course.Aca_Class.Aca_SemesterLevelTerm.Name</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>*@

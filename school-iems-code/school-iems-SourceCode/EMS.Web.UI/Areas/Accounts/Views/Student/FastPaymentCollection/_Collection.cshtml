@@ -1,0 +1,232 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@{
+
+    var viewStdTransactionListPageUrlByVoucherId = Url.Action("StdTransactionList", "StdTransaction", new { area = "Accounts" });
+
+    //Angular Function
+    string removeTransactionFromPaymentCollectionList = "removeTransactionFromPaymentCollectionList";
+    string saveStdCreditTransaction = "saveStdCreditTransaction";
+
+    //Angular Property
+    string CollectionTransaction = "CollectionTransaction";
+    string StdTransactionDetailListJson = "StdTransactionDetailListJson";
+
+}
+
+<table class="form pull-right" width="100%" border="0" cellspacing="2" cellpadding="3">
+    <tbody>
+        <tr>
+            <td class="fieldlabel">Collection Semester:</td>
+            <td class="fieldarea" colspan="3">
+                <select ng-model="CollectionTransaction.@Acnt_StdTransaction.Property_SemesterId"
+                        ng-options="option.Id as option.Name for option in SemesterList" class="form-control select-inline">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Bank Name:</td>
+            <td class="fieldarea" colspan="3">
+                <select ng-model="CollectionTransaction.@Acnt_StdTransaction.Property_BankId"
+                        ng-change="onChangeBank(CollectionTransaction.@Acnt_StdTransaction.Property_BankId,CollectionTransaction)"
+                        ng-options="option.Id as option.Name for option in OfficialBankList " class="form-control select-inline">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+            </td>
+        </tr>
+    <tr>
+        <td class="fieldlabel">Payment Method:</td>
+        <td class="fieldarea" colspan="3">
+            <select ng-model="CollectionTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                    ng-options="option.Id as option.Name for option in TransactionTypeEnumList " class="form-control select-inline">
+                <option value="" label="" class="">---Select One---</option>
+            </select>
+        </td>
+    </tr>
+        <tr>
+            <td class="fieldlabel">Date of Action:<span class="red glyphicon glyphicon-asterisk"></span></td>
+            <td class="fieldarea">
+                <input ng-model="@CollectionTransaction.@Acnt_StdTransaction.Property_Date" type="datetime"
+                       class="form-control  input-inline datepicker" placeholder="14/09/2018">
+            </td>
+            <td class="fieldlabel">Date Created:</td>
+            <td class="fieldarea" style="padding-left: 5px !important;">
+                {{@CollectionTransaction.@Acnt_StdTransaction.Property_CreateDate|date:'d/M/yy h:mm a'}}
+            </td>
+        </tr>
+    <tr>
+        <td class="fieldlabel">Auto Slip ID:</td>
+        <td class="fieldarea" style="padding-left: 5px !important;">
+            <span ng-show="CollectionTransaction.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                {{CollectionTransaction.@Acnt_StdTransaction.Property_PaySlipId}}
+            </span>
+            <span ng-hide="CollectionTransaction.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                {{CollectionTransaction.@Acnt_StdTransaction.Property_Id}}
+            </span>
+        </td>
+        <td class="fieldlabel">Manual Slip ID:</td>
+        <td class="fieldarea">
+            <input ng-model="@CollectionTransaction.@Acnt_StdTransaction.Property_ManualPaySlipNo" type="text"
+                   class="form-control  input-inline" placeholder="Manual Slip ID">
+        </td>
+
+
+    </tr>
+        <tr>
+            <td class="fieldlabel">Voucher No: <span class="red glyphicon glyphicon-asterisk"></span></td>
+            <td class="fieldarea" style="">
+
+                <input  next-focus id="VoucherNoText" ng-model="CollectionTransaction.@Acnt_StdTransaction.Property_VoucherNo" type="text"
+                       class="form-control  input-inline" placeholder="Manual Voucher No">
+
+                @*<a ng-show="CollectionTransaction.@Acnt_StdTransaction.Property_VoucherId>0" target="_blank" href="@(viewStdTransactionListPageUrlByVoucherId)/?vid={{CollectionTransaction.@Acnt_StdTransaction.Property_VoucherId}}" class="btn btn-xs btn-primary" title="Click to View all Collections in this Voucher."> {{CollectionTransaction.@Acnt_StdTransaction.Property_VoucherNo}}</a>*@
+            </td>
+            <td class="fieldlabel">Created By:</td>
+            <td class="fieldarea" style="padding-left: 5px !important;">
+                @*<a ng-href="@Url.Action("Index", "Profile", new {area = "Employee"})?Id={{@HttpUtil.Profile.EmployeeId}}"
+                   target="_blank">
+                    {{@HttpUtil.Profile.EmployeeId}}
+                </a>*@
+
+                {{CollectionTransaction.@Acnt_StdTransaction.Property_CreateByName}}
+  
+
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+<div ng-show="CollectionTransaction.StdTransactionDetailListJson.length==0" class="alert alert-warning fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention!</strong> Please select a debit from left for Collection or 
+    <button ng-click="addBlankSemesterPaymentCreditItem()" class="btn btn-success btn-xs" title="Key: Ctrl+Alt+2">
+        <i class="fa fa-plus"></i>
+        Add Semester Payment
+    </button>
+</div>
+
+<table ng-hide="CollectionTransaction.StdTransactionDetailListJson.length==0"
+       class="table table-striped table-bordered ">
+    <tbody>
+        <tr>
+            <td class="text-bold" colspan="3" style="text-align: center;">
+                Collection: {{CollectionTransaction.Name}}
+            </td>
+            <td style="text-align: center;" colspan="2">
+                <button ng-click="newPayment()"  title="Clear Current Items" class="btn btn-xs btn-success  btn-xs">
+                   
+                    <i class="fa fa-money"></i>Start New Payslip
+                </button>
+            </td>
+        </tr>
+        <tr class="text-bold">
+            <td class="text-center" style="width: 40px;">SN</td>
+            <td class="text-center">Particular Name</td>
+            @*<td class="text-center" style="width: 70px;">Dr.</td>*@
+            <td class="text-center" style="width: 85px;">Cr. Amount</td>
+            <td  class="text-center" style="width:200px;">Remark</td>
+            <td style="width: 45px;"></td>
+        </tr>
+    </tbody>
+    <tbody>
+        <tr ng-repeat="row in @CollectionTransaction.@StdTransactionDetailListJson">
+            <td style="text-align: center;">{{$index+1}}</td>
+            <td style="text-align: center;">
+                {{row.@Acnt_StdTransactionDetail.Property_Name}}
+            </td>
+            @*<td style="text-align: center;">{{row.ActualAmount | number: 2}}</td>*@
+            <td style="text-align: left;">
+                <input next-focus ng-model="row.@Acnt_StdTransactionDetail.Property_Amount"
+                       ng-disabled="!CanEditCollection&& CollectionTransaction.Id!=0"
+                       style="width: 85px; padding-left: 3px;"
+                       type="text"/>
+            </td>
+            <td style="text-align: left;padding-left:  10px!important;">
+                <input ng-model="row.@Acnt_StdTransactionDetail.Property_Remark"
+                       ng-disabled="!CanEditCollection&& CollectionTransaction.Id!=0"
+                       style="padding-left: 3px; width: 100%;"
+                       placeholder="remark optional"
+                       type="text" />
+            </td>
+
+            <td style="text-align: center;">
+                <button ng-hide="row.@Acnt_StdTransactionDetail.Property_IsAlreadyAdded"
+                        ng-click="@removeTransactionFromPaymentCollectionList ($index)" class="btn btn-xs btn-default">
+                    <i class="fa fa-times"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tbody>
+        @*<tr>
+                <td></td>
+                <td class="text-bold text-right " colspan="1">
+                    Current Payable
+                </td>
+                <td class="text-center text-bold" >
+                    {{CollectionTransaction.StdTransactionDetailListJson| total:'@Acnt_StdTransactionDetail.Property_Amount'|number:2}}
+                </td>
+                <td></td>
+            </tr>*@
+        @*<tr class="red">
+                <td class="text-center "></td>
+                <td class="text-bold text-right " colspan="1">
+                    Current Paying
+                </td>
+                <td class="text-bold ng-binding">
+                    <input next-focus  ng-model="@CollectionTransaction.@Acnt_StdTransaction.Property_CreditAmount"
+                           style="width: 85px; padding-left: 3px;"
+                           class="red text-bold"
+                           type="text" />
+                </td>
+                <td></td>
+            </tr>*@
+        @*<tr>
+                <th style="text-align: center;">
+                   Name
+                </th>
+                <th colspan="4" style="text-align: center;">
+                    <input ng-model="CollectionTransaction.Name"/>
+                </th>
+            </tr>*@
+        <tr>
+            @*It's Use Next Time*@
+            <td colspan="5" class="text-center text-bold" style="padding: 15px 0px !important;">
+                <span style="border:1.5px dotted #c7490d; padding: 10px;">
+                    Current Paying:<span class="red"> {{CollectionTransaction.StdTransactionDetailListJson| total:'@Acnt_StdTransactionDetail.Property_Amount'|number:2}}</span>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align: center;">
+                <button class="btn btn-success"
+                        title="Key: Ctrl+Alt+Enter"
+                        ng-show="@CollectionTransaction.@(StdTransactionDetailListJson).length>0 && CollectionTransaction.@Acnt_StdTransaction.Property_IsDebited "
+                        ng-click="@saveStdCreditTransaction ()" style="margin: 5px;">
+                    <i class="fa fa-edit"></i> Confirm
+                </button>
+                <button class="btn btn-warning"
+                        ng-show="!CollectionTransaction.@Acnt_StdTransaction.Property_IsDebited && CanEditCollection"
+                        ng-click="@saveStdCreditTransaction ()" style="margin: 5px;">
+                    <i class="fa fa-edit"></i> Update
+                </button>
+                <button ng-click="collectionEditActive()"
+                        ng-hide="CollectionTransaction.@Acnt_StdTransaction.Property_Id==0 || CanEditCollection"
+                        class="btn btn-primary">
+                    <i class="fa fa-pencil-square-o"></i>
+                    Edit
+                </button>
+                <a class="btn btn-blue"
+                   ng-if="!CollectionTransaction.@Acnt_StdTransaction.Property_IsDebited && !CanEditCollection"
+                   ng-href="@Url.Action("StudentMoneyReceipt","Report",new {area = "Accounts"})?transId={{CollectionTransaction.Id}}&stdId={{StudentId}}"
+                   target="_blank"
+                   style="margin: 5px;">
+                    <i class="fa fa-edit"></i>Print
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

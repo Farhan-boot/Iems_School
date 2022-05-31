@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Error 404";
+    ViewBag.Description = "Error 404";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="@ViewBag.Description" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="~/assets/img/favicon.png" type="image/x-icon">
+    @Styles.Render("~/css/bootstrap")
+    <link id="bootstrap-rtl-link" href="" rel="stylesheet" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300"
+          rel="stylesheet" type="text/css">
+    @Styles.Render("~/css/theme")
+    <link id="skin-link" href="" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/bundles/skin")
+</head>
+<body class="body-404">
+    <div class="error-header text-center">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-lg btn-success margin-top-50 text-center"><i class="fa fa-arrow-left"></i> Back to Home</a>
+    </div>
+    <div class="container ">
+        <section class="error-container text-center">
+            <h1>404</h1>
+            <div class="error-divider">
+                <h2>page not found</h2>
+                <p class="description">We Couldn’t Find This Page</p>
+            </div>
+            <a href="@Url.Action("Index","Home")" class="return-btn"><i class="fa fa-home"></i> Home</a>
+        </section>
+    </div>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+</body>
+</html>

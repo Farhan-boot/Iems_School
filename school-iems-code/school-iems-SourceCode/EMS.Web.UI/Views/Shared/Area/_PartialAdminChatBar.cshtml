@@ -1,0 +1,86 @@
+﻿<div id="chatbar" class="page-chatbar">
+    <div class="chatbar-contacts">
+        <div class="contacts-search">
+            <input type="text" class="searchinput" placeholder="Search Contacts" />
+            <i class="searchicon fa fa-search"></i>
+            <div class="searchhelper">Search Your Contacts and Chat History</div>
+        </div>
+        <ul class="contacts-list">
+            <li class="contact">
+                <div class="contact-avatar">
+                    <img src="~/assets/img/avatars/BlankPerson.png" />
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">System Administrator</div>
+                    <div class="contact-status">
+                        <div class="online"></div>
+                        <div class="status">online</div>
+                    </div>
+                    <div class="last-chat-time">
+                        a moment ago
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="chatbar-messages" style="display: none;">
+        <div class="messages-contact">
+            <div class="contact-avatar">
+                <img src="~/assets/img/avatars/BlankPerson.png" />
+            </div>
+            <div class="contact-info">
+                <div class="contact-name">System Administrator</div>
+                <div class="contact-status">
+                    <div class="online"></div>
+                    <div class="status">online</div>
+                </div>
+                <div class="last-chat-time">
+                    a moment ago
+                </div>
+                <div class="back">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </div>
+            </div>
+        </div>
+        <ul class="messages-list">
+            <li class="message">
+                <div class="message-info">
+                    <div class="bullet"></div>
+                    <div class="contact-name">Me</div>
+                    <div class="message-time">@DateTime.Now.ToString("h:mm:tt"), Today</div>
+                </div>
+                <div class="message-body">
+                    Hi, I want help.
+                </div>
+            </li>
+            <li class="message reply">
+                <div class="message-info">
+                    <div class="bullet"></div>
+                    <div class="contact-name">System Administrator</div>
+                    <div class="message-time">@DateTime.Now.ToString("h:mm:tt"), Today</div>
+                </div>
+                <div class="message-body">
+                    Hi, Please contact to EUB ICT <br/>
+                    <h5>Hamayon Kabir Pavel</h5>
+                    <h6 class="no-margin"><em>CTO, Pipilika Soft</em></h6>
+                    <h6>
+                        <i class="fa fa-phone"></i> +88-016-33300999
+                        <br/><i class="fa fa-envelope"></i> hkpavel@gmail.com
+                    </h6>
+                    <h4>Or</h4>
+                    <h5>Mohitosh Pramanik</h5>
+                    <h6 class="no-margin"><em>Software Engineer, Pipilika Soft</em></h6>
+                    <h6>
+                        <i class="fa fa-envelope-o"></i> mohitosh@pipilikasoft.com
+                    </h6>
+                </div>
+            </li>
+        </ul>
+        <div class="send-message">
+            <span  class="input-icon icon-right">
+                <textarea rows="4" class="form-control" placeholder="Type your message"></textarea>
+                <i class="fa fa-camera themeprimary"></i>
+            </span>
+        </div>
+    </div>
+</div>

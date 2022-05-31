@@ -1,0 +1,29 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+
+
+@{
+    ViewBag.Title = "Monthly Salary Summary Report";
+
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHRReport.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Report/Shared/_MonthlySalarySummary.js"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/HR/Views/Report/Shared/_MonthlySalarySummary.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

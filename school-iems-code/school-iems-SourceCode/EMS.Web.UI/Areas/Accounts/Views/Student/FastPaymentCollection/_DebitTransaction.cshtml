@@ -1,0 +1,118 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+
+@{
+    //Angular Function
+    string addRemoveTransactionInPaymentCollectionList = "addRemoveTransactionInPaymentCollectionList";
+    string getDeleteUndeleteDebitTransactionByIdStdId = "getDeleteUndeleteDebitTransactionByIdStdId";
+
+    //Angular Property
+    string ThisSemesterDebitTransactionList = "ThisSemesterDebitTransactionList";
+    string PreviousBalanceTransaction = "PreviousBalanceTransaction";
+    string ThisSemesterBalanceTransaction = "ThisSemesterBalanceTransaction";
+    string NetBalanceTransaction = "NetBalanceTransaction";
+
+}
+
+<table class="table table-hover table-striped table-bordered fast-payment-collection">
+    <tbody>
+        <tr>
+            <td class="text-bold" colspan="4" style="text-align: center;">
+                Debit (Payable Items) of {{SelectedSemesterName}}
+            </td>
+            <td>
+                <button ng-click="addDebitTransactionModelShow()"
+                        class="btn btn-success btn-xs">
+                    <i class="fa fa-plus"></i>
+                    Add Debit
+                </button>
+            </td>
+        </tr>
+        <tr role="row" class="text-bold" style="color: #555555;">
+            <td class="text-center" style="width: 40px;"></td>
+            
+            <td>
+                Prticulars
+            </td>
+           
+            <td style="width: 80px;">
+                Amount
+            </td>
+            <td>
+                Date
+            </td>
+            @*<td>
+                Status
+            </td>*@
+            <td style="width: 80px;">
+                Action
+            </td>
+        </tr>
+    </tbody>
+    <tbody>
+        <tr class="bg-white" ng-repeat="row in @ThisSemesterDebitTransactionList">
+            <td class="text-center ">
+                <input ng-model="row.@Acnt_StdTransaction.Property_IsSelected"
+                       @*ng-disabled="@ThisSemesterBalanceTransaction.@Acnt_StdTransaction.Property_IsSelected
+                                                                    ||@NetBalanceTransaction.@Acnt_StdTransaction.Property_IsSelected
+                                                                    ||row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((byte) Acnt_StdTransaction.PaymentStatusEnum.Paid)"*@
+                       ng-change="@addRemoveTransactionInPaymentCollectionList (row)"
+                       ng-hide="row.@Acnt_StdTransaction.Property_DebitAmount<=0"
+                       type="checkbox" />
+            </td>
+          
+            <td>
+                <b ng-hide="row.@Acnt_StdTransaction.Property_IsSemesterFee">
+                    {{row.@Acnt_StdTransaction.Property_Name}}
+                </b>
+                <a ng-show="row.@Acnt_StdTransaction.Property_IsSemesterFee"
+                   @*ng-click="loadPaymentDetails(row.@Acnt_StdTransaction.Property_SemesterId)"*@>
+                    <b>{{row.@Acnt_StdTransaction.Property_Name}}</b>
+
+                </a>
+                <div ng-repeat="transDetail in row.StdTransactionDetailListJson"
+                     ng-show="row.@Acnt_StdTransaction.Property_IsSemesterFee"
+                     style="margin-left: 25px;"
+                     >
+                    <input ng-model="transDetail.@Acnt_StdTransaction.Property_IsSelected"
+                           ng-change="addRemoveTransactionDetailInPaymentCollectionList (transDetail)"
+                           ng-disabled="row.@Acnt_StdTransaction.Property_DebitAmount<=0||transDetail.@Acnt_StdTransactionDetail.Property_Amount<=0"
+                           style="height: 12px !important;"
+                           type="checkbox" />
+                    {{transDetail.@Acnt_StdTransactionDetail.Property_Name}}
+                    ({{transDetail.@Acnt_StdTransactionDetail.Property_Amount}})
+                </div>
+            </td>
+        
+            <td style="text-align: right">
+                {{row.DebitAmount| number: 2}}
+            </td>
+            <td class="" style="text-align: center">{{row.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}}</td>
+            @*<td>
+                <p  ng-hide="row.@Acnt_StdTransaction.Property_DebitAmount<=0">
+                    {{row.@Acnt_StdTransaction.Property_PaymentStatus}}
+                    <span ng-if="row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((byte)Acnt_StdTransaction.PaymentStatusEnum.PartialPaid)"> ({{row.@Acnt_StdTransaction.Property_CreditAmount}})</span>
+
+                </p>
+            </td>*@
+            <td>
+                <button ng-click="editDebitTransaction(row)" class="btn btn-xs btn-primary">
+                    <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button ng-click="@getDeleteUndeleteDebitTransactionByIdStdId (row)" class="btn btn-xs btn-danger">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+  
+            <td class="text-bold" colspan="2">
+                This Semester Payable
+            </td>
+            <td class="text-bold" style="text-align: right">{{ThisSemesterPayable| number: 2}}</td>
+            <td class="text-bold " style=""></td>
+            <td class="text-bold " style=""></td>
+            @*<td class="text-bold " style=""></td>*@
+        </tr>
+    </tbody>
+</table>

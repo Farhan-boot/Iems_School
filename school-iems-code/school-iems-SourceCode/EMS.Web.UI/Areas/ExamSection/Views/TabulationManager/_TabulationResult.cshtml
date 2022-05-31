@@ -1,0 +1,247 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@model List<User_Student>
+@{
+
+    List<User_Student> studentList = Model;
+    List<Aca_CurriculumCourse> courseList = ViewBag.CourseList;
+}
+<table  border="1" cellpadding="5" cellspacing="0" bordercolor="#000000" style="border-collapse: collapse;" width="100%" id="AutoNumber1" bordercolordark="#666666" bordercolorlight="#999999">
+    <!-- Colum Titles -->
+
+    <tbody>
+        <tr bgcolor="#e2e2e2" align="center">
+
+            @*<td rowspan="3" colspan="2"><font face="Arial, Arial, Helvetica" size="2">Registration</font></td>*@
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Student ID</font></td>
+            @*<td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Exam Roll<br>No</font></td>*@
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Student's Name</font></td>
+            @*<td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Year of 1st<br> Admission<br> to the<br> course</font></td>*@
+
+            @{
+                if (courseList != null && courseList.Count > 0)
+                {
+                    foreach (var course in courseList)
+                    {
+                        @*<td colspan="2"><font face="Arial, Arial, Helvetica" size="2">@course.Code</font></td>*@
+
+                        <td colspan="2">
+                            <div style="margin: -6px -8px; padding: 3px">@course.Code</div>
+
+                            @*<table style="border: 0; width: 100px; height: 100px">
+                                <tr align="center" style="">
+
+                                    <td valign="top">
+                                        <font face="Arial, Arial, Helvetica" size="2">
+                                            <div style="border-bottom: 1px solid black; margin: -6px -8px; padding-bottom: 2px">@course.Code</div>
+                                        </font>
+                                    </td>
+
+                                </tr>
+                                $1$<tr align="center">
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        @course.Name
+                                    </font>
+                                </td>
+                            </tr>#1#
+                            </table>*@
+                            @*<font face="Arial, Arial, Helvetica" size="2">
+                                <div style="border-bottom: 1px solid black; margin: 0 -6px; vertical-align: top">@course.Code</div>
+                                @course.Name
+                            </font>*@
+                        </td>
+                    }
+                }
+
+            }
+
+
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">GPA</font></td>
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Total<br> Credit<br> Hr</font></td>
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Earned<br> Credit<br> Hr</font></td>
+
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Results</font></td>
+            <td rowspan="3"><font face="Arial, Arial, Helvetica" size="2">Remarks</font></td>
+            <td rowspan="3" class="hide-on-print"><font face="Arial, Arial, Helvetica" size="2">Mark Fail</font></td>
+        </tr>
+
+
+        <!-- Credits -->
+        <tr bgcolor="#e2e2e2" align="center">
+            @{
+                if (courseList != null && courseList.Count > 0)
+                {
+                    foreach (var course in courseList)
+                    {
+
+                        <td colspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2">
+                            <font face="Arial, Arial, Helvetica" size="2">&nbsp;Cr.Hr:@course.CreditLoad.ToString("f2")</font>
+                        </td>
+                    }
+                }
+            }
+        </tr>
+        <tr>
+
+            @{
+
+                if (courseList != null && courseList.Count > 0)
+                {
+                    foreach (var course in courseList)
+                    {
+                        <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade</font></td>
+                        <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade Point</font></td>
+                    }
+                }
+            }
+
+
+        </tr>
+        <tr bgcolor="#e2e2e2" align="center">
+            @*<td><font face="Arial, Arial, Helvetica" size="2">No</font></td>
+            <td><font face="Arial, Arial, Helvetica" size="2">Session</font></td>*@
+        </tr>
+
+        <!-- Student List Contents -->
+
+        @{
+            if (studentList != null && studentList.Count > 0)
+            {
+                foreach (var std in studentList)
+                {
+
+                    <tr align="center">
+                        @*<td><font face="Arial, Arial, Helvetica" size="2">@std.RegistrationNo</font></td>*@
+                        @*<td>
+                            <font face="Arial, Arial, Helvetica" size="2">
+                                @std.RegistrationSession
+                            </font>
+                        </td>*@
+                        <td>
+                            <font face="Arial, Arial, Helvetica" size="2">@std.ClassRollNo</font>
+                        </td>
+                        @*<td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll@std.ExamRollNo">@std.ExamRollNo</font></td>*@
+                        <td align="left"><font face="Arial, Arial, Helvetica" size="2"> @std.FullName.ToLower().ToTitleCase()</font></td>
+                        @{
+                            var regYear = "";
+                            if ( std.ClassRollNo.ToString().Length >= 4)
+                            {
+                                regYear = std.ClassRollNo.ToString().Substring(0, 4);
+                            }
+                        }
+
+                        @*<td>
+                            <font face="Arial, Arial, Helvetica" size="2"> @regYear </font>
+                        </td>*@
+
+
+                        @*Course Result Start*@
+
+                        @{
+                            //if (courseList != null && courseList.Count > 0)
+                            List<CourseResult> courseResultList = std.DataBag.CourseResults;
+                            if (courseResultList != null && courseResultList.Count > 0)
+                            {
+                                foreach (var course in courseResultList)
+                                {
+                                    <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.Grade</font></td>
+                                    <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.GradePoint</font></td>
+                                }
+                            }
+                        }
+
+                        @*Course Result End*@
+                        @{
+                            Aca_SemesterResult semesterResult = std.DataBag.SemesterResult;
+
+                        }
+                        <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">@semesterResult.GPA.ToString("f2")</font></td>
+                        <td align="center"><font face="Arial, Arial, Helvetica" size="2">@semesterResult.TotalCreditHour</font></td>
+                        <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">@semesterResult.EarnedCreditHour</font></td>
+                        
+
+                        @{
+                            string refSpan = "block";
+                            string failSpan = "block";
+                            if (semesterResult.IsLevelDrop)
+                            {
+                                refSpan = "none";
+                                failSpan = "block";
+                                
+                            }
+                            else
+                            {
+                                refSpan = "block";
+                                failSpan = "none";
+                            }
+                        }
+                        
+                        
+
+                        <td align="center">
+
+                            <font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">
+                                
+                                <span id="ref-ResultType-@semesterResult.StudentId"
+                                      style="display: @refSpan;"
+                                >
+                                    @semesterResult.ResultType
+                                </span>
+
+                                <span id="fail-ResultType-@semesterResult.StudentId"
+                                      style="display: @failSpan;"
+                                >
+                                   @Aca_SemesterResult.ResultTypeEnum.Failed
+                                </span>
+
+                               
+                            </font>
+
+                        </td>
+
+                        <td align="center">
+                            <font face="Arial, Arial, Helvetica" size="1" color="@semesterResult.Color">
+                                
+                               
+                                <span id="ref-remark-@semesterResult.StudentId"
+                                style="display: @refSpan;"
+                                      >
+                                    @Html.Raw(semesterResult.Remark)
+                                </span>
+                                <span id="fail-remark-@semesterResult.StudentId"
+                                      style="display: @failSpan;"
+                                      >
+                                    Failed in @(semesterResult.TotalFailedInNonTheory+semesterResult.TotalFailedInTheory) courses
+                                </span>
+
+                                @*Ref in<br>CE 102,<br><br>*@
+                            </font>
+                        </td>
+                        
+                        <td align="center" class="hide-on-print">
+                            @if (semesterResult.Id>0 && (semesterResult.TotalFailedInTheory>0 || semesterResult.TotalFailedInNonTheory>0))
+                            {
+                                <font face="Arial, Arial, Helvetica" size="1" color="@semesterResult.Color">
+                                    T:@semesterResult.TotalFailedInTheory,L:@semesterResult.TotalFailedInNonTheory 
+                                    <input id="checked-@semesterResult.StudentId"
+                                           checked="@semesterResult.IsLevelDrop"
+                                           onclick="onChangeIsLevelDropByStudentId(@semesterResult.StudentId, @semesterResult.SemesterId,this.checked)" 
+                                           type="checkbox"/> Mark Fail
+                                    
+
+                                </font>
+                                <div id="message-@semesterResult.StudentId" style="color: red; font-size: 8px; display: none; "></div>
+                            }
+                        </td>
+                    </tr>
+
+                                }
+                            }}
+
+        @*Student Info Ind*@
+
+    </tbody>
+</table>
+

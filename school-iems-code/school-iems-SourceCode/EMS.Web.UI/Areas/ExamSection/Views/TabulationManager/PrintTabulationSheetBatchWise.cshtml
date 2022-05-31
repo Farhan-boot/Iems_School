@@ -1,0 +1,247 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@model dynamic
+
+@{
+    ViewBag.Title = "Print Tabulation";
+    Layout = null;
+    List<User_Student> studentList = ViewBag.StudentList;
+    List<Aca_CurriculumCourse> courseList = ViewBag.CourseList;
+
+    Int64 semesterId = HttpUtil.GetQueryString("semesterId").ToInt64();
+    Int64 programId = HttpUtil.GetQueryString("programId").ToInt64(); ;
+    Int64 campusId = HttpUtil.GetQueryString("campusId").ToInt64(); ;
+    Int64 programTypeEnumId = HttpUtil.GetQueryString("programTypeEnumId").ToInt64(); ;
+    Int64 curriculumId = HttpUtil.GetQueryString("curriculumId").ToInt64(); ;
+    Int64 ContinuingBatchId = HttpUtil.GetQueryString("ContinuingBatchId").ToInt64();
+    var  remarkTxt = Request.QueryString["remark"];
+
+    string remark = "";
+    if (remarkTxt!=null)
+    {
+        remark = remarkTxt;
+    }
+
+
+    int? stdPerPageTmp = ViewBag.StdPerPage;
+    int stdPerPage = 31;
+    if (stdPerPageTmp != null && stdPerPageTmp >0)
+    {
+        stdPerPage =(int) stdPerPageTmp;
+    }
+
+    var viewTabulationUrl = Url.Action("PrintTabulationSheetBatchWise", "TabulationManager", new { area = "ExamSection" });
+
+    var query = string.Format("?semesterId={0}&programId={1}&campusId={2}&programTypeEnumId={3}&curriculumId={4}&ContinuingBatchId={5}&stdPerPage={6}", semesterId, programId, campusId, programTypeEnumId, curriculumId, ContinuingBatchId, stdPerPage);
+}
+
+
+<style>
+                                .print-mark-sheet td {
+                                    border: 1px solid black !important;
+                                    font-size: 12px;
+                                }
+                                @*("@page") {size: 22in 18in;margin: 1cm }
+                                @("@page") :first {margin-top: 0/* Top margin on first page 10cm */}
+                                @("@page") { size: portrait }
+                                @("@page") { size: landscape }
+                                @("@page") rotated { size: landscape }*@
+
+</style>
+<html>
+<!--//system error
+@ViewBag.Error
+-->
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Tabulation Print</title>
+    <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <meta name="Microsoft Theme" content="blocks 000, default">
+    <meta name="Microsoft Border" content="tlb, default">
+    <link href="~/assets/custom/css/print.css" rel="stylesheet"/>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+</head>
+@*width: 22in;height:18in*@
+<body style="" bgcolor="#FFFFFF" text="#000000" link="#CC0000" vlink="#CC0000" alink="#CC0000" leftmargin="5" topmargin="5" marginheight="0" marginwidth="0" onresize="if (navigator.family == 'nn4') window.location.reload()">
+
+<div class="no-print" style="width: 550px; left: 40%; text-align: center; position: fixed; top: 0px">
+    <div id="settings" style="background-color: whitesmoke; display: none; border: 1px solid gray; padding: 3px">
+        Student Per Page: <input type="number" id="stdCount" style="width: 50px" value="@stdPerPage"/> <button onclick="reload()">Reload</button>
+    </div>
+    <center>
+        <button onclick="$('#settings').slideToggle();" class="">Page Setting</button> <button onclick="window.print();" class="">Print</button>
+        Download As:
+        <button href="#" onclick="$('#tabulation').tableExport({ fileName: 'StudentMarks', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</button>
+        @*<button href="#" onclick="$('#tabulation').tableExport({ fileName: 'StudentMarks', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</button>
+        <button href="#" onclick="$('#tabulation').tableExport({ fileName: 'StudentMarks', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</button>*@
+
+    </center>
+</div>
+<div>
+
+    @{
+
+        var firstPage = 9;
+
+        var taken = 0;
+
+        if (studentList != null && studentList.Count > 0)
+        {
+            var totalStudent = studentList.Count;
+            var totalPage = (int)Math.Ceiling((double)totalStudent / stdPerPage); //(totalStudent + stdPerPage - 1) / stdPerPage;//
+
+            for (int i = 1; i <= totalPage; i++)
+            {
+                List<User_Student> studentListPaged
+                    = studentList.Skip(taken).Take(stdPerPage).ToList();
+
+                @GenerateTabulationView(studentListPaged, totalPage, i)
+                ;
+                if (i != totalPage)
+                {<p style="page-break-before: always">&nbsp;</p>}
+                taken += stdPerPage;
+            }
+
+        }
+    }
+</div>
+
+
+
+
+<!-- School Titile -->
+@helper GenerateTabulationView(List<User_Student> studentList, int totalPage, int pageNo)
+{
+    <table id="tabulation" style="width: 100%">
+        <tbody>
+        @*Tabulation Header Row*@
+        <tr>
+            <td>
+
+                @Html.Partial("~/Areas/ExamSection/Views/TabulationManager/BatchWiseTabulation/_BatchWiseTabulationHeader.cshtml", "Page " + pageNo + " of " + totalPage)
+            </td>
+        </tr>
+
+        @*<tr style="height: 25px; border: none;"></tr>*@
+        @*Tabulation Student result*@
+        <tr>
+            <td>
+                <!-- The result of the selection -->
+                @Html.Partial("~/Areas/ExamSection/Views/TabulationManager/BatchWiseTabulation/_BatchWiseTabulationResult.cshtml", studentList)
+
+                <br>
+
+            </td>
+        </tr>
+        <!--Comment -->
+        <tr>
+            <td>
+                <table width="100%">
+                    <tbody>
+                    <tr>
+                        <td align="left" valign="top"><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+            </td>
+        </tr>
+
+        <!-- Table Footer -->
+        <tr>
+            <td>
+                @Html.Partial("~/Areas/ExamSection/Views/TabulationManager/BatchWiseTabulation/_BatchWiseTabulationFooter.cshtml", "Page " + pageNo + " of " + totalPage)
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+}
+
+<script type="text/javascript">
+    function reload() {
+        var stdCount = document.getElementById("stdCount").value;
+        var url = "@viewTabulationUrl" + "@Html.Raw(string.Format("/?semesterId={0}&programId={1}&curriculumId={2}&ContinuingBatchId={3}&remark={4}", semesterId, programId, curriculumId, ContinuingBatchId, remark))" + "&stdPerPage=" + stdCount;
+        //alert(url);
+        //window.open(url);
+        window.location = url;
+    }
+    @{
+        var getChangeIsLevelDropByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PrintTabulationSheetApi", action = "GetChangeIsLevelDropByStudentId", area = "ExamSection" });
+    }
+
+
+
+    /*    var onChangeLevelDropByStudentId = function (studentId, semesterId, isLevelDrop2) {
+
+            console.log(isLevelDrop2);
+            return;
+            var isLevelDrop = false;
+
+            $("#checked-" + studentId).change(function () {
+                if (this.checked) {
+                    isLevelDrop = true;
+
+                } else {
+                    isLevelDrop = false;
+
+                }
+
+            });
+        };*/
+
+
+    var onChangeIsLevelDropByStudentId = function (studentId, semesterId, isLevelDrop) {
+        $.get("@getChangeIsLevelDropByStudentIdUrl/?" + "studentId=" + studentId + "&semesterId=" + semesterId + "&isLevelDrop=" + isLevelDrop, function (result) {
+        }).done(function (result) {
+            if (!result.HasError) {
+                if (isLevelDrop) {
+                    $("#ref-remark-" + studentId).css("display", "none");
+                    $("#fail-remark-" + studentId).css("display", "block");
+
+                    $("#ref-ResultType-" + studentId).css("display", "none");
+                    $("#fail-ResultType-" + studentId).css("display", "block");
+
+
+                } else {
+                    $("#ref-remark-" + studentId).css("display", "block");
+                    $("#fail-remark-" + studentId).css("display", "none");
+
+                    $("#ref-ResultType-" + studentId).css("display", "block");
+                    $("#fail-ResultType-" + studentId).css("display", "none");
+
+                }
+                $("#message-" + studentId).css("display", "none");
+
+            } else {
+
+                $("#checked-" + studentId).prop("checked", !isLevelDrop);
+                $("#message-" + studentId).text(result.Errors);
+                $("#message-" + studentId).css("display", "block");
+
+            }
+        }).fail(function (result) {
+
+            $("#checked-" + studentId).prop("checked", !isLevelDrop);
+            $("#message-" + studentId).text(result.Errors);
+            $("#message-" + studentId).css("display", "block");
+        });
+    };
+
+
+
+</script>
+
+
+
+
+
+</body>
+</html>

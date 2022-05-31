@@ -1,0 +1,83 @@
+﻿@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Admit Card Download";
+
+    //WebApi link for single row
+    var getSemesterListByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CourseManagerApi", action = "GetStudentSemesterList", area = "Student" });
+    var getSemesterWiseAdmitCardDownloadCheckingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmitCardApi", action = "GetSemesterWiseAdmitCardDownloadChecking", area = "Student" });
+
+    var getDownloadAdmitCardUrl = Url.Action("AdmitCardDownload", "Reports", new { area = "Student" });
+    var getPrintAdmitCardUrl = Url.Action("AdmitCardPrint", "Reports", new { area = "Student" });
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Reports/AdmitCard.js"></script>
+}
+<div ng-controller="AdmitCardCtrl"
+     ng-init="Init(
+      '@getSemesterListByStudentUrl'
+    ,'@getSemesterWiseAdmitCardDownloadCheckingUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b>Online Admit Card Download / Print</b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered " style="max-width: 700px">
+                        <tr>
+                            <td style="width: 170px; font-weight: bold">Select Semester</td>
+                            <td>
+                                <select ng-model="SelectedSemesterId"
+                                        ng-change="getSemesterWiseAdmitCardDownloadChecking()"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+                                    @*<option value="" label="" class="">---Select Semester---</option>*@
+                                </select>
+                            </td>
+                        </tr>
+                        @if (SiteSettings.Instance.IsMidtermExamEnable)
+                        {
+                            <tr>
+                                <td class="text-bold">Midterm Admit Card</td>
+                                <td>
+                                    <span ng-if="!AdmitCard.IsShowMidtermDownloadButton"
+                                          style="color: red"
+                                    >
+                                        {{AdmitCard.MidtermMessages}}
+                                    </span>
+                                
+                                    <a ng-if="AdmitCard.IsShowMidtermDownloadButton" target="_blank"
+                                       href="@(getPrintAdmitCardUrl)?semesterId={{SelectedSemesterId}}&isMidAdmit=true"
+                                       class="btn btn-success btn-xs">
+                                        Download / Print
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        
+                        <tr>
+                            <td class="text-bold">Final Term Admit Card</td>
+                            <td>
+                                <span ng-if="!AdmitCard.IsShowFinalTermDownloadButton"
+                                style="color: red" >
+                                    {{AdmitCard.FinalTermMessages}}
+                                </span>
+                                <a ng-if="AdmitCard.IsShowFinalTermDownloadButton" target="_blank"
+                                   href="@(getPrintAdmitCardUrl)?semesterId={{SelectedSemesterId}}&isMidAdmit=false"
+                                   class="btn btn-success btn-xs">
+                                    Download / Print
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

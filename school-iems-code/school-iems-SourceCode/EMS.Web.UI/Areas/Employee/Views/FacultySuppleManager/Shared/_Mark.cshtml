@@ -1,0 +1,803 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+    var gradeDetailReportBySemesterUrl = Url.Action("GradeDetailReportBySemester", "TranscriptAndCertificate", new { area = "Academic" });
+}
+
+<div class="widget-header bordered-bottom bordered-sky hide-on-print">
+    <span class="widget-caption buttons-bordered"
+          style="font-weight: bold !important; margin-right: 5px;">
+        Course:
+    </span>
+    <div class="widget-select2">
+        <ui-select ng-model="SelectedBaseCourseId"
+                   ng-change="onChangeBaseCourse($select.selected)"
+                   theme="select2" style="width: 100%;">
+            <ui-select-match class="text-bold">{{$select.selected.Code}}: {{$select.selected.Name}}</ui-select-match>
+            <ui-select-choices repeat="option as option in CourseList| orFilter: {Name: $select.search, Code: $select.search}">
+                <div ng-bind-html="option.Code+': '+option.Name | highlight: $select.search"></div>
+                <small>
+                    Cr.Hr: <span ng-bind-html="''+option.CreditHour"></span>
+                    ,  {{option.CourseCategory}} , {{option.ProgramShortTitle}}
+                </small>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+
+
+    <div ng-show="SelectedBaseCourseId >0" class="widget-buttons buttons-bordered">
+        <button ng-click="getSuppleApplicantListByCourseId()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+    </div>
+</div>
+
+<div ng-show="CourseResult == null" class="alert alert-warning fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> Please select a course to above.
+</div>
+
+<div ng-hide="CourseResult == null">
+    <table class="table table-striped table-bordered hide-on-print">
+        <tbody>
+            <tr style="font-weight: bold;">
+                @*<td>Total Batch: {{SuppleCourse.TotalBatch}}</td>
+                    <td>Total Semester: {{SuppleCourse.TotalSemester}}</td>
+                    <td>Total Class: {{SuppleCourse.TotalClass}}</td>
+                    <td>Total Examiner: {{SuppleCourse.TotalExaminer}}</td>
+                    <td>Total Referred: {{SuppleCourse.TotalReferred}}</td>
+                    <td>Total Backlog: {{SuppleCourse.TotalBacklog}}</td>*@
+                <td>
+                    <span class="badge badge-success">
+                        Approved: {{SuppleCourse.TotalApproved}}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-warning">
+                        Pending: {{SuppleCourse.TotalPending}}
+                    </span>
+                </td>
+                @*<td>
+                        <span class="badge badge-danger">
+                            Disapproved: {{SuppleCourse.TotalDisapproved}}
+                        </span>
+                    </td>*@
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="text-align: center" class="hide-on-print">
+
+        <table class="table table-striped table-bordered " style="width: 360px; margin: 0 auto">
+            <tr>
+                <td style="width: 70px;">
+                    <b>Status : </b>
+                </td>
+                <td>
+                    <span ng-if="CourseResult.IsLockThisCourse" class="label label-danger graded">
+                        <i class="fa fa-lock"></i>
+                        Confirmed & Locked
+                    </span>
+                    <span ng-if="!CourseResult.IsLockThisCourse" class="label label-success graded">
+                        <i class="fa fa-unlock"></i>
+                        Unlocked
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <b>Step 1 : </b>
+                </td>
+                <td>
+                    <button style="width: 146px; margin-top: 10px"
+                            class="btn btn-xs btn-success"
+                            ng-click="saveSuppleResultComponent()"
+                            ng-disabled="CourseResult.IsLockThisCourse">
+                        <i class="fa fa-save"></i> Save Marks
+                    </button>
+                </td>
+
+            </tr>
+
+            @*<tr>
+                    <td><b>Step 2 : </b></td>
+                    <td>
+                        <a style="width: 146px;" class="btn btn-xs btn-success">
+                            <i class="fa fa-eye"></i>
+                            View Draft Mark Sheet
+                        </a>
+
+                    </td>
+                </tr>*@
+            <tr>
+                <td><b>Step 2.1 : </b></td>
+                <td>
+                    <button style="width: 146px;"
+                            ng-click="saveAndLoclSuppleResult()"
+                            ng-disabled="CourseResult.IsLockThisCourse"
+                            class="btn btn-xs btn-danger">
+                        <i class="fa fa-lock"></i> Confirm &amp; Lock Marks
+                    </button>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Step 2.2 : </b></td>
+                <td>
+                    <button @*ng-disabled="ClassResult.IsLocked"*@
+                            style="width: 275px;"
+                            ng-click="getGenerateSuppleResultByCourseId()"
+                            class="btn btn-xs btn-success">
+                        <i class="fa fa-refresh"></i>
+                        Generate 100% Result by (@SiteSettings.Instance.SuppleExamViewName) Mark
+                    </button>
+
+                </td>
+            </tr>
+            <tr>
+                <td><b>Step 3 : </b></td>
+                <td>
+                    <a onclick="window.print()"
+                        style="width: 148px;" class="btn btn-xs btn-success">
+                        <i class="fa fa-print"></i>
+                        Print Mark Sheet
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div class="form-group no-margin  no-print">
+        <div class="input-icon icon-right input-group-xs">
+            <input ng-model="searchApplicant" class="form-control input-xs" id="searchStudent" type="text" placeholder="type to search from below list" autocomplete="on">
+            <i class="white fa fa-times bg-purple" ng-click="searchApplicant='';"></i>
+        </div>
+    </div>
+
+    @{
+        ReportHeaderFooterModel ReportModel = ViewBag.ReportModel;
+
+        if (ReportModel == null)
+        {
+            ReportModel = new ReportHeaderFooterModel();
+        }
+
+        if (ReportModel.Title == "")
+        {
+            ReportModel.Title = ViewBag.Title;
+        }
+    }
+
+    <div class="report-container ">
+        <div ng-hide="CourseResult.IsLockThisCourse" style="font-size: 90px; position: absolute; opacity: .25; text-align: center; transform: rotate(45deg); top: 250px; left: 20%; z-index: 5;">
+            Draft Preview
+        </div>
+        <table>
+            <thead class="report-header-row">
+                <tr>
+                    <th class="report-header">
+
+                        <div>
+                            <table class="" style="width: 100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 70px">
+                                            @(new HtmlString(ReportModel.HtmlLeftArea))
+                                        </td>
+                                        <td style="">
+                                            <div class="margin-bottom-5" style="text-align: center">
+                                                <div class="title-text-bold">@ReportModel.InstituteName</div>
+                                                <div>@ReportModel.InstituteAddress</div>
+                                                <div>Program:{{SuppleCourse.ProgramShortTitle}}</div>
+                                                <div>Grade Sheet:{{SelectedExam.Name}} </div>
+                                                <div class="text-bold"> Course Code, Title : {{SelectedBaseCourse.Code}}, {{SelectedBaseCourse.Name}}</div>
+                                                <div> Credit Hour: {{SelectedBaseCourse.CreditHour}}; {{SelectedBaseCourse.CourseCategory}}; Total Student: {{SuppleCourse.TotalApproved}}; {{SelectedExam.SemesterName}}.</div>
+                                                <div class="text-bold">
+                                                    Course Teacher(s):
+                                                    <span ng-repeat="examiner in SelectedBaseCourse.ExaminerList">
+                                                        {{examiner.FullName}};
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 70px; text-align: right;">
+                                            @(new HtmlString(ReportModel.HtmlRightArea))
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table style="width: 100%;">
+                                <tbody>
+                                    <tr style="">
+                                        <td class="show-on-print" style="text-align: left;">Printed at: @DateTime.Now.ToString("dd/MM/yyyy hh:mm tt ")</td>
+                                        <td>@ReportModel.ReportNo</td>
+                                        <td class="show-on-print" style="text-align: right;">Printed by: @HttpUtil.Profile.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="border-top: 1px solid black; margin-top: 5px;"></div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="report-body-row">
+                <tr>
+                    <td class="report-body">
+                    <div ng-repeat="row in CourseResult.SemesterWiseApplicantsListJson">
+
+                    <div ng-repeat="curriculum in row.CurriculumWiseApplicantsListJson">
+                    <div class="text-center show-on-print" style="margin-top: 20px; margin-bottom: 10px;">
+                        <div>
+                            <span class="text-bold">Semester: </span>
+                            {{row.SemesterName}}
+                        </div>
+                        <div>
+                            <span class="text-bold">Course: </span>
+                            {{curriculum.CurriculumCourseCode}}: {{curriculum.CurriculumCourseName}} [{{curriculum.CurriculumCourseCreditHour}}], [{{curriculum.SectionNames}}]
+                        </div>
+                        <div>
+                            <span class="text-bold">Syllabus: </span>
+                            {{curriculum.CurriculumShortName}}
+                        </div>
+                    </div>
+
+
+                    <div class="hide-on-print" style="margin-top: 20px;">
+                        <div ng-show="row.IsShowEnrollType" class="text-center text-bold" style="font-size: 20px; margin-bottom: 10px;">
+                            {{row.EnrollType}} Students
+                        </div>
+
+                        <div class="widget-header bg-success bordered-bottom">
+                            <table class="course-info-table" style="width: 100%;">
+                                <tr>
+                                    <td class="text-left">
+                                        <span class="widget-caption" style="font-weight: bold !important;">
+                                            Semester: {{row.SemesterName}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="widget-caption" style="font-weight: bold !important;">
+                                            {{curriculum.CurriculumCourseCode}}: {{curriculum.CurriculumCourseName}} [{{curriculum.CurriculumCourseCreditHour}}], [{{curriculum.SectionNames}}]
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span class="widget-caption" style="font-weight: bold !important; margin-right: 15px;">
+                                            {{curriculum.CurriculumShortName}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover supple-applicants-table">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center ser" style="vertical-align: middle;">Ser</th>
+                            <th class="text-center student-id" style="vertical-align: middle;">Student ID</th>
+                            <th class="text-center student-Name" style="vertical-align: middle;">Name [Section]</th>
+
+                            <th ng-repeat="componentSetting in curriculum.ResultComponentSettingListJsonForSingleClass"
+                                class="text-center result-component">
+                                {{componentSetting.Name}} ({{componentSetting.TotalMark}})
+
+                                <table ng-if="componentSetting.IsOpenComponentForMarkInput"
+                                       class="table table-striped table-bordered old-new-mark-table hide-on-print">
+                                    <thead>
+                                    <tr>
+                                        <th class="font-normal">Old</th>
+                                        <th class="font-normal">New</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+
+                                <div ng-if="!componentSetting.IsOpenComponentForMarkInput
+                                         && (componentSetting.TestTypeEnumId==@((byte) Aca_MarkDistributionPolicyComponent.TestTypeEnum.MidTerm)
+                                         || componentSetting.TestTypeEnumId==@((byte) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm)
+                                         )
+                                         "
+                                     style="font-size: 8px;">(Max)</div>
+                            </th>
+
+                            <th class="text-center total-mark">
+                                Total Mark ({{curriculum.ResultClassSettingJsonForSingleClass.TotalMark}})
+                                @*<table class="table table-striped table-bordered old-new-mark-table hide-on-print">
+                                    <thead>
+                                    <tr>
+                                        <th class="font-normal">Old</th>
+                                        <th class="font-normal">New</th>
+                                    </tr>
+                                    </thead>
+                                </table>*@
+                            </th>
+                            @if (SiteSettings.Instance.AutoGradeGraceMark > 0)
+                            {
+                                <th class="text-center mark-in">
+                                    Grace Mark
+                                </th>
+                            }
+                            <th class="text-center mark-in">
+                                Mark in {{curriculum.ResultClassSettingJsonForSingleClass.ConvertPercentage}}%
+
+                                @*<table class="table table-striped table-bordered old-new-mark-table hide-on-print">
+                                    <thead>
+                                    <tr>
+                                        <th class="font-normal">Old</th>
+                                        <th class="font-normal">New</th>
+                                    </tr>
+                                    </thead>
+                                </table>*@
+                            </th>
+                            <th class="text-center letter-grade">
+                                Letter Grade
+                                @*<table class="table table-striped table-bordered old-new-mark-table">
+                                    <thead>
+                                    <tr>
+                                        <th class="font-normal">Old</th>
+                                        <th class="font-normal">New</th>
+                                    </tr>
+                                    </thead>
+                                </table>*@
+                            </th>
+                            @*<th class="text-center grade-point"> Grade Point</th>*@
+                            @*<th class="text-center hide-on-print" style="width: 200px; vertical-align: middle;">Remark (Optional)</th>*@
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="applicant in curriculum.ApplicantListJson|filter:searchApplicant"
+                            @*ng-class="{@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred):'bg-green'
+                                                , @((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Backlog):'bg-yellow'}
+                                                [applicant.EnrollTypeEnumId]"*@>
+                            <td class="text-center">{{$index+1}}</td>
+                            <td class="text-center">
+                                <a ng-click="markHistoryModalShow(applicant, row, curriculum)"
+                                   title="click to view mark history">
+                                    {{applicant.UserName}}
+                                </a>
+
+                            </td>
+                            <td>
+                                <a ng-click="markHistoryModalShow(applicant, row, curriculum)"
+                                   class="text-bold student-Name" title="click to view mark history">
+                                    {{applicant.FullName}} [{{applicant.ClassSection}}]
+                                </a>
+                                @*<br/>*@
+                                @*<em style="font-size: 11px;">Reg. Sem.: {{row.RegSemesterName}} [{{row.ClassSection}}], Bath:{{row.StudentDeptBatchNo}}th</em>*@
+                            </td>
+
+                            <td ng-repeat="component in applicant.ResultComponentListJson"
+                                ng-class="component.IsOpenMarkInput && component.NewMark == ''  ? 'bg-yellow-mark': (component.NewMark < 0 ? 'bg-red-mark':'')"
+                                class="text-center">
+                                <div ng-hide="component.TestTypeEnumId!=@((byte) Aca_MarkDistributionPolicyComponent.TestTypeEnum.MidTerm)
+                                     && applicant.EnrollTypeEnumId==@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred)
+                                     && SelectedExam.ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)"
+                                     class="input-group input-group-xs text-center">
+
+                                    <span ng-if="!component.IsOpenMarkInput" class="input-group-addon" title="Current Mark">{{component.CurrentMark}}</span>
+                                    <table ng-if="component.IsOpenMarkInput"  class="table table-striped table-bordered old-new-mark-table">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="input-group-addon hide-on-print" title="Current Mark">{{component.CurrentMark}}</span>
+                                            </td>
+                                            <td >
+                                                <input next-focus
+                                                       ng-model="component.NewMark"
+                                                       class="mark-entry-input form-control input-xs"
+                                                       style="text-align: center;"
+                                                       type="text" value=""
+                                                       ng-disabled="CourseResult.IsLockThisCourse">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span>{{applicant.ResultClassJson.NewMark}}</span>
+                                @*<table class="table table-striped table-bordered old-new-mark-table final-grade">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <span ng-hide="applicant.EnrollTypeEnumId==@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred)
+                                                    && SelectedExam.ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)"
+                                                  class="hide-on-print">
+                                                {{applicant.ResultClassJson.CurrentMark}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>{{applicant.ResultClassJson.NewMark}}</span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>*@
+                            </td>
+                            @if (SiteSettings.Instance.AutoGradeGraceMark > 0)
+                            {
+                                <td>
+                                    <span>
+                                        {{component.GraceMark}}
+                                    </span>
+                                </td>
+                            }
+                            
+                            <td class="text-center">
+                                <span>{{applicant.ResultClassJson.NewContributedMark}}</span>
+                                @*<table class="table table-striped table-bordered old-new-mark-table final-grade">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <span ng-hide="applicant.EnrollTypeEnumId==@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred)
+                                                            && SelectedExam.ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)"
+                                                  class="hide-on-print">
+                                                {{applicant.ResultClassJson.CurrentContributedMark}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>{{applicant.ResultClassJson.NewContributedMark}}</span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>*@
+                            </td>
+                            <td class="text-center">
+                                <span>{{applicant.ResultClassJson.NewGrade}}</span>
+                                @*<table class="table table-striped table-bordered old-new-mark-table final-grade">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <span ng-hide="applicant.EnrollTypeEnumId==@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred)
+                                                        && SelectedExam.ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)">
+                                                {{applicant.ResultClassJson.CurrentGrade}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>{{applicant.ResultClassJson.NewGrade}}</span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>*@
+                            </td>
+                            @*<td class="text-center">
+                                                    <span ng-hide="applicant.EnrollTypeEnumId==@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred)
+                                                     && SelectedExam.ExamTypeEnumId==@((byte) Aca_Exam.ExamTypeEnum.ImprovementMidTerm)">
+                                                        {{applicant.ResultClassJson.CurrentGradePoint}}
+                                                    </span>
+                                                </td>*@
+                            @*<td class="text-center hide-on-print">
+                                <input ng-model="applicant.@Aca_SuppleTakenByStudent.Property_ExamRemark"  type="text"/>
+                            </td>*@
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot class="report-footer-row show-on-print">
+                <tr>
+                    <td class="report-footer">
+                        <div style="margin-top: 20px;">
+                            <table class="table-no-bordered no-bordered" style="width: 100%; font-size: 11px; border: none !important;">
+                                <tr>
+                                    <td class="no-bordered" rowspan="2" style="width: 33%; vertical-align: bottom; text-align: center; border: none !important;">
+                                        ____________________________________<br />
+                                        Date & Signature of Course Teacher
+                                    </td>
+                                    <td class="no-bordered" style="vertical-align: bottom; text-align: center; border: none !important;">
+                                        ____________________________________<br />
+                                        Date & Signature of Chairman
+                                    </td>
+                                    <td class="no-bordered" style="width: 33%; vertical-align: bottom; text-align: center; border: none !important;">
+                                        ____________________________________<br />
+                                        Date & Signature of Exam Controller
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div style="text-align: center;">
+        <button @*ng-show="ClassStudentList.length>0"*@
+                style="margin: 15px;"
+                ng-click="saveSuppleResultComponent()" 
+                ng-disabled="CourseResult.IsLockThisCourse"
+                class="btn btn-success">
+            <i class="fa fa-save"></i>
+            Save Marks
+        </button>
+    </div>
+
+    @*Mark History Modal Start*@
+    <div class="modal fade" id="markHistoryModal" tabindex="-1" role="dialog" aria-labelledby="markHistoryModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        Mark Change History
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-6 table-form">
+                                <!-- <input type="hidden" name="token" value=""> -->
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                Full Name:
+                                            </td>
+                                            <td class="fieldarea">
+                                                <a target="_blank"
+                                                   href="@(editStudentByIdAcademicPageUrl)/?id={{SelectedApplicant.UserId}}&stdId={{SelectedApplicant.StudentId}}&un={{SelectedApplicant.UserName}}"
+                                                   class="text-bold" title="click to view profile">
+                                                    {{SelectedApplicant.FullName}}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                Course Code, Title:
+                                            </td>
+                                            <td class="fieldarea">
+                                                {{SelectedApplicantCourse.CurriculumCourseCode}}: {{SelectedApplicantCourse.CurriculumCourseName}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                Reg. Semester:
+                                            </td>
+                                            <td class="fieldarea">
+                                                {{SelectedApplicantSemester.SemesterName}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                ID:
+                                            </td>
+                                            <td class="fieldarea">
+                                                <a ng-href="@(gradeDetailReportBySemesterUrl)?stdId={{SelectedApplicant.StudentId}}#classId-{{SelectedApplicant.ClassId}}"
+                                                   target="_blank"
+                                                   title="click to view Grade Detail Report">
+                                                    {{SelectedApplicant.UserName}}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                Section:
+                                            </td>
+                                            <td class="fieldarea">
+                                                {{SelectedApplicant.ClassSection}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">
+                                                Syllabus:
+                                            </td>
+                                            <td class="fieldarea">
+                                                {{SelectedApplicantCourse.CurriculumShortName}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bold" style="width: 170px; text-align: center">Component</th>
+                                            <th class="text-bold" style="width: 105px; text-align: center">Current Mark</th>
+                                            <th class="text-bold" style="text-align: center; width: 175px;">Remark</th>
+                                            <th class="text-bold" style="text-align: center">History</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="component in SelectedApplicant.ResultComponentListJson">
+                                            <td style="text-align: center;">{{component.Name}}</td>
+                                            <td class="text-center">{{component.CurrentMark}}</td>
+                                            <td class="text-center">{{component.Remark}}</td>
+                                            <td>
+                                                <div ng-bind-html="renderHtml(component.History)" class="text-center"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold" style="text-align: center;">Total</td>
+                                            <td class="text-center text-bold">{{SelectedApplicant.ResultClassJson.Mark}} ({{SelectedApplicant.ResultClassJson.Grade}})</td>
+                                            <td class="text-center text-bold">{{SelectedApplicant.ResultClassJson.Remark}}</td>
+                                            <td>
+                                                <div ng-bind-html="renderHtml(SelectedApplicant.ResultClassJson.History)" class="text-center text-bold"></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @* Mark History Modal End *@
+
+</div>
+
+
+<style>
+    .course-info-table tr td {
+        font-size: 13px !important;
+        padding-top: 5px;
+    }
+
+    .mark-entry-input {
+        height: 24px !important;
+        padding: 2px 6px 2px 7px;
+        font-size: 11px;
+        line-height: 1.4;
+        font-weight: normal !important;
+        width: 33px !important;
+    }
+
+    .final-grade tbody > tr > td {
+        height: 24px !important;
+        vertical-align: middle;
+    }
+
+    .ser {
+        width: 45px;
+    }
+
+    .student-id {
+        width: 90px;
+    }
+
+    .student-Name {
+        width: 200px;
+    }
+
+    .result-component {
+        width: 90px;
+    }
+
+    .total-mark {
+        width: 50px;
+    }
+
+    .mark-in {
+        width: 55px;
+    }
+
+    .letter-grade {
+        width: 55px;
+    }
+
+    .grade-point {
+        width: 50px;
+    }
+
+    .show-on-print {
+        display: none;
+    }
+
+
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+
+    .old-new-mark-table thead > tr > th {
+        font-size: 10px !important;
+        padding: 1px;
+        text-align: center;
+        /*font-weight: bold !important;*/
+    }
+
+    .old-new-mark-table tbody > tr > td {
+        padding: 0px !important;
+    }
+
+        .old-new-mark-table tbody > tr > td span {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            color: black;
+        }
+
+    .old-new-mark-table input {
+        height: 23px !important;
+    }
+
+    .font-normal {
+        font-weight: normal !important;
+    }
+
+    input[type="text"].bg-yellow-mark, .bg-yellow-mark {
+        border: 1px solid white  !important;
+        background-color: #EAEA96 !important;
+        -webkit-background-clip: border-box !important;
+    }
+
+    input[type="text"].bg-red-mark, .bg-red-mark {
+        border: 1px solid white !important;
+        background-color: #f5a8a8 !important;
+        -webkit-background-clip: border-box !important;
+    }
+
+    .input-group-addon {
+        border: none;
+        background-image: none !important;
+        background-color: transparent;
+    }
+
+    @@media print {
+        .supple-applicants-table tr th {
+            font-weight: 500 !important;
+        }
+
+        .ser {
+            width: 20px !important;
+        }
+
+        .student-id {
+            width: 20px !important;
+        }
+
+        .student-Name {
+            width: 200px !important;
+            font-weight: normal !important;
+        }
+
+        .result-component {
+            width: 20px !important;
+        }
+
+        .total-mark {
+            width: 20px !important;
+        }
+
+        .mark-in {
+            width: 20px !important;
+        }
+
+        .letter-grade {
+            width: 20px;
+        }
+
+        .grade-point {
+            width: 20px;
+        }
+
+        .show-on-print {
+            display: block !important;
+        }
+        .hide-on-print {
+            display: none !important;
+        }
+    }
+</style>

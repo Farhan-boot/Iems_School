@@ -1,0 +1,206 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    ViewBag.Title = "Print Curriculum";
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CurriculumId = (string)id == null ? "0" : (string)id;
+    long curriculumId;
+    long.TryParse(CurriculumId, out curriculumId);
+    Aca_Curriculum curriculum = HttpUtil.DbContext.Aca_Curriculum
+        .Include("Aca_Program")
+        //.Include("Aca_Program.HR_Department")
+        .SingleOrDefault(x => x.Id == curriculumId);
+    List<Aca_CurriculumCourse> curriculumCourseList = null;
+    HR_Department dept = null;
+    HR_Department faculty = null;
+    if (curriculum != null)
+    {
+        //dept = curriculum.Aca_Program.HR_Department;
+        //faculty = HttpUtil.DbContext.HR_Department.SingleOrDefault(x=>x.Id== dept.ParentDeptId);
+
+        curriculumCourseList = HttpUtil.DbContext.Aca_CurriculumCourse
+                                    //.Include("Aca_StudyLevelTerm")
+                                    .Include("Aca_CurriculumElectiveGroup")
+                                    .OrderBy(x=>x.Code)
+                                    .ThenBy(x => x.Code)
+                                    .Where(x => x.CurriculumId == curriculum.Id)
+                                    .ToList();
+    }
+}
+
+@if (curriculum != null)
+{
+    <div class="text-center">
+        <table class="table table-no-bordered">
+            <tr>
+                <td style="width: 135px;">
+                    <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" style="width: 135px;">
+                </td>
+                <td>
+                    <h3 class="text-center no-margin-top">@SiteSettings.Instance.InstituteName </h3>
+                    @if (faculty != null)
+                    {
+                        <h4 class="text-center">@faculty.Name </h4>
+                    }
+                    @*<h4 class="text-center no-margin-bottom">Department of @dept.Name </h4>*@
+                    <h5>
+                        Program : <strong>
+                            <a target="_blank" href="@Url.Action("Index", "ProgramManager", new {area = "Academic"})/?id=@curriculum.Id" title="click for details">
+                                @curriculum.Aca_Program.Name
+                            </a>
+                        </strong>
+                    </h5>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+                <td colspan="4">
+                    Curriculum : <strong>
+                        <a target="_blank" href="@Url.Action("CurriculumAddEdit", "Curriculum", new {area = "Academic"})/?id=@curriculum.Id" title="click for details">
+                            @curriculum.Name
+                        </a>
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Total Credit : <strong>@*@curriculum.TotalCredit*@</strong></td>
+                <td>Total Courses : <strong>@curriculum.TotalCourse</strong></td>
+                <td>Total Semester : <strong>@*@curriculum.TotalSemester*@</strong></td>
+                <td>Year : <strong>@curriculum.Year</strong></td>
+            </tr>
+        </table>
+    </div>
+}
+@if (curriculumCourseList != null)
+{
+    var list = curriculumCourseList;
+    @GetCourseList(list)
+    <div class="horizontal-space"></div>
+
+    List<Aca_StudyLevelTerm> levelTermList = HttpUtil.DbContext.Aca_StudyLevelTerm.ToList();
+    @*foreach (var levelTerm in levelTermList)
+    {
+        var list = curriculumCourseList
+
+            .Where(x => x.CourseType != Aca_CurriculumCourse.CourseTypeEnum.Elective)
+            .ToList();
+        if (list.Count != 0)
+        {
+            <h5><u><strong>@levelTerm.Name</strong></u></h5>
+            @GetCourseList(list)
+            <div class="horizontal-space"></div>
+        }
+    }*@
+
+    <div class="horizontal-space"></div>
+    <h4 class="text-center">Elective (Major/Minor/Optional) Courses</h4>
+    <div class="horizontal-space"></div>
+    List<Aca_CurriculumElectiveGroup> cegList = HttpUtil.DbContext.Aca_CurriculumElectiveGroup
+        .Where(x => x.ProgramId == curriculum.Aca_Program.Id)
+        .ToList();
+    @*foreach (var ceg in cegList)
+    {
+        var list = curriculumCourseList
+            .Where(x => x.CourseType == Aca_CurriculumCourse.CourseTypeEnum.Elective
+                        && x.ElectiveGroupId == ceg.Id)
+            .ToList();
+        <h5>@ceg.Name</h5>
+        @GetElectiveCourseList(list)
+        <div class="horizontal-space"></div>
+        //if (list.Count != 0)
+        //{
+
+        //}
+    }*@
+}
+@helper  GetCourseList(List<Aca_CurriculumCourse> curriculumCourseList)
+{
+float creditLoad = 0;
+float creditHour = 0;
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th class="" style="width: 110px;">Course Code</th>
+            <th class="">Course Title</th>
+            <th class="text-center" style="width: 56px;">Credit Hour</th>
+            @*<th class="text-center" style="width: 66px;">Contact Hour</th>*@
+            <th class="text-center" style="width: 122px;">Category</th>
+            <th class="text-center" style="width: 122px;">Credit Type</th>
+            <th class="text-center no-print" style="width: 90px;">Type</th>
+            @*<th class="text-center no-print" style="width: 90px;">Departmental</th>*@
+        </tr>
+        @foreach (var course in curriculumCourseList)
+        {
+            creditLoad += course.CreditLoad;
+            creditHour += course.CreditHour;
+            <tr>
+                <td class="">@course.Code</td>
+                <td class=""><a target="_blank" href="@Url.Action("CurriculumCourseAddEdit", "CurriculumCourse", new {area = "Academic"})/?id=@course.Id" title="click for details">@course.Name</a> </td>
+                <td class="text-right">@course.CreditLoad.ToString("F")</td>
+                @*<td class="text-right">@course.CreditHour.ToString("F")</td>*@
+                <td class="text-center">@course.CourseCategory.ToString().AddSpacesToSentence()</td>
+                <td class="text-center">@*@course.CreditType.ToString().AddSpacesToSentence()*@</td>
+                <td class="text-center no-print">@course.CourseType.ToString().AddSpacesToSentence()</td>
+                @*<td class="text-center no-print">
+                    @if (course.IsDepartmental)
+                    {
+                        <span  class="badge badge-success">Yes</span>
+                    }
+                    else
+                    {
+                        <span  class="badge badge-danger">No</span>
+                    }
+                </td>*@
+            </tr>
+        }
+        <tr>
+            <td colspan="2" class="text-right"><strong>Total:</strong></td>
+            <td class="text-right"><strong>@creditLoad.ToString("F")</strong></td>
+            <td class="text-right"><strong>@*@creditHour.ToString("F")*@</strong></td>
+            <td class="text-right">&nbsp;</td>
+            <td class="text-right">&nbsp;</td>
+        </tr>
+    </table>
+}
+@helper  GetElectiveCourseList(List<Aca_CurriculumCourse> curriculumCourseList)
+{
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th class="" style="width: 110px;">Course Code</th>
+            <th class="">Course Title</th>
+            <th class="text-center" style="width: 56px;">Credit Hour</th>
+            @*<th class="text-center" style="width: 66px;">Contact Hour</th>*@
+            <th class="text-center" style="width: 122px;">Category</th>
+            <th class="text-center" style="width: 122px;">Credit Type</th>
+            <th class="text-center no-print" style="width: 90px;">Type</th>
+            @*<th class="text-center no-print" style="width: 90px;">Departmental</th>*@
+            <th class="text-center" style="width: 110px;">Level Term</th>
+        </tr>
+        @foreach (var course in curriculumCourseList)
+        {
+            <tr>
+                <td class="">@course.Code</td>
+                <td class=""><a target="_blank" href="@Url.Action("CurriculumCourseAddEdit", "CurriculumCourse", new {area = "Academic"})/?id=@course.Id" title="click for details">@course.Name</a></td>
+                <td class="text-right">@course.CreditLoad.ToString("F")</td>
+                @*<td class="text-right">@course.CreditHour.ToString("F")</td>*@
+                <td class="text-center">@course.CourseCategory.ToString().AddSpacesToSentence()</td>
+                <td class="text-center">@*@course.CreditType.ToString().AddSpacesToSentence()*@</td>
+                <td class="text-center no-print">@course.CourseType.ToString().AddSpacesToSentence()</td>
+                @*<td class="text-center no-print">
+                    @if (course.IsDepartmental)
+                    {
+                        <span  class="badge badge-success">Yes</span>
+                    }
+                    else
+                    {
+                        <span  class="badge badge-danger">No</span>
+                    }
+                </td>*@
+                <td class="text-center">@*@course.Aca_StudyLevelTerm.Name*@</td>
+            </tr>
+        }
+    </table>
+}

@@ -1,0 +1,177 @@
+﻿
+<!--File:BAcnt_VoucherDetail Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "BasicAccounting: Add/Edit Voucher Detail";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var VoucherDetailId = (string) id == null?"0":(string)id;
+    
+    //BAcnt_VoucherDetail WebApi Single Row link   
+    var getVoucherDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailById", area = "BasicAccounting" });
+    var getVoucherDetailDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailDataExtra", area = "BasicAccounting" });
+    var saveVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "SaveVoucherDetail", area = "BasicAccounting" });
+    var deleteVoucherDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetDeleteVoucherDetailById", area = "BasicAccounting" });
+
+    //BAcnt_VoucherDetail WebApi List link 
+    var getPagedVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "VoucherDetailApi", action = "GetPagedVoucherDetail", area = "BasicAccounting"});
+    var getAllVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetAllVoucherDetail", area = "BasicAccounting" });
+    var saveVoucherDetailListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "SaveVoucherDetailList", area = "BasicAccounting" });
+    var getVoucherDetailListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailListDataExtra", area = "BasicAccounting" });
+
+    var editVoucherDetailByIdPageUrl = Url.Action("VoucherDetailAddEdit", "VoucherDetail", new { area = "BasicAccounting" });
+    var listVoucherDetailPageUrl = Url.Action("VoucherDetailList", "VoucherDetail", new { area = "BasicAccounting" });
+    
+    //BAcnt_VoucherDetail Angular Functions
+    string getVoucherDetailById="getVoucherDetailById";
+    var saveVoucherDetail = "saveVoucherDetail";
+    var getNewVoucherDetail = "getNewVoucherDetail";
+    var refreshPage = "loadPage()";
+    string deleteVoucherDetailById="deleteVoucherDetailById";
+    string loadVoucherDetailExtraData="loadVoucherDetailExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/VoucherDetail/VoucherDetailAddEdit.js"></script>
+}
+
+<div id="VoucherDetailAddEdit" class="row" ng-controller="VoucherDetailAddEditCtrl" ng-init="Init(
+      '@VoucherDetailId'
+      ,'@getVoucherDetailByIdUrl'
+      ,'@getVoucherDetailDataExtraUrl'
+      ,'@saveVoucherDetailUrl'
+      ,'@deleteVoucherDetailByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="VoucherDetail.@BAcnt_VoucherDetail.Property_Name!=''">{{(VoucherDetail.@BAcnt_VoucherDetail.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="VoucherDetailId" ng-Enter="@(getVoucherDetailById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewVoucherDetail)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listVoucherDetailPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Debit Account </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_DebitAccount" class="form-control" placeholder="Enter Debit Account"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Debit Account." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Credit Account </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_CreditAccount" class="form-control" placeholder="Enter Credit Account"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Account." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Debited </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_IsDebited"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Debited if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea type="text" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_Remark" class="form-control" placeholder="Enter Remark"   />
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Narration <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_Narration" class="form-control" placeholder="Enter Narration"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Narration." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                   
+                         <tr>
+                            <td class="fieldlabel">Ledger </td>
+                            <td class="fieldarea">
+                                <select ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_LedgerId"
+                                        ng-options="option.Id as option.Name for option in LedgerList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Ledger." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Voucher </td>
+                            <td class="fieldarea">
+                                <select ng-model="VoucherDetail.@BAcnt_VoucherDetail.Property_VoucherId"
+                                        ng-options="option.Id as option.Name for option in VoucherList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Voucher." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveVoucherDetail)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

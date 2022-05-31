@@ -1,0 +1,365 @@
+﻿<!--File:Aca_MarkDistributionPolicy Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Exam Section: Add/Edit Mark Distribution Policy";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+
+    var MarkDistributionPolicyId = (string)id == null ? "0" : (string)id;
+
+    var getMarkDistributionPolicyByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetMarkDistributionPolicyById", area = "ExamSection" });
+    var getMarkDistributionPolicyExtraDataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetMarkDistributionPolicyDataExtra", area = "ExamSection" }); ;
+    var saveMarkDistributionPolicyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "SaveMarkDistributionPolicy", area = "ExamSection" });
+    var deleteMarkDistributionPolicyByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetDeleteMarkDistributionPolicyById", area = "ExamSection" });
+    var listViewUrl = Url.Action("MarkDistributionPolicyList", "MarkDistributionPolicy", new { area = "ExamSection" });
+
+
+//Component api
+var getNewMarkPolicyComponentByPolicyIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetNewMarkPolicyComponentByPolicyId", area = "ExamSection" });
+    var deleteMarkDistributionPolicyComponentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetDeleteMarkDistributionPolicyComponentById", area = "ExamSection" });
+    //breakDown
+    var getNewMarkPolicyBreakdownByComponentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetNewMarkPolicyBreakdownByComponentId", area = "ExamSection" });
+    var deleteMarkDistributionPolicyBreakdownByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkDistributionPolicyApi", action = "GetDeleteMarkDistributionPolicyBreakdownById", area = "ExamSection" });
+
+    // Angular Functions
+    //string getMarkDistributionPolicyById = "getMarkDistributionPolicyById()";
+    var saveMarkDistributionPolicy = "saveMarkDistributionPolicy";
+    var getNewMarkDistributionPolicy = "getNewMarkDistributionPolicy()";
+    var refreshPage = "loadPage()";
+    string deleteMarkDistributionPolicyById = "deleteMarkDistributionPolicyById()";
+    string loadMarkDistributionPolicyExtraData = "loadMarkDistributionPolicyExtraData()";
+
+    //component
+    var editComponent = "editComponent";
+    var addNewComponent = "addNewComponent";
+    var getNewComponent = "getNewComponent";
+    var deleteComponent = "deleteComponent";
+
+    var editBreakdown = "editBreakdown";
+    var addNewBreakdown = "addNewBreakdown";
+    var getNewBreakdown = "getNewBreakdown";
+    var deleteBreakdown = "deleteBreakdown";
+
+    //AngularJs Function
+    string getNewMarkDistributionPolicyBreakdown = "getNewMarkDistributionPolicyBreakdown";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/MarkDistributionPolicy/MarkDistributionPolicyAddEdit.js?v=1"></script>
+}
+<style>
+    .result-grid [class^="col-"] {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .element-result-grid [class^="col-"] {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 20px;
+    }
+</style>
+<div id="MarkDistributionPolicyAddEdit" class="row" ng-controller="MarkDistributionPolicyAddEditCtrl" ng-init="Init(
+     '@MarkDistributionPolicyId',
+     '@getMarkDistributionPolicyByIdUrl',
+     '@getMarkDistributionPolicyExtraDataUrl',
+     '@saveMarkDistributionPolicyUrl',
+     '@deleteMarkDistributionPolicyByIdUrl',
+     '@getNewMarkPolicyComponentByPolicyIdUrl',
+     '@getNewMarkPolicyBreakdownByComponentIdUrl',
+     '@deleteMarkDistributionPolicyComponentByIdUrl',
+     '@deleteMarkDistributionPolicyBreakdownByIdUrl'
+     )">
+
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-edit bold  "></i>
+            <span class="widget-caption ">Mark Distribution Policy Settings</span>
+            <div class="widget-buttons no-padding-left">
+                <button ng-click="@getNewMarkDistributionPolicy" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div><!--Widget Header end-->
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-md-12 text-danger " ng-show="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_Remark!=null">
+                    <b>Note:</b> {{MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_Remark}}
+                </div>
+                <!--text type-->
+                <div class="col-sm-6 form-group">
+                    <label>Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                    <input type="text" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required=""/>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Credit Hour </label>
+                    <input type="number" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_CreditHour" class="form-control" placeholder="Enter Credit Hour"/>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>Course Category </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_CourseCategoryEnumId" ng-options="option.Id as option.Name for option in CourseCategoryEnumList " ng-init="" class="form-control"></select>
+                </div>
+                @*<div class="col-sm-3" style="margin-top: 20px;">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_IsBachelorProgram" /> Is Bachelor Program
+                        </div>
+                    </div>*@
+
+                <div class="col-sm-2 form-group">
+                    <label>Total Mark </label>
+                    <input type="number" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_TotalMark" class="form-control" placeholder="Enter Total Mark"/>
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label>Convert Percentage (%) </label>
+                    <input type="number" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_ConvertPercentage" class="form-control" placeholder="Enter Total Mark"/>
+                </div>
+                <!--dropdown option for EnumList-->
+                <div class="col-sm-2 form-group">
+                    <label> Exam Type </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_ExamTypeEnumId" ng-options="option.Id as option.Name for option in ExamTypeEnumList " ng-init="" class="form-control"></select>
+                </div>
+
+                <div class="col-sm-3 form-group">
+                    <label> Start Semester </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_StartSemesterId" ng-options="option.Id as option.Name for option in StartSemesterList" title="Select Start Semester" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label> End Semester </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_EndSemesterId" ng-options="option.Id as option.Name for option in EndSemesterList" title="Select Start Semester" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Not Selected---</option>
+                    </select>
+                </div>
+
+
+                <div class="col-sm-6 form-group">
+                    <label> Program </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_ProgramId" ng-options="option.Id as option.Name for option in ProgramList" title="Select Start Semester" ng-init="" class="form-control">
+                        <option value="" label="" class="">---All Program---</option>
+                    </select>
+                </div>
+
+                <!--dropdown option for EnumList-->
+                <div class="col-sm-3 form-group">
+                    <label> Status </label>
+                    <select ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"></select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>Is Fixed Policy </label>
+                    <input type="checkbox" ng-model="MarkDistributionPolicy.@Aca_MarkDistributionPolicy.Property_IsFixedPolicy" class="form-control" placeholder="Enter Is Fixed Policy"/>
+                </div>
+            </div>
+
+            <div class="row" ng-show="MarkDistributionPolicy.Id!=null && MarkDistributionPolicy.Id!='0'">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky bordered-top bordered-danger">
+                            <i class="widget-icon fa fa-edit bold  "></i>
+                            <span class="widget-caption ">Mark Breakdown Policy Settings</span>
+                            <div class="widget-buttons no-padding-left">
+                                <button ng-click="@(getNewComponent)()" class="btn btn-success btn-xs">
+                                    <i class="fa fa-plus">
+                                    </i> Add Mark Component
+                                </button>
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#addComponentModal">
+                                    <i class="fa fa-plus"></i> Import Component From Other Policy
+                                </button>
+                            </div>
+                        </div><!--Component Widget Header end-->
+                        <div class="widget-body">
+                            <div class="row">
+                                <!--text type-->
+                                <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+                                    <div class="margin5">
+                                        <div ng-repeat="row in MarkDistributionPolicy.Aca_MarkDistributionPolicyComponentJson | orderBy:'SerNo'">
+                                            <div class="row result-grid component">
+                                                <div class="col-md-3">
+                                                    <b>{{row.@Aca_MarkDistributionPolicyComponent.Property_Name}}</b> ({{row.@Aca_MarkDistributionPolicyComponent.Property_TestType}})
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <b class="pull-right">
+                                                        Total:{{row.@Aca_MarkDistributionPolicyComponent.Property_DefaultTotalMark}} | Percentage: {{row.@Aca_MarkDistributionPolicyComponent.Property_ConvertPercentage}}%
+                                                        <span ng-show="row.Aca_MarkDistributionPolicyBreakdownJson.length>0">
+                                                            | Count:
+                                                            <span ng-show="row.@Aca_MarkDistributionPolicyComponent.Property_BestCount==0">All</span>
+                                                            <span ng-show="row.@Aca_MarkDistributionPolicyComponent.Property_BestCount==-1">None</span>
+                                                            <span ng-show="row.@Aca_MarkDistributionPolicyComponent.Property_BestCount>0">{{row.@Aca_MarkDistributionPolicyComponent.Property_BestCount}}</span>
+
+                                                        </span>
+                                                    </b>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button ng-click="@(editComponent)(row)" type="button" class="btn btn-xs btn-success" @*data-toggle="modal" data-target="#editComponentModal{{row.Id}}"*@>
+                                                        <i class="fa fa-plus"></i> Edit
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button ng-click="@(getNewBreakdown)(row)" type="button" class="btn btn-xs btn-success" @*data-toggle="modal" data-target="#addBreakDownModal"*@>
+                                                        <i class="fa fa-plus"></i> Add Breakdown
+                                                    </button>
+                                                    <button ng-click="@(deleteComponent)(row)" class="btn btn-xs btn-danger">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-12 text-danger no-padding padding-left-20 padding-right-20" ng-show="row.Remark!=null"><b>Note:</b> {{row.Remark}}</div>
+                                            </div>
+                                            <!-- Breakdown start -->
+                                            <div ng-repeat="breakdown in row.Aca_MarkDistributionPolicyBreakdownJson | orderBy:'SerNo'" class="margin5 element-result breakdown">
+                                                <div class="row element-result-grid">
+                                                    <div class="col-md-3">
+                                                        {{breakdown.@Aca_MarkDistributionPolicyBreakdown.Property_Name}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <span class="pull-right">
+                                                            Total:{{breakdown.@Aca_MarkDistributionPolicyBreakdown.Property_DefaultTotalMark}}
+                                                            Percentage:{{breakdown.@Aca_MarkDistributionPolicyBreakdown.Property_ConvertPercentage}}%
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button ng-click="@(editBreakdown)(breakdown)" type="button" class="btn btn-xs btn-success">
+                                                            <i class="fa fa-plus"></i> Edit
+                                                        </button>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <button ng-click="@(deleteBreakdown)(breakdown,row)" class="btn btn-xs btn-danger">
+                                                            <i class="fa fa-trash"></i> Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--Widget Body end-->
+                        @*<div class="widget-footer text-center">
+                                    <button ng-click="@saveMarkDistributionPolicy" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+                                </div>*@
+                    </div>
+                </div>
+
+            </div>
+        </div><!--Widget Body end-->
+        <div class="widget-footer text-center">
+            <button ng-click="@(saveMarkDistributionPolicy)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+        </div>
+    </div>
+</div>
+
+
+<!--Component Modal -->
+<div class="modal fade" id="componentModal" tabindex="-1" role="dialog" aria-labelledby="componentModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">Add/Edit Mark Component</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!--text type-->
+                    <div class="col-sm-6 form-group">
+                        <label>Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                    </div>
+                    @*<div class="col-sm-6 form-group">
+            <label>Policy Id </label>
+            <input type="text" ng-model="row.@Aca_MarkDistributionPolicyComponent.Property_PolicyId" class="form-control" placeholder="Enter Policy Id" />
+        </div>*@
+                    <!--dropdown option for EnumList-->
+                    <div ng-show1="MarkDistributionPolicy.@(Aca_MarkDistributionPolicy.Property_CourseCategoryEnumId)==@((int)Aca_Course.CourseCategoryEnum.Theory)" class="col-sm-6 form-group">
+                        <label> Test Type </label>
+                        <select ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_TestTypeEnumId" ng-options="option.Id as option.Name for option in TestTypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label>Default Total Mark </label>
+                        <input type="number" ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_DefaultTotalMark" class="form-control" placeholder="Enter Default Total Mark" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label>Convert Percentage </label>
+                        <input type="number" ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_ConvertPercentage" class="form-control" placeholder="Enter Convert Percentage" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label>Order No </label>
+                        <input type="number" ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_SerNo" class="form-control" placeholder="Enter Order No" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label>Is Fixed Policy </label>
+                        <input type="checkbox" ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_IsFixedPolicy" class="form-control" placeholder="Enter Is Fixed Policy" />
+                    </div>
+
+                    <div class="col-sm-6 form-group" ng-show="MarkComponentToEdit.child>0">
+                        <label>Best Count @*({{MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_BestCount}})*@</label>
+                        <select ng-model="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_BestCount"
+                                ng-options="option.Id as option.Name for option in MarkComponentToEdit.BestCountOptionList " class="form-control"></select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="button" ng-show="MarkComponentToEdit.@Aca_MarkDistributionPolicyComponent.Property_IsAlreadyAdded==false" ng-click="@(addNewComponent)(MarkComponentToEdit)" class="btn btn-success">
+                    <i class="fa fa-save"></i> Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Component Modal End -->
+<!--Breakdown Modal start-->
+<div class="modal fade" id="breakdownModal" tabindex="-1" role="dialog" aria-labelledby="breakdownModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addCourseStudentsModalLabel">Add/Edit Mark Component Breakdown</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!--text type-->
+                    <div class="col-sm-6 form-group">
+                        <label>Name <span class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="MarkBreakdownToEdit.@Aca_MarkDistributionPolicyBreakdown.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                    </div>
+                    @*<div class="col-sm-6 form-group">
+            <label>Policy Id </label>
+            <input type="number" ng-model="row.@Aca_MarkDistributionPolicyBreakdown.Property_PolicyId" class="form-control" placeholder="Enter Policy Id" />
+        </div>*@
+                    <div class="col-sm-6 form-group">
+                        <label>Default Total Mark </label>
+                        <input type="number" ng-model="MarkBreakdownToEdit.@Aca_MarkDistributionPolicyBreakdown.Property_DefaultTotalMark" class="form-control" placeholder="Enter Default Total Mark" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label>Convert Percentage </label>
+                        <input type="number" ng-model="MarkBreakdownToEdit.@Aca_MarkDistributionPolicyBreakdown.Property_ConvertPercentage" class="form-control" placeholder="Enter Convert Percentage" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label>Order No </label>
+                        <input type="number" ng-model="MarkBreakdownToEdit.@Aca_MarkDistributionPolicyBreakdown.Property_SerNo" class="form-control" placeholder="Enter Order No" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="button" ng-click="addNewBreakdown(MarkBreakdownToEdit)"
+                        ng-show="MarkBreakdownToEdit.@Aca_MarkDistributionPolicyBreakdown.Property_IsAlreadyAdded==false" class="btn btn-success">
+                    <i class="fa fa-save"></i> Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Breakdown Modal End -->
+
+</div>
+
+
+

@@ -1,0 +1,694 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Grades by Curriculum/Syllabus";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div class="margin5">
+            <fieldset>
+                <legend>
+                    Curriculum Grade Report
+                    <a href="/Common/GradeReport/PrintGradeReportByCurriculum" class="btn btn-danger btn-xs pull-right">Print</a>
+                </legend>
+
+                <div class="grade-report">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Student ID</td>
+                                <td>:</td>
+                                <td>10-16377-1</td>
+                                <td>Core</td>
+                                <td>:</td>
+                                <td>BScCSE, Fall 2010-2011 Core</td>
+                            </tr>
+                            <tr>
+
+                                <td>Student Name</td>
+                                <td>:</td>
+                                <td>@HttpUtil.Profile.Name.ToUpper()</td>
+                                <td>Major</td>
+                                <td>:</td>
+                                <td>- </td>
+                            </tr>
+                            <tr>
+
+                                <td>Credit(s) Completed</td>
+                                <td>:</td>
+                                <td>148</td>
+                                <td>Second Major</td>
+                                <td>:</td>
+                                <td>- </td>
+                            </tr>
+                            <tr>
+
+                                <td>Course(s) Completed</td>
+                                <td>:</td>
+                                <td>56</td>
+                                <td>Minor</td>
+                                <td>:</td>
+                                <td>- </td>
+                            </tr>
+                            <tr>
+
+                                <td>Cgpa</td>
+                                <td>:</td>
+                                <td>3.94</td>
+                                <td>Elective</td>
+                                <td>:</td>
+                                <td>BScCSE, Fall 2010-2011 Elective </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <h4>
+                            <label>Core Curriculum</label>
+                        </h4>
+                    </div>
+                    <label>Level-1 Term-I</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>MAT1102</td>
+                                <td>DIFF CALCULUS AND COORDINATE GEOMETRY</td>
+                                <td>
+                                    (2009-2010, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PHY1101</td>
+                                <td>PHYSICS 1</td>
+                                <td>
+                                    (2009-2010, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PHY1102</td>
+                                <td>PHYSICS 1 LAB</td>
+                                <td>
+                                    (2009-2010, Spring) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC1102</td>
+                                <td>PROGRAMMING LANGUAGE 1</td>
+                                <td>
+                                    (2009-2010, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BAE1101</td>
+                                <td>ENGINEERING DRAWING</td>
+                                <td>
+                                    ENGINEERING DRAWING 1 (2010-2011, Fall) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC1101</td>
+                                <td>COMPUTER FUNDAMENTALS</td>
+                                <td>
+                                    (2009-2010, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ENG1101</td>
+                                <td>ENGLISH READING SKILLS &amp; PUBLIC SPEAKING</td>
+                                <td>
+                                    (2009-2010, Spring) [A+]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-1 Term-II</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>CSC1204</td>
+                                <td>DISCRETE MATHEMATICS</td>
+                                <td>
+                                    (2010-2011, Fall) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MAT1205</td>
+                                <td>INTEGRAL CALCULUS &amp; ORD. DIFF EQUATION</td>
+                                <td>
+                                    (2009-2010, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PHY1203</td>
+                                <td>PHYSICS 2</td>
+                                <td>
+                                    (2009-2010, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PHY1204</td>
+                                <td>PHYSICS 2 LAB</td>
+                                <td>
+                                    (2009-2010, Summer) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC1203</td>
+                                <td>PROGRAMMING LANGUAGE 2</td>
+                                <td>
+                                    (2010-2011, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BBA1102</td>
+                                <td>PRINCIPLES OF ACCOUNTING</td>
+                                <td>
+                                    (2010-2011, Fall) [D]
+                                    (2011-2012, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ENG1202</td>
+                                <td>ENGLISH WRITING SKILLS &amp; COMMUNICATIONS</td>
+                                <td>
+                                    (2009-2010, Summer) [A]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-2 Term-I</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>ENG2101</td>
+                                <td>BUSINESS COMMUNICATION</td>
+                                <td>
+                                    (2010-2011, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2105</td>
+                                <td>DATA STRUCTURE</td>
+                                <td>
+                                    (2010-2011, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE1201</td>
+                                <td>ELECTRICAL CIRCUITS -1 (DC)</td>
+                                <td>
+                                    (2010-2011, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE1202</td>
+                                <td>ELECTRICAL CIRCUITS -1  LAB (DC)</td>
+                                <td>
+                                    (2010-2011, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2107</td>
+                                <td>INTRODUCTION TO DATABASE</td>
+                                <td>
+                                    (2011-2012, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MAT2202</td>
+                                <td>MATRICES, VECTORS, FOURIER ANALYSIS</td>
+                                <td>
+                                    (2010-2011, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BAE2101</td>
+                                <td>COMPUTER AIDED DESIGN &amp; DRAFTING</td>
+                                <td>
+                                    ELECTRONICS SHOP (2012-2013, Spring) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2106</td>
+                                <td>COMPUTER ORGANIZATION AND ARCHITECTURE</td>
+                                <td>
+                                    (2010-2011, Summer) [A]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-2 Term-II</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>CSC2211</td>
+                                <td>ALGORITHMS</td>
+                                <td>
+                                    (2010-2011, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE2205</td>
+                                <td>DIGITAL LOGIC DESIGN</td>
+                                <td>
+                                    (2010-2011, Fall) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE2206</td>
+                                <td>DIGITAL LOGIC DESIGN LAB</td>
+                                <td>
+                                    (2010-2011, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MAT3101</td>
+                                <td>MATHEMATICAL METHODS OF ENGINEERING</td>
+                                <td>
+                                    (2010-2011, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2209</td>
+                                <td>OBJECT ORIENTED PROGRAMMING 1 </td>
+                                <td>
+                                    (2011-2012, Fall) [B]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BBA1204</td>
+                                <td>PRINCIPLES OF ECONOMICS</td>
+                                <td>
+                                    (2011-2012, Fall) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2208</td>
+                                <td>OPERATING SYSTEM</td>
+                                <td>
+                                    (2012-2013, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC2210</td>
+                                <td>OBJECT ORIENTED ANALYSIS AND DESIGN</td>
+                                <td>
+                                    (2011-2012, Spring) [A]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-3 Term-I</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>EEE2101</td>
+                                <td>ELECTRICAL CIRCUITS 2 (AC)</td>
+                                <td>
+                                    (2011-2012, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE2102</td>
+                                <td>ELECTRICAL CIRCUITS-2 (AC) LAB</td>
+                                <td>
+                                    (2011-2012, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3115</td>
+                                <td>OBJECT ORIENTED PROGRAMMING 2 </td>
+                                <td>
+                                    (2011-2012, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3114</td>
+                                <td>SOFTWARE ENGINEERING</td>
+                                <td>
+                                    (2011-2012, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MAT3103</td>
+                                <td>STATISTICS AND PROBABILITY</td>
+                                <td>
+                                    (2011-2012, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3116</td>
+                                <td>COMPUTER NETWORKS</td>
+                                <td>
+                                    DATA COMMUNICATION (2010-2011, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3113</td>
+                                <td>THEORY OF COMPUTATION</td>
+                                <td>
+                                    (2011-2012, Fall) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE2104</td>
+                                <td>ELECTRONIC DEVICES LAB</td>
+                                <td>
+                                    (2011-2012, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE2103</td>
+                                <td>ELECTRONIC DEVICES</td>
+                                <td>
+                                    (2011-2012, Summer) [A+]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-3 Term-II</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4121</td>
+                                <td>ARTIFICIAL INTELLIGENCE AND EXPERT SYSTEM</td>
+                                <td>
+                                    (2012-2013, Spring) [B]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3220</td>
+                                <td>COMPILER DESIGN</td>
+                                <td>
+                                    (2012-2013, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3224</td>
+                                <td>COMPUTER GRAPHICS</td>
+                                <td>
+                                    (2012-2013, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE3101</td>
+                                <td>DIGITAL ELECTRONICS</td>
+                                <td>
+                                    (2011-2012, Summer) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE3102</td>
+                                <td>DIGITAL ELECTRONICS LAB</td>
+                                <td>
+                                    (2011-2012, Summer) [B]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE4211</td>
+                                <td>MICROPROCESSOR &amp; I/O SYSTEM</td>
+                                <td>
+                                    (2011-2012, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3222</td>
+                                <td>WEB TECHNOLOGIES</td>
+                                <td>
+                                    (2012-2013, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC3223</td>
+                                <td>ADVANCED COMPUTER NETWORKS</td>
+                                <td>
+                                    (2011-2012, Spring) [A+]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-4 Term-I</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>EEE4105</td>
+                                <td>TELECOMMUNICATIONS ENGINEERING </td>
+                                <td>
+                                    (2012-2013, Fall) [B]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>COS ELECTIVE 1</td>
+                                <td>
+                                    ADVANCED TOPICS IN PROGRAMMING II (2012-2013, Fall) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>COS ELECTIVE 2</td>
+                                <td>
+                                    EMBEDDED PROGRAMMING (2012-2013, Fall) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>COS ELECTIVE 3</td>
+                                <td>
+                                    ADVANCE DATABASE MANAGEMENT SYSTEM (2012-2013, Spring) [A]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EEE4106</td>
+                                <td>TELECOMMUNICATIONS ENGINEERING LAB </td>
+                                <td>
+                                    (2012-2013, Fall) [A-]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MGT3202</td>
+                                <td>ENGINEERING MANAGEMENT</td>
+                                <td>
+                                    (2012-2013, Spring) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC4195</td>
+                                <td>RESEARCH METHODOLOGY</td>
+                                <td>
+                                    (2012-2013, Summer) [A+]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label>Level-4 Term-II</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4299</td>
+                                <td>PROJECT &amp; THESIS </td>
+                                <td>
+                                    (2012-2013, Summer) [A+]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CSC4296</td>
+                                <td>INTERNSHIP</td>
+                                <td>
+                                    (2012-2013, Summer) [A+]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <div class="text-center">
+                        <h4>
+                            <label>Elective Curriculum</label>
+                        </h4>
+                    </div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%"><b>Code</b></td>
+                                <td style="width: 45%"><b>Course in Curriculum</b></td>
+                                <td style="width: 45%"><b>Attended Course/Passing Semester/Grade</b></td>
+                            </tr>
+                            <tr>
+                                <td>CSC2212</td>
+                                <td>ADVANCE DATABASE MANAGEMENT SYSTEM</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3217</td>
+                                <td>CS MATH</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>MIS3102</td>
+                                <td>MANAGEMENT INFORMATION SYSTEM</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>EEE4207</td>
+                                <td>VHDL MODELING AND LOGIC SYNTHESIS</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>EEE4203</td>
+                                <td>VLSI CIRCUIT DESIGN</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3119</td>
+                                <td>BASIC GRAPH THEORY</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4136</td>
+                                <td>MULTIMEDIA SYSTEMS</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4137</td>
+                                <td>SIMULATION &amp; MODELING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4135</td>
+                                <td>E-GOVERNANCE</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>MIS4014</td>
+                                <td>ENTERPRISE RESOURCE PLANNING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4139</td>
+                                <td>DATA WAREHOUSING AND DATA MINING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4125</td>
+                                <td>SOFTWARE DEVELOPMENT PROJECT MANAGEMENT</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3230</td>
+                                <td>FORMAL METHOD OF SOFTWARE ENGINEERING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4140</td>
+                                <td>HUMAN COMPUTER INTERACTION</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4126</td>
+                                <td>SOFTWARE REQUIREMENT ENGINEERING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3229</td>
+                                <td>EMBEDDED TECHNOLOGIES</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4180</td>
+                                <td>ADVANCED TOPICS IN PROGRAMMING I</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4181</td>
+                                <td>ADVANCED TOPICS IN PROGRAMMIN II</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4182</td>
+                                <td>ADVANCED TOPICS IN PROGRAMMING III</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4138</td>
+                                <td>COMPUTER VISION AND PATTERN RECOGNITION</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4141</td>
+                                <td>LINEAR PROGRAMMING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3231</td>
+                                <td>NETWORK SECURITY</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC3232</td>
+                                <td>EMBEDDED SYSTEM SOFTWARE</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4133</td>
+                                <td>SOFTWARE QUALITY AND TESTING</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CSC4134</td>
+                                <td>ADVANCED OPERATING SYSTEM</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </fieldset>
+        </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

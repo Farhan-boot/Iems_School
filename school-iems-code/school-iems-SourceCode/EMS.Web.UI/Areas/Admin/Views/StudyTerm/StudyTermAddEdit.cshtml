@@ -1,0 +1,134 @@
+﻿<!--File:Aca_StudyTerm Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Study Term";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StudyTermId = (string)id == null ? "0" : (string)id;
+
+    //Aca_StudyTerm WebApi Single Row link
+    var getStudyTermByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetStudyTermById", area = "Admin" });
+    var getStudyTermDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetStudyTermDataExtra", area = "Admin" });
+    var saveStudyTermUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "SaveStudyTerm", area = "Admin" });
+    var deleteStudyTermByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetDeleteStudyTermById", area = "Admin" });
+
+    //Aca_StudyTerm WebApi List link
+    var getPagedStudyTermUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetPagedStudyTerm", area = "Admin" });
+    var getAllStudyTermUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetAllStudyTerm", area = "Admin" });
+    var saveStudyTermListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "SaveStudyTermList", area = "Admin" });
+    var getStudyTermListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudyTermApi", action = "GetStudyTermListDataExtra", area = "Admin" });
+
+    var editStudyTermByIdPageUrl = Url.Action("StudyTermAddEdit", "StudyTerm", new { area = "Admin" });
+    var listStudyTermPageUrl = Url.Action("StudyTermList", "StudyTerm", new { area = "Admin" });
+
+    //Aca_StudyTerm Angular Functions
+    string getStudyTermById = "getStudyTermById";
+    var saveStudyTerm = "saveStudyTerm";
+    var getNewStudyTerm = "getNewStudyTerm";
+    var refreshPage = "loadPage()";
+    string deleteStudyTermById = "deleteStudyTermById";
+    string loadStudyTermExtraData = "loadStudyTermExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/StudyTerm/StudyTermAddEdit.js?v=1"></script>
+}
+
+<div id="StudyTermAddEdit" class="row" ng-controller="StudyTermAddEditCtrl" ng-init="Init(
+      '@StudyTermId'
+      ,'@getStudyTermByIdUrl'
+      ,'@getStudyTermDataExtraUrl'
+      ,'@saveStudyTermUrl'
+      ,'@deleteStudyTermByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="StudyTerm.@Aca_StudyTerm.Property_Name!=''">{{(StudyTerm.@Aca_StudyTerm.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="StudyTermId" ng-Enter="@(getStudyTermById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewStudyTerm)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listStudyTermPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Term Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="StudyTerm.@Aca_StudyTerm.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                <tr>
+                                    <td class="fieldlabel">Semester Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="StudyTerm.@Aca_StudyTerm.Property_SemesterName" class="form-control" placeholder="Enter Term No" required="" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Name." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Semester Duration <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <select ng-model="StudyTerm.@Aca_Semester.Property_SemesterDurationEnumId" ng-options="option.Id as option.Name for option in SemesterDurationList" class="form-control" required>
+                                            <option value="">---Select One----</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Duration." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Term No <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="StudyTerm.@Aca_StudyTerm.Property_TermNo" class="form-control" placeholder="Enter Term No" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Term No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Enabled </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="StudyTerm.@Aca_StudyTerm.Property_IsEnabled" class="ng-pristine ng-untouched ng-valid">
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Enabled." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(saveStudyTerm)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsApplicantSeatLableByRoll" targetNamespace="http://tempuri.org/dsApplicantSeatLableByRoll.xsd" xmlns:mstns="http://tempuri.org/dsApplicantSeatLableByRoll.xsd" xmlns="http://tempuri.org/dsApplicantSeatLableByRoll.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsApplicantSeatLableByRoll" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsApplicantSeatLableByRoll" msprop:Generator_UserDSName="dsApplicantSeatLableByRoll">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ApplicantSeatLableByRoll" msprop:Generator_TableClassName="ApplicantSeatLableByRollDataTable" msprop:Generator_TableVarName="tableApplicantSeatLableByRoll" msprop:Generator_TablePropName="ApplicantSeatLableByRoll" msprop:Generator_RowDeletingName="ApplicantSeatLableByRollRowDeleting" msprop:Generator_RowChangingName="ApplicantSeatLableByRollRowChanging" msprop:Generator_RowEvHandlerName="ApplicantSeatLableByRollRowChangeEventHandler" msprop:Generator_RowDeletedName="ApplicantSeatLableByRollRowDeleted" msprop:Generator_UserTableName="ApplicantSeatLableByRoll" msprop:Generator_RowChangedName="ApplicantSeatLableByRollRowChanged" msprop:Generator_RowEvArgName="ApplicantSeatLableByRollRowChangeEvent" msprop:Generator_RowClassName="ApplicantSeatLableByRollRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ExamName" msprop:Generator_ColumnVarNameInTable="columnExamName" msprop:Generator_ColumnPropNameInRow="ExamName" msprop:Generator_ColumnPropNameInTable="ExamNameColumn" msprop:Generator_UserColumnName="ExamName" type="xs:string" minOccurs="0" />
+              <xs:element name="RollNo1" msprop:Generator_ColumnVarNameInTable="columnRollNo1" msprop:Generator_ColumnPropNameInRow="RollNo1" msprop:Generator_ColumnPropNameInTable="RollNo1Column" msprop:Generator_UserColumnName="RollNo1" type="xs:string" minOccurs="0" />
+              <xs:element name="RollNo2" msprop:Generator_ColumnVarNameInTable="columnRollNo2" msprop:Generator_ColumnPropNameInRow="RollNo2" msprop:Generator_ColumnPropNameInTable="RollNo2Column" msprop:Generator_UserColumnName="RollNo2" type="xs:string" minOccurs="0" />
+              <xs:element name="RollNo3" msprop:Generator_ColumnVarNameInTable="columnRollNo3" msprop:Generator_ColumnPropNameInRow="RollNo3" msprop:Generator_ColumnPropNameInTable="RollNo3Column" msprop:Generator_UserColumnName="RollNo3" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

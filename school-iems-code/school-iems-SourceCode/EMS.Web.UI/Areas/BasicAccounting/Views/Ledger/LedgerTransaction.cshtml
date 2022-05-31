@@ -1,0 +1,343 @@
+﻿
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "BasicAccounting: Ledger Transaction";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var LedgerId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link   
+    var getTransactionListByLedgerIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerTransactionApi", action = "GetTransactionListByLedgerId", area = "BasicAccounting" });
+    var getLedgerTransactionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerTransactionApi", action = "GetLedgerTransactionDataExtra", area = "BasicAccounting" });
+
+    var editVoucherByIdPageUrl = Url.Action("VoucherAddEdit", "Voucher", new { area = "BasicAccounting" });
+    var voucherPrintUrl = Url.Action("VoucherPrint", "Report", new { area = "BasicAccounting" });
+    var ledgerAccountReportUrl = Url.Action("LedgerAccountReport", "Report", new { area = "BasicAccounting" });
+    var ledgerAccountReportUrl2 = Url.Action("LedgerAccountReport2", "Report", new { area = "BasicAccounting" });
+
+
+
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Ledger/LedgerTransaction.js?v=1"></script>
+
+}
+
+<div class="row" ng-controller="LedgerTransactionCtrl" ng-init="Init(
+      '@LedgerId'
+      ,'@getTransactionListByLedgerIdUrl'
+     ,'@getLedgerTransactionDataExtraUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Ledger Transaction
+                    </span>
+                    
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="VoucherId" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+                    </div>
+
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="VoucherId" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <span class="widget-caption form-inline">
+                            <span>Select Branch</span>
+                            <select ng-model="SelectedBranchId" @*ng-change="@(searchLedgerList)()"*@ 
+                                    ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                                <option value="" label="" class="">---Select All Branch---</option>
+                            </select>
+                        </span>
+                    </div>
+
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        Start Date
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <span class="input-icon">
+
+                            @*<input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />*@
+                            <input type="text" ng-model="StartDate" ng-Enter="getTransactionListByLedgerId ()" class="form-control input-xs date-picker no-focus" id="" placeholder="Search Start Date" style="">
+                            <i class="glyphicon glyphicon-calendar blue"></i>
+                        </span>
+                    </div>
+
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        End Date
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <span class="input-icon">
+                            <input type="text" ng-model="EndDate" @*ng-Enter="@(searchCollectionVoucherList)()"*@ class="form-control input-xs date-picker no-focus" id="" placeholder="Search End Date" style="">
+                            <i class="glyphicon glyphicon-calendar blue"></i>
+                        </span>
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="getTransactionListByLedgerId()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Process </button>
+                    </div>
+                    <br/>
+                    <div style="text-align: left;">
+                        @* Include Narration *@
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            <span class="input-icon">
+                                <input ng-model="IncludeNarration" class="include-checkbox" type="checkbox"/>
+                            </span>
+                        </div>
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            Include Narration
+                        </div>
+                    
+                        @* Include Details *@
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            <span class="input-icon">
+                                <input ng-model="IncludeDetails" class="include-checkbox" type="checkbox" />
+                            </span>
+                        </div>
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            Include Details
+                        </div>
+                        
+                        @* Include Code Name *@
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            <span class="input-icon">
+                                <input ng-model="IncludeCodeName" class="include-checkbox" type="checkbox" />
+                            </span>
+                        </div>
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            Include Code Name
+                        </div>
+                        
+                        
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            <a href="@ledgerAccountReportUrl?narration={{IncludeNarration}}&dtl={{IncludeDetails}}&code={{IncludeCodeName}}&ledgerId={{LedgerId}}&branchId={{SelectedBranchId}}&startDate={{StartDate|date:'dd-MM-yyyy'}}&endDate={{EndDate|date:'dd-MM-yyyy'}}" 
+                               target="_blank" class="btn btn-azure btn-xs"><i class="fa fa-print"></i> Print </a>
+                        </div>
+                        <div class="widget-buttons buttons-bordered no-padding-right">
+                            <a href="@ledgerAccountReportUrl2?narration={{IncludeNarration}}&dtl={{IncludeDetails}}&code={{IncludeCodeName}}&ledgerId={{LedgerId}}&branchId={{SelectedBranchId}}&startDate={{StartDate|date:'dd-MM-yyyy'}}&endDate={{EndDate|date:'dd-MM-yyyy'}}"
+                               target="_blank" class="btn btn-azure btn-xs"><i class="fa fa-print"></i>Print 2</a>
+                        </div>
+
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="font-size: 20px; margin-bottom: 10px;">
+                                <span style="font-weight: bold;">Ledger:</span>
+                                {{LedgerTrans.LedgerName}}
+                            </div>
+                            <table class="table table-condensed voucher-table" style="border-collapse: collapse; height: 100%;">
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px;"></th>
+                                    <th class="text-center" style="width: 125px;">Date</th>
+                                    @*<th>Head of Accounts Name</th>*@
+                                    <th class="text-center" style="width: 150px;">Voucher No</th>
+                                    <th class="text-center" style="width: 160px;">Voucher Type</th>
+                                    
+                                    <th class="text-center" style="width: 130px;">Debit</th>
+                                    <th class="text-center" style="width: 130px;">Credit</th>
+                                    <th class="text-center" style="width: 130px;">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody ng-repeat="voucherRow in LedgerTrans.VoucherJsonList">
+                                <tr data-toggle="collapse" data-target="#demo{{voucherRow.Id}}" class="accordion-toggle header">
+                                    <td class="text-center">
+                                    </td>
+                                    <td class="text-center">{{voucherRow.Date | date:'dd/MM/yyyy'}}</td>
+                                    @*<td>
+                                        <div class="text-bold">{{voucherRow.Particular}}</div>
+                                    </td>*@
+                                    <td class="text-center">
+                                        <a href="@editVoucherByIdPageUrl?id={{voucherRow.Id}}" target="_blank">
+                                            {{voucherRow.VoucherNo}}
+                                        </a>
+                                    </td>
+                                    <td class="text-center">{{voucherRow.VoucherType}}</td>
+                                    <td class="text-center">
+                                        <span ng-if="voucherRow.SelectedLedgerDrAmount!=0">{{voucherRow.SelectedLedgerDrAmount}}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span ng-if="voucherRow.SelectedLedgerCrAmount!=0">{{voucherRow.SelectedLedgerCrAmount}}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@editVoucherByIdPageUrl?id={{voucherRow.Id}}" target="_blank" class="btn btn-xs btn-primary">
+                                            <i class="fa fa-edit"></i>
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-xs btn-primary" target="_blank" href="@voucherPrintUrl?id={{voucherRow.Id}}">
+                                            <i class="fa fa-print"> Print Voucher</i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="7" class="hiddenRow voucherTd4Dtl" style="background-color: #fff;">
+                                        <div class="accordian-body collapse" style="margin: 10px 60px 0px;" id="demo{{voucherRow.Id}}">
+                                            <table class="table table-striped table-bordered voucher-dlt-table" width="100%" style="">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 50px;">SN</th>
+                                                    <th class="text-center">Head of Accounts Name</th>
+                                                    <th class="text-center">Debit</th>
+                                                    <th class="text-center">Credit</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="voucherDtlRow in voucherRow.VoucherDetailsJsonList">
+                                                    <td class="text-center">
+                                                        {{$index+1}}
+                                                    </td>
+                                                    <td>{{voucherDtlRow.Particular}}</td>
+                                                    <td class="text-center" style="width: 130px;">
+                                                        <span ng-if="voucherDtlRow.DebitAmount!=0">{{voucherDtlRow.DebitAmount}}</span>
+                                                    </td>
+                                                    <td class="text-center" style="width: 130px;">
+                                                        <span ng-if="voucherDtlRow.CreditAmount!=0">{{voucherDtlRow.CreditAmount}}</span>
+                                                    </td>
+                                                    @*<td class="text-center" style="width: 230px;"></td>*@
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold" colspan="2" style="text-align: right">Total: </td>
+                                                    <td class="text-bold text-center"></td>
+                                                    <td class="text-bold text-center"></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <div style="padding: 7px 15px 15px;">
+                                                <strong>Narration: </strong>
+                                                <span>{{voucherRow.Narration}}</span>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr style="display: none;">
+                                    @* This Tr use only for call Init Function *@
+                                    <td ng-init="collapsedTable($index+1)"></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <table class="text-bold" width="100%">
+                                <tbody>
+                                <tr>
+
+                                    <td style="text-align: right;">Opening Balance:</td>
+                                    <td style="width: 140px;">{{LedgerTrans.PeriodOpeningDebitBalance}}</td>
+                                    <td style="width: 140px;">{{LedgerTrans.PeriodOpeningCreditBalance}}</td>
+                                    <td style="width: 140px;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Current Total:</td>
+                                    <td>Dr: {{LedgerTrans.PeriodTotalDebitAmount}} </td>
+                                    <td>Cr: {{LedgerTrans.PeriodTotalCreditAmount}} </td>
+                                    <td style="width: 140px;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Closing Balance:</td>
+                                    <td>{{LedgerTrans.PeriodClosingDebitBalance}}</td>
+                                    <td>{{LedgerTrans.PeriodClosingCreditBalance}}</td>
+                                    <td></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div>
+
+<style>
+    .table tr {
+        cursor: pointer;
+    }
+    .hiddenRow {
+        padding: 0 4px !important;
+        background-color: #eeeeee;
+        font-size: 13px;
+    }
+
+    .table .header td:first-child:after {
+        content: "\002b";
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        float: right;
+        color: #999;
+        text-align: center;
+        padding: 3px;
+        transition: transform .25s linear;
+        -webkit-transition: -webkit-transform .25s linear;
+    }
+
+    .table .header.active td:first-child:after {
+        content: "\2212";
+    }
+
+    .table > tbody + tbody {
+        border-top: 10px solid #ddd;
+    }
+    .voucher-table tbody tr {
+        border: 1px solid #ddd;
+    }
+
+    .voucher-dlt-table > thead > tr > th,.voucher-dlt-table > tbody > tr > td {
+        padding: 3px !important;
+    }
+    .table thead > tr > th {
+        background-color: #d4d4d4;
+    }
+    .table > tbody > .active > td {
+        background-color: #8cadce !important;
+    }
+    .voucherTd4Dtl {
+        background-color: #d5e5f5 !important;
+    }
+    .table > tbody > .active a {
+        color: #ffffff;
+        /*text-decoration: none;*/
+    }
+
+    .table > tbody > .active a:hover {
+        color: #2dc3e8 !important;
+    }
+    .include-checkbox {
+        vertical-align: top;
+    }
+
+</style>

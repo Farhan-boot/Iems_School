@@ -1,0 +1,161 @@
+﻿
+<!--File:General_Building List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Building List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var BuildingId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getBuildingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingById", area = "Admin" });
+    var getBuildingDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingDataExtra", area = "Admin" });
+    var saveBuildingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "SaveBuilding", area = "Admin" });
+    var deleteBuildingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetDeleteBuildingById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedBuildingUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "BuildingApi", action = "GetPagedBuilding", area = "Admin"});
+    var getAllBuildingUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetAllBuilding", area = "Admin" });
+    var saveBuildingListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "SaveBuildingList", area = "Admin" });
+    var getBuildingListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "BuildingApi", action = "GetBuildingListDataExtra", area = "Admin" });
+
+    var editBuildingByIdPageUrl = Url.Action("BuildingAddEdit", "Building", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewBuilding = "getNewBuilding";
+    var saveBuilding = "saveBuilding";
+    var deleteBuildingById = "deleteBuildingById";
+    var deleteBuildingByObj = "deleteBuildingByObj";
+    //for list
+    var searchBuildingList = "searchBuildingList";
+    var getPagedBuildingList = "getPagedBuildingList";
+    var getAllBuildingList = "getAllBuildingList";
+    var saveBuildingList = "saveBuildingList";
+    var getBuildingListExtraData = "getBuildingListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Building/BuildingList.js"></script>
+}
+
+
+<div ng-controller="BuildingListCtrl"
+     ng-init="Init(
+      '@getPagedBuildingUrl'
+     ,'@deleteBuildingByIdUrl'
+     ,'@getBuildingListDataExtraUrl'
+     ,'@saveBuildingListUrl'
+     ,'@getBuildingByIdUrl'
+     ,'@getBuildingDataExtraUrl'
+     ,'@saveBuildingUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Building </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Campus</span>*@
+                     <select ng-model="SelectedCampusId" ng-change="@(searchBuildingList)()" 
+                        ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Campus---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchBuildingList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editBuildingByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchBuildingList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">Number of Floor</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Campus</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in BuildingList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Building.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">{{row.@General_Building.Property_OrderNo}}</td>
+                    <td class="">{{row.@General_Building.Property_Name}}</td>
+                    <td class="text-center">{{row.@General_Building.Property_ShortName}}</td>
+                    <td class="text-center">{{row.@General_Building.Property_NumberOfFloor}}</td>
+                    <td class="text-center">{{row.@General_Building.Property_Status}}</td>
+                    <td class="text-center">{{row.General_CampusJson.@General_Campus.Property_ShortName}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editBuildingByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteBuildingById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

@@ -1,0 +1,171 @@
+﻿@using EMS.DataAccess.Data
+@{
+    var monthlyPayslipPrintUrl = Url.Action("MonthlySalaryPrint", "Report", new { area = "HR" });
+
+    var saveMonthlyPayslipDetailList = "saveMonthlyPayslipDetailList";
+    string getMonthlyPayslipDetailsById = "getMonthlyPayslipDetailsById";
+    var saveMonthlyPayslipDetails = "saveMonthlyPayslipDetails";
+    var getNewMonthlyPayslipDetails = "getNewMonthlyPayslipDetails";
+    var deleteMonthlyPayslipDetailsById = "deleteMonthlyPayslipDetailsById";
+}
+<div class="widget" ng-show="HasViewPermission">
+    <div class="widget-header bordered-bottom bordered-sky ">
+        <i class="widget-icon fa fa-list bold  "></i>
+        <span class="widget-caption "> Monthly Payslip Details </span>
+        <div class="widget-buttons no-padding-left">
+            <button ng-click="@(getNewMonthlyPayslipDetails)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add Salary Field</button>
+        </div>
+        @*<div class="widget-buttons no-padding-left">
+            <a target="_blank" href="@(monthlyPayslipPrintUrl)?id={{EmployeeMonthlyPayslip.Id}}{{EmployeeMonthlyPayslip.MonthlyPayslipId}}&employeeId={{EmployeeMonthlyPayslip.EmployeeId}}" class="btn btn-xs btn-info"><i class="fa fa-print"></i> Print</a>
+        </div>*@
+    </div>
+
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-title text-center">
+                    <b> <span ng-show="EmployeeMonthlyPayslip.Name!=null && EmployeeMonthlyPayslip.Name !=''">{{EmployeeMonthlyPayslip.Name}}'s</span> Payslip of {{SelectedPayroll.Name}}</b>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-title">
+                        Additions
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody ng-repeat="row in MonthlyPayslipDetailsList | filter:{IsAddition:true}">
+                        <tr>
+                            <td colspan="2" style="font-weight: bold" class="fieldlabel">{{row.Name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="fieldarea">
+                                <input style="margin-bottom: 5px" type="number" ng-keyup="CalculateTotalAdditionDeduction()" class="form-control" ng-model="row.Value"/>
+                            </td>
+                            <td class="fieldarea-tooltip text-center">
+                                <button ng-click="@(getMonthlyPayslipDetailsById)(row.Id)"><i class="fa fa-pencil"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-title">
+                        Deductions
+                    </div>
+                    <table ng-show="(MonthlyPayslipDetailsList | filter:{IsAddition:false}).length>0" class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody ng-repeat="row in MonthlyPayslipDetailsList | filter:{IsAddition:false}">
+                        <tr>
+                            <td colspan="2" style="font-weight: bold" class="fieldlabel">{{row.Name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="fieldarea">
+                                <input style="margin-bottom: 5px" type="number" ng-keyup="CalculateTotalAdditionDeduction()" class="form-control" ng-model="row.Value" />
+                            </td>
+                            <td class="fieldarea-tooltip text-center">
+                                <button ng-click="@(getMonthlyPayslipDetailsById)(row.Id)"><i class="fa fa-pencil"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-hide="(MonthlyPayslipDetailsList | filter:{IsAddition:false}).length>0">
+                        <label style="color: red"> No Deduction Added for this Employee.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin: 0">
+            <div class="form-title">
+                Remarks
+            </div>
+            <textarea ng-model="EmployeeMonthlyPayslip.Remarks" style="width: 100%" rows="3"></textarea>
+        </div>
+
+        <div class="col-md-12" style="margin: 0">
+            <div class="form-title">
+                Total Calculation
+            </div>
+            <div class="col-md-6">
+                <h3>Gross Salary : {{TotalAddition}}</h3>
+            </div>
+            <div class="col-md-6">
+                <h3 ng-show="TotalDeduction>0" style="color: red">Gross Deduction : {{TotalDeduction| number:2}}</h3>
+                <h3 ng-hide="TotalDeduction>0">Gross Deduction : {{TotalDeduction| number:2}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-6">
+                <h3>Net Total : {{TotalAddition - TotalDeduction}}</h3>
+            </div>
+        </div>
+        <div class="widget-footer">
+            <div class="text-center">
+                <button ng-click="@(saveMonthlyPayslipDetailList)()" class="btn btn-success"> Update Payslip </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="MonthlyPayslipDetailsModal" tabindex="-1" role="dialog" aria-labelledby="MonthlyPayslipDetailsModal">
+    <div class="modal-dialog modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">Add/Edit Monthly Payslip Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel">Category Type </td>
+                                <td class="fieldarea">
+                                    <select ng-disabled="MonthlyPayslipDetails.Id!=0" ng-change="SuggestName()" ng-model="MonthlyPayslipDetails.@HR_MonthlyPayslipDetails.Property_CategoryTypeEnumId" ng-options="option.Id as option.Name for option in CategoryTypeEnumList" title="Select Category Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Category Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Salary Type </td>
+                                <td class="fieldarea">
+                                    <select ng-disabled="MonthlyPayslipDetails.Id!=0" ng-model="MonthlyPayslipDetails.@HR_MonthlyPayslipDetails.Property_SalaryTypeEnumId" ng-options="option.Id as option.Name for option in SalaryTypeEnumList" title="Select Salary Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Salary Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="MonthlyPayslipDetails.Id!=0" type="text" ng-model="MonthlyPayslipDetails.@HR_MonthlyPayslipDetails.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Value </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="MonthlyPayslipDetails.@HR_MonthlyPayslipDetails.Property_Value" class="form-control" placeholder="Enter Value" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Value." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="MonthlyPayslipDetails.@HR_MonthlyPayslipDetails.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button ng-show="MonthlyPayslipDetails.Id!=0" ng-click="@(deleteMonthlyPayslipDetailsById)(MonthlyPayslipDetails)" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                <button ng-click="@(saveMonthlyPayslipDetails)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+@using EMS.Framework.Settings
+
+<div class="row">
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+                <tr>
+                    <td class="fieldlabel">Copyright </td>
+                    <td class="fieldarea">
+                        <input ng-disabled="true" type="text" value="@SiteSettings.Copyright" class="form-control" placeholder="Enter Copyright" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Copyright." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">PoweredBy </td>
+                    <td class="fieldarea">
+                        <input ng-disabled="true" type="text" value="@SiteSettings.PoweredBy" class="form-control" placeholder="Enter PoweredBy" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter PoweredBy." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Powered By Full Text </td>
+                    <td class="fieldarea">
+                        <input ng-disabled="true" type="text" value="@SiteSettings.PoweredByFullText" class="form-control" placeholder="Enter PoweredByFullText" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter PoweredByFullText." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Company Website </td>
+                <td class="fieldarea">
+                    <input ng-disabled="true" type="text" value="@SiteSettings.CompanyWebsite" class="form-control" placeholder="Enter Company Website" maxlength="256" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Company Website." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Pipilika Email </td>
+                <td class="fieldarea">
+                    <input type="email" ng-model="SiteSettings.PipilikaEmail" class="form-control" placeholder="Enter Pipilika Email" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Pipilika Email." data-toggle="tooltip"></i></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                    <td class="fieldlabel">Pipilika Logo </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.PipilikaLogo" class="form-control" placeholder="Enter Pipilika Logo" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Pipilika Logo." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Pipilika Cell No </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.PipilikaCellNo" class="form-control" placeholder="Enter Pipilika Cell No" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Pipilika Cell No." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Product Brand Name Solo </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.ProductBrandNameSolo" class="form-control" placeholder="Enter Product Brand Name Solo" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Product Brand Name Solo." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Product Full Name</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.ProductFullName" class="form-control" placeholder="Enter Product Full Name" maxlength="256" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Product Full Name." data-toggle="tooltip"></i></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+
+
+</div>
+

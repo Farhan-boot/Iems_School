@@ -1,0 +1,175 @@
+﻿
+<!--File:Aca_Exam List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Academic: Exam List";
+
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ExamId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamById", area = "ExamSection" });
+    var getExamDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamDataExtra", area = "ExamSection" });
+    var saveExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExam", area = "ExamSection" });
+    var deleteExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetDeleteExamById", area = "ExamSection" });
+
+    //WebApi link for List
+    var getPagedExamUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ExamApi", action = "GetPagedExam", area = "ExamSection"});
+    var getAllExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetAllExam", area = "ExamSection" });
+    var saveExamListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "SaveExamList", area = "ExamSection" });
+    var getExamListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ExamApi", action = "GetExamListDataExtra", area = "ExamSection" });
+
+    var editExamByIdPageUrl = Url.Action("ExamAddEdit", "Exam", new { area = "ExamSection" });
+
+    //Angular Function Name
+    var getNewExam = "getNewExam";
+    var saveExam = "saveExam";
+    var deleteExamById = "deleteExamById";
+    var deleteExamByObj = "deleteExamByObj";
+    //for list
+    var searchExamList = "searchExamList";
+    var getPagedExamList = "getPagedExamList";
+    var getAllExamList = "getAllExamList";
+    var saveExamList = "saveExamList";
+    var loadExamListExtraData = "loadExamListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Exam/ExamList.js?v=1"></script>
+}
+
+
+<div ng-controller="ExamListCtrl"
+     ng-init="Init(
+      '@getPagedExamUrl'
+     ,'@deleteExamByIdUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Exam </span>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Semester</span>*@
+                    <select ng-model="SelectedSemesterId" ng-change="@(searchExamList)()" 
+                            data-ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs " required="">
+                        <option value="" label="" class="">---Select All Semester---</option>
+                    </select>
+
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchExamList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editExamByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding " style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Academic Session</th>
+                    <th class="text-center">Semester Name</th>
+                    @*<th class="text-center">Program Type Enum Id</th>*@
+                    <th class="text-center">Program Type</th>
+                    @*<th class="text-center">Exam Type Enum Id</th>*@
+                    <th class="text-center">Exam Type</th>
+                    @*<th class="text-center">Last Date Of 3 0 Percent Mark Submission</th>
+                    <th class="text-center">Start Date Of Term Final Exam</th>
+                    <th class="text-center">End Date Of Term Final Exam</th>
+                    <th class="text-center">Last Date Of Term Final Exam Mark Submission</th>
+                    <th class="text-center">Last Date Of Scrutinization</th>
+                    <th class="text-center">Last Date Of Tabulation</th>
+                    <th class="text-center">Date Of Term Final Result Publication</th>
+                    <th class="text-center">Remarks</th>*@
+                    <th class="text-center" style="width: 165px;">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in ExamList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Aca_Exam.Property_IsSelected" /> 
+                    </td>
+                    <td>{{$index+1}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_Name}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_AcademicSession}}</td>
+                    <td class="">{{row.Aca_SemesterJson.@Aca_Semester.Property_Name}}</td>
+                    @*<td class="">{{row.@Aca_Exam.Property_ProgramTypeEnumId}}</td>*@
+                    <td class="">{{row.@Aca_Exam.Property_ProgramType}}</td>
+                    @*<td class="">{{row.@Aca_Exam.Property_ExamTypeEnumId}}</td>*@
+                    <td class="">{{row.@Aca_Exam.Property_ExamType}}</td>
+                    @*<td class="">{{row.@Aca_Exam.Property_LastDateOf30PercentMarkSubmission}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_StartDateOfTermFinalExam}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_EndDateOfTermFinalExam}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_LastDateOfTermFinalExamMarkSubmission}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_LastDateOfScrutinization}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_LastDateOfTabulation}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_DateOfTermFinalResultPublication}}</td>
+                    <td class="">{{row.@Aca_Exam.Property_Remarks}}</td>*@
+                    <td class="text-center">
+                        <a target="_blank" href="@(editExamByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Manage</a>
+                        <button ng-click="@(deleteExamByObj)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

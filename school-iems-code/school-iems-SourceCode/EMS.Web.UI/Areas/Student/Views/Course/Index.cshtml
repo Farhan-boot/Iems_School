@@ -1,0 +1,98 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model List<Aca_ClassTakenByStudent>
+
+@{
+    ViewBag.Title = "Course List";
+    var semesterLevelTermList = Model.Select(x=>x.Aca_Class.Aca_Semester).Distinct().ToList();
+    var i = 0;
+    var index = 0;
+    var active = "active";
+}
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="widget-icon fa fa-list"></i>
+                <span  class="widget-caption">Registered Course List @*<span  class="badge badge-success">@Model.Count</span>*@</span>
+                @*<div class="widget-buttons buttons-bordered">
+                        <select class="form-control input-sm" style="margin-top: 3px;">
+                            <option value="0">Level-1 Term-1</option>
+                        </select>
+                    </div>*@
+            </div>
+            <div class="widget-body no-padding">
+                <div class="tabbable tabs-left">
+                    <ul class="nav nav-tabs" id="myTab4">
+                        @foreach (var semesterLevelTerm in semesterLevelTermList)
+                        {
+                            active = i == 0 ? "active" : "";
+                            <li class="tab-green @active">
+                                <a data-toggle="tab" href="#@semesterLevelTerm.Id">@semesterLevelTerm.Name</a>
+                            </li>
+                            i++;
+                        }
+                    </ul>
+
+                    <div class="tab-content">
+                        @{ i = 0; }
+                        @foreach (var semesterLevelTerm in semesterLevelTermList)
+                        {
+                            active = i == 0 ? "active" : "";
+                            <div id="@semesterLevelTerm.Id" class="tab-pane @active">
+                                <table class="table table-striped table-bordered">
+                                    <tr>
+                                        <th class="text-center">Course</th>
+                                        <th class="text-center">Class Routine</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Level Term</th>
+                                    </tr>
+                                    @foreach (var course in Model.Where(x => x.Aca_Class.SemesterId == semesterLevelTerm.Id).ToList())
+                                    {
+                                        <tr>
+                                            <td class="" style="vertical-align: middle;">
+                                                <a href="@Url.Action("CoursePane", "Course", new {area = "Student", id = course.Aca_Class.Id})"><strong>@course.Aca_Class.Code @course.Aca_Class.Name</strong></a><br/>
+                                                <em>Cr.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditHour.ToString("F"), @course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>
+                                            </td>
+                                            <td class="" style="vertical-align: middle;">
+                                                @if (course.Aca_Class.Aca_ClassRoutine.Count != 0)
+                                                {
+                                                    <ul class="no-margin list-unstyled" style="-webkit-padding-start: 2px;">
+                                                        @foreach (var x in course.Aca_Class.Aca_ClassRoutine)
+                                                        {
+                                                            <li>
+                                                                @x.RoutineDetails<br/>
+                                                                @if (x.General_Room != null)
+                                                                {
+                                                                    <em>@x.General_Room.RoomDetails</em>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <em>Room: N/A</em>
+                                                                }
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                                else
+                                                {
+                                                    <span  class="badge badge-danger graded">Not Available</span>
+                                                }
+                                            </td>
+                                            <td class="text-center" style="vertical-align: middle;"><span  class="badge badge-success">Valid</span></td>
+                                            <td class="text-center" style="vertical-align: middle;">@course.Aca_Class.Aca_Semester.Name</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                            i++;
+                        }
+                    </div>
+                </div>
+                <div class="horizontal-space"></div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,164 @@
+﻿
+<!--File:HR_EmpLeaveAllocationSettings Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Emp Leave Allocation Settings";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var EmpLeaveAllocationSettingsId = (string) id == null?"0":(string)id;
+    
+    //HR_EmpLeaveAllocationSettings WebApi Single Row link   
+    var getEmpLeaveAllocationSettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "GetEmpLeaveAllocationSettingsById", area = "HR" });
+    var getEmpLeaveAllocationSettingsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "GetEmpLeaveAllocationSettingsDataExtra", area = "HR" });
+    var saveEmpLeaveAllocationSettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "SaveEmpLeaveAllocationSettings", area = "HR" });
+    var deleteEmpLeaveAllocationSettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "GetDeleteEmpLeaveAllocationSettingsById", area = "HR" });
+
+    //HR_EmpLeaveAllocationSettings WebApi List link 
+    var getPagedEmpLeaveAllocationSettingsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "EmpLeaveAllocationSettingsApi", action = "GetPagedEmpLeaveAllocationSettings", area = "HR"});
+    var getAllEmpLeaveAllocationSettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "GetAllEmpLeaveAllocationSettings", area = "HR" });
+    var saveEmpLeaveAllocationSettingsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "SaveEmpLeaveAllocationSettingsList", area = "HR" });
+    var getEmpLeaveAllocationSettingsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmpLeaveAllocationSettingsApi", action = "GetEmpLeaveAllocationSettingsListDataExtra", area = "HR" });
+
+    var editEmpLeaveAllocationSettingsByIdPageUrl = Url.Action("EmpLeaveAllocationSettingsAddEdit", "EmpLeaveAllocationSettings", new { area = "HR" });
+    var listEmpLeaveAllocationSettingsPageUrl = Url.Action("EmpLeaveAllocationSettingsList", "EmpLeaveAllocationSettings", new { area = "HR" });
+    
+    //HR_EmpLeaveAllocationSettings Angular Functions
+    string getEmpLeaveAllocationSettingsById="getEmpLeaveAllocationSettingsById";
+    var saveEmpLeaveAllocationSettings = "saveEmpLeaveAllocationSettings";
+    var getNewEmpLeaveAllocationSettings = "getNewEmpLeaveAllocationSettings";
+    var refreshPage = "loadPage()";
+    string deleteEmpLeaveAllocationSettingsById="deleteEmpLeaveAllocationSettingsById";
+    string loadEmpLeaveAllocationSettingsExtraData="loadEmpLeaveAllocationSettingsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/EmpLeaveAllocationSettings/EmpLeaveAllocationSettingsAddEdit.js"></script>
+}
+
+<div id="EmpLeaveAllocationSettingsAddEdit" class="row" ng-controller="EmpLeaveAllocationSettingsAddEditCtrl" ng-init="Init(
+      '@EmpLeaveAllocationSettingsId'
+      ,'@getEmpLeaveAllocationSettingsByIdUrl'
+      ,'@getEmpLeaveAllocationSettingsDataExtraUrl'
+      ,'@saveEmpLeaveAllocationSettingsUrl'
+      ,'@deleteEmpLeaveAllocationSettingsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_Name!=''">{{(EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="EmpLeaveAllocationSettingsId" ng-Enter="@(getEmpLeaveAllocationSettingsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewEmpLeaveAllocationSettings)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listEmpLeaveAllocationSettingsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Total Leave Hour </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_TotalLeaveHour" class="form-control" placeholder="Enter Total Leave Hour"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Leave Hour." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Current </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_IsCurrent"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Current if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Effective From </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_EffectiveFrom" class="form-control" placeholder="Enter Effective From"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Effective From." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Effective Till </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_EffectiveTill" class="form-control" placeholder="Enter Effective Till"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Effective Till." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_Remarks" class="form-control" placeholder="Enter Remarks"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Employee </td>
+                            <td class="fieldarea">
+                                <select ng-model="EmpLeaveAllocationSettings.@HR_EmpLeaveAllocationSettings.Property_EmployeeId"
+                                        ng-options="option.Id as option.Name for option in EmployeeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveEmpLeaveAllocationSettings)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

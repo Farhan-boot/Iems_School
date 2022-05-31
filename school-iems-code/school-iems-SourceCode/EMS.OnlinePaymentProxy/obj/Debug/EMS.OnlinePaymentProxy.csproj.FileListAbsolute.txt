@@ -1,0 +1,16 @@
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.OnlinePaymentProxy.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.OnlinePaymentProxy.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.CoreLibrary.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.DataAccess.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\Newtonsoft.Json.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EntityFramework.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.CoreLibrary.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.DataAccess.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EMS.DataAccess.dll.config
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\Newtonsoft.Json.xml
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\bin\Debug\EntityFramework.xml
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\obj\Debug\EMS.OnlinePaymentProxy.csproj.AssemblyReference.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\obj\Debug\EMS.OnlinePaymentProxy.csproj.CoreCompileInputs.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\obj\Debug\EMS.OnlinePaymentProxy.csproj.CopyComplete
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\obj\Debug\EMS.OnlinePaymentProxy.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.OnlinePaymentProxy\obj\Debug\EMS.OnlinePaymentProxy.pdb

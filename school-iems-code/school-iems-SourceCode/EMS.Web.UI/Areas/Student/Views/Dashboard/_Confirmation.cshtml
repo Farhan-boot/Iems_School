@@ -1,0 +1,706 @@
+﻿@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@model EMS.Framework.Objects.MvcModelResult<Acnt_StdTransaction>
+@{
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var payslipId = (string)id == null ? "0" : (string)id;
+    var getOnlinePaymentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlinePaymentManagerApi", action = "GetOnlinePaymentDataExtra", area = "Student" });
+    var getOnlinePayslipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlinePaymentManagerApi", action = "GetOnlinePayslipById", area = "Student" });
+    var onlinePaymentUrl = Url.Action("Index", "OnlinePayment", new {area = "student"});
+    var paymentHistoryUrl = Url.Action("Financial", "Reports", new {area = "student"});
+    var printPayslip = "printPayslip";
+}
+
+<div ng-controller="ConfirmationCtrl"
+     ng-init="Init(
+     '@payslipId'
+,'@getOnlinePaymentDataExtraUrl'
+,'@getOnlinePayslipByIdUrl'
+     )">
+
+@helper Header(string reportCopyName)
+    {
+        var reportModel = new ReportHeaderFooterModel();
+        reportModel.ReportNo = ""; //SACNT/001/201901
+        reportModel.HtmlRightArea = "<img class=\"logo-size\" src=\"/assets/img/logo/barcode.png\" >";
+        reportModel.Subtitle = reportCopyName;
+        ViewBag.ReportModel = reportModel;
+        <div id="reportHeader" style="display: none">
+            @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+        </div>
+    }
+    @helper Footer()
+    {
+        @*<div style="margin-top: 10px;">
+            @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+        </div>*@
+    }
+
+    <div class="row" id="confirmation">
+        <div class="col-md-12">
+            <div class="databox databox-lg databox-halved radius-bordered databox-shadowed databox-vertical bg-white" style="height: 160px; margin-bottom: 15px;">
+                <div class="databox-top padding-10">
+                    <div class="text-align-center padding-10">
+                        <h1 class="text-success"><i class="fa fa-check"></i> Payment Successfully Completed. </h1>
+                        @*<h1 class="text-danger"><i class="fa fa-times-circle"></i> Payment Was not Completed. </h1>*@
+                        <h1 class="text-black-o" style="color: #d73d32 !important;"> Paid Amount: {{Payslip.TotalAmount | number:2}}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="main-body">
+    <div class="widget">
+        <div class="widget-body" style="background-color: white;">
+            <div style="min-height: 200px;">
+                @Header("Student Copy")
+                <div class="online-payslip-header">
+                    <table style="width: 100%">
+                        <tbody>
+                        <tr>
+                            <td style="font-weight: bold;">
+                                <span>Student ID: </span>
+
+                                <span>{{Payslip.StudentUserName}}</span>
+
+                            </td>
+                            <td style="font-weight: bold;">
+                                <span>Name:</span>{{Payslip.StudentName}}
+                            </td>
+                            <td style="width: 180px;">
+                                <span>Semester:</span> {{Payslip.Semester}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Voucher No:</span> {{Payslip.VoucherNo}}
+                            </td>
+                            <td>
+                                <span>Transaction Id:</span> {{Payslip.GatewayTransNo}}
+                            </td>
+                            
+                            <td><span>Date: </span> {{Payslip.TransactionDate | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 15px;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="vertical-align: baseline;">
+                                <div class="bor transaction-info">
+                                    <table style="width: 300px;">
+                                        <tr class="header" style="background-color: lightgray !important; text-align: center; font-weight: bold;">
+                                            <td style="width: 250px; text-align: left; padding-left: 6px;">Particular Name</td>
+                                            <td style="width: 120px;">Amount [BDT]</td>
+                                        </tr>
+
+                                        @*for every transaction details print here*@
+                                        <tr class="items" ng-repeat="particular in Payslip.ParticularList">
+                                            <td style="padding-left: 6px;">
+                                                <span class="particular">
+                                                    {{particular.ParticularName}}
+                                                </span>
+
+                                                <span class="remark" style=""> {{particular.Remark}} </span>
+
+                                            </td>
+                                            <td style="padding-right: 10px; text-align: right">{{particular.Amount | number:2}}</td>
+                                        </tr>
+
+
+                                        <tr style="background-color: lightgray; text-align: right; font-weight: bold;">
+                                            <td style="padding-right: 10px;">Total</td>
+                                            <td style="padding-right: 10px;">{{Payslip.TotalAmount |number :2}}</td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </td>
+                            <!-- ==== -->
+                            <td style="width: 100%;">
+                                <div style="text-align: center;">
+                                    <span>Paid Amount [BDT]</span>
+                                </div>
+                                <div style="text-align: center; font-weight: bold;">
+                                    <span style="font-size: 25px !important; line-height: 2; border: 1px solid; padding: 0px 10px;">
+                                        ={{Payslip.TotalAmount | number: 2}}=
+                                    </span>
+                                </div>
+                                <div style="text-align: center; font-weight: bold;">
+                                    <span style="font-size: 11px !important; color: #656060; line-height: 2; padding: 0px 10px; text-transform: capitalize">
+                                        [{{Payslip.TotalAmountInWord}} Only]
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table class="online-pay-info-table" style="width: 100%;margin-top: 15px;">
+                        <tr>
+                            <td style="width: 47%; border: 1px solid black; padding: 5px;">
+                                <div>
+                                    <span>Payment Method: </span>
+                                    Online Payment
+                                </div>
+                                <div>
+                                    <span> Gateway Name: </span>
+                                    <img style="width: 150px; display: inline-block;" src="/assets/img/paymentGateway/bkash.gif">
+                                </div>
+                            </td>
+                            <td style="width: auto;"></td>
+                            <td style="width: 47%; border: 1px solid black; padding: 5px;">
+                                <div>
+                                    <span>Slip ID:</span> {{Payslip.PayslipId}}
+                                </div>
+                                <div>
+                                    <span>Varsity Bank:</span> {{Payslip.TransactionBankName}}
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+               
+                @Footer()
+            </div>
+        </div>
+        <div class="widget-footer" style="margin-top: 15px; padding: 10px;">
+            <div style="text-align: center;">
+                @*<a href="@(onlinePaymentUrl)" class="btn btn-default btn-warning"><i class="fa fa-arrow-left"></i> Back </a>*@
+                <button ng-click="@(printPayslip)()" class="btn btn-default btn-info"><i class="fa fa-print"></i> Print Online Payment Receipt </button>
+                <a href="@(paymentHistoryUrl)#OnlinePaymentHistory" class="btn btn-default btn-success"><i class="fa fa-history"></i> View Payment History </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <style>
+        /** {
+            font-size: 10px !important;
+            line-height: 1.728571 !important;
+            /*font-size: 14px;
+        font-family: 'Times New Roman', Times, serif;
+        }*/
+
+        .bor table, .bor tr, .bor td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .transaction-info td {
+            font-size: 12px !important;
+        }
+
+        .transaction-info .items td {
+            font-size: 13px !important;
+            font-weight: bold;
+        }
+
+        .transaction-info td .remark {
+            font-size: 8px !important;
+            display: block;
+        }
+
+        .transaction-info td .particular {
+            font-size: 13px !important;
+            font-weight: bold;
+            display: block;
+        }
+
+        .main-body {
+            width: 7.27in;
+            margin: 0 auto;
+        }
+
+        .title-text-bold {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .logo-size {
+            max-width: 55px;
+        }
+
+        .divider-border {
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .online-pay-info-table .tr .td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .online-payslip-header {
+            margin-top: 10px;
+        }
+
+    </style>
+    
+
+
+</div>
+
+
+
+<style>
+
+    @@media print{
+        #confirmation{
+            display: none !important;
+        }
+        #reportHeader{
+            display: block !important;
+        }
+        .online-payslip-header {
+            margin-top: 30px !important;
+        }
+    }
+
+    
+        .taka-icon {
+            font-weight: 900 !important;
+            font-size: 20px;
+        }
+
+        .widget-header-font-size {
+            font-size: 16px !important;
+        }
+
+        .Payment-th, .Payment-td {
+            height: 54px;
+            font-size: 15px !important;
+            vertical-align: middle !important;
+        }
+
+        .Payment-th div {
+            margin-left: 10px;
+        }
+
+        .payment-head-sub {
+            font-size: 15px;
+        }
+
+        .payment-amount-td {
+            vertical-align: middle !important;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .redio-td {
+            width: 55px;
+            text-align: center;
+            padding-top: 10px !important;
+        }
+
+        .redio-input {
+            width: 30px !important;
+            height: 30px !important;
+        }
+
+        .payment-head {
+            width: 300px;
+            vertical-align: middle !important;
+            font-size: 22px;
+            padding-left: 10px !important;
+        }
+
+        .payble-head-td {
+            width: 265px;
+            height: 54px;
+            vertical-align: middle !important;
+            font-size: 22px;
+            padding-left: 10px !important;
+        }
+
+        .payble-amount-td {
+            vertical-align: middle !important;
+            font-size: 22px;
+            padding-left: 10px !important;
+        }
+
+        .payble-amount-input {
+            font-size: 22px;
+        }
+
+
+        .payble-action-td {
+            width: 50px;
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        .small-box .inner p {
+            font-size: 25px;
+            color: white;
+        }
+
+        .small-box-footer {
+            color: white;
+        }
+
+        .radio, .checkbox {
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        .select-payment-radio {
+            height: 13px !important;
+            width: 13px !important;
+        }
+
+        .input-group-addon {
+            font-size: 12px !important;
+            text-align: center !important;
+            font-weight: 900 !important;
+            padding: 5px 15px 0px 5px !important;
+        }
+
+        .input-group {
+            display: inline-flex;
+        }
+
+        .bill-header {
+            text-align: center;
+            border: 1px solid #e33771;
+            border-bottom: none;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .bill {
+            font-size: 20px;
+            /*font-weight: bold;*/
+        }
+
+        .due {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 5px 0px;
+        }
+
+        .AmountToPay-input {
+            width: 100px !important;
+            padding-left: 5px;
+            font-weight: bold;
+            height: 30px !important;
+            text-align: left !important;
+        }
+
+
+
+        @@media (max-width: 992px) {
+            .final-bill-box {
+                margin-top: 15px;
+            }
+        }
+
+
+        @@media (min-width: 600px) {
+
+            .small-box {
+                margin-bottom: 0px;
+            }
+        }
+
+
+
+        .fade-in {
+            opacity: 0;
+            -webkit-animation: fadeIn ease-in 1;
+            -moz-animation: fadeIn ease-in 1;
+            animation: fadeIn ease-in 1;
+            -webkit-animation-fill-mode: forwards;
+            -moz-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+            -webkit-animation-duration: 0.3s;
+            -moz-animation-duration: 0.3s;
+            animation-duration: 0.3s;
+            -webkit-animation-delay: 0.0s;
+            -moz-animation-delay: 0.0s;
+            animation-delay: 0.0s;
+        }
+
+        #container-bg {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            opacity: 0.60;
+            filter: alpha(opacity=60);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        .form-signin {
+            width: 100%;
+            min-width: 320px;
+            padding: 5px 0px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            z-index: 10000;
+            position: relative;
+            text-align: center;
+            color: #fff;
+            font-family: 'Muli', sans-serif;
+        }
+
+        #logoHolder {
+            height: 100px;
+            background-color: #fff;
+            width: 100%;
+            padding: 0px;
+        }
+
+        hr.itemDivider {
+            border: 3px solid #e44b6f;
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+
+        #trxLoader {
+            display: flex;
+            flex-direction: column;
+            padding-top: 24px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-bottom: 24px;
+            opacity: 1;
+            animation-name: fadeInRight;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 1.5s;
+        }
+
+        .loadingText {
+            color: #464646;
+            font-size: 14px;
+            font-style: italic;
+            flex-wrap: wrap;
+            font-family: Roboto;
+        }
+
+        #trxInfo {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            padding-top: 17px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-bottom: 17px;
+        }
+
+        .formBody {
+            margin-bottom: 0px;
+        }
+
+        #inputHolder {
+            display: flex;
+            flex-direction: column;
+            background-image: url(https://client.sandbox.bka.sh/resource/img/input_bg.png);
+            width: 100%;
+            height: 170px;
+            align-items: center;
+            justify-content: center;
+            background-color: #c94161;
+        }
+
+        span.infoText {
+            color: #FFFFFF;
+            font-size: 11.5px;
+            font-family: sans-serif;
+        }
+
+        #error {
+            color: #fff;
+            font-weight: bold;
+            font-size: 11.5px;
+            font-family: sans-serif;
+        }
+
+        div.buttonAction {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #resend_otp, #close_button, #no_button {
+            width: 50%;
+            color: #FFFFFF;
+            background-color: #d1d3d4;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 12px;
+            border-radius: 0px;
+        }
+
+        #submit_button, #yes_button {
+            width: 50%;
+            color: #000000;
+            background-color: #d1d3d4;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 12px;
+            border-radius: 0px;
+        }
+
+        button, .button {
+            margin-bottom: 1rem;
+        }
+
+
+        button, html input[type="button"], input[type="reset"], input[type="submit"] {
+            -webkit-appearance: button;
+            cursor: pointer;
+        }
+
+        #footerItem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 5px;
+        }
+
+        #credit {
+            display: flex;
+            flex-direction: row;
+            margin-left: 10px;
+            margin-right: 10px;
+            align-items: center;
+        }
+
+        div.dialerItem {
+            display: flex;
+            width: 23px;
+            height: 23px;
+            align-items: center;
+            justify-content: center;
+            background-color: #e2136e;
+            border-radius: 50px;
+        }
+
+        #dialText {
+            color: #c94161;
+            margin-left: 10px;
+        }
+
+        div.infoNameInvoice {
+            display: flex;
+            flex-direction: column;
+            padding-left: 1px;
+        }
+
+        #merchantName {
+            color: #464646;
+            font-size: 12px;
+            flex-wrap: wrap;
+            font-family: Roboto;
+            text-align: left;
+        }
+
+        div.infoInvoice {
+            display: flex;
+            flex-direction: row;
+        }
+
+        span.invoiceText {
+            font-size: 13px;
+            color: #9a9a9a;
+            font-family: Roboto;
+        }
+
+        #merchantInvoice1 {
+            color: #9a9a9a;
+            font-size: 13px;
+            margin-left: 3px;
+            width: 50px;
+            font-family: Roboto;
+            white-space: nowrap;
+            text-align: start;
+        }
+
+        #merchantInvoice2 {
+            color: #9a9a9a;
+            font-size: 13px;
+            overflow: hidden;
+            width: 185px;
+            margin-left: 45px;
+            text-overflow: ellipsis;
+            font-family: Roboto;
+            white-space: nowrap;
+            text-align: start;
+        }
+
+        div.trxMerchantAmount {
+            display: flex;
+            flex-direction: row;
+            margin-left: 1px;
+        }
+
+        span.merchantAmount {
+            color: #464646;
+            font-family: Roboto;
+        }
+
+        #merchantAmountVal {
+            color: #464646;
+            font-family: Roboto;
+            margin-left: 2px;
+        }
+
+        .form-signin .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            margin-top: 15px;
+        }
+
+        button, input, optgroup, select, textarea {
+            color: inherit;
+            font: inherit;
+            margin: 0;
+        }
+
+        input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"], textarea, select {
+            height: 38px;
+            padding: 6px 10px;
+            background-color: #fff;
+            border: 1px solid #D1D1D1;
+            border-radius: 4px;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+
+        .form-signin input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"] {
+            text-align: center;
+            border-radius: 0px;
+            width: 80%;
+        }
+
+        .form-signin input[type="password"], input[type="text"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            color: #3c3c3c;
+        }
+
+
+
+        @@media only screen and (min-width: 600px) {
+        }
+        </style>
+

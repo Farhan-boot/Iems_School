@@ -1,0 +1,319 @@
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li>
+            <a  title="Goto My Home Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">My Dashboard</span>
+            </a>
+        
+        </li>
+    <li>
+        <a href="@Url.Action("Index", "Profile", new {area = "Employee"})">
+            <i class="menu-icon fa fa-user"></i>
+            <span  class="menu-text"> My Profile </span>
+        </a>
+    </li>
+        <li>
+            <a href="@Url.Action("ChangePassword", "CommonManager", new {area = ""})">
+                <i class="menu-icon fa fa-user-secret"></i>
+                <span class="menu-text">Change Password</span>
+            </a>
+        </li>
+        @*<li>
+            <a href="@Url.Action("LoginHistory", "Profile", new {area = "Employee"})">
+                <i class="menu-icon fa fa-leaf"></i>
+                <span  class="menu-text"> Login History <span  class="badge badge-success">new</span></span>
+            </a>
+        </li>*@
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-university"></i>
+            <span  class="menu-text"> Academic (for Faculty) </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})/#ClassStudentList">
+                    <span  class="menu-text"> Student List </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})/#MarkEntry">
+                    <span  class="menu-text"> Mark Entry</span>
+                </a>
+            </li>
+            <li>
+                <a class="" href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})/#ClassAttendance">
+                    <span  class="menu-text"> Student Attendance </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})/#ClassMaterials">
+                    <span  class="menu-text"> Class Materials </span><span  class="badge badge-success">new</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})/#ClassNotice">
+                    <span  class="menu-text"> Class Notice</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "FacultySuppleManager", new {area = "Employee"})">
+                    <span class="menu-text"> @SiteSettings.Instance.SuppleExamViewName Manager</span>
+                </a>
+            </li>
+
+        </ul>
+    </li>
+    
+    @if (SiteSettings.InstituteKey == "eub" && PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.Report.CanViewUgcStaticAdmissionReport))
+    {
+        <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-print"></i>
+                <span  class="menu-text"> Admission Report </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("AdmissionReportOf17", "Report", new {area = "Employee"})">
+                        <span  class="menu-text"> Adm Report of 17 </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AdmissionReportOf18", "Report", new {area = "Employee"})">
+                        <span class="menu-text"> Adm Report of 18 </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AdmissionReportOf19", "Report", new {area = "Employee"})">
+                        <span class="menu-text"> Adm Report of 19 </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AdmissionReportOf20", "Report", new {area = "Employee"})">
+                        <span class="menu-text"> Adm Report of 20 </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    }
+    @*<li>
+            <a href="@Url.Action("Index", "OfferedCourses", new {area = "Employee"})">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span  class="menu-text"> OfferedCourses </span>
+            </a>
+        </li>*@
+        @*<li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span  class="menu-text"> HR </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="">
+                <li>
+                    <a href="@Url.Action("AdmitCard", "Reports", new {area = "Employee"})" target="_blank">
+                        <span  class="menu-text"> Salary History </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AdmitCard", "Reports", new {area = "Employee"})" target="_blank">
+                        <span  class="menu-text"> Appointments </span><span  class="badge badge-success">new</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("GradesByCurriculum", "Reports", new {area = "Employee"})">
+                        <span  class="menu-text"> Payslips </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("GradesBySemester", "Reports", new {area = "Employee"})">
+                        <span  class="menu-text"> Apply For Leave </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("GradesBySemester", "Reports", new {area = "Employee"})">
+                        <span  class="menu-text"> Leave History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("GradesBySemester", "Reports", new {area = "Employee"})">
+                        <span  class="menu-text"> Leave Supervision</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})/#FinancialRecord">
+                        <span  class="menu-text"> Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})/#FinancialRecord">
+                        <span  class="menu-text"> Attendance Supervision</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Academic Calender </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-book"></i>
+                <span  class="menu-text"> My Library </span>
+
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Library", new {area = "Employee"})">
+                        <span  class="menu-text"> Book Search </span>
+                    </a>
+                </li>
+                @*<li>
+                    <a href="@Url.Action("CurrentBorrows", "Library", new {area = "Employee"})">
+                        <span  class="menu-text"> Current Borrows </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("BorrowHistory", "Library", new {area = "Employee"})">
+                        <span  class="menu-text"> Borrowing History </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Reservation", "Library", new {area = "Employee"})">
+                        <span  class="menu-text"> Online Reservation </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Financials", "Library", new {area = "Employee"})">
+                        <span  class="menu-text"> Financial Account </span>
+                    </a>
+                </li>@
+            </ul>
+        </li>*@
+        <li>
+            <a href="@Url.Action("Index", "Application", new {area = "Employee"})">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span  class="menu-text">Application Forms</span>
+            </a>
+        </li>
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span  class="menu-text">Application Forms</span>
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text">Official Forms</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text">Online Forms</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text">Agreement Forms</span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+    @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-wechat"></i>
+                <span  class="menu-text"> Communication </span>
+
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Message </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> E-Mail </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Chat </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-support"></i>
+                <span  class="menu-text">Help & Support </span>
+
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Submit Request Online</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Live Chat (@(EMS.Framework.Settings.SiteSettings.Instance.InstituteShortName) IT)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> Find Contact </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> EMS Tutorial(with Video) </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard", new {area = "Employee"})">
+                        <span  class="menu-text"> FAQ </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+
+        @if (SiteSettings.Instance.IsShowEmployeeContacts)
+        {
+            <li>
+                <a href="@Url.Action("Contacts", "Dashboard", new {area = "Employee"})">
+                    <i class="menu-icon fa fa-address-book-o"></i>
+                    <span class="menu-text"> Employee Contacts </span>
+                </a>
+            </li>
+        }
+        
+        <!-- <li>
+            <a href="Url.Action("Student", "ParadeState", new {area = ""})" target="_blank">
+                <i class="menu-icon fa fa-braille"></i>
+                <span  class="menu-text"> Students’ Parade State </span>
+            </a>
+        </li> -->
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

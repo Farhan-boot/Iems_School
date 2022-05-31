@@ -1,0 +1,87 @@
+﻿<!--File:General_Floor Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Floor";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var FloorId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getFloorByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorById", area = "Admin" });
+    var getFloorDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorDataExtra", area = "Admin" });
+    var saveFloorUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "SaveFloor", area = "Admin" });
+    var deleteFloorByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetDeleteFloorById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedFloorUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetPagedFloor", area = "Admin" });
+    var getAllFloorUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetAllFloor", area = "Admin" });
+    var saveFloorListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "SaveFloorList", area = "Admin" });
+    var getFloorListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FloorApi", action = "GetFloorListDataExtra", area = "Admin" });
+
+    var editFloorByIdPageUrl = Url.Action("FloorAddEdit", "Floor", new { area = "Admin" });
+    var listFloorPageUrl = Url.Action("FloorList", "Floor", new { area = "Admin" });
+
+    // Angular Functions
+    string getFloorById = "getFloorById";
+    var saveFloor = "saveFloor";
+    var getNewFloor = "getNewFloor";
+    var refreshPage = "loadPage()";
+    string deleteFloorById = "deleteFloorById";
+    string loadFloorExtraData = "loadFloorExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Floor/FloorAddEdit.js"></script>
+}
+<div id="FloorAddEdit" class="row" ng-controller="FloorAddEditCtrl" ng-init="Init(
+      '@FloorId'
+      ,'@getFloorByIdUrl'
+      ,'@getFloorDataExtraUrl'
+      ,'@saveFloorUrl'
+      ,'@deleteFloorByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Floor.@General_Floor.Property_Name!=''">{{(Floor.@General_Floor.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="FloorId" ng-Enter="@(getFloorById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewFloor)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listFloorPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <!--text type-->
+                    @*<div class="col-sm-6 form-group">
+                            <label class="control-label">Id </label>
+                            <input type="number" ng-model="Floor.@General_Floor.Property_Id" class="form-control" placeholder="Enter Id"   />
+                        </div>*@
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Floor Number </label>
+                        <input type="number" ng-model="Floor.@General_Floor.Property_FloorNo" class="form-control" placeholder="Enter Floor No" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="Floor.@General_Floor.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                    </div>
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveFloor)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

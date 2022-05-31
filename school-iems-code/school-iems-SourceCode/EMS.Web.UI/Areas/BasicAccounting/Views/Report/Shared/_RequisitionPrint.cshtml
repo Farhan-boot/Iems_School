@@ -1,0 +1,240 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Framework.Utils
+@model EMS.Framework.Objects.MvcModelResult<Inv_Requisition>
+
+@helper Header(string reportCopyName)
+{
+
+    var reportModel = new ReportHeaderFooterModel();
+    reportModel.ReportNo = "";
+    reportModel.HtmlRightArea = "";
+    reportModel.Subtitle = "";
+    //reportModel.Title= Model.DataBag.VoucherTitleName;
+    ViewBag.ReportModel = reportModel;
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+
+}
+
+@helper Footer()
+{
+    <div style="margin-top: 10px;">
+        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+    </div>
+}
+
+
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+
+    <div class="main-body">
+        <div style="min-height: 500px;">
+            @MoneyReceiptHtlm("Office Copy")
+        </div>
+    </div>
+
+}
+
+@*<div class="main-body">
+        <div style="min-height: 500px;">
+            @MoneyReceiptHtlm("Office Copy")
+        </div>
+    </div>*@
+
+@helper MoneyReceiptHtlm(string reportCopyName)
+{
+    var requisition = Model.Data;
+    //var totalDebitAmount = Model.DataBag.TotalDebitAmount;
+    //var totalCreditAmount = Model.DataBag.TotalCreditAmount;
+    // var amountInWords = Model.DataBag.AmountInWords;
+
+    @Header(reportCopyName)
+    <div>
+        <table width="100%">
+            <tr>
+                <td style="">
+                    <span class="text-bold">Requested By Employee Name:</span>
+                    @requisition.RequestedByEmployeeName
+                </td>
+                <td>
+                    <span class="text-bold">Referenced By Employee Name:</span>
+                    @requisition.ReferencedByEmployeeName
+                </td>
+                <td style="">
+                    <span class="text-bold">Issued Or Release By UserName:</span>
+                    @requisition.IssuedOrReleaseByUserName
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <span class="text-bold">Approved By Admin Name:</span>
+                    @requisition.ApprovedByAdminName
+                </td>
+                <td>
+                    <span class="text-bold">Received By Employee Name:</span>
+                    @requisition.ReceivedByEmployeeName
+                </td>
+                <td>
+                    <span class="text-bold">Requisition Date:</span>
+                    @requisition.RequisitionDate
+
+                </td>
+            </tr>
+            
+            
+            
+            <tr>
+                <td>
+                    <span class="text-bold">Require Date:</span>
+                    @requisition.RequireDate
+                </td>
+                <td>
+                    <span class="text-bold">Purpose:</span>
+                    @requisition.Purpose
+                </td>
+                <td>
+                    <span class="text-bold">Remark:</span>
+                    @requisition.Remark
+
+                </td>
+            </tr>
+            
+            
+            
+
+
+
+            @*@if (product.PurchaseCode.IsValid()|| voucher.ChequeDate.IsValid())
+                {
+                    <tr>
+                        <td>
+                            <span class="text-bold">Cheque No:</span>
+                            @voucher.ChequeNo
+                        </td>
+                        <td></td>
+                        <td>
+                            <span class="text-bold">Cheque Date:</span>
+                            @voucher.ChequeDate
+
+                        </td>
+                    </tr>
+                }*@
+
+        </table>
+    </div>
+
+
+
+    <div style="margin-top: 20px;">
+        <table class="table-bordered table-border" width="100%">
+            <thead>
+                <tr>
+                    <th class="text-center">Item Name</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Approved Quantity</th>
+                    <th class="text-center">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var requisitionDtl in requisition.Inv_RequisitionDetails)
+            {
+                <tr>
+                    <td class="text-center">
+                        @if (requisitionDtl.ItemName != null)
+                        {
+                            <span>@requisitionDtl.ItemName</span>
+                        }
+                    </td>
+                    <td>
+                        @if (requisitionDtl.Quantity != null)
+                        {
+                            <span>@requisitionDtl.Quantity</span>
+                        }
+                    </td>
+                    <td>
+                        @if (requisitionDtl.ApprovedQuantity != null)
+                        {
+                            <span style="font-size: 10px !important;">@requisitionDtl.ApprovedQuantity</span>
+                        }
+                    </td>
+                    <td>
+                        @if (requisitionDtl.Detail != null)
+                        {
+                            <span style="font-size: 10px !important;">@requisitionDtl.Detail</span>
+                        }
+                    </td>
+                </tr>
+            }
+
+            @*<tr>
+                        <td class="text-bold" colspan="2" style="text-align: right;">Total</td>
+                        <td class="text-bold text-center">@totalDebitAmount</td>
+                        <td class="text-bold text-center">@totalCreditAmount</td>
+                    </tr>*@
+            </tbody>
+        </table>
+        <!--<div style="margin-top: 10px; text-align: right;">
+            <span class="text-bold">Taka(in words):</span>-->
+            @*@amountInWords*@
+        <!--</div>-->
+        <div style="margin-top: 50px; padding: 0 40px;">
+            <table width="100%">
+                <tr>
+                    <td style="text-align: left; text-decoration-line: overline;">Prepared by</td>
+                    <td style="text-align: center; text-decoration-line: overline;">Checked by</td>
+                    <td style="text-align: right; text-decoration-line: overline;">Approved by</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    @Footer()
+
+}
+<style>
+    * {
+        font-size: 12px !important;
+        line-height: 1.728571 !important;
+        /*font-size: 14px;
+        font-family: 'Times New Roman', Times, serif;*/
+    }
+
+    .main-body {
+        /*width: 7.27in;*/
+        width: 11.27in;
+        margin: 0 auto;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    .logo-size {
+        max-width: 55px;
+    }
+
+    .table-bordered > tbody > tr > td {
+        border: 1px solid #696464;
+        padding: 5px;
+    }
+
+    .table-bordered > thead > tr > th {
+        border: 1px solid #696464;
+        border-bottom: none;
+        padding: 5px;
+    }
+</style>

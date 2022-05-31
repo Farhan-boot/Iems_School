@@ -1,0 +1,180 @@
+﻿
+<!--File:Inv_Requisition Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Requisition";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RequisitionId = (string) id == null?"0":(string)id;
+    
+    //Inv_Requisition WebApi Single Row link   
+    var getRequisitionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "GetRequisitionById", area = "Inventory" });
+    var getRequisitionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "GetRequisitionDataExtra", area = "Inventory" });
+    var saveRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "SaveRequisition", area = "Inventory" });
+    var deleteRequisitionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "GetDeleteRequisitionById", area = "Inventory" });
+
+    //Inv_Requisition WebApi List link 
+    var getPagedRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RequisitionApi", action = "GetPagedRequisition", area = "Inventory"});
+    var getAllRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "GetAllRequisition", area = "Inventory" });
+    var saveRequisitionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "SaveRequisitionList", area = "Inventory" });
+    var getRequisitionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionApi", action = "GetRequisitionListDataExtra", area = "Inventory" });
+
+    var editRequisitionByIdPageUrl = Url.Action("RequisitionAddEdit", "Requisition", new { area = "Inventory" });
+    var listRequisitionPageUrl = Url.Action("RequisitionList", "Requisition", new { area = "Inventory" });
+    
+    //Inv_Requisition Angular Functions
+    string getRequisitionById="getRequisitionById";
+    var saveRequisition = "saveRequisition";
+    var getNewRequisition = "getNewRequisition";
+    var refreshPage = "loadPage()";
+    string deleteRequisitionById="deleteRequisitionById";
+    string loadRequisitionExtraData="loadRequisitionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Requisition/RequisitionAddEdit.js"></script>
+}
+
+<div id="RequisitionAddEdit" class="row" ng-controller="RequisitionAddEditCtrl" ng-init="Init(
+      '@RequisitionId'
+      ,'@getRequisitionByIdUrl'
+      ,'@getRequisitionDataExtraUrl'
+      ,'@saveRequisitionUrl'
+      ,'@deleteRequisitionByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="Requisition.@Inv_Requisition.Property_Name!=''">{{(Requisition.@Inv_Requisition.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="RequisitionId" ng-Enter="@(getRequisitionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewRequisition)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listRequisitionPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Requested By Employee Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_RequestedByEmployeeId" class="form-control" placeholder="Enter Requested By Employee Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requested By Employee Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Requisition Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="Requisition.@Inv_Requisition.Property_RequisitionDate" class="form-control date-picker" placeholder="Enter Requisition Date"  datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Require Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="Requisition.@Inv_Requisition.Property_RequireDate" class="form-control date-picker" placeholder="Enter Require Date"  datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Require Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Purpose </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Requisition.@Inv_Requisition.Property_Purpose" class="form-control" placeholder="Enter Purpose" maxlength="500"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Purpose." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea type="text" ng-model="Requisition.@Inv_Requisition.Property_Remark" class="form-control" placeholder="Enter Remark" maxlength="500"  />
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Referenced By Employee Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_ReferencedByEmployeeId" class="form-control" placeholder="Enter Referenced By Employee Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Referenced By Employee Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Issued Or Release By User Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_IssuedOrReleaseByUserId" class="form-control" placeholder="Enter Issued Or Release By User Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Issued Or Release By User Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Approved By Admin Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_ApprovedByAdminId" class="form-control" placeholder="Enter Approved By Admin Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved By Admin Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Received By Employee Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_ReceivedByEmployeeId" class="form-control" placeholder="Enter Received By Employee Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Received By Employee Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Status </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Requisition.@Inv_Requisition.Property_Status" class="form-control" placeholder="Enter Status"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Status." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Requisition.@Inv_Requisition.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveRequisition)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

@@ -1,0 +1,265 @@
+﻿@using System.Data.Entity
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    var hasAdminPermission = HttpUtil.DbContext.UAC_RoleUserMap.Any(x => x.UserId == HttpUtil.Profile.UserId);
+    var profilePictureUrl = HttpUtil.GetProfilePictureUrl();
+    var currentArea = HttpUtil.GetCurrentArea();
+}
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="navbar-container">
+            <div style="position: absolute; margin-left: 222px; font-size: 16px; padding: 11px 0; color: #fff;">
+                @*@currentArea*@
+                @if (!currentArea.ToString().ToLower().Equals("test")
+        && !currentArea.ToString().ToLower().Equals("student")
+        && !currentArea.ToString().ToLower().Equals("guardian")
+        && !currentArea.ToString().ToLower().Equals("employee")
+        && hasAdminPermission
+        )
+                {
+                    @*<div class="widget-buttons no-padding-right" style="display: inline-flex;">
+                            <span class="input-icon">
+                                <input type="text" ng-model="SearchUserName" ng-enter="searchStudentList()" class="form-control input-xs  ng-pristine ng-valid ng-touched" placeholder="Search by User ID" style="">
+                                <i class="glyphicon glyphicon-search blue"></i>
+                            </span>
+                        </div>*@
+                }
+            </div>
+            @*<div style="position: absolute; margin-left: 400px; font-size: 16px; padding: 5px 0; color: #fff;">
+                <span class="input-icon">
+                    <input type="text" class="form-control" placeholder="Search Tasks">
+                    <i class="fa fa-search gray"></i>
+                </span>
+                </div>
+                @Url.Action(HttpUtil.GetCurrentAction(), HttpUtil.GetCurrentController(), new {Area = @HttpUtil.GetCurrentArea()})
+            *@
+            <div class="navbar-header pull-left">
+                <a href="@ViewBag.AreaHome" title="@(HttpUtil.GetCurrentArea().AddSpacesToSentence()) : @(SiteSettings.Instance.ProductBrandNameSolo)" class="navbar-brand">
+                    <small>
+                        <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoColorShort)" alt="" />
+                    </small>
+                </a>
+            </div>
+            <div class="sidebar-collapse" id="sidebar-collapse">
+                <i class="collapse-icon fa fa-bars"></i> @*Administrative*@
+            </div>
+            @*<div id="navbar" class="navbar-collapse collapse in" aria-expanded="true" style="">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a title="Administrative Area" class="page-scroll" href="#" style="font-size: 26px; padding: 15px;">@HttpUtil.GetCurrentArea()</a>
+                        </li>
+                    </ul>
+                </div>*@
+
+            <div class="navbar-header pull-right">
+                <div class="navbar-account">
+                    <ul class="account-area">
+                        @if (hasAdminPermission)
+                        {
+                            <li class="wave in">
+                                <a class="dropdown-toggle" data-toggle="dropdown" title="Select Working Area" href="#" aria-expanded="false">
+                                    <i class="icon fa fa-windows"></i>
+                                </a>
+                                <ul class="pull-right dropdown-menu dropdown-arrow dropdown-messages" style="padding: 0;">
+                                    @{
+                                        var areaList = HttpUtil.GetAreaList();
+                                    }
+                                    @foreach (var area in areaList)
+                                    {
+                                        if (area.ToString().Equals(currentArea))
+                                        {
+                                            <li style="border-bottom: 1px solid #ddd;padding: 0; background: #eee;" class="active">
+                                                <a style="font-size: 17px;padding: 10px;" href="@Url.Action("Index", "Dashboard", new {Area = @area})">
+                                                    <i class="dropdown-icon fa fa-windows fa-flip-horizontal"></i> @(area == "Employee" ? "My Home" : area.ToString().AddSpacesToSentence())
+                                                </a>
+                                            </li>
+                                        }
+                                        else if (!area.ToString().ToLower().Equals("test")
+                                            && !area.ToString().ToLower().Equals("student")
+                                            && !area.ToString().ToLower().Equals("guardian")
+                                            )
+                                        {
+                                            <li style="border-bottom: 1px solid #ddd;padding: 0;">
+                                                <a style="font-size: 17px;padding: 10px;" href="@Url.Action("Index", "Dashboard", new {Area = @area})">
+                                                    <i class="dropdown-icon fa fa-windows fa-flip-horizontal"></i> @(area == "Employee" ? "My Home" : area.ToString().AddSpacesToSentence())
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                                        }
+                        @if (HttpUtil.Profile.UserTypeId == (byte)User_Account.UserTypeEnum.Employee)
+                        {
+
+
+                            <li>
+                                <a class="dropdown-toggle" data-toggle="dropdown" title="Need Help" href="#" aria-expanded="false">
+                                    <i class="icon fa fa-question-circle"></i>
+                                </a>
+                                <ul class="pull-right dropdown-menu dropdown-arrow dropdown-messages">
+                                    <li>
+                                        <div style="white-space: nowrap;">
+                                            <img src="@SiteSettings.Instance.PipilikaLogo"
+                                                 style="max-width: 95px;"
+                                                 class="message-avatar" alt="Pipilika Soft">
+
+                                            <div class="message" style="margin-left: 10px;">
+                                                <span class="message-body">
+                                                    <i class="fa fa-phone"></i>
+                                                    <a href="tel:+8801886668333">
+                                                        +88 0188 6668333
+                                                    </a>
+                                                </span>
+                                                <span class="message-body">
+                                                    <i class="fa fa-phone"></i>
+                                                    <a href="tel:+8801633300888">
+                                                        +88 0163 3300888
+                                                    </a>
+                                                </span>
+
+                                                <span class="message-body">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <a href="mailto:@SiteSettings.Instance.PipilikaEmail">@SiteSettings.Instance.PipilikaEmail</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    @*<li>
+                                        <a href="#">
+                                            <img src="~/assets/img/profile/hkpavel.jpg"
+                                                 class="message-avatar" alt="Humayon Kabir Pavel">
+                                            <div class="message">
+                                                <span class="message-sender">
+                                                    Humayon Kabir Pavel
+                                                </span>
+                                                <span class="message-time">
+                                                    Chief<br />Technology<br />Officer
+                                                </span>
+                                                <span class="message-subject">
+                                                    <i class="fa fa-envelope-o"></i> hkpavel@pipilikasoft.com
+                                                </span>
+                                                <span class="message-body">
+                                                    <i class="fa fa-phone"></i> +88 016 333 00 999
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>*@
+                                    @*<li>
+                                        <a href="#">
+                                            <img src="~/assets/img/profile/mohitosh.jpg"
+                                                 class="message-avatar" alt="Mohitosh Pramanik">
+                                            <div class="message">
+                                                <span class="message-sender">
+                                                    Mohitosh Pramanik
+                                                </span>
+                                                <span class="message-time">
+                                                    Senior<br />Software<br />Engineer
+                                                </span>
+                                                <span class="message-subject">
+                                                    <i class="fa fa-envelope-o"></i> mohitosh@pipilikasoft.com
+                                                </span>
+                                                <span class="message-body">
+                                                    <i class="fa fa-phone"></i> +88 016 333 00 888
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>*@
+                                    <li>
+
+                                        <a href="#">
+                                            <div class="message">
+
+                                            </div>
+                                        </a>
+
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        <li style="display: none">
+                            <a class="wave in" id="chat-link" title="Chat" href="#">
+                                <i class="icon glyphicon glyphicon-comment"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Logout" href="@Url.Action("Logout", "Login", new {area = ""})">
+                                <i class="icon glyphicon glyphicon-off"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="login-area dropdown-toggle" data-toggle="dropdown">
+                                <div class="avatar" title="View your public profile">
+                                    <img src="@Url.Content(profilePictureUrl)" alt="@HttpUtil.Profile.Name">
+                                </div>
+                                <section>
+                                    <h2><span class="profile"><span>@HttpUtil.Profile.Name</span></span></h2>
+                                </section>
+                            </a>
+                            <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                                <li><a href="#" class="text-center">@HttpUtil.Profile.UserName</a></li>
+                                <li>
+                                    <div class="avatar-area">
+                                        <img src="@Url.Content(profilePictureUrl)" alt="@HttpUtil.Profile.Name" class="avatar">
+                                        <span class="caption">Change Photo</span>
+                                    </div>
+                                </li>
+                                <li class="edit">
+                                    @*<a href="profile.html" class="pull-left">Profile</a> Reset/Index*@
+                                    <a href="@Url.Action("ChangePassword", "CommonManager", new {area=""})" class="pull-right">Change Password</a>
+                                </li>
+                                <li class="theme-area">
+                                    <ul class="colorpicker" id="skin-changer">
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #5DB2FF;" rel="~/assets/css/skins/blue.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #2dc3e8;" rel="~/assets/css/skins/azure.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #03B3B2;" rel="~/assets/css/skins/teal.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #53a93f;" rel="~/assets/css/skins/green.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #FF8F32;" rel="~/assets/css/skins/orange.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #cc324b;" rel="~/assets/css/skins/pink.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #AC193D;" rel="~/assets/css/skins/darkred.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #8C0095;" rel="~/assets/css/skins/purple.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #0072C6;" rel="~/assets/css/skins/darkblue.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #585858;" rel="~/assets/css/skins/gray.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #474544;" rel="~/assets/css/skins/black.min.css"></a></li>
+                                        <li><a class="colorpick-btn" href="#" style="background-color: #001940;" rel="~/assets/css/skins/deepblue.min.css"></a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-footer">
+                                    <a href="@Url.Action("Logout", "Login", new {area = ""})" class="btn btn-block btn-primary" style="color: #fff; padding: 10px 2px; font-weight: 500;"><i class="fa fa-lock"></i> Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="setting">
+                        <a id="btn-setting" title="Setting" href="#">
+                            <i class="icon glyphicon glyphicon-cog"></i>
+                        </a>
+                    </div>
+                    <div class="setting-container">
+                        <label>
+                            <input type="checkbox" class="checkbox" id="checkbox_fixednavbar">
+                            <span class="text">Fixed Navbar</span>
+                        </label>
+                        @*<label>
+                                <input type="checkbox" id="checkbox_fixedsidebar">
+                                <span  class="text">Fixed SideBar</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="checkbox_fixedheader">
+                                <span  class="text">Fixed Header</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="checkbox_fixedbreadcrumbs">
+                                <span  class="text">Fixed BreadCrumbs</span>
+                            </label>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

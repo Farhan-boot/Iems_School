@@ -1,0 +1,307 @@
+﻿<!--File:HR_MonthlyPayslip List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Payslip Manager";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+
+    //WebApi link for single row
+    var getMonthlyPayslipManagerDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipManagerApi", action = "GetMonthlyPayslipDataExtra", area = "HR" });
+    var getMonthlyPayslipByPayrollIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipManagerApi", action = "GetMonthlyPayslipByPayrollId", area = "HR" });
+
+    var getMonthlyPayslipDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "GetMonthlyPayslipDetailsById", area = "HR" });
+    var getMonthlyPayslipDetailsByMonthlyPayslipIdUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "MonthlyPayslipDetailsApi", action = "GetMonthlyPayslipDetailsByMonthlyPayslipId", area = "HR"});
+    var saveMonthlyPayslipDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "SaveMonthlyPayslipDetailsList", area = "HR" });
+    var saveMonthlyPayslipDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "SaveMonthlyPayslipDetails", area = "HR" });
+    var deleteMonthlyPayslipDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipDetailsApi", action = "GetDeleteMonthlyPayslipDetailsById", area = "HR" });
+
+    var getPagedEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipManagerApi", action = "GetPagedEmployeeForSalaryGenerate", area = "HR" });
+    var generateMonthlyPayslipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipManagerApi", action = "GenerateMonthlyPayslip", area = "HR" });
+    
+    var draftOrUndraftSelectedUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlyPayslipManagerApi", action = "DraftOrUnDraftPayslip", area = "HR" });
+
+    var editEmployeeByIdPageUrl = Url.Action("UpdateEmployee", "ManageEmployee", new { area = "HR" });
+
+
+    //Angular Function Name
+    var getMonthlyPayslipByPayrollId = "getMonthlyPayslipByPayrollId";
+    var generateMonthlyPayslip = "generateMonthlyPayslip";
+    var getGenerateAbleEmployeeList = "getGenerateAbleEmployeeList";
+    var searchEmployeeList = "searchEmployeeList";
+    var draftOrUndraftSelected = "draftOrUndraftSelected";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/MonthlyPayslip/MonthlyPayslipManager.js"></script>
+    <script>
+        $(document).ready(function () {
+            collapseSidebar();
+        });
+    </script>
+}
+
+<div ng-controller="MonthlyPayslipListCtrl"
+     ng-init="Init(
+      '@getMonthlyPayslipManagerDataExtraUrl'
+      ,'@getMonthlyPayslipByPayrollIdUrl'
+      ,'@getMonthlyPayslipDetailsByMonthlyPayslipIdUrl'
+      ,'@saveMonthlyPayslipDetailsListUrl'
+      ,'@getPagedEmployeeUrl'
+      ,'@generateMonthlyPayslipUrl'
+      ,'@getMonthlyPayslipDetailsByIdUrl'
+      ,'@saveMonthlyPayslipDetailsUrl'
+      ,'@draftOrUndraftSelectedUrl'
+      ,'@deleteMonthlyPayslipDetailsByIdUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="widget" ng-show="HasViewPermission">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-list bold  "></i>
+                    <span class="widget-caption "> Monthly Payslip </span>
+
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getGenerateAbleEmployeeList)()" class="btn btn-xs btn-success"><i class="fa fa-user-plus"></i> Generate Monthly Salary </button>
+                        <button ng-click="@(getMonthlyPayslipByPayrollId)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+
+                </div>
+
+                <div class="widget-body no-padding text-center" style="overflow: auto">
+                    @*<div class="table-footer no-print">
+                            @OptionControl()
+                        </div>*@
+                    
+                    <div class="widget-buttons no-padding-right">
+                        <span class="widget-caption form-inline">
+                            <span>Select Payroll Month</span>
+                            <select ng-model="SelectedPayroll" ng-change="@(getMonthlyPayslipByPayrollId)()"
+                                    ng-options="option as option.Name for option in PayrollList" ng-init="" class="form-control input-xs ">
+                            </select>
+                        </span>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center" ng-show="IsEnableBulkDrafting">
+                                <input type="checkbox" ng-click="selectAllPayslip($event)">
+                            </th>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Total Addition</th>
+                            <th class="text-center">Total Deduction</th>
+                            <th class="text-center">Net Total</th>
+                            <th class="text-center">Is Draft</th>
+                        </tr>
+                        </thead>
+                        <tbody ng-show="MonthlyPayslipList.length>0">
+                        <tr ng-repeat="row in MonthlyPayslipList" ng-click="editEmployeeMonthlyPayslip($index)" ng-class="{ 'active': $index == selectedEmployeeMonthlyPayslipIndex}">
+                            <td class="text-center" ng-show="IsEnableBulkDrafting">
+                                <input ng-change="checkIsDraftUndraftAble()" type="checkbox" ng-model="row.@HR_MonthlyPayslip.Property_IsSelected" />
+                            </td>
+                            <td class="text-center">{{$index+1}}</td>
+                            <td class="">
+                                <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{row.UserId}}&empId={{row.EmployeeId}}#Payslip">{{row.@HR_MonthlyPayslip.Property_Name}}</a>
+                            </td>
+                            <td class="">{{row.@HR_MonthlyPayslip.Property_TotalAddition}}</td>
+                            <td class="">{{row.@HR_MonthlyPayslip.Property_TotalDeduction}}</td>
+                            <td class="text-center no-print">
+                                {{row.@HR_MonthlyPayslip.Property_TotalAddition-row.@HR_MonthlyPayslip.Property_TotalDeduction}}
+                            </td>
+                            <td class="">
+                                <label style="color: red" ng-show="row.@HR_MonthlyPayslip.Property_IsDraft"> Yes </label>
+                                <label style="color: green" ng-hide="row.@HR_MonthlyPayslip.Property_IsDraft"> No </label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center" ng-hide="MonthlyPayslipList.length>0">
+                        <label style="color: red"> No Payslip Generated For this payroll.</label>
+                    </div>
+                </div>
+                <div ng-show="MonthlyPayslipList.length>0" class="widget-footer">
+                    <button ng-hide="IsEnableBulkDrafting" ng-click="IsEnableBulkDrafting = !IsEnableBulkDrafting" class="btn btn-xs btn-default">
+                        <i class="fa fa-check"></i> Enable Bulk Selection
+                    </button>
+                    <button ng-show="IsEnableBulkDrafting" ng-click="IsEnableBulkDrafting = !IsEnableBulkDrafting" class="btn btn-xs btn-warning">
+                        <i class="fa fa-times"></i> Cancel Bulk Selection
+                    </button>
+                    <button ng-show="IsEnableBulkDrafting" ng-disabled="!IsDraftUndraftAble" ng-click="@(draftOrUndraftSelected)(true)" class="btn btn-xs btn-warning"><i class="fa fa-check"></i> Mark As Draft</button>
+                    <button ng-show="IsEnableBulkDrafting" ng-disabled="!IsDraftUndraftAble" ng-click="@(draftOrUndraftSelected)(false)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i> Mark As Un-Draft</button>
+                </div>
+
+            </div>
+
+
+
+        </div>
+        <div ng-show="MonthlyPayslipList.length>0" class="col-md-7">
+            @Html.Partial("~/Areas/HR/Views/MonthlyPayslip/Payslip/_Payslip.cshtml")
+        </div>
+    </div>
+
+    <div class="modal fade" id="MonthlyPayslipModal" tabindex="-1" role="dialog" aria-labelledby="MonthlyPayslipModal">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">Generate Monthly Payslip of {{SelectedPayroll.Name}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="widget" ng-show="HasViewPermission">
+                            <div class="widget-header bordered-bottom bordered-sky" style="text-align: center">
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SelectedSalaryTemplateId" ng-options="option.Id as option.Name for option in SalaryTemplateList" class="form-control input-xs">
+                                        <option value="">---Select Salary Group---</option>
+                                    </select>
+                                </div>
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByWorkingStatusEnumId" ng-options="option.Id as option.Name for option in WorkingStatusEnumList" class="form-control input-xs">
+                                        <option value="">---Select All Working Status---</option>
+                                    </select>
+                                </div>
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByDepartmentId" ng-options="option.Id as option.Name group by option.Type  for option in DepartmentList" class="form-control input-xs">
+                                        <option value="">---Select All Department---</option>
+                                    </select>
+                                </div>
+
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByEmployeeCategoryEnumId" ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList" class="form-control input-xs">
+                                        <option value="">---Select All Category---</option>
+                                    </select>
+                                </div>
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByJobClassEnumId" ng-options="option.Id as option.Name for option in JobClassEnumList" class="form-control input-xs">
+                                        <option value="">---Select All Salary Grade---</option>
+                                    </select>
+                                </div>
+
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByEmployeeTypeEnumId" ng-options="option.Id as option.Name for option in EmployeeTypeEnumList" class="form-control input-xs">
+                                        <option value="">---Select All Employee Type---</option>
+                                    </select>
+                                </div>
+
+                                <div class="widget-buttons no-padding-left form-inline">
+                                    <select ng-model="SearchByJobTypeEnumId" ng-options="option.Id as option.Name for option in JobTypeEnumList" class="form-control input-xs">
+                                        <option value="">---Select All Job Type---</option>
+                                    </select>
+                                </div>
+
+                                <div class="widget-buttons no-padding-right">
+                                    <span class="input-icon">
+                                        <input type="text" ng-model="SearchUserName" class="form-control input-xs " placeholder="search by User ID" style="">
+                                        <i class="glyphicon glyphicon-search blue"></i>
+                                    </span>
+                                </div>
+                                <div class="widget-buttons no-padding-right">
+                                    <span class="input-icon">
+                                        <input type="text" ng-model="SearchText" class="form-control input-xs " placeholder="search by Full name" style="">
+                                        <i class="glyphicon glyphicon-search blue"></i>
+                                    </span>
+                                </div>
+                                <br />
+                                <button ng-click="@(searchEmployeeList)()" class="btn btn-primary"><i class="fa fa-search"></i>Search</button>
+                            </div>
+
+                            <div class="widget-body no-padding">
+                                <div style="" class="table-footer no-print">
+                                    @OptionControl()
+                                </div>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center">
+                                            <input type="checkbox" ng-click="selectAll($event)">
+                                        </th>
+                                        <th class="text-center">SN</th>
+                                        <th class="text-center">User ID</th>
+                                        <th class="text-center">Full Name</th>
+                                        <th class="text-center">Position</th>
+                                        <th class="text-center">Approved</th>
+                                    </tr>
+
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="row in GenerateEmployeePayslipJson.EmployeeList">
+                                        <td class="text-center">
+                                            <input ng-change="checkIsGenerateAble()" type="checkbox" ng-model="row.@HR_MonthlyPayslip.Property_IsSelected" />
+                                        </td>
+                                        <td class="text-center">{{$index+1}}</td>
+                                        <td class="text-center">
+                                            <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{row.UserId}}&empId={{row.Id}}#Payslip">{{row.UserName}}</a>
+                                            
+                                        </td>
+                                        <td class="">
+                                            <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{row.UserId}}&empId={{row.Id}}#Payslip">{{row.FullName}}</a>
+                                        </td>
+                                        <td class="text-center">{{row.PositionShortName}}</td>
+                                        <td class="text-center">
+                                            <span ng-show="row.@User_Account.Property_IsApproved" class="badge badge-success"> Yes </span>
+                                            <span ng-hide="row.@User_Account.Property_IsApproved" class="badge badge-danger"> No </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div style="" class="table-footer no-print">
+                                    @OptionControl()
+                                </div>
+                            </div>
+                            @*<div ng-hide="GenerateEmployeePayslipJson.EmployeeList.length>0">
+                                <h3 style="color: red"> Salary Generate Able Employee Not Available.</h3>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <input type="checkbox" ng-model="GenerateEmployeePayslipJson.IsDraft" />Is Draft<br/>
+                    <button ng-disabled="!IsGenerateAble" ng-show="GenerateEmployeePayslipJson.EmployeeList.length>0" ng-click="@(generateMonthlyPayslip)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Generate Monthly Payslip</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            @*<div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>*@
+        </div>
+    </div>
+}
+
+
+

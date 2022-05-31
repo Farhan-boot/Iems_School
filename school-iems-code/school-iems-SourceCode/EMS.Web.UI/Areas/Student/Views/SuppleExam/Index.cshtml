@@ -1,0 +1,354 @@
+﻿
+
+
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    string suppleExamViewName = SiteSettings.Instance.SuppleExamViewName;
+    ViewBag.Title = string.Format("{0} Exam", suppleExamViewName);
+
+    //WebApi link for single row
+    var getSuppleExamEligibleCourseListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleExamApi", action = "GetSuppleExamEligibleCourseList", area = "Student" });
+    var saveSuppleTakenCourseListByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleExamApi", action = "SaveSuppleTakenCourseListByStudent", area = "Student" });
+
+    var suppleAdmitCardPrintPrintUrl = Url.Action("SuppleAdmitCardPrint", "Reports", new { area = "Student" });
+
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/SuppleExam/Index.js"></script>
+}
+
+@section StyleSection
+{
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet"/>
+    <style>
+        .select2-results li {
+            border-bottom: 1px solid #b3b3b3;
+        }
+        @@media screen and (max-width: 600px)
+        {
+            .select2-container {
+                max-width: 186px !important;
+            }
+        }
+
+    </style>
+}
+
+<div ng-controller="SuppleExamCtrl"
+     ng-init="Init(
+      '@getSuppleExamEligibleCourseListUrl'
+    ,'@saveSuppleTakenCourseListByStudentUrl'
+     )" class="row">
+    
+<div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> {{ErrorMsg}}
+</div>
+
+@*{{SuppleExam.StudentName}} [{{SuppleExam.UserName}}]*@
+<div ng-show="SuppleExam.StudentsInstructionsForApply!=''" class="col-md-12">
+    <div class="">
+        <div class="widget">
+            <div class="widget-header bg-success">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span class="widget-caption">Important Notice</span>
+                
+            </div>
+            <div class="widget-body" style="text-align: left;">
+                <kbd>Note:</kbd>
+               <span ng-bind-html="renderHtml(SuppleExam.StudentsInstructionsForApply)"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="col-md-8 ">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky " style="text-align: center;">
+                <span class="widget-caption" style="float: none;">
+                    <b>
+                        Apply Courses for {{SuppleExam.OfficialExamName}} ({{SuppleExam.SemesterName}})
+                    </b>
+                </span>
+            </div>
+            <div class="widget-body">
+                <span ng-if="!SuppleExam.IsShowApplyForm"
+                      style="color: red">
+                    <kbd style="background-color: red">Attention:</kbd>
+                    {{SuppleExam.ApplyMessages}}
+                </span>
+                
+                <div ng-if="SuppleExam.IsShowApplyForm">
+                    <div ng-if="!IsApplyForNewCourse" style="text-align: center;">
+                        <button ng-click="showApplyFrom()" class="btn btn-default btn-success">
+                            Apply For New Course
+                        </button>
+                    </div>
+                    <div ng-if="IsApplyForNewCourse">
+                        <table class="table table-hover table-responsive table-striped table-bordered">
+                            <tbody>
+                                <tr role="row" class="text-bold" style="color: #555555; background-color: #bebebe;">
+                                    <td colspan="2">
+                                        <span class="text-info text-bold">Step 1:</span>
+                                        Select Course for Apply
+                                    </td>
+                                    <td class="text-center" style="width: 100px;">
+                                        Fee(Tk)
+                                    </td>
+                                    <td class="text-center" style="width: 60px;">
+                                        Action
+                                    </td>
+                                </tr>
+                            <tr>
+                                <td colspan="2" class="course-name">
+                                    <ui-select ng-model="SelectedApplyCourse"
+                                               ng-change="onApplyCourse($select.selected)"
+                                               theme="select2" style="width: 100%;">
+                                        <ui-select-match placeholder="Select Course" class="text-bold">{{$select.selected.ClassInfoJson.Code}}: {{$select.selected.ClassInfoJson.ClassName}}</ui-select-match>
+                                        <ui-select-choices repeat="option as option in SuppleExam.EligibleCourseList| orFilter: {ClassName : $select.search, ClassCode: $select.search,}">
+                                            <div ng-bind-html="option.ClassInfoJson.Code+': '+option.ClassInfoJson.ClassName | highlight: $select.search"></div>
+                                            <small>
+                                                Grade: <span ng-bind-html="''+option.Grade"></span>
+                                                | {{option.RegSemesterName}} @*| {{option.@Aca_SuppleTakenByStudent.Property_EnrollType}}*@
+                                            </small>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                    <div ng-show="SelectedApplyCourse!=null" class="course-detail ">
+                                        Grade: {{SelectedApplyCourse.Grade}} | {{SelectedApplyCourse.RegSemesterName}} @*| {{SelectedApplyCourse.@Aca_SuppleTakenByStudent.Property_EnrollType}}*@
+                                    </div>
+
+                                </td>
+
+
+
+                                <td class="text-center vertical-middle">
+                                    <div>{{SelectedApplyCourse.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount}}</div>
+                                </td>
+                                <td class="text-center vertical-middle">
+                                    <button ng-click="addApplyCourse(SelectedApplyCourse)"
+                                            class="btn btn-default btn-success btn-xs">
+                                        Add
+                                    </button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <br/>
+                        <table class="table table-hover table-responsive table-striped table-bordered">
+                            <tbody>
+                            <tr ng-show="ApplyCourseList.length>0" role="row" class="text-bold" style="color: #555555; background-color: #bebebe;">
+                                <td colspan="4">
+                                    <span class="text-info text-bold">Step 2:</span>
+                                    Summery of Selected Courses for Confirm
+                                </td>
+                            </tr>
+                            <tr ng-repeat="row in ApplyCourseList"
+                                class="bg-yellow">
+                                <td class="text-center vertical-middle">{{$index+1}}</td>
+                                <td class="text-bold course-name">
+                                    {{row.ClassInfoJson.Code}}: {{row.ClassInfoJson.ClassName}}
+
+                                    <div class="course-detail">
+                                        Grade: {{row.Grade}} | {{row.RegSemesterName}} @*| {{row.@Aca_SuppleTakenByStudent.Property_EnrollType}}*@
+                                    </div>
+
+                                </td>
+                                <td class="text-center vertical-middle">
+                                    <div>{{row.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount}}</div>
+                                </td>
+                                <td class="text-center vertical-middle">
+                                    <button ng-click="removeCourseFromApplyList($index)"
+                                            class="btn btn-default btn-danger btn-xs">
+                                        Cancel
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-show="ApplyCourseList.length>0">
+                                <td colspan="2" style="text-align: right; font-weight: bold;">Total Payable Exam Fee</td>
+                                <td colspan="2" style="text-align: left; font-weight: bold;">
+                                    {{ApplyCourseList| total:'@Aca_SuppleTakenByStudent.Property_ExamFeeAmount'|number:2}} TK
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <table class="table table-bordered" style="border: 1px solid black;">
+                            <tbody>
+                            <tr ng-show="ApplyCourseList.length>0 && SuppleExam.StudentApplyConfirmationMessage!=''">
+                                <td colspan="3" style="color: red; text-align: center;">
+                                    <span ng-bind-html="renderHtml(SuppleExam.StudentApplyConfirmationMessage)"></span>
+                                </td>
+                            </tr>
+                            <tr ng-show="ApplyCourseList.length>0" style="background-color: #bebebe;">
+                                <td style="border: none; vertical-align: middle; width: 60px;">
+                                    <span class="text-info text-bold">Step 3:</span>
+                                </td>
+                                <td style="text-align: center; border: none;">
+                                    <button ng-click="saveSuppleTakenCourseListByStudent()" class="btn btn-default btn-success">Confirm</button>
+
+                                </td>
+                                <td style="text-align: right; border: none; width: 90px;">
+                                    <button ng-click="removeAllCourseFromApplyList()" class="btn btn-default btn-danger">Cancel All</button>
+                                </td>
+                            </tr>
+                            <tr ng-show="ApplyCourseList.length<=0">
+                                <td colspan="3" style="text-align: center; border: none;">
+                                    <button ng-click="removeAllCourseFromApplyList()" class="btn btn-default btn-danger">Cancel Apply</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <div ng-show="(SuppleExam.AppliedCourseList).length>0 && (ApplyCourseList).length<=0 && !IsApplyForNewCourse" class="widget">
+
+            <div class="widget-header bordered-bottom bordered-sky" style="text-align: center;">
+                <span class="widget-caption" style="float: none;">
+                    <b>
+                        Applied Courses for {{SuppleExam.OfficialExamName}} ({{SuppleExam.SemesterName}})
+                    </b>
+                </span>
+            </div>
+            <div class="widget-body">
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <span ng-if="!SuppleExam.IsShowAdmitCardDownloadButton"
+                          style="color: red">
+                        <kbd style="background-color: red">Admit Card:</kbd>
+                        {{SuppleExam.AdmitCardMessages}}
+                    </span>
+
+                    <a ng-if="SuppleExam.IsShowAdmitCardDownloadButton" target="_blank"
+                       href="@(suppleAdmitCardPrintPrintUrl)"
+                       class="btn btn-success btn-xs">
+                        Download / Print Admit Card
+                    </a>
+                </div>
+                <table class="table table-hover table-striped table-bordered">
+                    <tbody>
+                        <tr role="row" class="text-bold" style="color: #555555;">
+                            <td class="text-center" style="width: 40px;">
+                                SN
+                            </td>
+
+                            <td class="text-center">
+                                Course
+                            </td>
+                            <td class="text-center" style="width: 100px;">
+                                Fee(Tk)
+                            </td>
+                            @*<td class="text-center" style="width: 60px;">
+                Status
+            </td>*@
+                        </tr>
+                    <tr ng-repeat="row in SuppleExam.AppliedCourseList"
+                        ng-class="{@((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.NotApplied):'bg-white'
+                                                , @((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Approved):'bg-green'
+                                                , @((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Pending):'bg-yellow'
+                                                , @((byte) Aca_SuppleTakenByStudent.RegistrationStatusEnum.Disapproved):'bg-red'}
+                                                [row.@Aca_SuppleTakenByStudent.Property_RegistrationStatusEnumId]">
+                        <td class="text-center vertical-middle">{{$index+1}}</td>
+                        <td class="text-bold course-name">
+                            {{row.ClassInfoJson.Code}}: {{row.ClassInfoJson.ClassName}}
+
+                            <div class="course-detail">
+                                {{row.RegSemesterName}} @*| {{row.@Aca_SuppleTakenByStudent.Property_EnrollType}}*@
+                            </div>
+
+                        </td>
+
+
+
+                        <td class="text-center vertical-middle">
+                            <div>{{row.@Aca_SuppleTakenByStudent.Property_ExamFeeAmount}}</div>
+                        </td>
+                        @*<td class="text-center vertical-middle">
+                            {{row.@Aca_SuppleTakenByStudent.Property_RegistrationStatus}}
+                        </td>*@
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right; font-weight: bold;">Total Exam Fee</td>
+                        <td style="text-align: left; font-weight: bold;"> {{SuppleExam.AppliedCourseList| total:'@Aca_SuppleTakenByStudent.Property_ExamFeeAmount'|number:2}} TK</td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    
+
+
+
+</div>
+
+<style>
+    .supple-view.well {
+        padding: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .course-detail {
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+
+    .vertical-middle {
+        vertical-align: middle !important;
+    }
+
+    .exam-dropdwon {
+        height: 25px !important;
+    }
+    .table-bordered > tbody > tr > td {
+
+        border: 1px solid #0b0b0b;
+    }
+
+    @@media screen and (max-width: 600px) {
+
+        .hide-on-mobile {
+            display: none;
+        }
+        .course-name{
+            font-weight: normal !important;
+        }
+    }
+
+    @@media screen and (min-width: 600px) {
+
+        .pc-right {
+            float: right !important;
+        }
+    }
+        </style>
+

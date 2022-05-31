@@ -1,0 +1,144 @@
+﻿
+<!--File:UAC_LoginAudit List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Login Audit List";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var LoginAuditId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getLoginAuditByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "GetLoginAuditById", area = "Admin" });
+    var getLoginAuditDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "GetLoginAuditDataExtra", area = "Admin" });
+    var saveLoginAuditUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "SaveLoginAudit", area = "Admin" });
+    var deleteLoginAuditByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "GetDeleteLoginAuditById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedLoginAuditUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "LoginAuditApi", action = "GetPagedLoginAudit", area = "Admin"});
+    var getAllLoginAuditUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "GetAllLoginAudit", area = "Admin" });
+    var saveLoginAuditListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "SaveLoginAuditList", area = "Admin" });
+    var getLoginAuditListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LoginAuditApi", action = "GetLoginAuditListDataExtra", area = "Admin" });
+
+    var editLoginAuditByIdPageUrl = Url.Action("LoginAuditAddEdit", "LoginAudit", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewLoginAudit = "getNewLoginAudit";
+    var saveLoginAudit = "saveLoginAudit";
+    var deleteLoginAuditById = "deleteLoginAuditById";
+    var deleteLoginAuditByObj = "deleteLoginAuditByObj";
+    //for list
+    var searchLoginAuditList = "searchLoginAuditList";
+    var getPagedLoginAuditList = "getPagedLoginAuditList";
+    var getAllLoginAuditList = "getAllLoginAuditList";
+    var saveLoginAuditList = "saveLoginAuditList";
+    var loadLoginAuditListExtraData = "loadLoginAuditListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/LoginAudit/LoginAuditList.js"></script>
+}
+
+
+<div ng-controller="LoginAuditListCtrl"
+     ng-init="Init(
+      '@getPagedLoginAuditUrl'
+     ,'@deleteLoginAuditByIdUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Login Audit </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchLoginAuditList)()" class="form-control input-xs " placeholder="Search by User ID">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchName" ng-Enter="@(searchLoginAuditList)()" class="form-control input-xs " placeholder="Search by Name">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editLoginAuditByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">User Name</th>
+                    <th class="text-center">Full Name</th>
+                    <th class="text-center">Audit Date</th>
+                    <th class="text-center">IP Address</th>
+                    <th class="text-center">MAC Address</th>
+                    <th class="text-center">Login Result</th>
+                    <th class="text-center">Mobile</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="row in LoginAuditList">
+                    <td>{{$index+1}}</td>
+                    <td class="">{{row.@UAC_LoginAudit.Property_UserName}}</td>
+                    <td class="">{{row.@UAC_LoginAudit.Property_Password}}</td>
+                    <td class="">{{row.@UAC_LoginAudit.Property_AuditDate | date:'medium'}}</td>
+                    <td class="">{{row.@UAC_LoginAudit.Property_FromIp}}</td>
+                    <td class="text-center">{{row.@UAC_LoginAudit.Property_MacAddress}}</td>
+                    <td class="text-center">
+                        <span  ng-show="row.@UAC_LoginAudit.Property_StatusEnumId==1" class="badge badge-success">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                        <span  ng-show="row.@UAC_LoginAudit.Property_StatusEnumId==0" class="badge badge-danger">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                    </td>
+                    <td class="text-center">
+                        <span  ng-show="row.@UAC_LoginAudit.Property_IsMobileBrowser" class="badge badge-success">Yes</span>
+                        <span  ng-hide="row.@UAC_LoginAudit.Property_IsMobileBrowser" class="badge badge-danger">No</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

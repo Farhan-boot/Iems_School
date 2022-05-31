@@ -1,0 +1,28 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+
+
+@{
+    ViewBag.Title = "Admission Summary";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmissionReport.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/AdmissionReport/Shared/_AdmissionSummary.js?v=2"></script>
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+
+@Html.Partial("~/Areas/Admission/Views/AdmissionReport/Shared/_AdmissionSummary.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

@@ -1,0 +1,157 @@
+﻿
+<!--File:Inv_ProductCategoryDetails Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Product Category Details";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ProductCategoryDetailsId = (string) id == null?"0":(string)id;
+    
+    //Inv_ProductCategoryDetails WebApi Single Row link   
+    var getProductCategoryDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "GetProductCategoryDetailsById", area = "Inventory" });
+    var getProductCategoryDetailsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "GetProductCategoryDetailsDataExtra", area = "Inventory" });
+    var saveProductCategoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "SaveProductCategoryDetails", area = "Inventory" });
+    var deleteProductCategoryDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "GetDeleteProductCategoryDetailsById", area = "Inventory" });
+
+    //Inv_ProductCategoryDetails WebApi List link 
+    var getPagedProductCategoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ProductCategoryDetailsApi", action = "GetPagedProductCategoryDetails", area = "Inventory"});
+    var getAllProductCategoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "GetAllProductCategoryDetails", area = "Inventory" });
+    var saveProductCategoryDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "SaveProductCategoryDetailsList", area = "Inventory" });
+    var getProductCategoryDetailsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryDetailsApi", action = "GetProductCategoryDetailsListDataExtra", area = "Inventory" });
+
+    var editProductCategoryDetailsByIdPageUrl = Url.Action("ProductCategoryDetailsAddEdit", "ProductCategoryDetails", new { area = "Inventory" });
+    var listProductCategoryDetailsPageUrl = Url.Action("ProductCategoryDetailsList", "ProductCategoryDetails", new { area = "Inventory" });
+    
+    //Inv_ProductCategoryDetails Angular Functions
+    string getProductCategoryDetailsById="getProductCategoryDetailsById";
+    var saveProductCategoryDetails = "saveProductCategoryDetails";
+    var getNewProductCategoryDetails = "getNewProductCategoryDetails";
+    var refreshPage = "loadPage()";
+    string deleteProductCategoryDetailsById="deleteProductCategoryDetailsById";
+    string loadProductCategoryDetailsExtraData="loadProductCategoryDetailsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ProductCategoryDetails/ProductCategoryDetailsAddEdit.js"></script>
+}
+
+<div id="ProductCategoryDetailsAddEdit" class="row" ng-controller="ProductCategoryDetailsAddEditCtrl" ng-init="Init(
+      '@ProductCategoryDetailsId'
+      ,'@getProductCategoryDetailsByIdUrl'
+      ,'@getProductCategoryDetailsDataExtraUrl'
+      ,'@saveProductCategoryDetailsUrl'
+      ,'@deleteProductCategoryDetailsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_Name!=''">{{(ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ProductCategoryDetailsId" ng-Enter="@(getProductCategoryDetailsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewProductCategoryDetails)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listProductCategoryDetailsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Unit </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_Unit" class="form-control" placeholder="Enter Unit"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Unit." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Type </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_Type" class="form-control" placeholder="Enter Type"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Warrning Quantity </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_WarrningQuantity" class="form-control" placeholder="Enter Warrning Quantity"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Warrning Quantity." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Details </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_Details" class="form-control" placeholder="Enter Details" maxlength="250"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Details." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Has Barcode </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_HasBarcode"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Has Barcode if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Product Category </td>
+                            <td class="fieldarea">
+                                <select ng-model="ProductCategoryDetails.@Inv_ProductCategoryDetails.Property_ProductCategoryId"
+                                        ng-options="option.Id as option.Name for option in ProductCategoryList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Product Category." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveProductCategoryDetails)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

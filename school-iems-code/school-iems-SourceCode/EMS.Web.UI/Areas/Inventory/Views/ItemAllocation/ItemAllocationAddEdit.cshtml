@@ -1,0 +1,215 @@
+﻿
+<!--File:Inv_ItemAllocation Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Item Allocation";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemAllocationId = (string) id == null?"0":(string)id;
+    
+    //Inv_ItemAllocation WebApi Single Row link   
+    var getItemAllocationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "GetItemAllocationById", area = "Inventory" });
+    var getItemAllocationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "GetItemAllocationDataExtra", area = "Inventory" });
+    var saveItemAllocationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "SaveItemAllocation", area = "Inventory" });
+    var deleteItemAllocationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "GetDeleteItemAllocationById", area = "Inventory" });
+
+    //Inv_ItemAllocation WebApi List link 
+    var getPagedItemAllocationUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ItemAllocationApi", action = "GetPagedItemAllocation", area = "Inventory"});
+    var getAllItemAllocationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "GetAllItemAllocation", area = "Inventory" });
+    var saveItemAllocationListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "SaveItemAllocationList", area = "Inventory" });
+    var getItemAllocationListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemAllocationApi", action = "GetItemAllocationListDataExtra", area = "Inventory" });
+
+    var editItemAllocationByIdPageUrl = Url.Action("ItemAllocationAddEdit", "ItemAllocation", new { area = "Inventory" });
+    var listItemAllocationPageUrl = Url.Action("ItemAllocationList", "ItemAllocation", new { area = "Inventory" });
+    
+    //Inv_ItemAllocation Angular Functions
+    string getItemAllocationById="getItemAllocationById";
+    var saveItemAllocation = "saveItemAllocation";
+    var getNewItemAllocation = "getNewItemAllocation";
+    var refreshPage = "loadPage()";
+    string deleteItemAllocationById="deleteItemAllocationById";
+    string loadItemAllocationExtraData="loadItemAllocationExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ItemAllocation/ItemAllocationAddEdit.js"></script>
+}
+
+<div id="ItemAllocationAddEdit" class="row" ng-controller="ItemAllocationAddEditCtrl" ng-init="Init(
+      '@ItemAllocationId'
+      ,'@getItemAllocationByIdUrl'
+      ,'@getItemAllocationDataExtraUrl'
+      ,'@saveItemAllocationUrl'
+      ,'@deleteItemAllocationByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="ItemAllocation.@Inv_ItemAllocation.Property_Name!=''">{{(ItemAllocation.@Inv_ItemAllocation.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ItemAllocationId" ng-Enter="@(getItemAllocationById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewItemAllocation)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listItemAllocationPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Item </td>
+                                <td class="fieldarea">
+                                    @*<input type="text" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ItemId" class="form-control" placeholder="Enter Item Id" maxlength="50" />*@
+                                    <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ItemId" ng-options="option.Id as option.Name for option in ItemList" title="Select Item" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">From Store </td>
+                                <td class="fieldarea">
+                                    @*<input type="number" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_FromStore" class="form-control" placeholder="Enter From Store" />*@
+                                           
+                                    <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_FromStore" ng-options="option.Id as option.Name for option in StoreList" title="Select From Store" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter From Store." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Allocated To </td>
+                                <td class="fieldarea">
+                                    @*<input type="number" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_AllocatedTo" class="form-control" placeholder="Enter Allocated To" />*@
+
+                                    <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_AllocatedTo" ng-options="option.Id as option.Name for option in UserList" title="Select User" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Allocated To." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Allocation Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_AllocationDate" class="form-control date-picker" placeholder="Enter Allocation Date"  datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Allocation Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Allocation Status </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_AllocationStatus" class="form-control" placeholder="Enter Allocation Status"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Allocation Status." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Reference By </td>
+                                <td class="fieldarea">
+                                    @*<input type="number" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ReferenceBy" class="form-control" placeholder="Enter Reference By" />*@
+
+                                    <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ReferenceBy" ng-options="option.Id as option.Name for option in UserList" title="Select User" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Reference By." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_Remarks" class="form-control" placeholder="Enter Remarks" maxlength="1000"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+                         @*<tr>
+                            <td class="fieldlabel">Item Allocation </td>
+                            <td class="fieldarea">
+                                <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_Id"
+                                        ng-options="option.Id as option.Name for option in ItemAllocationList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Item Allocation." data-toggle="tooltip"></i></span></td>
+                        </tr>*@
+                        <tr>
+                            <td class="fieldlabel">Requested Item </td>
+                            <td class="fieldarea">
+                                @*<input type="text" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_RequestedItemId" class="form-control" placeholder="Enter Requested Item Id" maxlength="1000"  />*@
+                                
+                                <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_RequestedItemId" ng-options="option.Id as option.Name for option in ItemList" title="Select Item" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requested Item Id." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Approved Quantity </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ApprovedQuantity" class="form-control" placeholder="Enter Approved Quantity" maxlength="1000"  />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved Quantity." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Approved By </td>
+                            <td class="fieldarea">
+                                @*<input type="text" ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ApprovedById" class="form-control" placeholder="Enter Approved By Id" maxlength="1000" />*@
+                                
+                                <select ng-model="ItemAllocation.@Inv_ItemAllocation.Property_ApprovedById" ng-options="option.Id as option.Name for option in UserList" title="Select User" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved By." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        
+                        
+
+                        </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveItemAllocation)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

@@ -1,0 +1,151 @@
+﻿
+<!--File:Adm_EducationBoard List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admission: Education Board List";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmission.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var EducationBoardId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getEducationBoardByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "GetEducationBoardById", area = "Admission" });
+    var getEducationBoardDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "GetEducationBoardDataExtra", area = "Admission" });
+    var saveEducationBoardUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "SaveEducationBoard", area = "Admission" });
+    var deleteEducationBoardByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "GetDeleteEducationBoardById", area = "Admission" });
+
+    //WebApi link for List
+    var getPagedEducationBoardUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "EducationBoardApi", action = "GetPagedEducationBoard", area = "Admission"});
+    var getAllEducationBoardUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "GetAllEducationBoard", area = "Admission" });
+    var saveEducationBoardListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "SaveEducationBoardList", area = "Admission" });
+    var getEducationBoardListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationBoardApi", action = "GetEducationBoardListDataExtra", area = "Admission" });
+
+    var editEducationBoardByIdPageUrl = Url.Action("EducationBoardAddEdit", "EducationBoard", new { area = "Admission" });
+
+    //Angular Function Name
+    var getNewEducationBoard = "getNewEducationBoard";
+    var saveEducationBoard = "saveEducationBoard";
+    var deleteEducationBoardById = "deleteEducationBoardById";
+    var deleteEducationBoardByObj = "deleteEducationBoardByObj";
+    //for list
+    var searchEducationBoardList = "searchEducationBoardList";
+    var getPagedEducationBoardList = "getPagedEducationBoardList";
+    var getAllEducationBoardList = "getAllEducationBoardList";
+    var saveEducationBoardList = "saveEducationBoardList";
+    var getEducationBoardListExtraData = "getEducationBoardListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/EducationBoard/EducationBoardList.js"></script>
+}
+
+
+<div ng-controller="EducationBoardListCtrl"
+     ng-init="Init(
+      '@getPagedEducationBoardUrl'
+     ,'@deleteEducationBoardByIdUrl'
+     ,'@getEducationBoardListDataExtraUrl'
+     ,'@saveEducationBoardListUrl'
+     ,'@getEducationBoardByIdUrl'
+     ,'@getEducationBoardDataExtraUrl'
+     ,'@saveEducationBoardUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Education Board </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchEducationBoardList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editEducationBoardByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchEducationBoardList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Full Name</th>
+                    <!--th class="text-center">Board Type Enum Id</th-->
+                    <th class="text-center">Board Type</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Is Enable</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in EducationBoardList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Adm_EducationBoard.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@Adm_EducationBoard.Property_Name}}</td>
+                    <td class="">{{row.@Adm_EducationBoard.Property_FullName}}</td>
+                    @*<td class="">{{row.@Adm_EducationBoard.Property_BoardTypeEnumId}}</td>*@
+                    <td class="">{{row.@Adm_EducationBoard.Property_BoardType}}</td>
+                    <td class="">{{row.@Adm_EducationBoard.Property_OrderNo}}</td>
+                    <td class="">{{row.@Adm_EducationBoard.Property_IsEnable}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editEducationBoardByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteEducationBoardById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

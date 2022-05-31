@@ -1,0 +1,109 @@
+﻿<!--File:User_Employee Add/Edit View-->
+@using EMS.CoreLibrary
+@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Models
+@{
+    ViewBag.Title = "Add/Edit Employee";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var EmployeeId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getEmployeeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeById", area = "HR" });
+    var getEmployeeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeDataExtra", area = "HR" });
+    var saveEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "SaveEmployee", area = "HR" });
+    var saveApprovalUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "SaveApproval", area = "HR" });
+    var changePasswordUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "ResetPassword", area = "HR" });
+    var deleteEmployeeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetDeleteEmployeeById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetPagedEmployee", area = "HR" });
+    var getAllEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetAllEmployee", area = "HR" });
+    var saveEmployeeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "SaveEmployeeList", area = "HR" });
+    var getEmployeeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeListDataExtra", area = "HR" });
+
+    var editEmployeeByIdPageUrl = Url.Action("EmployeeAddEdit", "Employee", new { area = "HR" });
+    var manageEmployeeBreakdownListUrl = Url.Action("EmployeeList", "Employee", new { area = "HR" });
+
+    // Angular Functions
+    string getEmployeeById = "getEmployeeById";
+    var saveEmployee = "saveEmployee";
+    var saveApproval = "saveApproval";
+    var changePassword = "changePassword";
+    var getNewEmployee = "getNewEmployee";
+    var refreshPage = "loadPage()";
+    string deleteEmployeeById = "deleteEmployeeById";
+    string loadEmployeeExtraData = "loadEmployeeExtraData";
+}
+@section ScriptSection
+{
+
+    <script src="~/Areas/HR/Views/Employee/EmployeeAddEdit.js?v=1"></script>
+<script src="~/Areas/HR/Views/ManageEmployee/ClassManager/_ClassManager.js?v=1"></script>
+}
+<div id="EmployeeAddEdit" class="row" ng-controller="EmployeeAddEditCtrl" ng-init="Init(
+      '@EmployeeId'
+      ,'@getEmployeeByIdUrl'
+      ,'@getEmployeeDataExtraUrl'
+      ,'@saveEmployeeUrl'
+      ,'@saveApprovalUrl'
+      ,'@changePasswordUrl'
+      ,'@deleteEmployeeByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    {{Obj.Account.@User_Account.Property_FullName}}
+                    <span  ng-show="Obj.Account.@User_Account.Property_IsApproved"><span  class="badge badge-success graded"><i class="fa fa-check"></i> Approved</span> Employee </span>
+                    <span  ng-hide="Obj.Account.@User_Account.Property_IsApproved"><span  class="badge badge-danger graded"><i class="fa fa-times"></i> Disapproved</span> Employee </span>
+                </span>
+                @*<div class="widget-buttons buttons-bordered no-padding-right">
+                        <span  class="input-icon">
+                            <input type="text" ng-model="EmployeeId" ng-Enter="@(getEmployeeById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+                    </div>*@
+                <div class="widget-buttons no-padding-left">
+                    @*<button ng-click="@(getNewEmployee)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    <button ng-click="test()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Test</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body no-padding">
+                <div class="widget-main ">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs" id="myTab9">
+                            <li class="active"><a data-toggle="tab" href="#Summary">Summary</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#Profile">Profile</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#Classes">Assigned Classes</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#Attendance">Attendance</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#LeaveCard">Leave Card</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#Salary">Salary</a></li>
+                            <li class="tab-red"><a data-toggle="tab" href="#Payslip">Payslip</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="Summary" class="tab-pane active">
+                              @Html.Partial("~/Areas/HR/Views/Employee/ProfileManager/_ProfileSummery.cshtml")
+                            </div>
+                            <div id="Profile" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/Employee/ProfileManager-old/_ProfileManager.cshtml")
+                            </div>
+                            <div id="Classes" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/Employee/ClassManager/_ClassManager.cshtml")
+                            </div>
+                            <div id="Attendance" class="tab-pane">
+                            </div>
+                            <div id="LeaveCard" class="tab-pane">
+                            </div>
+                            <div id="Salary" class="tab-pane">
+                            </div>
+                            <div id="Payslip" class="tab-pane">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Widget Body end-->
+        </div>
+    </div>
+</div>

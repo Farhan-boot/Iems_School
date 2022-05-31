@@ -1,0 +1,162 @@
+﻿
+<!--File:HR_Department Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Add/Edit Department";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DepartmentId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getDepartmentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentById", area = "Admin" });
+    var getDepartmentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentDataExtra", area = "Admin" });
+    var saveDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "SaveDepartment", area = "Admin" });
+    var deleteDepartmentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDeleteDepartmentById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "DepartmentApi", action = "GetPagedDepartment", area = "Admin"});
+    var getAllDepartmentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetAllDepartment", area = "Admin" });
+    var saveDepartmentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "SaveDepartmentList", area = "Admin" });
+    var getDepartmentListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DepartmentApi", action = "GetDepartmentListDataExtra", area = "Admin" });
+
+    var editDepartmentByIdPageUrl = Url.Action("DepartmentAddEdit", "Department", new { area = "Admin" });
+    var listDepartmentPageUrl = Url.Action("DepartmentList", "Department", new { area = "Admin" });
+    
+    // Angular Functions
+    string getDepartmentById="getDepartmentById";
+    var saveDepartment = "saveDepartment";
+    var getNewDepartment = "getNewDepartment";
+    var refreshPage = "loadPage()";
+    string deleteDepartmentById="deleteDepartmentById";
+    string loadDepartmentExtraData="loadDepartmentExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Department/DepartmentAddEdit.js"></script>
+}
+
+<div id="DepartmentAddEdit" class="row" ng-controller="DepartmentAddEditCtrl" ng-init="Init(
+      '@DepartmentId'
+      ,'@getDepartmentByIdUrl'
+      ,'@getDepartmentDataExtraUrl'
+      ,'@saveDepartmentUrl'
+      ,'@deleteDepartmentByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Department.@HR_Department.Property_Name!=''">{{(Department.@HR_Department.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="DepartmentId" ng-Enter="@(getDepartmentById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewDepartment)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listDepartmentPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <!--text type-->
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Id </label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Id" class="form-control" placeholder="Enter Id"   />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="50" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Department No </label>
+                                <input type="number" ng-model="Department.@HR_Department.Property_DepartmentNo" class="form-control" placeholder="Enter Department No"   />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Parent Dept Id </label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_ParentDeptId" class="form-control" placeholder="Enter Parent Dept Id"   />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Description <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Description" class="form-control" placeholder="Enter Description" maxlength="256" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Address <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Address" class="form-control" placeholder="Enter Address" maxlength="256" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Map Embed Code <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_MapEmbedCode" class="form-control" placeholder="Enter Map Embed Code"  required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Email <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Email" class="form-control" placeholder="Enter Email" maxlength="50" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Mobile <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Mobile" class="form-control" placeholder="Enter Mobile" maxlength="20" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Phone <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Phone" class="form-control" placeholder="Enter Phone" maxlength="20" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Fax <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Fax" class="form-control" placeholder="Enter Fax" maxlength="20" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Website <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                <input type="text" ng-model="Department.@HR_Department.Property_Website" class="form-control" placeholder="Enter Website" maxlength="50" required="" />
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Founded </label>
+                                <input type="date" ng-model="Department.@HR_Department.Property_Founded" class="form-control" placeholder="Enter Founded"   />
+                            </div>
+                        <!--dropdown option for EnumList-->
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label"> Type  </label>
+                            <select ng-model="Department.@HR_Department.Property_TypeEnumId" ng-options="option.Id as option.Name for option in TypeEnumList " ng-init="" class="form-control"  ></select>
+                        </div>
+                        <!--dropdown option for EnumList-->
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label"> Status  </label>
+                            <select ng-model="Department.@HR_Department.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"  ></select>
+                        </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="control-label">Priority </label>
+                                <input type="number" ng-model="Department.@HR_Department.Property_Priority" class="form-control" placeholder="Enter Priority"   />
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <input type="checkbox" ng-model="Department.@HR_Department.Property_IsDeleted" /> Is Deleted 
+                                </div>
+                            </div>
+                   
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label">Organization </label>
+                            <select ng-model="Department.@HR_Department.Property_OrgId" 
+                            ng-options="option.Id as option.Name for option in OrganizationList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveDepartment)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

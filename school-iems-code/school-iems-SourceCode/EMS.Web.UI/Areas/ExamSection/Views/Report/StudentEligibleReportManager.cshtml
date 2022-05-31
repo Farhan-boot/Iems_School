@@ -1,0 +1,120 @@
+﻿
+
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Student Eligible Report Manager";
+    //WebApi link for single row
+    var getGeneralDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentEligibleReportApi", action = "GetStudentEligibleReportDataExtra", area = "ExamSection" });
+    var getExamListBySemesterIdForStudentEligibleReportUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentEligibleReportApi", action = "GetExamListBySemesterIdForStudentEligibleReport", area = "ExamSection" });
+    var getBatchListByProgramIdSemesterId = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentEligibleReportApi", action = "GetBatchListByProgramIdSemIdForStdEligibleReport", area = "ExamSection" });
+
+    var getStudentEligibleReportPrintUrl = Url.Action("StudentEligibleReportPrint", "Report", new { area = "ExamSection" });
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Report/StudentEligibleReportManager.js"></script>
+}
+<div ng-controller="StudentEligibleReportManagerCtrl"
+     ng-init="Init(
+      '@getGeneralDataExtraUrl'
+     ,'@getExamListBySemesterIdForStudentEligibleReportUrl'
+    ,'@getBatchListByProgramIdSemesterId'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b> </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered " style="max-width: 700px">
+                        <tr>
+                            <td style="width: 130px">Select Semester</td>
+                            <td>
+                                <select ng-model="SelectedSemesterId"
+                                        ng-change="onChangeSemester()"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control">
+                                    @*<option value="" label="" class="">---Select Semester---</option>*@
+                                </select>
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td>Select Exam </td>
+                            <td>
+                                <select ng-model="SelectedExamId" 
+                                        ng-options="option.Id as option.Name for option in ExamList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select Exam---</option>
+                                </select>
+                            </td>
+                        </tr>*@
+                        <tr>
+                            <td>Select Program </td>
+                            <td>
+                                <select ng-model="SelectedProgramId"
+                                        ng-change="onChangeProgram()"
+                                        ng-options="option.Id as option.ShortTitle for option in ProgramList " ng-init="" class="form-control">
+                                </select>
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td>
+                                Select Level Term
+                            </td>
+                            <td>
+                                <select ng-model="SelectedLevelTermId"
+                                        ng-options="option.Id as option.Name for option in LevelTermList " ng-init="" class="form-control">
+                                    $1$<option value="" label="" class="">---Select Dept---</option>#1#
+                                </select>
+                            </td>
+                        </tr>*@
+                        <tr>
+                            <td>
+                                Select Type
+                            </td>
+                            <td>
+                                <select ng-model="SelectedReportTypeEnumId"
+                                        ng-options="option.Id as option.Name for option in ReportTypeEnumList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select Type---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td>Select Class</td>
+                            <td>
+                                <select ng-model="SelectedBatchId"
+                                        ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">All Batch</option>
+                                </select>
+                            </td>
+                        </tr>*@
+                        <tr>
+                            <td>Select Batch</td>
+                            <td>
+                                <select ng-model="SelectedBatchId"
+                                        ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control">
+                                    <option value="" label="" class="">All Batch</option>
+                                </select>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a ng-show="(SelectedProgramId>0 && SelectedSemesterId>0)"
+                                   style="" target="_blank" href="@(getStudentEligibleReportPrintUrl)/?semesterId={{SelectedSemesterId}}&programId={{SelectedProgramId}}&reportTypeEnumId={{SelectedReportTypeEnumId}}&ContinuingBatchId={{SelectedBatchId}}" class="btn btn-xs btn-success"><i class="fa fa-print"></i>View Report</a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

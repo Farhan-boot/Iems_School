@@ -1,0 +1,22 @@
+﻿@using EMS.Framework.Settings
+
+@{
+    ViewBag.Title = "Online Payment";
+}
+@section ScriptSection
+{
+    @if (SiteSettings.Instance.Student.IsEnableSandboxModebKash)
+    {
+        <script type="text/javascript"
+                src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js"></script>
+    }
+    else
+    {
+        <script type="text/javascript"
+                src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js"></script>
+    }
+
+    <script src="~/Areas/Student/Views/Dashboard/_BillAndPayment.js?v=1.5"></script>
+}
+
+@Html.Partial("~/Areas/Student/Views/Dashboard/_BillAndPayment.cshtml")

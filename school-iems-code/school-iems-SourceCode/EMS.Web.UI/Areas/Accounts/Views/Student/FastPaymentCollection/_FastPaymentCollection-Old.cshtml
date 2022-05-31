@@ -1,0 +1,532 @@
+﻿<!--File:User_Student List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetStudentById", area = "Academic" });
+    var getStudentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetStudentDataExtra", area = "Academic" });
+
+    //WebApi link for List
+    var getPaymentCollectionByStudentIdSemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentCollectionApi", action = "GetPaymentCollectionByStudentIdSemesterId", area = "Academic" });
+
+
+    var viewStdTransactionListPageUrlByVoucherId = Url.Action("StdTransactionList", "StdTransaction", new { area = "Accounts" });
+
+    //Angular Function Name
+
+    //for list
+    var searchStudentList = "searchStudentList";
+    var getPaymentCollectionByStudentIdSemesterId = "getPaymentCollectionByStudentIdSemesterId";
+
+    var refreshPage = "searchStudentList()";
+
+}
+
+
+<div ng-controller="StudentPaymentCollection"
+     ng-init="Init(
+      '@getPaymentCollectionByStudentIdSemesterIdUrl'
+     ,'@getStudentByIdUrl'
+     ,'@getStudentDataExtraUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption form-inline">
+                <a target="_blank" ng-href="http://localhost/Academic/Student/StudentAddEdit/?id={{Student.StudentId}}#AccountManager">
+                    {{Student.StudentName}}
+                </a>
+
+            </span>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchUserName" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by User ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchClassRoll" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by Class Roll" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by full name" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                @*<a target="_blank" href="@editStudentByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>*@
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+
+        <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-12 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel">Name<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="Student.StudentName" type="text"
+                                           class="form-control  input-inline" placeholder="Name">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+
+                                <td class="fieldlabel">Semester<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="StdTransaction.@Acnt_StdTransaction.Property_SemesterId"
+                                            ng-options="option.Id as option.Name for option in Student.SemesterList " class="form-control select-inline">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+
+                                <td class="fieldlabel">Collection Type<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="StdTransaction.@Acnt_StdTransaction.Property_SemesterId"
+                                            ng-options="option.Id as option.Name for option in Student.SemesterList " class="form-control select-inline">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bank Name" data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Auto Mr No<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="Auto Mr No">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+
+                                <td class="fieldlabel">Voucher No<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="Voucher No">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+                                
+                                <td class="fieldlabel">Branch<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="Branch">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+
+                               
+                            </tr>
+
+                        <tr>
+                            <td class="fieldlabel">Bank Slip/MR No<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-disabled="StdTransaction.IsDebited"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                       class="form-control  input-inline" placeholder="Bank Slip/MR No">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+
+                            <td class="fieldlabel">Date<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-model="StdTransaction.@Acnt_StdTransaction.Property_Date" type="datetime"
+                                       class="form-control  input-inline datepicker" placeholder="14/09/2018">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date" data-toggle="tooltip"></i></span></td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr style="height: 40px;">
+                                <td class="fieldlabel">Transaction</td>
+                                <td class="fieldarea">
+                                    <input type="radio"
+                                           ng-value="true"
+                                           ng-model="StdTransaction.IsDebited1"
+                                           @*ng-change="@(forIsDebited)()"*@ />
+                                    Full Payment
+
+                                    <input type="radio"
+                                           ng-value="false"
+                                           ng-model="StdTransaction.IsDebited1"
+                                           @*ng-change="@(forIsDebited)()"*@ />
+                                    Half Payment
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Transaction Type" data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="fieldlabel">MR Amount<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="MR Amount">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Give Particular" data-toggle="tooltip"></i></span></td>
+
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="widget">
+                                @*Core Courses*@
+                                <div class="widget-header bordered-bottom bordered-sky ">
+                                    <i class="widget-icon fa fa-list bold"></i>
+                                    <span class="widget-caption " style="font-weight: bold !important;">
+                                        Collection
+                                    </span>
+
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <table class="table table-striped table-bordered ">
+                                        <thead class="bordered-blue">
+                                            <tr>
+
+                                                <th class="text-center" >SN</th>
+                                                <th class="text-center">Particular</th>
+                                                <th class="text-center">Amount</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+
+                                            <td class="text-center">1</td>
+                                            <td class="text-center">Tution/Course Fees</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="text-center">2</td>
+                                            <td class="text-center">Tution/Course Fees</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="text-center">3</td>
+                                            <td class="text-center">Registration/Enrollment Fees</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="text-center">4</td>
+                                            <td class="text-center">Lab Fee</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="text-center">5</td>
+                                            <td class="text-center">Library Fee</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="text-center">6</td>
+                                            <td class="text-center">Development Fee</td>
+                                            <td>
+                                                <input ng-disabled="StdTransaction.IsDebited"
+                                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                       class="form-control  input-inline" placeholder="Amount">
+                                            </td>
+                                            <td>
+                                                <button ng-click="onClickTransactionEdit($index)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+
+                                        @*<tr ng-repeat="row in ClassList
+                    | filter:{
+                        CourseTypeEnumId : @((byte) Aca_CurriculumCourse.CourseTypeEnum.Core)
+                    }:true">
+
+                                                <td class="text-center">{{$index+1}}</td>
+                                                <td class="text-center">[{{row.TotalStudent}}/{{row.@Aca_Class.Property_RegularCapacity}}]<br /><span class="label label-success">{{row.@Aca_Class.Property_Status}}</span></td>
+                                                <td>
+                                                    <input ng-disabled="StdTransaction.IsDebited"
+                                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                                           class="form-control  input-inline" placeholder="Amount">
+                                                </td>
+                                            </tr>*@
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel">Total <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="Total">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Give Particular" data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">
+                                Previous Balance: 
+                                
+                            </td>
+                            <td class="fieldlabel">
+                                1000
+                            </td>
+                                
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">
+                                This Semester Balance: 
+                            </td>
+                            <td class="fieldlabel">
+                                1000
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">
+
+                                Net balance:
+                            </td>
+                            <td class="fieldlabel">
+                                2000
+                            </td>
+                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs" id="tabProfile">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#PayableItems" aria-expanded="false">
+                                            Payable Items
+                                        </a>
+                                    </li>
+                                    <li class="tab-red">
+                                        <a data-toggle="tab" href="#PaidItems" aria-expanded="false">
+                                            Paid Items
+                                        </a>
+                                    </li>
+                                    <li class="tab-red">
+                                        <a data-toggle="tab" href="#BalanceSheet" aria-expanded="false">
+                                            Balance Sheet
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content radius-bordered no-padding">
+                                    <div id="PayableItems" class="tab-pane in active">
+                                        <div class="widget">
+                                            @*Core Courses*@
+                                            <div class="widget-header bordered-bottom bordered-sky ">
+                                                <i class="widget-icon fa fa-list bold"></i>
+                                                <span class="widget-caption " style="font-weight: bold !important;">
+                                                    Semester Bill 
+
+                                                </span>
+                                            </div>
+                                            <div class="widget-body no-padding">
+                                                <table class="table table-striped table-bordered ">
+
+                                                    <thead class="bordered-blue">
+                                                        <tr>
+                                                            <th style="text-align: center;">SN</th>
+                                                            <th class="text-center" style="width: 183px;">Particular</th>
+                                                            <th class="text-center">Amount</th>
+                                                            <th class="text-center">Date</th>
+                                                            <th class="text-center">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="row in Student.PayableParticularList">
+                                                            <td style="text-align: center;">{{$index+1}}</td>
+                                                            <td class="text-left">{{row.Name}}</td>
+                                                            <td class="">{{row.Amount}}</td>
+                                                            <td class="">{{row.CreateDate| date:'d MMM y '}}</td>
+                                                            <td class=""></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="PaidItems" class="tab-pane">
+                                        <div class="widget">
+                                            @*Paid Items*@
+                                            <div class="widget-header bordered-bottom bordered-sky ">
+                                                <i class="widget-icon fa fa-list bold"></i>
+                                                <span class="widget-caption " style="font-weight: bold !important;">
+                                                    Semester Bill
+
+                                                </span>
+                                            </div>
+                                            <div class="widget-body no-padding">
+                                                <table class="table table-striped table-bordered ">
+
+                                                    <thead class="bordered-blue">
+                                                    <tr>
+                                                        <th class="text-center">SN</th>
+                                                        <th class="text-center" style="width: 183px;">Particular</th>
+                                                        <th class="text-center">Amount</th>
+                                                        <th class="text-center">Voucher No</th>
+                                                        <th class="text-center">Date</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr ng-repeat="row in Student.PaidParticularList">
+                                                        <td class="text-center">{{$index+1}}</td>
+                                                        <td class="text-center">{{row.Name}}</td>
+                                                        <td class="">{{row.Amount}}</td>
+                                                        <td class=""></td>
+                                                        <td class="">{{row.CreateDate| date:'d MMM y '}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="BalanceSheet" class="tab-pane">
+                                        <div class="widget">
+                                            @*Core Courses*@
+                                            <div class="widget-header bordered-bottom bordered-sky ">
+                                                <i class="widget-icon fa fa-list bold"></i>
+                                                <span class="widget-caption " style="font-weight: bold !important;">
+                                                    Semester Bill
+
+                                                </span>
+                                            </div>
+                                            <div class="widget-body no-padding">
+                                                <table class="table table-striped table-bordered ">
+
+                                                    <thead class="bordered-blue">
+                                                        <tr>
+                                                            <th class="text-center" style="width: 29px;">
+                                                                <input type="checkbox"
+                                                                       @*                                           ng-hide="IsRegistrationConfirm"*@
+                                                                       @*                                           ng-disabled="IsRegistrationConfirm"*@
+                                                                       ng-model="SelectAllClasses"
+                                                                       ng-change="selectAllClasses()">
+                                                            </th>
+                                                            <th class="text-center">SN</th>
+                                                            <th class="text-center" style="width: 183px;">Particular</th>
+                                                            <th class="text-center">Payable</th>
+                                                            <th class="text-center">Paid</th>
+                                                            <th class="text-center">Balance</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr ng-repeat="row in Student.PayableParticularList">
+                                                            <td class="text-center">
+                                                                <input type="checkbox"
+                                                                       ng-change="courseAddRemove(row)"
+                                                                       ng-model="row.@Aca_Class.Property_IsAlreadyAdded" />
+                                                            </td>
+                                                            <td class="text-center">{{$index+1}}</td>
+                                                            <td class="text-center">{{row.Name}}</td>
+                                                            <td class=""></td>
+                                                            <td class=""></td>
+                                                            <td class=""></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel">This Semester Total<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="StdTransaction.IsDebited"
+                                           ng-model="StdTransaction.@Acnt_StdTransaction.Property_ORNumber" type="text"
+                                           class="form-control  input-inline" placeholder="This Semester Total">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Give Particular" data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+

@@ -1,0 +1,185 @@
+﻿<!--File:Acnt_CollectionVoucher Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Collection Voucher";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CollectionVoucherId = (string)id == null ? "0" : (string)id;
+
+    //Acnt_CollectionVoucher WebApi Single Row link
+    var getCollectionVoucherByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetCollectionVoucherById", area = "Accounts" });
+    var getCollectionVoucherDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetCollectionVoucherDataExtra", area = "Accounts" });
+    var saveCollectionVoucherUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "SaveCollectionVoucher", area = "Accounts" });
+    var deleteCollectionVoucherByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetDeleteCollectionVoucherById", area = "Accounts" });
+
+    //Acnt_CollectionVoucher WebApi List link
+    var getPagedCollectionVoucherUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetPagedCollectionVoucher", area = "Accounts" });
+    var getAllCollectionVoucherUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetAllCollectionVoucher", area = "Accounts" });
+    var saveCollectionVoucherListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "SaveCollectionVoucherList", area = "Accounts" });
+    var getCollectionVoucherListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CollectionVoucherApi", action = "GetCollectionVoucherListDataExtra", area = "Accounts" });
+
+    var editCollectionVoucherByIdPageUrl = Url.Action("CollectionVoucherAddEdit", "CollectionVoucher", new { area = "Accounts" });
+    var listCollectionVoucherPageUrl = Url.Action("CollectionVoucherList", "CollectionVoucher", new { area = "Accounts" });
+
+    //Acnt_CollectionVoucher Angular Functions
+    string getCollectionVoucherById = "getCollectionVoucherById";
+    var saveCollectionVoucher = "saveCollectionVoucher";
+    var getNewCollectionVoucher = "getNewCollectionVoucher";
+    var refreshPage = "loadPage()";
+    string deleteCollectionVoucherById = "deleteCollectionVoucherById";
+    string loadCollectionVoucherExtraData = "loadCollectionVoucherExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/CollectionVoucher/CollectionVoucherAddEdit.js"></script>
+}
+
+<div id="CollectionVoucherAddEdit" class="row" ng-controller="CollectionVoucherAddEditCtrl" ng-init="Init(
+      '@CollectionVoucherId'
+      ,'@getCollectionVoucherByIdUrl'
+      ,'@getCollectionVoucherDataExtraUrl'
+      ,'@saveCollectionVoucherUrl'
+      ,'@deleteCollectionVoucherByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="CollectionVoucher.@Acnt_CollectionVoucher.Property_Name!=''">{{(CollectionVoucher.@Acnt_CollectionVoucher.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="CollectionVoucherId" ng-Enter="@(getCollectionVoucherById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        @*<button ng-click="@(getNewCollectionVoucher)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                        <a href="@(listCollectionVoucherPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input  type="text" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Date </td>
+                                        <td class="fieldarea">
+                                            <input type="datetime" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_Date" class="form-control date-picker" placeholder="Enter Date" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Voucher Bank </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_BankId"
+                                                    ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Official Bank." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                <tr>
+                                    <td class="fieldlabel">Collection Semester </td>
+                                    <td class="fieldarea">
+                                        <select ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_SemesterId"
+                                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Status </td>
+                                    <td class="fieldarea">
+                                        <select ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Collection Type </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_CollectionTypeEnumId" ng-options="option.Id as option.Name for option in CollectionTypeEnumList" title="Select Collection Type" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Collection Type." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Incremental Suffix </td>
+                                        <td class="fieldarea">
+                                            <input disabled="" type="number" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_IncrementalSuffix" class="form-control" placeholder="Enter Incremental Suffix" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Incremental Suffix." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    @*<tr>
+                                            <td class="fieldlabel">User Id </td>
+                                            <td class="fieldarea">
+                                                <input disabled type="number" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_UserId" class="form-control" placeholder="Enter User Id"   />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Id." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+                                    <tr>
+                                        <td class="fieldlabel">Count </td>
+                                        <td class="fieldarea">
+                                            <input disabled="" type="number" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_Count" class="form-control" placeholder="Enter Count" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Count." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <!--dropdown option for EnumList-->
+                                
+                                    <!--dropdown option for EnumList-->
+                                
+                                    <tr>
+                                        <td class="fieldlabel">Is Deleted </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input disabled="" type="checkbox" ng-model="CollectionVoucher.@Acnt_CollectionVoucher.Property_IsDeleted" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(saveCollectionVoucher)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

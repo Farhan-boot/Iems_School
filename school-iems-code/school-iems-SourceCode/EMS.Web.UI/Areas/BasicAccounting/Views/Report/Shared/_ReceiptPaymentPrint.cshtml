@@ -1,0 +1,260 @@
+﻿
+
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+@model EMS.Framework.Objects.MvcModelResult<ReportController.ReceiptPaymentModel>
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+
+
+    var receiptPayment = Model.Data;
+    var startDate = Model.DataBag.StartDate;
+    var endDate = Model.DataBag.EndDate;
+
+    <div class="main-body" style="background-color: white !important;">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 15px;">
+            <div style="font-size: 20px;">Receipt Payment</div>
+            <div> @startDate.ToString("dd/MM/yyyy") to @endDate.ToString("dd/MM/yyyy")</div>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <table class="table-bordered table-border voucher-table" width="100%">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">Particulars</th>
+                    <th class="text-center">Receipts(Cr.)</th>
+                    <th class="text-center">Payments(Dr.)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-bold">
+                        Opening Cash & Bank Accounts
+                    </td>
+                    <td class="text-bold text-center">Balance</td>
+                    <td colspan="2"></td>
+                </tr>
+                @{
+                    if (receiptPayment.BankList.Count>0)
+                    {
+                        foreach (var openingBalance in receiptPayment.BankList)
+                        {
+                            if (openingBalance.PeriodOpeningBalance == 0)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td>@openingBalance.Name</td>
+                                <td class="text-center">@openingBalance.PeriodOpeningBalance.ToString("F")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2">Bank ledger not found!</td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="2" class="text-bold text-align-right">Total Opening Balance: </td>
+                    <td class="text-center text-bold">@receiptPayment.TotalOpeningBalance.ToString("F")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding: 11px; border: none;"></td>
+                </tr>
+                    @foreach (var ledgerTrans in receiptPayment.LedgerTransactionList)
+                {
+                        <tr>
+                            <td colspan="2">@ledgerTrans.LedgerName</td>
+                            <td class="text-center">
+                                @if (ledgerTrans.ReceiptAmount != 0)
+                                {
+                                    <span>@ledgerTrans.ReceiptAmount.ToString("F")</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (ledgerTrans.PaymentsAmount != 0)
+                                {
+                                    <span>@ledgerTrans.PaymentsAmount.ToString("F")</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                <tr>
+                    <td colspan="2" class="text-bold" style="text-align: right;">Total:</td>
+                    <td class="text-center text-bold">@receiptPayment.TotalReceiptAmount.ToString("F")</td>
+                    <td class="text-center text-bold">@receiptPayment.TotalPaymentAmount.ToString("F")</td>
+                </tr>
+
+                <tr class="print-no-border">
+                    <td colspan="4" class="print-no-border" style="padding: 11px; border: none;"></td>
+                </tr>
+
+                <tr>
+                    <td  class="text-bold">Closing Cash & Bank Accounts</td>
+                    <td class="text-bold text-center">Balance</td>
+                    <td colspan="2"></td>
+                </tr>
+                
+                @{
+                    if (receiptPayment.BankList.Count>0)
+                    {
+                        foreach (var closingBalance in receiptPayment.BankList)
+                        {
+                            if (closingBalance.PeriodClosingBalance == 0)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td>@closingBalance.Name</td>
+                                <td class="text-center">@closingBalance.PeriodClosingBalance.ToString("F")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2">Bank ledger not found!</td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="2" class="text-bold text-align-right">Total Closing Balance:</td>
+                    <td></td>
+                    <td class="text-center">@receiptPayment.TotalClosingBalance.ToString("F")</td>
+                </tr>
+                    <tr class="print-no-border">
+                        <td colspan="4" style="padding: 11px; border: none;"></td>
+                    </tr>
+                <tr>
+                    <td colspan="2" class="text-bold text-align-right">Net Balance:</td>
+                    <td class="text-bold text-center">@receiptPayment.NetTotalReceiptsAmount.ToString("F")</td>
+                    <td class="text-bold text-center">@receiptPayment.NetTotalPaymentAmount.ToString("F")</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+
+    .voucher-dlt-table thead > tr > th {
+        line-height: normal;
+        padding: 0px;
+    }
+
+    .voucher-dlt-table thead > tr > th, .voucher-dlt-table tbody > tr > td {
+        font-size: 11px !important;
+    }
+
+    .voucher-table-thead > th {
+        line-height: normal;
+        border: 1px solid black !important;
+    }
+
+
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #a09f9f;
+    }
+
+    @@media print {
+
+        .main-body table {
+            border: none !important;
+        }
+
+        .voucher-dlt-table thead > tr > th {
+            line-height: normal;
+            padding: 1px;
+        }
+
+        .voucher-dlt-table thead > tr > th, .voucher-dlt-table tbody > tr > td {
+            font-size: 11px !important;
+        }
+
+        .voucher-table-thead > th {
+            line-height: normal;
+            border: 1px solid black !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: none !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 0.5px solid #a09f9f !important;
+        }
+        .print-no-border {
+            border: none !important;
+        }
+    }
+</style>

@@ -1,0 +1,245 @@
+﻿<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getMonthlySalaryReportWithBankDetailsExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalarySummaryReportDataExtra", area = "HR" });
+    //WebApi link for List
+    var getMonthlySalaryReportWithBankDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalaryReportWithBankDetails", area = "HR" });
+
+    var editEmployeeByIdPageUrl = Url.Action("UpdateEmployee", "ManageEmployee", new { area = "HR" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="MonthlySalaryReportWithBankDetailsCtrl"
+     ng-init="Init(
+     '@getMonthlySalaryReportWithBankDetailsExtraUrl'
+     ,'@getMonthlySalaryReportWithBankDetailsUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                    <tr>
+                        <th style="text-align: center;" colspan="12"><strong>Salary of {{SelectedPayroll.Name}}</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody class="hide-on-print">
+                        <tr>
+                            <td style="width: 50px;">Payroll:</td>
+                            <td style="">
+                                <select ng-model="SelectedPayroll"
+                                        ng-options="option as option.Name for option in PayrollList"
+                                        title="Select Program" class="form-control">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="hide-on-print">
+                            <td style="text-align: center;" colspan="12">
+                                <button class="btn btn-info" ng-click="getMonthlySalaryReportWithBankDetails()">
+                                    View Report
+                                </button>
+
+                                <button ng-show="Report!=null" class="btn btn-warning" onclick="window.print();return false;">
+                                    <i class="fa fa-print"></i>Print
+                                </button>
+                                <button ng-show="Report!=null" class="btn btn-danger" onclick="$('#monthlySalaryReportWithBankDetailList').tableExport({ fileName: 'monthlySalaryReportWithBankDetailList', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });">
+                                    <i class="fa fa-file-excel-o"></i> Download As Excel(.xls)
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="monthlySalaryReportWithBankDetailList" ng-show="Report!=null" style="margin-top: 10px;" class="border-black main-body">
+            
+            <table>
+                <!--Header Start of Feni University.-->
+                @*<thead style="margin-bottom:5px" class="show-on-print">
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="3">
+                            The Manager
+                        </th>
+                        <th style="text-align: right; border: none !important">
+                            @DateTime.Now.ToString("D")
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="4">
+                            Mercantile Bank Limited
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="4">
+                            Rajnagar Branch
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="4">
+                            Feni
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="4">
+                            <strong>Sub : <u>Disbursement of Staff Salary of Feni University A/C No.115513115432177</u></strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; border: none !important" colspan="4">
+                            Dear Sir,<br />
+                            We would request you to please disburse of the following amount of Teachers,
+                            Officers, & Staff’s Salary for the month of {{SelectedPayroll.Name}} to our under mentioned staff Members
+                            and credit the amount to their respective A/C with you, indicated against their individual name:<br />
+                        </th>
+                    </tr>
+                </thead>*@
+                <!--Header Start of Feni University.-->
+            </table>
+
+            <table class="report-table table-bordered table-border" style="width: 100%; text-align: center; margin-bottom: 15px;">
+                <thead class="bg-gray">
+                    <tr style="font-weight: bold; font-size: 14px;">
+                        <th style="width: 50px">Sl No.</th>
+                        <th>Name of Staff</th>
+                        <th>A/C No.</th>
+                        <th>Amount in Taka</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="row in Report">
+                    <tr>
+                        <td>{{$index+1}}</td>
+                        <td>
+                            <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{row.UserId}}&empId={{row.EmployeeId}}#Payslip">{{row.FullName}}</a>
+                        </td>
+                        <td>
+                            {{row.BankAccountNo}}
+                        </td>
+                        <td>
+                            {{row.Amount |number}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td style="text-align: right;" colspan="3">Total :</td>
+                        <td>
+                            {{GrandTotal |number}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <em>In Words : Tk. <span style="text-transform: capitalize">{{GrandTotalInWords}}</span> Only</em>
+
+            <table class="report-table">
+                <tfoot class="no-bordered show-on-print">
+                <tr style="height: 120px;">
+                    <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: left; padding-bottom: 15px; border: none !important;">
+                        __________________________
+                        <br /> 
+                        Sr. Assistant Director<br />(Finance & Accounts)
+                    </td>
+                    <td colspan="2" style="vertical-align: bottom; padding-bottom: 37px; border: none !important; ">
+                        _______________
+                        <br /> 
+                        Treasurer<br />
+
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <!--Footer Start of Feni University.-->
+            @*<table>
+                <tfoot class="show-on-print">
+                    <tr>
+                        <td style="text-align: left;border:none" colspan="4">
+                            We authorize to you debit total amount of
+                            Tk {{GrandTotal | number}} ({{GrandTotalInWords}}) only
+                            from our STD A/C No. 115513115432177 and to credit the amount to the respective Account as stated above.<br /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; border: none" colspan="4">
+                            -----------------------<br />
+                            Yours Sincerely.
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>*@
+            <!--Footer end of Feni University.-->
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    table .no-border,
+    table .no-border tr,
+    table .no-border tr td {
+        border: none;
+    }
+
+    .report-table > tbody > tr > td,
+    .report-table > thead > tr > th {
+        border: 1px solid black !important;
+    }
+
+    .report-table > thead > tr > th {
+        padding: 0px !important;
+    }
+</style>

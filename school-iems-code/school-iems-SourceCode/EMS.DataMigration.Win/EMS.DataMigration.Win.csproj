@@ -1,0 +1,606 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8348D18C-7A76-4AF2-8044-12ED1AC8186F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.DataMigration.Win</RootNamespace>
+    <AssemblyName>EMS.DataMigration.Win</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\EubBill\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\EubBillGen\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\EDUCATION.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\REG_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Partials\REG_M.cs" />
+    <Compile Include="Utils\BaseMigrator.cs" />
+    <Compile Include="Utils\MailGunEmailSender.cs" />
+    <Compile Include="Utils\MigrationSettings.cs" />
+    <Compile Include="Utils\UserCommand.cs" />
+    <Compile Include="Data\ACCBUYER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCCHARTOFACCOUNT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCCOMPANY.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCCOMPANYGROUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCLOCATION.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCMONTHCLOSE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCMONTHCLOSEBACKUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCORDER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCPROJECT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCSUBLEDGER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCTRANDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCTRANMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCYEARCLOSE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ACCYEARCLOSEBACKUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AC_GROUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AC_LEDGER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AC_SUB_GROUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ADMISSION_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTENDANCE_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTENDANCE_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_D22.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_DT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_D_CT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_D_CW.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_M22.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_MT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_M_CT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ATTMARK_M_CW.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AUTHOR.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BALSHEETDDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BALSHEETDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BALSHEETMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BOOK_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BOOK_LEND_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BUDGETDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BUDGETMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BUDGETRPTDDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BUDGETRPTDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BUDGETRPTMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CARD.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CASHFLOWDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CASHFLOWMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CHART.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CIRD_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COLL_INFO_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COLL_INFO_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COLL_INFO_MD.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COLL_INFO_M_DELETE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COURSEMAP_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\COURSEMAP_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CURRENT_SEMESTER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DEPARTMENT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DESIGNATION.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DISTRICT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EMP_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EubOracle.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EubOracle.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EubOracle.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EubOracle.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EubOracle.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FACULTY.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FIND.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\INCOMEDDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\INCOMEDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\INCOMEMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\INSTRUCTOR.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\INTERTRANSMAP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LEND_INFO_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LEND_INFO_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LOANTRANS.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LOOKUPDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LOOKUPMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LOOKUP_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\LOOKUP_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MARK_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MARK_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MEMBER_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MENU_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\MENU_MODULE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\OFFER_COURSE_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\OFFER_COURSE_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\OFFER_D.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\OFFER_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PROGRAM.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PROGRAM1.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PUBLISHER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\RATIODTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\RATIOMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\REG_DT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\REG_M.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\RETURN_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SFGRPPRIVILEGE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SFMODULE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SFSUBMODULE.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SFUSERS.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SFUSERSGROUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\STUDENT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\SUBJECT.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TEACHER.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\THANA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALDTL.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALFIVECOA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALFIVECOAPROJ.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALFOURCOA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALFOURCOAPROJ.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALMST.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALONECOA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALONECOAPROJ.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALTHREECOA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALTHREECOAPROJ.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALTWOCOA.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TRIALBALTWOCOAPROJ.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TUTION_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\T_EDUCATION.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\USERS.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\USER_GROUP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\USER_GROUP_MAP.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\USER_INFO.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\USER_LOGON.cs">
+      <DependentUpon>EubOracle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\CtlMigrateCommands.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Documents\CtlMigrateCommands.Designer.cs">
+      <DependentUpon>CtlMigrateCommands.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Documents\CtlMigrateCommands.resx">
+      <DependentUpon>CtlMigrateCommands.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EntityDeploy Include="Data\EubOracle.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EubOracle.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Data\EubOracle.edmx.diagram">
+      <DependentUpon>EubOracle.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.Communication\EMS.Communication.csproj">
+      <Project>{1764c63e-06b0-4bbf-9ce4-32d9de7cd9e9}</Project>
+      <Name>EMS.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{C943AC10-D3E5-4BF4-9519-E3083DCD5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Project>{772BF7CE-F2A1-466D-883D-CD3D19AF8AE4}</Project>
+      <Name>EMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataService\EMS.DataService.csproj">
+      <Project>{79B042A7-73B0-4EC8-A528-E540380B5508}</Project>
+      <Name>EMS.DataService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Facade\EMS.Facade.csproj">
+      <Project>{DA0DB7B3-290B-4DBC-A198-641BCC7249FA}</Project>
+      <Name>EMS.Facade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Project>{ab834801-ee9a-44a7-873a-9c9f123c02ce}</Project>
+      <Name>EMS.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.Framework\EMS.Web.Framework.csproj">
+      <Project>{BAF344BC-DEDA-43D5-ABDE-41ACF5A86019}</Project>
+      <Name>EMS.Web.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.Jsons\EMS.Web.Jsons.csproj">
+      <Project>{9757A87B-0AE2-4DE7-BF29-0D0EB3A3A6BF}</Project>
+      <Name>EMS.Web.Jsons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.UI\EMS.Web.UI.csproj">
+      <Project>{E94DB73A-6507-49B3-816E-CCBC69B9CEFF}</Project>
+      <Name>EMS.Web.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\EubOracle.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EubOracle.edmx</DependentUpon>
+      <LastGenOutput>EubOracle.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data\EubOracle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EubOracle.edmx</DependentUpon>
+      <LastGenOutput>EubOracle.cs</LastGenOutput>
+    </Content>
+    <Content Include="Migrator\Helper\Manual.sql" />
+    <Content Include="Migrator\Helper\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BulkUpdate\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.Sql.UnitTesting.targets" Condition="'$(SQLDBExtensionsRefPath)' != ''" />
+  <PropertyGroup>
+    <SsdtUnitTestVersion>2.0</SsdtUnitTestVersion>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

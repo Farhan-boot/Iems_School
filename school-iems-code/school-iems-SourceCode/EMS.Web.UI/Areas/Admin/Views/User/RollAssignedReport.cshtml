@@ -1,0 +1,170 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Web.UI.Areas.Academic.Controllers.WebApi
+
+
+@{
+    ViewBag.Title = "Admin: Roll Assigned Report";
+
+    //WebApi link for List
+    var getRollAssignedReportExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RollAssignedReportApi", action = "GetRollAssignedReportDataExtra", area = "Admin" });
+    var getRollAssignedListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RollAssignedReportApi", action = "GetRollAssignedList", area = "Admin" });
+   
+    //var editassignedUserByIdAcademicPageUrl = Url.Action("assignedUserAddEdit", "assignedUser", new { area = "Academic" });
+    //Angular Function Name
+
+    var getRollAssignedList = "getRollAssignedList";
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+
+    <script src="~/Areas/Admin/Views/User/RollAssignedReport.js"></script>
+}
+
+<div ng-controller="RollAssignedReportCtrl"
+     ng-init="Init(
+      '@getRollAssignedReportExtraUrl'
+      ,'@getRollAssignedListUrl'
+     )">
+    <div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+   
+    <div class="widget" show="ResultComponentSettingSectionAB.length>0">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b> </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-sky no-print">
+                            <i class="widget-icon fa fa-list bold  "></i>
+                            <span class="widget-caption "><b>Select Below Items To Start </b></span>
+                        </div>
+                        <div class="widget-body no-padding">
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <th style="text-align: center;" colspan="12"><strong>Report of Assigned Roll User</strong></th>
+                                </tr>
+                               
+                                <tbody @*class="hide-on-print"*@>
+                                    <tr>
+                                        <td>Select Roll </td>
+                                        <td>
+                                            <select ng-model="SelectedRollId"
+                                                    ng-options="option.Id as option.Name for option in RollList" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---All Role---</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Select User Status </td>
+                                        <td>
+                                            <select ng-model="SelectedUserStatusEnumId"
+                                                    ng-options="option.Id as option.Name for option in UserStatusEnumList" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Any Status ---</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Select Department</td>
+                                        <td>
+                                            <select ng-model="SelectedDepartmentId" ng-options="option.Id as option.Name group by option.Type  for option in DepartmentList" class="form-control">
+                                                <option value="">---Select All Department---</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-center" colspan="2">
+                                            <button ng-click="@(getRollAssignedList)()" class="btn btn-xs btn-success"><i class="fa fa-search"></i> Load Roll Assigned Report</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-12">
+                    <div class="widget" ng-show="RollAssignedUserList.length>0">
+
+                        <div ng-repeat="roll in RollAssignedUserList">
+                            
+                            <div style="margin-bottom:10px" ng-class="{'no-print': roll.AssignedUserList.length==0}">
+                                <div class="widget-header bg-darkgray bordered-bottom">
+                                    <table class="course-info-table" style="width: 100%;">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="widget-caption" style="font-weight: bold !important;margin: auto">
+                                                    {{roll.Name}}<br />
+                                                    <em style="font-size: 10px;color: black">{{roll.Description}}</em>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div ng-hide="roll.AssignedUserList.length>0" class="widget-header bordered-bottom">
+                                    <table class="course-info-table" style="width: 100%;">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="widget-caption danger" style="font-weight: bold !important;margin: auto">
+                                                    No User's Assigned in this Role.
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <table ng-show="roll.AssignedUserList.length>0" class="table table-striped table-bordered">
+                                    <thead class="bordered-blue">
+                                        <tr>
+                                            <th class="text-center">SN</th>
+                                            <th class="text-center">User Name</th>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-center">Department</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Assigned By</th>
+                                            <th class="text-center">Assigned Date</th>
+                                            <th class="text-center">Expired Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tr ng-repeat="assignedUser in roll.AssignedUserList">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{assignedUser.UserName}}</td>
+                                        <td>{{assignedUser.FullName}}</td>
+                                        <td>{{assignedUser.DepartmentName}}</td>
+                                        <td>
+                                            {{assignedUser.UserStatus}}
+                                        </td>
+                                        <td>{{assignedUser.AssignedByName}}</td>
+                                        <td>{{assignedUser.AssignedDate |date:'d/M/yy h:mm a'}}</td>
+                                        <td>{{assignedUser.ExpiredDate |date:'d/M/yy h:mm a'}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>

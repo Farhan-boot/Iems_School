@@ -1,0 +1,3099 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@model dynamic
+
+@{
+    ViewBag.Title = "title";
+    Layout = null;
+    List<User_Student> studentList = ViewBag.StudentList;
+    List<Aca_CurriculumCourse> courseList = ViewBag.CourseList;
+}
+
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Tabulation Print</title>
+    <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <meta name="Microsoft Theme" content="blocks 000, default">
+    <meta name="Microsoft Border" content="tlb, default">
+    <link href="~/assets/custom/css/print.css" rel="stylesheet" />
+    <script src="~/assets/js/jquery.min.js"></script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" link="#CC0000" vlink="#CC0000" alink="#CC0000" leftmargin="5" topmargin="5" marginheight="0" marginwidth="0" onresize="if (navigator.family == 'nn4') window.location.reload()">
+
+    <!-- School Titile -->
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td>
+                    <table width="100%">
+
+                        <tbody>
+                            <tr>
+                                <td width="25%">
+                                    <table width="80%" border="1" style="border-collapse: collapse; height: 240px; width: 240px; ">
+                                        <tbody>
+                                            <tr>
+                                                <td align="center" style="padding: 5px">
+                                                    <font face="Arial, Arial, Helvetica" size="1">GRADING SYSTEM</font>
+                                                    <table border="1" width="90%" style="border-collapse: collapse; margin: 5px">
+                                                        <tbody>
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Grade</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Grade Point</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Marks</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">A+</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">4.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">79.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">A</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">3.75&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">74.5,79.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">A-</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">3.5&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">69.5,74.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">B+</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">3.25&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">64.5,69.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">B</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">3.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">59.5,64.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">B-</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">2.75&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">54.5,59.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">C+</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">2.5&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">49.5,54.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">C</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">2.25&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">44.5,49.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">D</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">2.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">39.5,44.49</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">F</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">39.5</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">I</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">X</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">W</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0.0&nbsp;&nbsp;&nbsp;</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                            </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td valign="bottom" align="center" style="padding: 15px">
+
+                                    <font face="times" size="6" style="white-space: nowrap;">BANGLADESH UNIVERSITY <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" border="0" height="42"/>  OF&nbsp;PROFESSIONALS</font>
+                                    <br>
+
+                                    <font face="times" size="4">Name of Institution: @SiteSettings.Instance.InstituteName</font><br>
+                                    <font face="times" size="4">
+                                        Tabulation Sheet for the
+                                        @ViewBag.ProgramName,&nbsp;&nbsp;
+                                    </font><br>
+                                    <font face="times" size="4">
+                                        @ViewBag.StudyLevelTerm @*LEVEL-1 TERM-II*@,
+                                        Examination of Academic Session @ViewBag.Session,
+                                        held in @ViewBag.ExamDate @*Nov-Dec,&nbsp;2015*@
+                                    </font><br>
+                                </td>
+                                <td valign="bottom" width="25%" align="right">
+                                    <table width="80%" border="1" style="border-collapse: collapse; height: 144px; width: 240px; ">
+                                        <tbody>
+                                            <tr>
+                                                <td align="center" style="padding: 5px">
+                                                    <font face="Arial, Arial, Helvetica" size="1">STATISTICS OF RESULT</font>
+                                                    <table border="1" width="90%" style="border-collapse: collapse; margin: 5px" cellpadding="5">
+                                                        <tbody>
+                                                            <tr align="center">
+                                                                <td colspan="2"><font face="Arial, Arial, Helvetica" size="1">Number<br>Admitted</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Discontinued</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Dismissed</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Appeared</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Total No<br>Passed</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">% of<br>Passes</font></td>
+                                                            </tr>
+
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Male</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">143</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td class="appeared_male"><font face="Arial, Arial, Helvetica" size="1" id="appeared_male">143</font></td>
+                                                                <td class="passed_male"><font face="Arial, Arial, Helvetica" size="1" id="passed_male">80</font></td>
+                                                                <td class="percentage_male"><font face="Arial, Arial, Helvetica" size="1" id="percentage_male">55.94</font></td>
+                                                            </tr>
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Female</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">45</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td class="appeared_female"><font face="Arial, Arial, Helvetica" size="1" id="appeared_female">45</font></td>
+                                                                <td class="passed_female"><font face="Arial, Arial, Helvetica" size="1" id="passed_female">29</font></td>
+                                                                <td class="percentage_female"><font face="Arial, Arial, Helvetica" size="1" id="percentage_female">64.44</font></td>
+                                                            </tr>
+                                                            <tr align="center">
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">Total</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">188</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                                                <td class="appeared_total"><font face="Arial, Arial, Helvetica" size="1" id="appeared_total">188</font></td>
+                                                                <td class="passed_total"><font face="Arial, Arial, Helvetica" size="1" id="passed_total">109</font></td>
+                                                                <td class="percentage_total"><font face="Arial, Arial, Helvetica" size="1" id="percentage_total">57.98</font></td>
+                                                            </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr style="height:25px;border:none;"></tr>
+            <tr>
+                <td>
+                    <!-- The result of the selection -->
+                    <table border="1" cellpadding="5" cellspacing="0" bordercolor="#000000" style="border-collapse: collapse;" width="100%" id="AutoNumber1" bordercolordark="#666666" bordercolorlight="#999999">
+                        <!-- Colum Titles -->
+
+                        <tbody>
+                            <tr bgcolor="#e2e2e2" align="center">
+
+                                <td rowspan="3" colspan="2"><font face="Arial, Arial, Helvetica" size="2">Registration</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Student No</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Exam Roll<br>No</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Name of Candidates</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Year of 1st<br> Admission<br> to the<br> course</font></td>
+
+                                @{
+                                    if (courseList != null && courseList.Count > 0)
+                                    {
+                                        foreach (var course in courseList)
+                                        {
+                                            <td colspan="2"><font face="Arial, Arial, Helvetica" size="2">@course.Code<br>@course.Name</font></td>
+                                        }
+                                    }
+
+                                }
+                               
+
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">GPA</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Total<br> Credit<br> Hr</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Earned<br> Credit<br> Hr</font></td>
+
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Results</font></td>
+                                <td rowspan="4"><font face="Arial, Arial, Helvetica" size="2">Remarks</font></td>
+                            </tr>
+
+
+                            <!-- Credits -->
+                            <tr bgcolor="#e2e2e2" align="center">
+                                @{
+                                    if (courseList != null && courseList.Count > 0)
+                                    {
+                                        foreach (var course in courseList)
+                                        {
+
+                                            <td colspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">&nbsp;@course.CreditLoad</font></td>
+                                        }
+                                    }
+                                }
+                            </tr>
+                            <tr>
+
+                                @{
+
+                                    if (courseList != null && courseList.Count > 0)
+                                    {
+                                        foreach (var course in courseList)
+                                        {
+                                            <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade</font></td>
+                                            <td rowspan="2" align="center" style="border-bottom: 1.0pt solid windowtext;" valign="top" bgcolor="#e2e2e2"><font face="Arial, Arial, Helvetica" size="2">Grade Point</font></td>
+                                        }
+                                    }
+                                }
+                                
+
+                            </tr>
+                            <tr bgcolor="#e2e2e2" align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">No</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">Session</font></td>
+                            </tr>
+
+                            <!-- Student List Contents -->
+
+                        @{ if(studentList!=null && studentList.Count>0)
+                            { foreach (var std in studentList)
+                                {
+
+                        <tr align="center">
+                            <td><font face="Arial, Arial, Helvetica" size="2">@std.RegistrationNo</font></td>
+                            <td>
+                                <font face="Arial, Arial, Helvetica" size="2">
+                                    @std.RegistrationSession
+                                </font>
+                            </td>
+                            <td><font face="Arial, Arial, Helvetica" size="2">@std.ClassRollNo</font></td>
+                            <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll@std.ExamRollNo">@std.ExamRollNo</font></td>
+                            <td align="left"><font face="Arial, Arial, Helvetica" size="2"> @std.FullName.ToUpper()</font></td>
+                            @{
+                                var regYear = "";
+                                if (std.ClassRollNo>0 && std.ClassRollNo.ToString().Length>=4)
+                                {
+                                    regYear = std.ClassRollNo.ToString().Substring(0, 4);
+                                }
+                            }
+                            <td><font face="Arial, Arial, Helvetica" size="2"> @regYear </font></td>
+
+
+                            @*Course Result Start*@
+
+                    @{
+                        //if (courseList != null && courseList.Count > 0)
+                        List<CourseResult> courseResultList = std.DataBag.CourseResults;
+                        if (courseResultList != null && courseResultList.Count > 0)
+                        {
+                            foreach (var course in courseResultList)
+                            {
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.Grade</font></td>
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@course.Color">&nbsp;@course.GradePoint</font></td>
+                            }
+                        }
+                    }
+
+                            @*Course Result End*@
+                            @{
+                                Aca_SemesterResult semesterResult = std.DataBag.SemesterResult;
+                               
+                            }
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2">@semesterResult.GPA.ToString("f2")</font></td>
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2">@semesterResult.TotalCreditHour</font></td>
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2">@semesterResult.EarnedCreditHour</font></td>
+                            <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="@semesterResult.Color">@semesterResult.ResultType</font></td>
+
+                            <td align="center">
+                                <font face="Arial, Arial, Helvetica" size="1" color="@semesterResult.Color">
+                                    @Html.Raw(semesterResult.Remark) 
+                                    @*Ref in<br>CE 102,<br><br>*@
+                                </font>
+                            </td>
+                        </tr>
+
+                                }}}
+
+                            @*Student Info Ind*@
+                     
+
+
+
+
+                            @*<tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201311051</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24091"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Md. Emruz&nbsp;&nbsp;Ahmed</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2012</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;X</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24091').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">1.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br>CE 104,<br>CHEM 103,<br>MATH 139,<br>PHY 102,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411012</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24583"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Mysha&nbsp;Masud&nbsp;Chowdhury</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24583').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.42</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">9</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">REFERRED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br>MATH 139,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411037</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24610"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Rodosee&nbsp;&nbsp;Shuhra</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;X</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24610').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">1.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br>CE 104,<br>CHEM 103,<br>PHY 102,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140040</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-14
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411039</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24613"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Sanjida&nbsp;&nbsp;Afroz</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24613').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.63</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">17.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">REFERRED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140051</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411050</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24628"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Md Rifatul&nbsp;islam&nbsp;Ovi</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24628').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.66</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140057</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411056</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24634"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Shaumik&nbsp;Sadman&nbsp;Khan</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24634').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.33</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">19</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">9</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br>CHEM 103,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140062</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411061</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24639"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Saberi&nbsp;&nbsp;Amin</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;X</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24639').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">1.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br>CE 104,<br>CHEM 103,<br>EECE 165,<br>MATH 139,<br>PHY 102,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140063</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411062</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24640"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Ishtiaque Rahman&nbsp;&nbsp;Khan</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24640').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.13</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">6</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br>CHEM 103,<br>EECE 165,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140064</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411063</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24641"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">MOHAMMAD&nbsp;SADMAN&nbsp;SAKIB</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24641').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.65</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">18</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">REFERRED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140075</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411074</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24444"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Md Sabbir&nbsp;&nbsp;Ahmed</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24444').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.69</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">18</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">REFERRED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">1131101140087</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411086</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24521"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Sajjad Ibne&nbsp;&nbsp;Kabir</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24521').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br>CHEM 103,<br>EECE 165,<br>MATH 139,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140098</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-14
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411097</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24555"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Sakib Md&nbsp;&nbsp;Asif</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24555').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.31</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">18</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">REFERRED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 103,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140110</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411109</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24571"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Md &nbsp;Shakil&nbsp;Shahriar</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24571').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.63</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">6</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">6</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101140113</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013-2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411112</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24574"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Muslima&nbsp;&nbsp;Zaman</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24574').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.47</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">16</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">1131101140119</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2013/2014
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411118</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24522"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">S.M Ishtiaque&nbsp;&nbsp;Rahman</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;D</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24522').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">2.69</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411121</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24533"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Aswat Aksir Mujib&nbsp;&nbsp;Wasi</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;X</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24533').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">1.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br>CE 104,<br>CHEM 103,<br>PHY 102,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201411122</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll24536"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Amit&nbsp;&nbsp;Raihan</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2013</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;X</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;W</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;F</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">&nbsp;0.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll24536').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">0.00</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">1.5</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="red">FAILED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                        Ref in<br>CE 102,<br>CE 104,<br>CHEM 103,<br>PHY 102,<br>PHY 105,<br><br>
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101150001</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2014-2015
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201511001</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll25075"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">Masudur&nbsp;Rahman&nbsp;Khan</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2014</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;4.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25075').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">3.18</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr align="center">
+                                <td><font face="Arial, Arial, Helvetica" size="2">131101150002</font></td>
+                                <td>
+                                    <font face="Arial, Arial, Helvetica" size="2">
+                                        2014-2015
+                                    </font>
+                                </td>
+                                <td><font face="Arial, Arial, Helvetica" size="2">201511002</font></td>
+                                <td><font face="Arial, Arial, Helvetica" size="2" id="exam_roll25076"></font></td>
+                                <td align="left"><font face="Arial, Arial, Helvetica" size="2">S M Mahfuzur&nbsp;&nbsp;Rahman</font></td>
+
+                                <td><font face="Arial, Arial, Helvetica" size="2">2014</font></td>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;C</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;2.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.25</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.75</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A+</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;4.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;A-</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.5</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;B</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="BLACK">&nbsp;3.0</font></td>
+                                <script type="text/javascript">
+							examroll();
+							function examroll(){
+							     document.getElementById('exam_roll25076').innerHTML = ;
+
+									}
+                                </script>
+
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">3.17</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2">22</font></td>
+                                <td align="center"><font face="Arial, Arial, Helvetica" size="2" color="">PASSED</font></td>
+
+                                <td align="center">
+                                    <font face="Arial, Arial, Helvetica" size="1" color="red">
+                                    </font>
+                                </td>
+
+                            </tr>*@
+
+
+
+
+                        </tbody>
+                    </table>
+                    <br>
+
+                </td>
+            </tr>
+            <!--Comment  -->
+
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <td align="left" valign="top"><font face="Arial, Arial, Helvetica" size="2"></font></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </td>
+            </tr>
+
+            <!-- Table Footer -->
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <td align="left">
+                                    <font size="1" face="arial">
+                                        <b>Name and Signature of Tabulators</b>
+                                    </font><br>
+                                    <table style="margin: 5px" cellpadding="5">
+                                        <tbody>
+                                            <tr>
+                                                <td align="left"><font size="1" face="arial">Full Name</font></td>
+                                                <td><font size="1" face="arial">Signature</font></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"><font size="1" face="arial">Tabulator 1. </font></td>
+                                                <td>................................</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"><font size="1" face="arial">Tabulator 2. </font></td>
+                                                <td>................................</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+
+                                <td align="left">
+                                    <font size="1" face="arial">
+                                        <b>
+                                            Name and Signature of Chairman and Members of the Result Publication Committee
+                                        </b>
+                                    </font>
+                                    <table style="margin: 5px" cellpadding="5">
+                                        <tbody>
+                                            <tr>
+                                                <td><font size="1" face="arial">Full Name</font></td>
+                                                <td colspan="2"><font size="1" face="arial">Signature</font></td>
+                                            </tr>
+                                            <tr>
+                                                <td><font size="1" face="arial">Chairman. </font></td>
+                                                <td colspan="2">................................</td>
+                                            </tr>
+                                            <tr>
+                                                <td><font size="1" face="arial">Member 1. </font></td>
+                                                <td colspan="2">................................</td>
+                                            </tr>
+                                            <tr>
+                                                <td><font size="1" face="arial">Member 2. </font></td>
+                                                <td>................................</td>
+                                                <td align="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;................................<br><font size="1" face="arial">Controller of Examinations</font></td>
+                                            </tr>
+                                            <tr>
+                                                <td><font size="1" face="arial">Member 3. </font></td>
+                                                <td>................................</td>
+                                                <td align="right"><font size="1" face="arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dated the ..............2015</font></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </td>
+
+                                <td>
+                                    <table style="margin: 5px" cellpadding="5">
+                                        <tbody>
+                                            <tr align="center">
+                                                <td>
+                                                    <br>
+                                                    <font size="1" face="arial"></font>
+                                                </td>
+                                            </tr>
+                                            <tr><td><font size="1" face="arial"></font></td></tr>
+                                            <tr><td valign="bottom"><font size="1" face="arial"><b>Result Published</b> on.....................2015</font></td></tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+
+                                <td align="right">
+                                    <table style="margin: 5px" cellpadding="5">
+                                        <tbody>
+                                            <tr align="center">
+                                                <td>
+                                                    ..........................................<br>
+                                                    <font size="1" face="arial">Vice Chancellor</font>
+                                                </td>
+                                            </tr>
+                                            <tr><td><font size="1" face="arial">Dated the......................... 2015</font></td></tr>
+                                            <tr><td align="left"><font size="1" face="arial"></font></td></tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="page-break-before: always">&nbsp;</p>
+
+
+
+    <script type="text/javascript">
+   result();
+   function result(){
+
+	   $('.passed_male font').html(80);
+	   $('.passed_female font').html(29);
+	   $('.passed_total font').html(109);
+	   $('.percentage_male font').html(55.94);
+	   $('.percentage_female font').html(64.44);
+	   $('.percentage_total font').html(57.98);
+	   $('.appeared_male font').html(143);
+	   $('.appeared_female font').html(45);
+	   $('.appeared_total font').html(188);
+
+
+
+	   }
+
+    </script>
+
+
+
+
+
+</body>
+</html>

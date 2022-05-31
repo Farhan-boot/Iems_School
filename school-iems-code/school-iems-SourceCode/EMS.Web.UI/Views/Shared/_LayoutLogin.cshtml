@@ -1,0 +1,157 @@
+﻿@using BeyondThemes.Bootstrap
+@using EMS.Framework.Settings
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutHtmlCore.cshtml";
+}
+@section CheckBrowserSection{
+    @RenderPage("~/Views/Shared/_PartialMessageForIE.cshtml")
+}
+
+@section StyleSection
+{
+    @Styles.Render("~/css/bootstrap")
+
+    <style>
+        * {
+            font-family: arile;
+        }
+
+        body {
+            background: #d6d3d3;
+        }
+
+        .title {
+            color: #c80909;
+            font-family: fantasy;
+            font-size: 20px;
+            text-align: center !important;
+        }
+
+        .input-label {
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #373636;
+            font-family: serif;
+        }
+
+        .right {
+            text-align: right !important;
+        }
+
+        .login-block {
+            background: #d6d3d3;
+            float: left;
+            width: 100%;
+            padding: 50px 0;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 15px 20px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .develop-by {
+            margin-top: 25px;
+            text-align: center;
+            margin-bottom: 16px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .btn-login {
+            background: rgb(52, 160, 204);
+            color: #fff;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .alert {
+            margin-bottom: 0px;
+        }
+        .alert.alert-danger {
+            border-color: #df5138;
+            background: #e46f61;
+            color: white;
+            padding: 5px 10px;
+            border-left: 5px solid #be0000;
+        }
+
+        .login-block .container {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .thumbnail {
+            margin-bottom: 5px;
+            background-color: #dfffdf;
+            border: 1px solid red;
+        }
+
+        .img-thumbnail {
+            display: block;
+        }
+    </style>
+    @RenderSection("StyleSection", required: false)
+}
+@section ScriptSection {
+    @RenderSection("ScriptSection", required: false)
+}
+<section class="login-block  animated fadeInDown">
+    <div class="container" style="">
+
+        <div class="Login-Box" style="">
+            <div class="row">
+                <div class="center" style="margin-top: 30px;   text-align: center !important;">
+                    <a target="_blank" title="back to @SiteSettings.Instance.InstituteShortName home" href="@SiteSettings.Instance.InstituteWebsite">
+                        <img class="" style="margin: 0 auto;    max-width: 250px;" src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoColorFull)"
+                             alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <h2 class="center title" style="">@ViewBag.FormTitle</h2>
+            </div>
+            <div style="">
+                @if ((ViewBag.Message != string.Empty && ViewBag.Message != null) || (ViewBag.ErrorMessage != string.Empty && ViewBag.ErrorMessage != null))
+                {
+                    <div class="alert alert-danger fade in alert-dismissible1 no-margin ">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close" style="color:#ffffff">×</a>
+                        <i class="fa-fw fa fa-warning"></i> <strong>Sorry!</strong> <span>@ViewBag.Message @ViewBag.ErrorMessage</span>
+                    </div>
+                }
+
+                @if (ViewBag.SuccessMessage != string.Empty && ViewBag.SuccessMessage != null)
+                {
+                    <div class="alert alert-success no-margin fade in">
+                        <button class="close" data-dismiss="alert">×</button>
+                        <i class="fa-fw fa fa-check"></i> @ViewBag.SuccessMessage
+                    </div>
+                }
+                @using (var form = Html.Bootstrap().Begin(new Form().Type(FormType.Vertical)))
+                {
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.AntiForgeryToken()
+                    @RenderBody()
+
+                }
+                <div class="row">
+
+                    <div class="copy-text develop-by">
+                        Developed & Maintained by <br />
+                        <a target="_blank" title="@SiteSettings.PoweredByFullText" href="@SiteSettings.CompanyWebsite">
+                            <img class="img-responsive" style="width: 90px;margin: 0 auto;" src="@SiteSettings.Instance.PipilikaLogo" alt="@SiteSettings.PoweredByFullText">
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

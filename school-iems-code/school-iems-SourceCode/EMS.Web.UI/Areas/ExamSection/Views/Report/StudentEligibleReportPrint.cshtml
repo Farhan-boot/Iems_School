@@ -1,0 +1,35 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.ExamSection.Controllers
+@model  EMS.Framework.Objects.MvcModelListResult<ReportController.StudentEligibleReportModel>
+@{
+
+    string title= Model.DataBag.ReportType;
+
+    ViewBag.Title = "Student List of "+ title;
+
+    Layout = "~/Views/Shared/Report/_LayoutReportCore.cshtml";
+}
+
+@section ScriptSection
+{
+    @*<script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>*@
+}
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/ExamSection/Views/Report/Shared/_StudentEligibleReportPrint.cshtml", Model)
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}
+
+

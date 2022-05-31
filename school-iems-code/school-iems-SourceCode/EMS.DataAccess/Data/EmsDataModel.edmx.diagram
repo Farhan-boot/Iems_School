@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ab2b2211fa0a476ab4cbbb624d81a285" Name="Diagram1" ZoomLevel="83">
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Class" Width="1.5" PointX="9" PointY="61.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassAttendance" Width="1.5" PointX="11.25" PointY="65" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassAttendanceSetting" Width="1.5" PointX="14.25" PointY="70" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassAttendanceSmsLog" Width="1.5" PointX="16.5" PointY="76.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassMaterialFileMap" Width="1.5" PointX="14.25" PointY="66" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassNotice" Width="1.5" PointX="14.25" PointY="61.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassRoutine" Width="1.5" PointX="11.25" PointY="59.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassSection" Width="1.5" PointX="6.75" PointY="95.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassTakenByEmployee" Width="1.5" PointX="11.25" PointY="70.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassTakenByStudent" Width="1.5" PointX="17.25" PointY="64.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ClassWaiverStudent" Width="1.5" PointX="17.25" PointY="59.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Course" Width="1.5" PointX="3" PointY="74.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CoursePrerequisiteMap" Width="1.5" PointX="7.5" PointY="100.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CreditTransfer" Width="1.5" PointX="19.5" PointY="81.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CreditTransferCourses" Width="1.5" PointX="10.5" PointY="81.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CreditTransferInstitute" Width="1.5" PointX="17.25" PointY="97.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Curriculum" Width="1.5" PointX="3" PointY="64.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CurriculumCourse" Width="1.5" PointX="5.25" PointY="75.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CurriculumElectiveGroup" Width="1.5" PointX="3" PointY="89.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_CurriculumStudentMap" Width="1.5" PointX="5.25" PointY="60.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_DeptBatch" Width="1.5" PointX="6.75" PointY="41.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Exam" Width="1.5" PointX="8.25" PointY="125.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ExamRoll" Width="1.5" PointX="10.5" PointY="92" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ExamSupple" Width="1.5" PointX="10.5" PointY="128.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_GradingPolicy" Width="1.5" PointX="0.75" PointY="58.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_GradingPolicyOption" Width="1.5" PointX="6" PointY="128.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_HomeWork" Width="1.5" PointX="6" PointY="64.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_HomeWorkSubmission" Width="1.5" PointX="16.5" PointY="80.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_MarkDistributionPolicy" Width="1.5" PointX="11.75" PointY="5.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_MarkDistributionPolicyBreakdown" Width="1.5" PointX="16.25" PointY="6.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_MarkDistributionPolicyComponent" Width="1.5" PointX="14" PointY="6.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OfferedCourse" Width="1.5" PointX="14" PointY="28.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OfferedCourseForCurriculum" Width="1.5" PointX="16.25" PointY="29.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OnlineClass" Width="1.5" PointX="13.5" PointY="75.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OnlineExam" Width="1.5" PointX="10.5" PointY="75" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OnlineExamResultDetail" Width="1.5" PointX="22" PointY="82.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_OnlineExamTakenByStudent" Width="1.5" PointX="18.75" PointY="76.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Program" Width="1.5" PointX="0.75" PointY="63.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_ProgramTakenByStudent" Width="1.5" PointX="16.5" PointY="71.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_QuestionBank" Width="1.5" PointX="13.5" PointY="81.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_QuestionBankOnlineExamMap" Width="1.5" PointX="21.75" PointY="79" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_QuestionGroup" Width="1.5" PointX="11.25" PointY="95.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_QuestionOption" Width="1.5" PointX="15.75" PointY="92.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_Semester" Width="1.5" PointX="6.75" PointY="45.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_StudentRegistration" Width="1.5" PointX="16.5" PointY="87" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_StudyLevel" Width="1.5" PointX="4.5" PointY="38" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_StudyLevelTerm" Width="1.5" PointX="6.75" PointY="37.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_StudyTerm" Width="1.5" PointX="4.5" PointY="50" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_TPEQuestion" Width="1.5" PointX="31" PointY="16.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_TPEQuestionAnswer" Width="1.5" PointX="33.25" PointY="14.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_TPEQuestionAnswer2" Width="1.5" PointX="33.25" PointY="17.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_TPEQuestionCategory" Width="1.5" PointX="28.75" PointY="16.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Acnt_OfficialBank" Width="1.5" PointX="18.75" PointY="26.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Adm_AdmissionExam" Width="1.5" PointX="6" PointY="83.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Adm_DegreeCategory" Width="1.5" PointX="16.75" PointY="33.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Adm_EducationBoard" Width="1.5" PointX="16.75" PointY="2.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Adm_ParentsPrimaryJobType" Width="1.5" PointX="6" PointY="71.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Adm_StudentQuotaName" Width="1.5" PointX="6" PointY="90.625" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_Branch" Width="1.5" PointX="18.75" PointY="31.625" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_CompanyAccount" Width="1.5" PointX="24.75" PointY="26.875" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_Ledger" Width="1.5" PointX="27" PointY="31" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_Voucher" Width="1.5" PointX="21" PointY="30.75" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_VoucherDetail" Width="1.5" PointX="29.25" PointY="31.625" />
+        <EntityTypeShape EntityType="emsdb2Model.BAcnt_VoucherType" Width="1.5" PointX="24" PointY="31.75" />
+        <EntityTypeShape EntityType="emsdb2Model.General_AllSmsLog" Width="1.5" PointX="9" PointY="57.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Bank" Width="1.5" PointX="18.75" PointY="2.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Building" Width="1.5" PointX="6.75" PointY="115.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_CalendarEvent" Width="1.5" PointX="0.75" PointY="20.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Campus" Width="1.5" PointX="6.75" PointY="32" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Country" Width="1.5" PointX="4.5" PointY="20.375" />
+        <EntityTypeShape EntityType="emsdb2Model.General_District" Width="1.5" PointX="9" PointY="3.625" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Division" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="emsdb2Model.General_File" Width="1.5" PointX="12" PointY="54.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Floor" Width="1.5" PointX="6.75" PointY="112" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Language" Width="1.5" PointX="7.5" PointY="141.625" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Notice" Width="1.5" PointX="18.75" PointY="6.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_PoliceStation" Width="1.5" PointX="11.25" PointY="1" />
+        <EntityTypeShape EntityType="emsdb2Model.General_PostOffice" Width="1.5" PointX="14.5" PointY="1.5" />
+        <EntityTypeShape EntityType="emsdb2Model.General_Room" Width="1.5" PointX="9" PointY="113.125" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_AppointmentHistory" Width="1.5" PointX="14.25" PointY="53.125" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_Attendance" Width="1.5" PointX="11.25" PointY="26.25" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_CalendarYear" Width="1.5" PointX="29.75" PointY="23" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_Department" Width="1.5" PointX="6.75" PointY="104" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_EmpLeaveAllocationSettings" Width="1.5" PointX="11.25" PointY="21.375" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_EmpLeaveAllocationSettingsDetails" Width="1.5" PointX="13.5" PointY="23.25" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_EmpLeaveApplication" Width="1.5" PointX="16.5" PointY="17.125" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_EmployementHistory" Width="1.5" PointX="17.25" PointY="53.125" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_HolidaySettings" Width="1.5" PointX="32" PointY="21" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_LeaveAllocationTemplateDetails" Width="1.5" PointX="3" PointY="30.5" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_MonthlyPayslip" Width="1.5" PointX="13.5" PointY="18" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_MonthlyPayslipDetails" Width="1.5" PointX="18.75" PointY="11.875" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_Organization" Width="1.5" PointX="4.5" PointY="104.5" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_Payroll" Width="1.5" PointX="11.25" PointY="44.5" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_Position" Width="1.5" PointX="6.75" PointY="5.625" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_SalarySettings" Width="1.5" PointX="11.25" PointY="12.125" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_SalarySettingsDetails" Width="1.5" PointX="13.5" PointY="12.375" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_SalaryTemplate" Width="1.5" PointX="0.75" PointY="28.25" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_SalaryTemplateDetails" Width="1.5" PointX="3" PointY="26" />
+        <EntityTypeShape EntityType="emsdb2Model.HR_WorkWeek" Width="1.5" PointX="32" PointY="25.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_Floor" Width="1.5" PointX="11.25" PointY="99.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_FloorHostelBuildingMap" Width="1.5" PointX="13.5" PointY="102" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_HostalBuilding" Width="1.5" PointX="11.25" PointY="103.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_HostelBuildingStudentMap" Width="1.5" PointX="13.5" PointY="87.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_MealType" Width="1.5" PointX="8.25" PointY="120.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_Room" Width="1.5" PointX="11.25" PointY="108.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_Routine" Width="1.5" PointX="10.5" PointY="120.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Htl_StudentMealCancel" Width="1.5" PointX="10.5" PointY="87.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_Inventory" Width="1.5" PointX="24" PointY="8" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_InventoryDetails" Width="1.5" PointX="26.25" PointY="15.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_InventoryPurchaseRequisitionMap" Width="1.5" PointX="26.25" PointY="10" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_Item" Width="1.5" PointX="32.25" PointY="9.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemAllocation" Width="1.5" PointX="0.75" PointY="2.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemAllocationRequisitionMap" Width="1.5" PointX="3" PointY="4.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemDelivery" Width="1.5" PointX="20.75" PointY="2.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemDescription" Width="1.5" PointX="21.75" PointY="15.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemMaintainance" Width="1.5" PointX="21.75" PointY="19.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemRequest" Width="1.5" PointX="20.75" PointY="24.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemReturn" Width="1.5" PointX="0.75" PointY="9.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemReturnAllocationMap" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemsEquipmentDetailITMap" Width="1.5" PointX="34" PointY="37.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemsInventoryMap" Width="1.5" PointX="26.25" PointY="20.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ItemWarrentyDetails" Width="1.5" PointX="0.75" PointY="35.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ProductCategory" Width="1.5" PointX="27" PointY="2.75" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_ProductCategoryDetails" Width="1.5" PointX="34.75" PointY="2.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_PurchaseRequisition" Width="1.5" PointX="24" PointY="3.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_PurchaseRequisitionDetail" Width="1.5" PointX="29.25" PointY="3.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_RequestedItem" Width="1.5" PointX="32.25" PointY="5.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_RequestedItemAssign" Width="1.5" PointX="34.75" PointY="6.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_Requisition" Width="1.5" PointX="0.75" PointY="13.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_RequisitionDetails" Width="1.5" PointX="3" PointY="9.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_Store" Width="1.5" PointX="27" PointY="24.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_StoreManager" Width="1.5" PointX="29.25" PointY="8.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Inv_Supplier" Width="1.5" PointX="21.75" PointY="8.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Invt_EquipmentDetailIT" Width="1.5" PointX="31.75" PointY="35.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_Book" Width="1.5" PointX="9.75" PointY="138.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookActivityLog" Width="1.5" PointX="11.25" PointY="38.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookAuthor" Width="1.5" PointX="12.75" PointY="138" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookAuthorMap" Width="1.5" PointX="15" PointY="141.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookCopy" Width="1.5" PointX="12" PointY="143.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookCopyTransaction" Width="1.5" PointX="14.25" PointY="34.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookDeptMap" Width="1.5" PointX="12" PointY="124.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookSubject" Width="1.5" PointX="9.75" PointY="157" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BookSubjectMap" Width="1.5" PointX="12" PointY="140.625" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_Borrower" Width="1.5" PointX="9" PointY="33.125" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_BorrowerActivityLog" Width="1.5" PointX="11.25" PointY="41.375" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_Branch" Width="1.5" PointX="9.75" PointY="148.25" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_Fine" Width="1.5" PointX="11.25" PointY="30.875" />
+        <EntityTypeShape EntityType="emsdb2Model.Lib_Supplier" Width="1.5" PointX="9.75" PointY="152" />
+        <EntityTypeShape EntityType="emsdb2Model.sysdiagrams" Width="1.5" PointX="23.75" PointY="23.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Temp_JoiningSemesterUpdate" Width="1.5" PointX="28.75" PointY="19.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Temp_MissingResult" Width="1.5" PointX="34.75" PointY="20.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Temp_ResultBlock" Width="1.5" PointX="15.75" PointY="10.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Temp_ResultMigration" Width="1.5" PointX="23.75" PointY="36.5" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_LoginAudit" Width="1.5" PointX="35.75" PointY="11.5" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_PassReset" Width="1.5" PointX="9" PointY="95.25" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_Role" Width="1.5" PointX="13.75" PointY="44.25" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_RolePremissionMap" Width="1.5" PointX="16" PointY="44.25" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_RoleUserMap" Width="1.5" PointX="16" PointY="13" />
+        <EntityTypeShape EntityType="emsdb2Model.UAC_VerificationAudit" Width="1.5" PointX="9" PointY="39.125" />
+        <EntityTypeShape EntityType="emsdb2Model.UCS_SmsLog" Width="1.5" PointX="34" PointY="29.75" />
+        <EntityTypeShape EntityType="emsdb2Model.UCS_SmsProvider" Width="1.5" PointX="31.75" PointY="30.625" />
+        <EntityTypeShape EntityType="emsdb2Model.UCS_SmtpSetting" Width="1.5" PointX="35.75" PointY="15.5" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Account" Width="1.5" PointX="6.75" PointY="10.875" />
+        <EntityTypeShape EntityType="emsdb2Model.User_ContactAddress" Width="1.5" PointX="9" PointY="8.5" />
+        <EntityTypeShape EntityType="emsdb2Model.User_ContactEmail" Width="1.5" PointX="9" PointY="103.25" />
+        <EntityTypeShape EntityType="emsdb2Model.User_ContactNumber" Width="1.5" PointX="9" PointY="23.75" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Education" Width="1.5" PointX="19" PointY="17.5" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Employee" Width="1.5" PointX="9" PointY="13.75" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Experience" Width="1.5" PointX="9" PointY="107.125" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Image" Width="1.5" PointX="9" PointY="53.375" />
+        <EntityTypeShape EntityType="emsdb2Model.User_ProfileChangeAudit" Width="1.5" PointX="14" PointY="38.875" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Publication" Width="1.5" PointX="9" PointY="44.25" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Rank" Width="1.5" PointX="15" PointY="48.5" />
+        <EntityTypeShape EntityType="emsdb2Model.User_RankHistory" Width="1.5" PointX="16" PointY="22.75" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Relationship" Width="1.5" PointX="4.5" PointY="16.5" />
+        <EntityTypeShape EntityType="emsdb2Model.User_Student" Width="1.5" PointX="8.25" PointY="74" />
+        <EntityTypeShape EntityType="emsdb2Model.User_UserNameChangeAudit" Width="1.5" PointX="16.75" PointY="37.5" />
+        <EntityTypeShape EntityType="emsdb2Model.Aca_StudentHouse" Width="1.5" PointX="18.75" PointY="37.5" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_ClassSection" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_DeptBatch" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_Aca_StudyLevelTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_General_Campus" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Class_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendance_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSetting_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSmsLog_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassMaterialFileMap_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassNotice_Aca_ClassNotice" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassRoutine_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassTakenByEmployee_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassTakenByStudent_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassWaiverStudent_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassWaiverStudent_Previous_Aca_Class" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendance_Aca_ClassAttendanceSetting" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendance_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSetting_Aca_ClassRoutine" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSetting_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSmsLog_Aca_ClassAttendanceSetting" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassAttendanceSmsLog_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassMaterialFileMap_General_File" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassMaterialFileMap_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassNotice_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassRoutine_General_Room" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassRoutine_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_ClassSection" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassTakenByEmployee_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassTakenByStudent_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ClassWaiverStudent_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumCourse_Aca_Course" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_HomeWork_Aca_Course" />
+        <AssociationConnector Association="emsdb2Model.FK_CoursePrerequisiteMap_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_CoursePrerequisiteMap_Aca_CurriculumPreCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransfar_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransfer_Aca_CreditTransferInstitute" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransfer_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransferCourses_Aca_CreditTransfer" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransferCourses_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CreditTransferCourses_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Curriculum_Aca_GradingPolicy" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Curriculum_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumCourse_Aca_Curriculum" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumStudentMap_Aca_Curriculum" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_Curriculum" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumCourse_Aca_CurriculumElectiveGroup" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineClass_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExam_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_QuestionBank_Aca_CurriculumCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumElectiveGroup_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_CurriculumElectiveGroup" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_CurriculumElectiveGroupMinor" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_CurriculumElectiveGroupSeceondMajor" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_CurriculumElectiveGroupMajor" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_CurriculumStudentMap_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_DeptBatch" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_DeptBatch1" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_AbsentGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_ContinuationGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_MaximumGradeForImproveExamGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_MaximumImproveExamAllowGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_MaximummGradeForRetakeCourseGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_GradingPolicyOption_MaximumRetakeCourseAllowGradeId" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Exam_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ExamRoll_Aca_Exam" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ExamSupple_Aca_Exam" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ExamRoll_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_GradingPolicyOptions_Aca_GradingPolicy" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_GradingPolicy" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_HomeWork_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_HomeWorkSubmission_Aca_HomeWork" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_HomeWorkSubmission_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_HomeWorkSubmission_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_MarkDistributionPolicyComponent_Aca_MarkDistributionPolicy" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourse_Aca_MarkDistributionPolicyBacklog" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourse_Aca_MarkDistributionPolicyReferred" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourse_Aca_MarkDistributionPolicyRegular" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_MarkDistributionPolicyBreakdown_Aca_MarkDistributionPolicyComponent" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourse_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourse_Aca_StudyLevelTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OfferedCourseForCurriculum_Aca_OfferedCourse" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineClass_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExam_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamResultDetail_Aca_OnlineExam" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamTakenByStudent_Aca_OnlineExam" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_QuestionBankOnlineExamMap_Aca_OnlineExam" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamResultDetail_Aca_QuestionBank" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamResultDetail_Aca_QuestionOption" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamResultDetail_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_OnlineExamTakenByStudent_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ProgramTakenByStudent_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_Program" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_Program1" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_ProgramTakenByStudent_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_AnswerOfQuestion_Aca_QuestionBank" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_QuestionBank_Aca_QuestionGroup" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_QuestionBankOnlineExamMap_Aca_QuestionBank" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Semester_Aca_SemesterTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_Semester_Aca_StudyTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_Adm_AdmissionExam_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Account_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ProfileChangeAudit_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_Semester" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_SemesterGraduation" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_StudentRagistration_Aca_StudyLevel" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_StudentRagistration_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_StudyLevelTerm_Aca_StudyLevel" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_StudyLevelTerm_Aca_StudyTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Aca_StudyLevelTerm" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_EvaluationQuestion_Aca_EvaluationQuestionCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_EvaluationQuestionAnswer_Aca_EvaluationQuestion" />
+        <AssociationConnector Association="emsdb2Model.FK_Aca_EvaluationQuestionAnswer2_Aca_EvaluationQuestion" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Voucher_Acnt_OfficialBank" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Adm_AdmissionExam" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Education_Adm_DegreeCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Education_Adm_EducationBoard" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_User_Adm_ParentsJobType" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_Adm_StudentQuotaName" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Ledger_BAcnt_Branch" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Voucher_BAcnt_Branch" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_VoucherType_BAcnt_Branch" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Ledger_BAcnt_CompanyAccount" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Voucher_BAcnt_CompanyAccount" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_VoucherType_BAcnt_CompanyAccount" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_VoucherDetail_BAcnt_Ledger" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_Voucher_BAcnt_VoucherType" />
+        <AssociationConnector Association="emsdb2Model.FK_BAcnt_VoucherDetail_BAcnt_Voucher" />
+        <AssociationConnector Association="emsdb2Model.FK_General_AllSmsLog_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_General_Building_General_Campus" />
+        <AssociationConnector Association="emsdb2Model.FK_General_Room_General_Building" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Account_General_Campus" />
+        <AssociationConnector Association="emsdb2Model.FK_General_District_General_Country" />
+        <AssociationConnector Association="emsdb2Model.FK_General_Division_General_Country" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Account_General_Country" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ContactAddress_General_Country" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ContactNumber_General_Country" />
+        <AssociationConnector Association="emsdb2Model.FK_General_District_General_Division" />
+        <AssociationConnector Association="emsdb2Model.FK_General_PoliceStation_General_District" />
+        <AssociationConnector Association="emsdb2Model.FK_General_PostOffice_General_District" />
+        <AssociationConnector Association="emsdb2Model.FK_General_Room_General_Floor" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_Book_General_Language" />
+        <AssociationConnector Association="emsdb2Model.FK_General_PostOffice_General_PoliceStation" />
+        <AssociationConnector Association="emsdb2Model.FK_General_Room_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_AppointmentHistory_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_AppointmentHistory_HR_Position" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_AppointmentHistory_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_Attendance_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_HolidaySettings_HR_CalendarYear" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_WorkWeek_HR_CalendarYear" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmployementHistory_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_OrgDept_HR_Organization" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_BookDeptMap_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Account_HR_Department" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Employee_HR_DepartmentJoining" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmpLeaveAllocationSettings_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmpLeaveAllocationSettingsDetails_HR_EmpLeaveAllocationSettings" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmpLeaveApplicationDetails_HR_EmpLeaveAllocationSettings" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmpLeaveApplicationDetails_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmpLeaveApplicationDetails_User_Employee1" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmployementHistory_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_EmployementHistory_User_Rank" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_LeaveAllocationTemplateDetails_HR_SalaryTemplate" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslip_HR_Payroll" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslip_HR_SalarySettings" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslip_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslipDetails_HR_MonthlyPayslip" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslipDetails_HR_MonthlyPayslipDetails" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_MonthlyPayslipDetails_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Employee_HR_Position" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_SalarySettings_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_SalarySettingsDetails_HR_SalarySettings" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_SalarySettingsDetails_HR_SalarySettingsDetails" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_PayslipGroupHeadDetails_HR_SalaryTemplate" />
+        <AssociationConnector Association="emsdb2Model.FK_HR_PayslipGroupHeadDetails_HR_PayslipGroupHeadDetails1" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_FloorHostelBuildingMap_Hostel_Floor" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_HostelBuildingStudentMap_Hostel_Floor" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_Room_Hostel_Floor" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_FloorHostelBuildingMap_Hostal_HostalBuilding" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_HostelBuildingStudentMap_Hostal_HostalBuilding" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_Room_Hostal_HostalBuilding" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_HostelBuildingStudentMap_Hostel_Room" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_HostelBuildingStudentMap_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_Routine_Hostel_MealType" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_StudentMealCancel_Hostel_MealType" />
+        <AssociationConnector Association="emsdb2Model.FK_Hostel_StudentMealCancel_User_Student" />
+        <AssociationConnector Association="emsdb2Model.FK_Inv_StoreManager_Inv_Inventory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_Inventory_Invt_Supplier" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_InventoryDetails_Invt_Inventory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_InventoryPurchaseRequisitionMap_Invt_Inventory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemsInventoryMap_Invt_Inventory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_InventoryPurchaseRequisitionMap_Invt_PurchaseRequisition" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_Item_Invt_ProductCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_Item_Invt_Store" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemAllocation_Invt_ItemAllocation" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemAllocationRequisitionMap_Invt_ItemAllocation" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemReturnAllocationMap_Invt_ItemAllocation" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemAllocationRequisitionMap_Invt_Requisition" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemReturnAllocationMap_Invt_ItemReturn" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_ItemsEquipmentDetailITMap_Invt_EquipmentDetailIT" />
+        <AssociationConnector Association="emsdb2Model.FK_Inv_RequestedItem_Inv_ProductCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_Inv_StoreManager_Inv_ProductCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_PurchaseRequisitionDetail_Invt_ProductCategory" />
+        <AssociationConnector Association="emsdb2Model.FK_Inv_RequestedItem_Inv_Requisition" />
+        <AssociationConnector Association="emsdb2Model.FK_Invt_RequisitionDetails_Invt_Requisition" />
+        <AssociationConnector Association="emsdb2Model.FK_Inv_StoreManager_Inv_Store" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_BookDeptMap_Lib_Book" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookAuthorMap_Library_Book" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookCopy_Library_Book" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookSubjectMap_Library_Book" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookActivityLog_Library_Borrower" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookAuthorMap_Library_BookAuthor" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_BookCopy_Lib_Branch_Permanent" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_BookCopy_Lib_BranchPresent" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_BookCopyTransaction_Lib_BookCopy" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookCopy_Library_Supplier" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookCopyTransaction_Library_Borrower" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BookSubjectMap_Library_BookSubject" />
+        <AssociationConnector Association="emsdb2Model.FK_Lib_Borrower_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_BorrowerActivityLog_Library_Borrower" />
+        <AssociationConnector Association="emsdb2Model.FK_Library_Fine_Library_Borrower" />
+        <AssociationConnector Association="emsdb2Model.FK_UAC_PassReset_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_RolePremission_User_Role" />
+        <AssociationConnector Association="emsdb2Model.FK_User_UserRoleMap_User_Role" />
+        <AssociationConnector Association="emsdb2Model.FK_User_UserRoleMap_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_UAC_VerificationAudit_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_UAC_VerificationAudit_User_Account_ConfBy" />
+        <AssociationConnector Association="emsdb2Model.FK_UAC_VerificationAudit_User_Account_ReqBy" />
+        <AssociationConnector Association="emsdb2Model.FK_UCS_SmsLog_UCS_SmsProvider" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Account_User_Relationship" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ContactAddress_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ContactEmail_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ContactNumber_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Education_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Employee_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Experience_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Image_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ProfileChangeAudit_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_ProfileChangeAudit_User_Account1" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Publication_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_RankHistory_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Student_User_Account" />
+        <AssociationConnector Association="emsdb2Model.FK_User_Employee_User_Employee" />
+        <AssociationConnector Association="emsdb2Model.FK_User_RankHistory_User_Rank" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

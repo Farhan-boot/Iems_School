@@ -1,0 +1,575 @@
+﻿<!--File:Acnt_StdTransaction Add/Edit View-->
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@{
+    //ViewBag.Title = "Accounts: Add/Edit Std Transaction";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getTransactionListByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "GetTransactionListByStudentId", area = "Accounts" });
+    var getStdTransactionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "GetStdTransactionById", area = "Accounts" });
+    var saveStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "SaveStdTransaction", area = "Accounts" });
+    var deleteStdTransactionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "GetDeleteStdTransactionById", area = "Accounts" });
+    var payDrAddCrTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "PayDrAddCrTransaction", area = "Accounts" });
+
+
+    var printPaySlipByTransIdPageUrl = Url.Action("PrintPaySlip", "Student", new { area = "Academic" });
+    var downloadPaySlipByTransIdPageUrl = Url.Action("DownloadPaySlipPdf", "Student", new { area = "Academic" });
+    var printTransactionReportUrl = Url.Action("PrintTransactionReport", "Student", new {area = "Academic"});
+    var printMoneyReceiptByTransIdPageUrl = Url.Action("PrintMoneyReceipt", "Student", new { area = "Academic" });
+
+    //WebApi link for List
+    var getAddPaymentExtraDataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "GetStdTransactionExtraData", area = "Accounts" });
+    var getPagedStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetPagedStdTransaction", area = "Accounts" });
+    var getAllStdTransactionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetAllStdTransaction", area = "Accounts" });
+    var saveStdTransactionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "SaveStdTransactionList", area = "Accounts" });
+    var getStdTransactionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdTransactionApi", action = "GetStdTransactionListDataExtra", area = "Accounts" });
+    var balanceRecalculateByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdPaymentTransactionApi", action = "GetBalanceRecalculateByStudentId", area = "Accounts" });
+
+
+    var editStdTransactionByIdPageUrl = Url.Action("StdTransactionAddEdit", "StdTransaction", new { area = "Accounts" });
+    var listStdTransactionPageUrl = Url.Action("StdTransactionList", "StdTransaction", new { area = "Accounts" });
+    var viewPaymentDetailsByStudentIdSemesterIdUrl = Url.Action("ViewPaymentDetailsByStudentIdSemesterId", "Student", new { area = "Academic" });
+
+    // Angular Functions
+
+    string getNewTransaction = "getNewTransaction";
+    string selectParticularName = "selectParticularName";
+    string selectBankName = "selectBankName";
+    string getStdTransactionById = "getStdTransactionById";
+    string getTransactionListByStudentId = "getTransactionListByStudentId";
+    string loadAddPaymentExtraData = "loadAddPaymentExtraData";
+    var saveStdTransaction = "saveStdTransaction";
+    var onClickTransactionEdit = "onClickTransactionEdit";
+    var openModalForAddCrAmountForDr = "openModalForAddCrAmountForDr";
+    var payDrAddCrTransaction = "payDrAddCrTransaction";
+    string deleteStdTransactionById = "deleteStdTransactionById";
+    var refreshPage = "loadPage()";
+    string forIsDebited = "forIsDebited";
+    string forTransactionType = "forTransactionType";
+    string balanceRecalculateByStudentId = "balanceRecalculateByStudentId";
+
+    //string loadPaymentsByTransactionId = "loadPaymentsByTransactionId";
+
+}
+
+
+
+<div class="widget" id="StdTransactionAddEdit" ng-controller="StdTransactionAddEditCtrl"
+     ng-init="Init(
+      '@StudentId'
+      ,'@getTransactionListByStudentIdUrl'
+      ,'@getAddPaymentExtraDataUrl'
+      ,'@getStdTransactionByIdUrl'
+      ,'@saveStdTransactionUrl'
+      ,'@payDrAddCrTransactionUrl'
+      ,'@deleteStdTransactionByIdUrl'
+      ,'@viewPaymentDetailsByStudentIdSemesterIdUrl'
+       ,'@balanceRecalculateByStudentIdUrl'
+
+      )">
+
+<div class="alert alert-danger fade in radius-bordered alert-shadowed" ng-show="HasErrorGetList">
+        <button type="button" class="close"  ng-click="HasErrorGetList=false;">×</button> <i class="fa-fw fa fa-stop-circle"></i>
+        <strong>Attention: </strong> <span>{{ErrorMsg}}</span>
+    </div>
+<div class="widget-header bordered-bottom bordered-sky">
+
+    <div class="widget-buttons no-padding-left">
+        <button class="btn btn-success btn-xs" ng-click="@getNewTransaction (StdTransaction)"><i class="fa fa-edit"></i> Add Payment</button>
+        <a class="btn btn-info btn-xs"target="_blank" href="@printTransactionReportUrl/?id=@StudentId"><i class="fa fa-print"></i>Print Transaction</a>
+        <button class="btn btn-info btn-xs" ng-click="@refreshPage"><i class="fa fa-refresh"></i> Refresh</button>
+        <button class="btn btn-warning btn-xs" ng-click="@(balanceRecalculateByStudentId)(StudentId)"><i class="fa fa-refresh"></i> Recalculate</button>
+        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#printDebitSlipModal"><i class="fa fa-print"></i> Print Pay Slip</button>
+        <button class="btn btn-info btn-xs"><i class="fa fa-check-circle-o"></i> Clear For Exam Permit</button>
+        <button class="btn btn-danger btn-xs" ng-click="@(deleteStdTransactionById)($scope.StdTransaction)"><i class="fa fa-trash-o"></i>Delete</button>
+
+    </div>
+
+</div><!--Widget Header-->
+<div class="widget-header bordered-bottom bordered-sky">
+    <div class="form-inline pull-left">
+        <div class="form-group widget-buttons buttons-bordered" style="padding-right: 30px;">
+            <label style="padding-bottom: 5px;">Total Debit+: </label>
+            <label class="label label-info">{{ TotalDebitAmount | number: 2}}</label>
+
+        </div>
+        <div class="form-group widget-buttons buttons-bordered " style="padding-right: 30px;">
+            <label style="padding-bottom: 5px;">Total Credit-: </label>
+            <label class="label label-info">{{TotalCreditAmount | number: 2}}</label>
+        </div>
+        <div class="form-group widget-buttons buttons-bordered" style="padding-right: 30px;">
+            <label style="padding-bottom: 5px;">Balance: </label>
+            <label ng-class="TotalBalance < 0 ? ' label label-warning': TotalBalance == 0 ? ' label label-success':(TotalBalance > 0 ? ' label label-danger' : '')">{{TotalBalance | number: 2}}</label>
+
+        </div>
+    </div>
+
+
+
+</div><!--Widget Header-->
+<div class="widget-body no-padding">
+    <div id="teacherCourseList">
+        <table class="table table-hover table-striped table-bordered ">
+            <thead class="bordered-blue">
+            <tr role="row" style="color: #555555;">
+
+                <th class="text-center">SN</th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Semester
+                </th>
+                <th>
+                    Prticulars
+                </th>
+                <th>
+                    Debit
+                </th>
+                <th>
+                    Credit
+                </th>
+
+                <th>
+                    Balance
+                </th>
+                <th>
+                    Payment Status
+                </th>
+
+                <th>
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="{{row.IsSelected}}" ng-class="{ 'bg-gray': row.@Acnt_StdTransaction.Property_IsSemesterFee == 1, 'bg-white':row.@Acnt_StdTransaction.Property_IsSemesterFee == 0  ,'active':  SelectedStdTransactionIndex == $index}"
+                ng-click="selectStdTransaction($index)"
+                @*ng-dblclick="@(openModalForAddCrAmountForDr)($index)"*@
+                ng-dblclick="@(onClickTransactionEdit)($index)"
+                ng-repeat="row in StdTransactionList"
+                title="{{row.IsDebited?'Debited : '+row.@Acnt_StdTransaction.Property_DebitAmount+' ('+row.@Acnt_StdTransaction.Property_PaymentStatus+')':'Credited : '+ row.@Acnt_StdTransaction.Property_CreditAmount+' ('+row.@Acnt_StdTransaction.Property_TransactionType+')'}} {{}}">
+
+                <td class="text-center">{{$index+1}}</td>
+                <td>{{row.@Acnt_StdTransaction.Property_Date| date:'d MMM y '}}</td>
+                <td>{{row.SemesterName}}</td>
+                <td>
+                    @*<a ng-click="@onClickTransactionEdit ($index)"
+                    >
+                        {{row.@Acnt_StdTransaction.Property_Name}}
+                    </a>*@
+                    <p ng-hide="row.@Acnt_StdTransaction.Property_IsSemesterFee">
+                        {{row.@Acnt_StdTransaction.Property_Name}}
+                    </p>
+                    <a ng-show="row.@Acnt_StdTransaction.Property_IsSemesterFee"
+                       ng-click="LoadPaymentDetails(row.@Acnt_StdTransaction.Property_SemesterId)">
+                       {{row.@Acnt_StdTransaction.Property_Name}}</a>
+                </td>
+                <td>
+                    <label ng-class="row.IsDebited==1 ? 'label label-purple': (row.IsDebited!==1 ? '' : '')">
+                        <span ng-if="row.IsDebited">
+                            {{row.@Acnt_StdTransaction.Property_DebitAmount| number: 2}}
+                        </span>
+                    </label>
+
+                </td>
+                <td>
+                    <label ng-class="row.IsDebited==0 ? 'label label-primary': (row.IsDebited!==0 ? '' : '')">
+                        <span ng-if="row.IsDebited==0">
+                            {{row.@Acnt_StdTransaction.Property_CreditAmount| number: 2}}
+                        </span> 
+                    </label>
+
+                </td>
+                <td class="center">{{row.@Acnt_StdTransaction.Property_Balance| number: 2}}</td>
+                <td ng-show="row.IsDebited==0">
+                    {{row.@Acnt_StdTransaction.Property_TransactionType}}
+                </td>
+                <td ng-show="row.IsDebited==1">
+                    <label ng-class="row.@Acnt_StdTransaction.Property_PaymentStatusEnumId == @((int) Acnt_StdTransaction.PaymentStatusEnum.Paid) ? ' label label-success':row.@Acnt_StdTransaction.Property_PaymentStatusEnumId == @((int) Acnt_StdTransaction.PaymentStatusEnum.Unpaid) ? ' label label-darkorange' : (row.@Acnt_StdTransaction.Property_PaymentStatusEnumId == @((int) Acnt_StdTransaction.PaymentStatusEnum.PartialPaid) ? ' label label-warning' : '')">{{row.@Acnt_StdTransaction.Property_PaymentStatus}}</label>
+
+                </td>
+                <td>
+                    <a ng-show="(row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((int) Acnt_StdTransaction.PaymentStatusEnum.Unpaid)|| row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((int) Acnt_StdTransaction.PaymentStatusEnum.PartialPaid))
+                               && row.IsDebited==1"
+                       ng-click="@(openModalForAddCrAmountForDr)($index) "class="btn btn-success btn-xs edit"><i class="fa fa-dollar"></i>Pay</a>
+                    <a ng-show="(row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((int) Acnt_StdTransaction.PaymentStatusEnum.Paid)
+                               ||row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((int) Acnt_StdTransaction.PaymentStatusEnum.Unpaid)
+                               ||row.@Acnt_StdTransaction.Property_PaymentStatusEnumId==@((int) Acnt_StdTransaction.PaymentStatusEnum.PartialPaid))
+                               && row.IsDebited==1"
+                       target="_blank" href="@(printPaySlipByTransIdPageUrl)/?transactionId={{row.Id}}"
+                       @*data-toggle="modal" data-target="#printDebitSlipModal"*@ 
+                       class="btn btn-info btn-xs"
+                       ><i class="fa fa-clipboard"></i>PaySlip</a>
+                    <a ng-show="row.IsDebited==0"
+                       target="_blank" href="@(printMoneyReceiptByTransIdPageUrl)/?transactionId={{row.Id}}"
+                       @*data-toggle="modal" data-target="#printDebitSlipModal"*@ 
+                       class="btn btn-info btn-xs"><i class="fa fa-clipboard"></i>Money Receipt</a>
+                    @*<button ng-click="@(deleteStdTransactionById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>*@
+                    <button ng-click="@(onClickTransactionEdit)($index)" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div><!--Widget Body-->
+
+<!-- Add Payment Modal Start -->
+<div class="modal fade" id="addPaymentModal" tabindex="-1" role="dialog" aria-labelledby="addPaymentModal">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Payment : {{IndexInModal}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-12 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Period<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea" style="width: 736px;">
+                                <select ng-model="StdTransaction.@Acnt_StdTransaction.Property_SemesterId"
+                                        ng-options="option.Id as option.Name for option in SemesterList " class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Period" data-toggle="tooltip"></i></span></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Particular<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="StdTransaction.@Acnt_StdTransaction.Property_Name" class="dropdown-toggle form-control" type="text" id="textDropdownParticularType"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  />
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                        <li ng-repeat="row in ParticularTypeList | filter:StdTransaction.@Acnt_StdTransaction.Property_Name"><a href="#" ng-click="@(selectParticularName)(row.Name)">{{row.Name}}</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Give Particular" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr style="height: 40px;">
+                            <td class="fieldlabel">Transaction Type</td>
+                            <td class="fieldarea">
+                                <input type="radio"
+                                       ng-value="true"
+                                       ng-model="StdTransaction.IsDebited"
+                                       ng-change="@(forIsDebited)()"
+                                       @*ng-disabled1="ComponentSetting.@(Aca_ResultComponentSetting.Property_IsLockedScrutinizer) ||  !ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"*@
+                                       />
+                                +Debited
+
+                                <input type="radio"
+                                       ng-value="false"
+                                       ng-model="StdTransaction.IsDebited"
+                                       ng-change="@(forIsDebited)()"
+                                       @*ng-disabled1="ComponentSetting.@(Aca_ResultComponentSetting.Property_IsLockedScrutinizer) ||  !ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"*@
+                                       />
+                                -Credited
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Transaction Type" data-toggle="tooltip"></i></span></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form">
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr style="height: 40px;">
+                            <td class="fieldlabel">Payment Status@*<span class="red glyphicon glyphicon-asterisk"></span>*@</td>
+                            <td class="fieldarea" ng-disabled="StdTransaction.IsDebited">
+                                <input type="radio"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_PaymentStatusEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.PaymentStatusEnum.Unpaid)"/> @Acnt_StdTransaction.PaymentStatusEnum.Unpaid.ToString().AddSpacesToSentence()
+                                <input type="radio"
+
+                                       @*ng-disabled="StdTransaction.IsDebited"*@
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_PaymentStatusEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.PaymentStatusEnum.Paid)"/>@Acnt_StdTransaction.PaymentStatusEnum.Paid.ToString().AddSpacesToSentence()
+                                <input type="radio"
+                                       @*ng-disabled="StdTransaction.IsDebited"*@
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_PaymentStatusEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.PaymentStatusEnum.PartialPaid)"/> @Acnt_StdTransaction.PaymentStatusEnum.PartialPaid.ToString().AddSpacesToSentence()
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Payment Status" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr style="height: 40px;">
+                            <td class="fieldlabel">Payment Method@*<span class="red glyphicon glyphicon-asterisk"></span>*@</td>
+                            <td class="fieldarea">
+                                <input type="radio"
+                                       ng-change="@(forTransactionType)()"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.TransactionTypeEnum.CashInCampus)"/> @Acnt_StdTransaction.TransactionTypeEnum.CashInCampus.ToString().AddSpacesToSentence()
+                                <input type="radio"
+                                       ng-change="@(forTransactionType)()"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.TransactionTypeEnum.OnlinePayment)"/>@Acnt_StdTransaction.TransactionTypeEnum.OnlinePayment.ToString().AddSpacesToSentence()
+                                <input type="radio"
+                                       ng-change="@(forTransactionType)()"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                                       ng-value="@((int) Acnt_StdTransaction.TransactionTypeEnum.Cheque)"/> @Acnt_StdTransaction.TransactionTypeEnum.Cheque.ToString().AddSpacesToSentence()
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Payment Method" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="show-assesment well with-header">
+            <div class="header bg-blue" style="padding: 0 10px;">
+                Details
+            </div>
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-6 table-form" style="text-align: center;">
+                    <h4 class="label" style="background-color: #e27a30">Transaction Details </h4>
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">OR No<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-disabled="StdTransaction.IsDebited"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_VoucherNo" type="text"
+                                       class="form-control  input-inline" placeholder="Enter OR Number">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter OR No" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Amount<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-model="StdTransaction.Amount" type="number"
+                                       class="form-control  input-inline" placeholder="Enter Amount">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Date<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-model="StdTransaction.@Acnt_StdTransaction.Property_Date" type="datetime"
+                                       class="form-control  input-inline datepicker" placeholder="Enter Amount">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form" style="text-align: center;">
+                    <h5 class="label" style="background-color: #e27a30">Cheque Details</h5>
+                    <!-- <input type="hidden" name="token" value=""> -->
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">No<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-disabled="@((int) Acnt_StdTransaction.TransactionTypeEnum.CashInCampus)==StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId || @((int) Acnt_StdTransaction.TransactionTypeEnum.OnlinePayment)==StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_ManualPaySlipNo" type="text"
+                                       class="form-control  input-inline" placeholder="Enter Cheque Number">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Cheque Number" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Bank Name<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="StdTransaction.@Acnt_StdTransaction.Property_BankName" class="dropdown-toggle form-control" type="text"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="textDropdownBankName"/>
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 100px;">
+                                        <li ng-repeat="row in BankList | filter:StdTransaction.@Acnt_StdTransaction.Property_BankName"><a href="#" ng-click="@(selectBankName)(row.Name)">{{row.Name}}</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bank Name" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Date<span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input ng-disabled="@((int) Acnt_StdTransaction.TransactionTypeEnum.CashInCampus)==StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId || @((int) Acnt_StdTransaction.TransactionTypeEnum.OnlinePayment)==StdTransaction.@Acnt_StdTransaction.Property_TransactionTypeEnumId"
+                                       ng-model="StdTransaction.@Acnt_StdTransaction.Property_Date" type="datetime"
+                                       class="form-control  input-inline datepicker">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Of Cheque" data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align: center">
+        <button ng-click="@saveStdTransaction ()" type="button" class="btn btn-success">
+            <span class="fa fa-save"></span> Save
+        </button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+    </div>
+</div>
+</div>
+</div>
+<!-- Add Payment Modal End -->
+
+<!-- Print Debit Slip Modal Start -->
+<div class="modal fade" id="printDebitSlipModal" tabindex="-1" role="dialog" aria-labelledby="printDebitSlipModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Print Debit Slip</h4>
+            </div>
+            <div class="modal-body">
+                <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                    <div class="row">
+                        <!--text type-->
+                        <div class="col-md-12 table-form">
+                            <!-- <input type="hidden" name="token" value=""> -->
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Select Bank<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <select class="form-control select-inline" style="width: 450px;">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Bank" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4 table-form" style="text-align: center;">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Defined</td>
+                                    <td class="fieldarea">
+                                        <label class="checkbox-inline"><input style="margin-top: 0px !important" type="checkbox"> </label>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Auto Generate Once On Course Add" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-8 table-form" style="text-align: center;">
+                            <!-- <input type="hidden" name="token" value=""> -->
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Amount<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                    <td class="fieldarea">
+                                        <input type="number" class="form-control  input-inline" placeholder="Enter Amount">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                @*<tr>
+                                                            <td class="fieldlabel">Total Amount<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                            <td class="fieldarea">
+                                                                <input type="number"  class="form-control  input-inline" placeholder="Enter Amount">
+                                                            </td>
+                                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount" data-toggle="tooltip"></i></span></td>
+                                                        </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" class="btn btn-info" data-dismiss="modal"><span class="fa fa-save"></span> Preview</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal"><span class="fa fa-save"></span> Print</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print Debit Slip Modal End -->
+<!--Assesment Modal Start -->
+<div class="modal fade" id="showAssesmentModal" tabindex="-1" role="dialog" aria-labelledby="showAssesmentModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color: white;" id="showAssesmentModalLabel">Semester Payments</h4>
+            </div>
+            <div class="modal-body">
+                @*<div class="show-assesment well with-header">*@
+                @*<div class="header bg-blue">
+                                Semester Payments
+                            </div>*@
+                <div class="payment-details"></div>
+                @*</div>*@
+                <div class="modal-footer" style="text-align: center">
+                    @*<button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-paypal"></i> Online Payment</button>*@
+                    <a class="btn btn-blue" 
+                       target="_blank" href="@(printPaySlipByTransIdPageUrl)/?transactionId={{StdTransactionId}}"
+                       @*data-dismiss="modal"*@
+                       ><i class="fa fa-print"></i>Print Payslip</a>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal End -->
+</div>
+<!--Assesment Modal End -->
+</div><!--Widget-->
+@*End of controller Div*@
+
+<style>
+    .show-assesment.well.with-header {
+        padding-top: 35px !important;
+    }
+
+    .widget-buttons .label {
+        padding: 6px 6px 6px 6px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .text-dropdown-toggle .dropdown-menu li a:hover {
+        background: #1884e6;
+        color: #fff;
+    }
+    .text-dropdown {
+        max-height: 115px; 
+        overflow-y: auto;
+        font-size: 13px;
+        padding: 6px 12px;
+        width: 100%;
+        line-height: 1.42857143;
+        background-image: none;
+    }
+    .text-dropdown-toggle ul {
+        max-height: 115px !important;
+        padding: 0px !important;
+        overflow-x: hidden !important;
+    }
+
+    .text-dropdown-toggle ul li a {
+        padding-left: 0px !important; 
+        padding-right: 0px !important;
+        padding: 2px 10px !important;
+    }
+    
+</style>
+

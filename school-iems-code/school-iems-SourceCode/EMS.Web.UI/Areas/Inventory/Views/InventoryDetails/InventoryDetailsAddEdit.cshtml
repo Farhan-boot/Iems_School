@@ -1,0 +1,204 @@
+﻿
+<!--File:Inv_InventoryDetails Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Inventory Details";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var InventoryDetailsId = (string) id == null?"0":(string)id;
+    
+    //Inv_InventoryDetails WebApi Single Row link   
+    var getInventoryDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "GetInventoryDetailsById", area = "Inventory" });
+    var getInventoryDetailsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "GetInventoryDetailsDataExtra", area = "Inventory" });
+    var saveInventoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "SaveInventoryDetails", area = "Inventory" });
+    var deleteInventoryDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "GetDeleteInventoryDetailsById", area = "Inventory" });
+
+    //Inv_InventoryDetails WebApi List link 
+    var getPagedInventoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "InventoryDetailsApi", action = "GetPagedInventoryDetails", area = "Inventory"});
+    var getAllInventoryDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "GetAllInventoryDetails", area = "Inventory" });
+    var saveInventoryDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "SaveInventoryDetailsList", area = "Inventory" });
+    var getInventoryDetailsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "InventoryDetailsApi", action = "GetInventoryDetailsListDataExtra", area = "Inventory" });
+
+    var editInventoryDetailsByIdPageUrl = Url.Action("InventoryDetailsAddEdit", "InventoryDetails", new { area = "Inventory" });
+    var listInventoryDetailsPageUrl = Url.Action("InventoryDetailsList", "InventoryDetails", new { area = "Inventory" });
+    
+    //Inv_InventoryDetails Angular Functions
+    string getInventoryDetailsById="getInventoryDetailsById";
+    var saveInventoryDetails = "saveInventoryDetails";
+    var getNewInventoryDetails = "getNewInventoryDetails";
+    var refreshPage = "loadPage()";
+    string deleteInventoryDetailsById="deleteInventoryDetailsById";
+    string loadInventoryDetailsExtraData="loadInventoryDetailsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/InventoryDetails/InventoryDetailsAddEdit.js"></script>
+}
+
+<div id="InventoryDetailsAddEdit" class="row" ng-controller="InventoryDetailsAddEditCtrl" ng-init="Init(
+      '@InventoryDetailsId'
+      ,'@getInventoryDetailsByIdUrl'
+      ,'@getInventoryDetailsDataExtraUrl'
+      ,'@saveInventoryDetailsUrl'
+      ,'@deleteInventoryDetailsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="InventoryDetails.@Inv_InventoryDetails.Property_Name!=''">{{(InventoryDetails.@Inv_InventoryDetails.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="InventoryDetailsId" ng-Enter="@(getInventoryDetailsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewInventoryDetails)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listInventoryDetailsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Product Category Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_ProductCategoryId" class="form-control" placeholder="Enter Product Category Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Product Category Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Quantity </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_Quantity" class="form-control" placeholder="Enter Quantity"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Quantity." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Unit Price </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_UnitPrice" class="form-control" placeholder="Enter Unit Price"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Unit Price." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Warrenty Start Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_WarrentyStartDate" class="form-control" placeholder="Enter Warrenty Start Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Warrenty Start Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Warrenty Expair Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_WarrentyExpairDate" class="form-control" placeholder="Enter Warrenty Expair Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Warrenty Expair Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Description </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_Description" class="form-control" placeholder="Enter Description" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Own Barcode </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_OwnBarcode" class="form-control" placeholder="Enter Own Barcode" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Own Barcode." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Our Barcode </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_OurBarcode" class="form-control" placeholder="Enter Our Barcode" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Our Barcode." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Status </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="InventoryDetails.@Inv_InventoryDetails.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea type="text" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_Remark" class="form-control" placeholder="Enter Remark"   />
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Barcoded </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_IsBarcoded"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Barcoded if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="InventoryDetails.@Inv_InventoryDetails.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Inventory </td>
+                            <td class="fieldarea">
+                                <select ng-model="InventoryDetails.@Inv_InventoryDetails.Property_InventoryId"
+                                        ng-options="option.Id as option.Name for option in InventoryList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Inventory." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveInventoryDetails)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

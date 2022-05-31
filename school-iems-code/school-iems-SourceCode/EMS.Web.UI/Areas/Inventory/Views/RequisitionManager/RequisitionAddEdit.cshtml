@@ -1,0 +1,434 @@
+﻿@using EMS.Web.UI.Areas.Inventory.Controllers.WebApi
+@{
+    ViewBag.Title = "Requisition: Add/Edit";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RequisitionId = (string)id == null ? "0" : (string)id;
+
+    //ProductCardManager WebApi Single Row link
+    var getRequisitionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionManagerApi", action = "GetRequisitionById", area = "Inventory" });
+    var getRequisitionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionManagerApi", action = "GetRequisitionDataExtra", area = "Inventory" });
+    var saveRequisitionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionManagerApi", action = "SaveRequisition", area = "Inventory" });
+
+    //var getPurchaseDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "GetPurchaseListDataExtra", area = "Inventory" });
+    //var saveItemInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "SaveItemInformation", area = "Inventory" });
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/RequisitionManager/RequisitionAddEdit.js"></script>
+}
+
+
+<!--File:BAcnt_Requisition Add/Edit View-->
+<div id="RequisitionAddEdit" class="row ng-scope" ng-controller="RequisitionAddEditCtrl" ng-init="Init(
+        '@RequisitionId'
+        ,'@getRequisitionByIdUrl'
+        ,'@getRequisitionDataExtraUrl'
+        ,'@saveRequisitionUrl'
+        );">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12 voucher-entry-form">
+        <div ng-hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong>
+        </div>
+        <div ng-show="HasViewPermission" class="">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="VoucherId" ng-enter="" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        @*<button ng-click="getNewVoucher()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                        <a href="/Inventory/RequisitionManager/RequisitionList" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="loadPage()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-5 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Requested By Employee <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            @*<input type="text" ng-model="RequisitionInformation.RequestedByEmployeeId" class="form-control" placeholder="Enter Requested By Employee Id" maxlength="50" required="">*@
+
+                                            <select ng-model="RequisitionInformation.RequestedByEmployeeId" ng-options="option.Id as option.Name for option in UserList" title="Select Item List" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requested By  Employee Id." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Requisition Date </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.RequisitionDate" class="form-control date-picker" placeholder="Enter Requisition Date" datetime="dd/MM/yyyy">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition Date." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Require Date </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.RequireDate" class="form-control date-picker" placeholder="Enter Require Date">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Require Date." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Purpose </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.Purpose" class="form-control" placeholder="Enter Purpose">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Purpose." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Remark </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.Remark" class="form-control" placeholder="Enter Remark">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Referenced By Employee </td>
+                                        <td class="fieldarea">
+                                            @*<input type="text" ng-model="RequisitionInformation.ReferencedByEmployeeId" class="form-control" placeholder="Enter Referenced By Employee Id">*@
+
+                                            <select ng-model="RequisitionInformation.ReferencedByEmployeeId" ng-options="option.Id as option.Name for option in UserList" title="Select Item List" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Referenced By Employee Id." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Issued Or Release By User </td>
+                                        <td class="fieldarea">
+                                            @*<input type="text" ng-model="RequisitionInformation.IssuedOrReleaseByUserId" class="form-control" placeholder="Enter Issued Or Release By UserId">*@
+
+                                            <select ng-model="RequisitionInformation.IssuedOrReleaseByUserId" ng-options="option.Id as option.Name for option in UserList" title="Select Item List" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Issued Or Release By UserId." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Approved By Admin </td>
+                                        <td class="fieldarea">
+                                            @*<input type="text" ng-model="RequisitionInformation.ApprovedByAdminId" class="form-control" placeholder="Enter Approved By AdminId">*@
+
+                                            <select ng-model="RequisitionInformation.ApprovedByAdminId" ng-options="option.Id as option.Name for option in UserList" title="Select Item List" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved By AdminId." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Received By Employee </td>
+                                        <td class="fieldarea">
+                                            @*<input type="text" ng-model="RequisitionInformation.ReceivedByEmployeeId" class="form-control" placeholder="Enter Received By Employee Id">*@
+
+                                            <select ng-model="RequisitionInformation.ReceivedByEmployeeId" ng-options="option.Id as option.Name for option in UserList" title="Select Item List" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Received By EmployeeId." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">Status </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.Status" class="form-control" placeholder="Enter Status">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Status." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Requisition Status Id </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.RequisitionStatusId" class="form-control" placeholder="Enter Requisition Status Id ">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition Status Id ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Approved By Id </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="RequisitionInformation.ApprovedById" class="form-control" placeholder="Enter Approved By Id ">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved By Id ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+
+                                <tr>
+                                    <td class="fieldlabel">Delivered By Id </td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="RequisitionInformation.DeliveredById" class="form-control" placeholder="Enter Delivered By Id ">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Delivered By Id." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">Item Category Id  </td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="RequisitionInformation.ItemCategoryId" class="form-control" placeholder="Enter Item Category Id ">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Category Id ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">Quantity </td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="RequisitionInformation.Quantity" class="form-control" placeholder="Enter Quantity ">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Quantity." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                </tr>
+                                
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+
+                        <div class="col-md-12">
+                            <div ng-show="IsShowDeleteUnDeleteMessage" class="alert alert-warning fade in radius-bordered alert-shadowed ng-binding ng-hide" style="margin-bottom: 5px;">
+                                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                                <i class="fa-fw fa fa-warning"></i>
+                                <strong>Attention Please!</strong>
+                            </div>
+                            <div class="no-padding">
+                                <div class="widget-main fast-payment-collection-tabs">
+                                    <div class="tabbable">
+                                        <ul class="nav nav-tabs" id="myTab9">
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#product-items" aria-expanded="true" class="ng-binding">
+                                                    <i class="fa fa-check" style="color: #65b951;"></i>
+                                                    Add Product
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                        <div class="tab-content no-padding">
+                                            <div id="product-items" class="tab-pane active">
+                                                <table class="table table-striped table-bordered" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            @*<th style="width: 65px; text-align: center;">SL</th>*@
+                                                            <th style="text-align: center; width: 300px">Item Name <span class="red glyphicon glyphicon-asterisk"></span></th>
+                                                            <th style="text-align: center; width: 300px">Item <span class="red glyphicon glyphicon-asterisk"></span></th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Detail</th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Quantity</th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Approved Quantity</th>
+
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requisition No</th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requisition By BP Id </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requisition By Name </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requisition By Rank </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requested By Department </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requested By Department Area </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requisition Date </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Requier Date </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Approved By BP Id </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Approved By Rank </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Approved By Department </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Status Enum Id </th>
+                                                            <th style="width: 100px; text-align: center; width: 500px">Purpose </th>
+
+
+                                                            @*<th style="width: 55px; text-align: center; width: 300px">Total Item <span class="red glyphicon glyphicon-asterisk"></span></th>
+        <th style="width: 55px; text-align: center; width: 300px">Store <span class="red glyphicon glyphicon-asterisk"></span></th>*@
+                                                            <th style="width: 55px; text-align: center; width: 300px">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- ngRepeat: voucherDtlRow in Voucher.BAcnt_VoucherDetailListJson| filter:{IsDeleted:false} -->
+                                                        <tr ng-repeat="RequisitionDtlRow in RequisitionInformation.RequisitionDetailsJson">
+                                                            @*<td>
+            <input ng-value="{{$index+1}}" style="padding-left: 3px; width: 100%;" placeholder="SL" type="text" class="ng-valid ng-dirty ng-valid-parse ng-touched">
+        </td>*@
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.ItemName" style="padding-left: 3px; width: 100%;" placeholder="Item Name" type="text" class="">
+                                                            </td>
+
+                                                            <td>
+                                                                <select ng-model="RequisitionDtlRow.ItemId" ng-options="option.Id as option.Name for option in ItemList" title="Select Item List" ng-init="" class="form-control">
+                                                                    <option value="" label="" class="">---Select One---</option>
+                                                                </select>
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.Detail" style="padding-left: 3px; width: 100%;" placeholder="Detail" type="text" class="ng-valid ng-dirty">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.Quantity" style="padding-left: 3px; width: 100%;" placeholder="Quantity" type="text" class="ng-valid ng-dirty">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.ApprovedQuantity" style="padding-left: 3px; width: 100%;" placeholder="Approved Quantity" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequisitionNo" style="padding-left: 3px; width: 100%;" placeholder="Requisition No " type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequisitionByBPId" style="padding-left: 3px; width: 100%;" placeholder="Requisition By BP Id" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequisitionByName" style="padding-left: 3px; width: 100%;" placeholder="Requisition By Name" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequisitionByRank" style="padding-left: 3px; width: 100%;" placeholder="Requisition By Rank" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequestedByDepartment" style="padding-left: 3px; width: 100%;" placeholder="Requested By Department " type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequestedByDepartmentArea" style="padding-left: 3px; width: 100%;" placeholder="Requested By Department Area" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequisitionDate" style="padding-left: 3px; width: 100%;" placeholder="Requisition Date" type="text" class="form-control date-picker" >
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.RequierDate" style="padding-left: 3px; width: 100%;" placeholder="Requier Date" type="text" class="form-control date-picker" >
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.ApprovedByBPId" style="padding-left: 3px; width: 100%;" placeholder="Approved By BP Id" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.ApprovedByRank" style="padding-left: 3px; width: 100%;" placeholder="Approved By Rank" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.ApprovedByDepartment" style="padding-left: 3px; width: 100%;" placeholder="Approved By Department" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.StatusEnumId" style="padding-left: 3px; width: 100%;" placeholder="Status Enum Id" type="text">
+                                                            </td>
+
+                                                            <td>
+                                                                <input ng-model="RequisitionDtlRow.Purpose" style="padding-left: 3px; width: 100%;" placeholder="Purpose" type="text">
+                                                            </td>
+
+                                                            @*<td style="text-align: center;">
+            <select ng-model="productDtlRow.WarhouseId" ng-options="option.Id as option.Name for option in WarhouseList" title="Select Warhouse" ng-init="" class="form-control">
+                <option value="" label="" class="">---Select One---</option>
+            </select>
+        </td>*@
+
+                                                            <td class="text-center">
+                                                                <button ng-click="delete(RequisitionDtlRow)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                                            </td>
+                                                        </tr><!-- end ngRepeat: voucherDtlRow in Voucher.BAcnt_VoucherDetailListJson| filter:{IsDeleted:false} -->
+                                                        <tr>
+                                                            <td>
+                                                                <button ng-click="addNewRequisitionDtl(RequisitionDtlRow)" class="btn btn-xs btn-azure">Add To Cart</button>
+                                                            </td>
+                                                            @*<td class="text-bold" style="text-align: right;" colspan="2">
+                                                                    Total:
+                                                                </td>
+                                                                <td class="text-bold">{{PurchaseInformation.Invt_PurchaseDetailListJson| total:'Amount'|number:0 }}</td>*@
+
+                                                            <td></td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div><!--Widget Body end-->
+                            </div>
+                        </div>
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-10 text-center">
+                            <button ng-click="saveRequisition()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+<style>
+
+    .voucher-entry-form input,
+    .voucher-entry-form optgroup,
+    .voucher-entry-form select,
+    .voucher-entry-form textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .text-dropdown-toggle .dropdown-menu li a:hover {
+        background: #1884e6;
+        color: #fff;
+    }
+
+    .text-dropdown {
+        max-height: 115px;
+        overflow-y: auto;
+        font-size: 13px;
+        padding: 6px 12px;
+        width: 100%;
+        line-height: 1.42857143;
+        background-image: none;
+    }
+
+    .text-dropdown-toggle ul {
+        max-height: 115px !important;
+        padding: 0px !important;
+        overflow-x: hidden !important;
+    }
+
+        .text-dropdown-toggle ul li a {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            padding: 2px 10px !important;
+        }
+
+    #product-items {
+        overflow-x: scroll;
+    }
+    #product-items < th, td { min-width: 200px; }
+</style>
+
+
+
+

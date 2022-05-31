@@ -1,0 +1,109 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model EMS.Web.UI.Areas.Student.Models.CourseViewModel
+
+@{
+    ViewBag.Title = "Course Pane";
+    // Angular Properties !ViewBag.IsProfileRegistered
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+
+
+}
+@if (false)
+{
+    <h6 class="row-title before-success" style="color: red">
+        <b>
+            Sorry! Your Online <a href="@Url.Action("Edit", "Profile", new {area = "Student"})" class="small-box-footer">Profile Registration</a> is pending. Please confirm your Profile Information to get Term Result/Registration/Admid Card/Certificate/Transcript.
+        </b>
+    </h6>
+}
+else
+    if (Model.Course == null)
+{
+    <h6 class="row-title before-success" style="color: red">
+        <b>
+            Sorry! You are not enrolled in this Class.
+        </b>
+    </h6>
+}
+else
+{
+
+
+    <h5 class="row-title no-margin-top before-success" style="display: block;">
+        <i class="fa fa-institution success"></i> @Model.Course.Code @Model.Course.Name
+        <span  class="pull-right">@Model.Course.Aca_Semester.Name</span>
+    </h5>
+    <h6>
+        Class No: @Model.Course.ClassNo, Class Section: @Model.Course.Aca_ClassSection.Name, Status: @Model.Course.Status
+        <em class="pull-right">Cr.Hr:@Model.Course.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@Model.Course.Aca_CurriculumCourse.CreditHour.ToString("F"), @Model.Course.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @Model.Course.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @Model.Course.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>
+    </h6>
+    <div class="tabbable">
+        <ul class="nav nav-tabs" id="myTab">
+            @if (SiteSettings.Instance.Student.Class.AttendancesCanView)
+            {
+                <li class="active">
+                    <a data-toggle="tab" href="#Attendance" aria-expanded="false">Attendance</a>
+                </li>
+            }
+            
+            @if (SiteSettings.Instance.Student.Class.ResultsCanView)
+            {
+                <li class="tab-blue">
+                    <a data-toggle="tab" href="#Results" aria-expanded="true">Results</a>
+                </li>
+            }
+            @if (SiteSettings.Instance.Student.Class.CourseMaterialsCanView)
+            {
+                <li class="tab-blue">
+                    <a data-toggle="tab" href="#CourseMaterials" aria-expanded="true">Course Materials <span class="badge badge-success">new</span></a>
+                </li>
+            }
+            @if (SiteSettings.Instance.Student.Class.CourseNoticesCanView)
+            {
+                <li class="tab-blue">
+                    <a data-toggle="tab" href="#Notices" aria-expanded="true">Notices</a>
+                </li>
+            }
+            
+        </ul>
+        <div class="tab-content no-padding">
+            @if (SiteSettings.Instance.Student.Class.AttendancesCanView)
+            {
+                <div id="Attendance" class="tab-pane active">
+                    @{
+                        Html.RenderPartial("~/Areas/Student/Views/Course/ClassAttendance.cshtml", Model.ClassAttendanceList);
+                    }
+                </div>
+            }
+            @if (SiteSettings.Instance.Student.Class.ResultsCanView)
+            {
+                <div id="Results" class="tab-pane">
+                    @{
+                        Html.RenderPartial("~/Areas/Student/Views/Course/ClassResults.cshtml", Model.CourseResultViewModel);
+                    }
+                </div>
+            }
+            @if (SiteSettings.Instance.Student.Class.CourseMaterialsCanView)
+            {
+                <div id="CourseMaterials" class="tab-pane">
+                    @{
+                        Html.RenderPartial("~/Areas/Student/Views/Course/ClassMaterials.cshtml", Model.ClassMaterialList);
+                    }
+                </div>
+            }
+            @if (SiteSettings.Instance.Student.Class.CourseNoticesCanView)
+            {
+                <div id="Notices" class="tab-pane">
+                    @{
+                        Html.RenderPartial("~/Areas/Student/Views/Course/ClassNotices.cshtml", Model.ClassNoticeList);
+                    }
+                </div>
+            }
+            
+        </div>
+    </div>
+                    }

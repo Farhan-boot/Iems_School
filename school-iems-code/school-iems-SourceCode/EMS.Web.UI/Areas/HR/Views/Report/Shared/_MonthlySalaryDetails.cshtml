@@ -1,0 +1,241 @@
+﻿<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getMonthlySalaryDetailsReportExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalaryDetailsReportDataExtra", area = "HR" });
+    //WebApi link for List
+    var getMonthlySalaryDetailsReportUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalaryDetailsReport", area = "HR" });
+
+    var editEmployeeByIdPageUrl = Url.Action("UpdateEmployee", "ManageEmployee", new { area = "HR" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="MonthlySalaryDetailsReportCtrl"
+     ng-init="Init(
+     '@getMonthlySalaryDetailsReportExtraUrl'
+     ,'@getMonthlySalaryDetailsReportUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                        <tr>
+                            <th style="text-align: center;" colspan="12">
+                                <strong>Salary of {{SelectedSalaryTemplate.Name}}</strong><br />
+                                For the Month of {{SelectedPayroll.Name}}
+                            </th>
+                        </tr>
+                       
+                    </thead>
+                    <tbody class="hide-on-print">
+                        <tr>
+                            <td style="width: 50px;">Payroll:</td>
+                            <td style="">
+                                <select ng-model="SelectedPayroll"
+                                        ng-options="option as option.Name for option in PayrollList"
+                                        title="Select Program" class="form-control">
+                                </select>
+                            </td>
+
+                            <td style="width: 150px;">Salary Template Group: </td>
+                            <td>
+                                <select ng-model="SelectedSalaryTemplate"
+                                        ng-options="option as option.Name for option in SalaryTemplateList" class="form-control">
+                                    <option value="" label="" class="">---Select Salary Template Group Type---</option>
+                                </select>
+                            </td>
+                            <td style="width: 150px;">
+                                <input type="checkbox" ng-model="IsShowJoiningDate" />Show Joining Date
+                            </td>
+                            <td style="width: 170px;">
+                                <input type="checkbox" ng-model="IsShowLengthOfService" />Show Length of service
+                            </td>
+                            <td style="width: 190px;">
+                                <input type="checkbox" ng-model="IsShowNextPromotionDate" />Show Next Increment Date
+                            </td>
+                        </tr>
+                        <tr class="hide-on-print">
+                            <td style="text-align: center;" colspan="12">
+                                <button class="btn btn-info" ng-click="getMonthlySalaryDetailsReport()">
+                                    View Report
+                                </button>
+                                <button ng-show="Report!=null" class="btn btn-warning" onclick="window.print();return false;">
+                                    <i class="fa fa-print"></i>Print
+                                </button>
+                                <button ng-show="Report!=null" class="btn btn-danger" onclick="$('#MonthlySalaryDetails').tableExport({ fileName: 'MonthlySalaryDetails', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });">
+                                    <i class="fa fa-file-excel-o"></i>Download As Excel(.xls)
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="MonthlySalaryDetails" ng-show="Report!=null" style="margin:10px" class="border-black">
+
+            <table class="report-table table-bordered table-border" style="width: 100%; text-align: center; margin-bottom: 15px;">
+                <thead class="bg-gray">
+                    <tr style="font-weight: bold; font-size: 14px;">
+                        <th style="width: 50px">Sl No.</th>
+                        <th style="width: 190px">Name</th>
+                        <th style="width: 165px">Designation</th>
+                        <th ng-show="IsShowJoiningDate">Joining Date</th>
+                        <th ng-show="IsShowLengthOfService">Length of Service<br />@DateTime.Now.ToString("dd/MM/yyyy")</th>
+                        <th ng-show="IsShowNextPromotionDate">Next Increment Date</th>
+                        <th ng-repeat="head in Report.SalaryHeadList">{{head}}</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="employee in Report.EmployeeList">
+                    <tr>
+                        <td>{{$index+1}}</td>
+                        <td style="text-align: left">
+                            <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{employee.UserId}}&empId={{employee.EmployeeId}}#Payslip">{{employee.EmployeeName}}</a>
+                        </td>
+                        <td style="text-align: center">
+                            {{employee.Designation}}
+                        </td>
+                        <td ng-show="IsShowJoiningDate">
+                            {{employee.JoiningDate | date:'dd/MM/yy'}}
+                        </td>
+                        <td ng-show="IsShowLengthOfService">
+                            {{employee.LengthOfService}}
+                        </td>
+                        <td ng-show="IsShowNextPromotionDate">
+                            <span ng-show="employee.NextPromotionDate==null">
+                                N/A
+                            </span>
+                            {{employee.NextPromotionDate | date:'dd/MM/yy'}}
+                        </td>
+                        <td ng-repeat="value in employee.SalaryValueList track by $index">
+                            <span ng-show="value!=0">{{value|number}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td ng-show="IsShowJoiningDate">
+                        </td>
+                        <td ng-show="IsShowLengthOfService">
+                        </td>
+                        <td ng-show="IsShowNextPromotionDate">
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td style="text-align: right;">Total :</td>
+
+                        <td ng-repeat="value in Report.TotalList track by $index">{{value|number}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <em>In Words : Tk. <span style="text-transform: capitalize">{{Report.NetTotalInWords}}</span> Only</em>
+
+            <table class="report-table">
+                <tfoot class="no-bordered show-on-print">
+                    <tr style="height: 120px;">
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: left; padding-bottom: 15px; border: none !important;">
+                            __________________________
+                            <br />
+                            Sr. Assistant Director<br />(Finance & Accounts)
+                        </td>
+                        <td colspan="2" style="vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important; ">
+                            _______________
+                            <br />
+                            Treasurer<br />
+
+                        </td>
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important;">
+                            ____________________
+                            <br />
+                            Vice-Chancellor<br />
+                        </td>
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important;">
+                            _______________
+                            <br />
+                            Approved<br />
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    table .no-border,
+    table .no-border tr,
+    table .no-border tr td {
+        border: none;
+    }
+
+    .report-table > tbody > tr > td,
+    .report-table > thead > tr > th {
+        border: 1px solid black !important;
+    }
+
+    .report-table > thead > tr > th {
+        padding: 0px !important;
+    }
+</style>

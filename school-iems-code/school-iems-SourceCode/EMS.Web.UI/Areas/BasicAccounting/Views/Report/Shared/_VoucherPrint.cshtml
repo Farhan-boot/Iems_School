@@ -1,0 +1,202 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Framework.Utils
+@model EMS.Framework.Objects.MvcModelResult<BAcnt_Voucher>
+
+@helper Header(string reportCopyName)
+{
+
+var reportModel = new ReportHeaderFooterModel();
+reportModel.ReportNo = "";
+reportModel.HtmlRightArea = "";
+reportModel.Subtitle = "";
+reportModel.Title= Model.DataBag.VoucherTitleName;
+ViewBag.ReportModel = reportModel;
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+
+}
+
+@helper Footer()
+{
+    <div style="margin-top: 10px;">
+        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+    </div>
+}
+
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+    
+    <div class="main-body">
+        <div style="min-height: 500px;">
+            @MoneyReceiptHtlm("Office Copy")
+        </div>
+    </div>
+
+}
+
+@*<div class="main-body">
+    <div style="min-height: 500px;">
+        @MoneyReceiptHtlm("Office Copy")
+    </div>
+</div>*@
+
+@helper MoneyReceiptHtlm(string reportCopyName)
+{
+    var voucher = Model.Data;
+    var totalDebitAmount = Model.DataBag.TotalDebitAmount;
+    var totalCreditAmount = Model.DataBag.TotalCreditAmount;
+    var amountInWords = Model.DataBag.AmountInWords;
+
+    @Header(reportCopyName)
+    <div>
+        <table width="100%">
+            <tr>
+                <td style="width: 160px;">
+                    <span class="text-bold">Voucher No:</span>
+                    @voucher.VoucherNo
+                </td>
+                <td></td>
+                <td style="width: 160px;">
+                    <span class="text-bold">Voucher Date:</span>
+                    @voucher.Date.ToString("d")
+
+                    
+
+                </td>
+            </tr>
+          @if (voucher.ChequeNo.IsValid()|| voucher.ChequeDate.IsValid())
+          {
+              <tr>
+                  <td>
+                      <span class="text-bold">Cheque No:</span>
+                      @voucher.ChequeNo
+                  </td>
+                  <td></td>
+                  <td>
+                      <span class="text-bold">Cheque Date:</span>
+                      @voucher.ChequeDate
+                    
+                  </td>
+              </tr>
+          }
+            
+        </table>
+    </div>
+    <div style="margin-top: 10px">
+        <span class="text-bold">Narration:</span>
+        @voucher.Narration
+    </div>
+    <div style="margin-top: 20px;">
+        <table class="table-bordered table-border" width="100%">
+            <thead>
+            <tr>
+                <th class="text-center" style="width: 100px;">Code</th>
+                <th class="text-center">Head Of Accounts</th>
+                <th class="text-center"  style="width: 100px;">Debit</th>
+                <th class="text-center"  style="width: 100px;">Credit</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var voucherDtl in voucher.BAcnt_VoucherDetail)
+            {
+                <tr>
+                    <td class="text-center">
+                        @if (voucherDtl.BAcnt_Ledger != null)
+                        {
+                            <span>@voucherDtl.BAcnt_Ledger.CodeName</span>
+                        }
+                    </td>
+                    <td>
+                        @if (voucherDtl.BAcnt_Ledger != null)
+                        {
+                            <span>@voucherDtl.BAcnt_Ledger.Name</span>
+                        }
+                        <div style="margin-left: 15px;">
+                            @if (voucherDtl.Narration != null)
+                            {
+                                <span style="font-size: 10px !important;">@voucherDtl.Narration</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        @if (voucherDtl.DebitAmount != 0)
+                        {
+                            <span>@voucherDtl.DebitAmount</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (voucherDtl.CreditAmount != 0)
+                        {
+                            <span>@voucherDtl.CreditAmount</span>
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td class="text-bold" colspan="2" style="text-align: right;">Total</td>
+                <td class="text-bold text-center">@totalDebitAmount</td>
+                <td class="text-bold text-center">@totalCreditAmount</td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 10px; text-align: right;">
+            <span class="text-bold">Taka(in words):</span>
+            @amountInWords
+        </div>
+        <div style="margin-top: 50px; padding: 0 40px;">
+            <table width="100%">
+                <tr>
+                    <td style="text-align: left; text-decoration-line: overline;">Prepared by</td>
+                    <td style="text-align: center; text-decoration-line: overline;">Checked by</td>
+                    <td style="text-align: right; text-decoration-line: overline;">Approved by</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    @Footer()
+
+}
+<style>
+    * {
+        font-size: 12px !important;
+        line-height: 1.728571 !important;
+        /*font-size: 14px;
+        font-family: 'Times New Roman', Times, serif;*/
+    }
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    .logo-size {
+        max-width: 55px;
+    }
+    .table-bordered > tbody > tr > td {
+        border: 1px solid #696464;
+        padding: 5px;
+    }
+    .table-bordered > thead > tr > th {
+        border: 1px solid #696464;
+        border-bottom: none;
+        padding: 5px;
+    }
+
+</style>
+

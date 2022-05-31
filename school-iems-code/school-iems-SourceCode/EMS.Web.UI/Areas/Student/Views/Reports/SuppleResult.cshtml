@@ -1,0 +1,120 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+
+@{
+
+    var SuppleExamViewName = SiteSettings.Instance.SuppleExamViewName;
+
+    ViewBag.Title = SuppleExamViewName+" Result";
+
+
+    var getSuppleResultDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleResultApi", action = "GetSuppleResultDataExtra", area = "Student" });
+    var getSuppleResultByExamIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleResultApi", action = "GetSuppleResultByExamId", area = "Student" });
+
+    string getSemesterResultByStudentUserName = "getSemesterResultByStudentUserName";
+
+
+}
+@section ScriptSection
+{
+
+    <script src="~/Areas/Student/Views/Reports/SuppleResult.js"></script>
+
+}
+
+
+<div class="row"
+     ng-controller="PublicResultPublishPanelCtrl"
+     ng-init="Init(
+     '@getSuppleResultDataExtraUrl'
+    ,'@getSuppleResultByExamIdUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption "><b>{{SelectedExam.Name}} Result</b></span>
+                <div class="widget-buttons">
+                    Select @SuppleExamViewName Exam:
+                </div>
+                <div class="widget-buttons">
+                    <select ng-model="SelectedExam"
+                            ng-change="onChangeExam()"
+                            ng-options="option.Name for option in ExamListForSuppleList"
+                            ng-init="" class="form-control input-sm" style="margin-top: 3px;"></select>
+                </div>
+                <div class="widget-buttons">
+                    <button ng-click="refreshResult()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+
+            </div><!--Widget Header-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-md-8 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="exam-type text-center" style="margin-bottom: 5px;">
+                                    <span>@SuppleExamViewName Result</span>
+                                </div>
+                                <div ng-show="HasSuppleResultError ||SuppleResultError!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                                    <button ng-click="HasSuppleResultError=false" class="close" data-dismiss1="alert">×</button>
+                                    <i class="fa-fw fa fa-warning"></i>
+                                    <strong>Sorry!</strong> {{SuppleResultError}}
+                                </div>
+                                <div>
+                                    <div ng-show="FinalTermResult!=null">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 70px;">Course Code</th>
+                                                    <th class="text-center">Course Title</th>
+                                                    <th ng-show="SelectedExam.ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)" class="text-center" style="width: 55px;">Midterm  Mark</th>
+                                                    <th class="text-center" style="width: 55px;">Grade</th>
+                                                    @*<th class="text-center" style="width: 55px;">Accepted Grade</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="row in FinalTermResult">
+                                                    <td>{{row.CourseCode}}</td>
+                                                    <td class="text-left">
+                                                        {{row.CourseName}} (<em>{{row.EnrollType}}</em>)
+                                                    </td>
+                                                    <td ng-show="SelectedExam.ExamTypeEnumId==@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)" class="text-center">{{row.MidtermMark}}</td>
+                                                    <td class="text-center">{{row.@Aca_ResultClass.Property_Grade}}</td>
+                                                    @*<td class="text-center">{{row.BestGrade}}</td>*@
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--Widget Body-->
+    </div><!--Widget-->
+</div>
+
+<style>
+    .result-box-size {
+        width: 70%;
+        margin: 0 auto;
+    }
+
+    .result-publishing-panel input {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .exam-type {
+        font-size: 30px;
+        font-weight: bold;
+        color: #d65050;
+    }
+</style>

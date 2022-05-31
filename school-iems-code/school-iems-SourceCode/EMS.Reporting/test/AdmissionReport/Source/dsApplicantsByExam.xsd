@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsApplicantsByExam" targetNamespace="http://tempuri.org/dsApplicantsByExam.xsd" xmlns:mstns="http://tempuri.org/dsApplicantsByExam.xsd" xmlns="http://tempuri.org/dsApplicantsByExam.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsApplicantsByExam" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsApplicantsByExam" msprop:Generator_UserDSName="dsApplicantsByExam">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Applicants" msprop:Generator_TableClassName="ApplicantsDataTable" msprop:Generator_TableVarName="tableApplicants" msprop:Generator_TablePropName="Applicants" msprop:Generator_RowDeletingName="ApplicantsRowDeleting" msprop:Generator_RowChangingName="ApplicantsRowChanging" msprop:Generator_RowEvHandlerName="ApplicantsRowChangeEventHandler" msprop:Generator_RowDeletedName="ApplicantsRowDeleted" msprop:Generator_UserTableName="Applicants" msprop:Generator_RowChangedName="ApplicantsRowChanged" msprop:Generator_RowEvArgName="ApplicantsRowChangeEvent" msprop:Generator_RowClassName="ApplicantsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Roll" msprop:Generator_ColumnVarNameInTable="columnRoll" msprop:Generator_ColumnPropNameInRow="Roll" msprop:Generator_ColumnPropNameInTable="RollColumn" msprop:Generator_UserColumnName="Roll" type="xs:string" minOccurs="0" />
+              <xs:element name="FullName" msprop:Generator_ColumnVarNameInTable="columnFullName" msprop:Generator_ColumnPropNameInRow="FullName" msprop:Generator_ColumnPropNameInTable="FullNameColumn" msprop:Generator_UserColumnName="FullName" type="xs:string" minOccurs="0" />
+              <xs:element name="AppliedProgram" msprop:Generator_ColumnVarNameInTable="columnAppliedProgram" msprop:Generator_ColumnPropNameInRow="AppliedProgram" msprop:Generator_ColumnPropNameInTable="AppliedProgramColumn" msprop:Generator_UserColumnName="AppliedProgram" type="xs:string" minOccurs="0" />
+              <xs:element name="PassedProgram" msprop:Generator_ColumnVarNameInTable="columnPassedProgram" msprop:Generator_ColumnPropNameInRow="PassedProgram" msprop:Generator_ColumnPropNameInTable="PassedProgramColumn" msprop:Generator_UserColumnName="PassedProgram" type="xs:string" minOccurs="0" />
+              <xs:element name="HasSubmitted" msprop:Generator_ColumnVarNameInTable="columnHasSubmitted" msprop:Generator_ColumnPropNameInRow="HasSubmitted" msprop:Generator_ColumnPropNameInTable="HasSubmittedColumn" msprop:Generator_UserColumnName="HasSubmitted" type="xs:string" minOccurs="0" />
+              <xs:element name="HasRegistered" msprop:Generator_ColumnVarNameInTable="columnHasRegistered" msprop:Generator_ColumnPropNameInRow="HasRegistered" msprop:Generator_ColumnPropNameInTable="HasRegisteredColumn" msprop:Generator_UserColumnName="HasRegistered" type="xs:string" minOccurs="0" />
+              <xs:element name="WrittenPassed" msprop:Generator_ColumnVarNameInTable="columnWrittenPassed" msprop:Generator_ColumnPropNameInRow="WrittenPassed" msprop:Generator_ColumnPropNameInTable="WrittenPassedColumn" msprop:Generator_UserColumnName="WrittenPassed" type="xs:string" minOccurs="0" />
+              <xs:element name="VivaPassed" msprop:Generator_ColumnVarNameInTable="columnVivaPassed" msprop:Generator_ColumnPropNameInRow="VivaPassed" msprop:Generator_ColumnPropNameInTable="VivaPassedColumn" msprop:Generator_UserColumnName="VivaPassed" type="xs:string" minOccurs="0" />
+              <xs:element name="Result" msprop:Generator_ColumnVarNameInTable="columnResult" msprop:Generator_ColumnPropNameInRow="Result" msprop:Generator_ColumnPropNameInTable="ResultColumn" msprop:Generator_UserColumnName="Result" type="xs:string" minOccurs="0" />
+              <xs:element name="Phone" msprop:Generator_ColumnVarNameInTable="columnPhone" msprop:Generator_ColumnPropNameInRow="Phone" msprop:Generator_ColumnPropNameInTable="PhoneColumn" msprop:Generator_UserColumnName="Phone" type="xs:string" minOccurs="0" />
+              <xs:element name="ExamTitle" msprop:Generator_ColumnVarNameInTable="columnExamTitle" msprop:Generator_ColumnPropNameInRow="ExamTitle" msprop:Generator_ColumnPropNameInTable="ExamTitleColumn" msprop:Generator_UserColumnName="ExamTitle" type="xs:string" minOccurs="0" />
+              <xs:element name="PrintedBy" msprop:Generator_ColumnVarNameInTable="columnPrintedBy" msprop:Generator_ColumnPropNameInRow="PrintedBy" msprop:Generator_ColumnPropNameInTable="PrintedByColumn" msprop:Generator_UserColumnName="PrintedBy" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,95 @@
+<div class="row">
+<div class="col-md-12">
+    <div class="row">
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td style="height: 40px" class="fieldlabel">Max File Upload Size In Byte </td>
+                <td class="fieldarea">
+                    <input type="number" ng-model="SiteSettings.MaxFileUploadSizeInByte" class="form-control" placeholder="Enter Max File Upload Size In Byte" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Max File Upload Size In Byte." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Semester Payment Particular</td>
+                <td class="fieldarea">
+                    <select ng-model="SiteSettings.SemesterPaymentParticularId" ng-options="option.Id as option.Name for option in ParticularList" title="Select Type" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                    @*<input type="number" ng-model="SiteSettings.SemesterPaymentParticularId" class="form-control" placeholder="Enter SemesterPaymentParticularId" required=""/>*@
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter SemesterPaymentParticularId." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Minimum Online Payment Amount </td>
+                <td class="fieldarea">
+                    <input type="number" ng-model="SiteSettings.MinimumOnlinePaymentAmount" class="form-control" placeholder="Enter Minimum Online Payment Amount" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Minimum Online Payment Amount." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Program Id List For Result Published </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="SiteSettings.ProgramIdListForResultPublished" class="form-control" placeholder="Enter Program Id List For Result Published" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Program Id List For Result Published." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Check Program For Result Of Those Exam Ids </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="SiteSettings.CheckProgramForResultOfThoseExamIds" class="form-control" placeholder="Enter Program For Result Of Those Exam Ids" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Program For Result Of Those Exam Ids." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Operation Terminated </td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.IsOperationTerminated" class="radio-inline" ng-value="true" />Yes
+                    <input type="radio" ng-model="SiteSettings.IsOperationTerminated" class="radio-inline" ng-value="false" />No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Operation Terminated." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">Operation Termination Message</td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.OperationTerminationMessage" class="form-control" placeholder="Enter Operation Termination Message" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Operation Termination Message." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+                
+            <tr>
+                <td colspan="3" class="fieldlabel pull-left">Absent Attendance Sms Template</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="fieldarea">
+                    <textarea rows="7" type="text" ng-model="SiteSettings.AbsentAttenceSmsTemplate" class="form-control" placeholder="Enter Absent Attendance Sms Template" required="">No default settings available for Rocket.</textarea>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Absent Attendance Sms Template." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">Is Polytechnic Institute </td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.IsPolytechnicInstitute" class="radio-inline" ng-value="true" />Yes
+                        <input type="radio" ng-model="SiteSettings.IsPolytechnicInstitute" class="radio-inline" ng-value="false" />No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Std Payment Collection Settings." data-toggle="tooltip"></i></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+
+
+</div>
+</div>
+</div>
+

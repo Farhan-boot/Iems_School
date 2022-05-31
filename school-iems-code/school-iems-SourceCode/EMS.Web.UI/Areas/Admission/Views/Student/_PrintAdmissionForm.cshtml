@@ -1,0 +1,548 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@using EMS.CoreLibrary.Helpers
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+
+@if (Model.HasError == true)
+{
+        <div class="alert alert-danger radius-bordered ">
+            <strong>Attention Please!</strong> 
+            @Html.Raw(Model.ErrorHtml)
+        </div>
+}
+else{
+
+    var student = Model.Data;
+    List<User_Education> studentEducationList=Model.DataBag.StudentEducationList;
+    var perCredit = Model.DataBag.PerCredit;
+    var tutionFee = Model.DataBag.TutionFee;
+    var othersFee = Model.DataBag.OthersFee;
+    var totalPayable = Model.DataBag.TotalPayable;
+
+    <div style="width: 793px; height: 1122px; padding-left: 10px; padding-right: 10px; margin: 0 auto;">
+    <table>
+    <thead>
+    <tr>
+        <th>
+            <table>
+                <tr>
+                    <td class="uni-name">
+                        @SiteSettings.Instance.InstituteName
+                    </td>
+                </tr>
+            </table>
+            <table style="margin-top: -10px;">
+                <tr>
+                    <td class="img-box" style="vertical-align: top;">
+
+                        <img class="logo" src="@SiteSettings.Instance.InstituteLogoColorSolo"/>
+
+                    </td>
+                    <td class="text-center" style="vertical-align: text-top;">
+                        <div class="title-text text-bold" style="color: rgb(48, 49, 136);">
+                            (Approved by UGC & Govt.)
+                        </div>
+                        <div class="">
+                            <span class="text-bold">Main Campus:</span>
+                            <span>@SiteSettings.Instance.InstituteAddress</span>
+                        </div>
+                        <div class="">
+                            <span class="text-bold"> Phone:</span>
+                            <span>@SiteSettings.Instance.InstituteAdmissionOfficeLandPhoneNo,</span>
+                            <span class="text-bold"> Cell:</span>
+                            <span>@SiteSettings.Instance.InstituteAdmissionOfficeCellNo</span>
+                            <span class="text-bold"> Web:</span>
+                            <span> @SiteSettings.Instance.InstituteDomain</span>
+                        </div>
+                        <div style="border-bottom: 1px solid black; margin: 5px 30px;"></div>
+                        <div class="title-text text-bold" style="margin-top: 15px; color: #247f3c !important;">Admission Form</div>
+                    </td>
+                    <td style="text-align: center">
+                        <span style="font-size: 9px;"> SADM/002/201901</span>
+                        <div class="border-black" style="width: 95px; height: 100px; margin: 0 auto;">
+                            <div style="text-align: center; padding-top: 15px; font-size: 13px;">Photo</div>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>
+    <table>
+        <tr>
+            <td><div class="text-bold">Form No: @student.AdmissionFormNo</div></td>
+            <td style="width: 430px"></td>
+            <td>
+                <div class="text-bold">Registration No: @student.RegistrationNo</div>
+            </td>
+        </tr>
+    </table>
+    <table class="aca-info-table">
+        <tr style="background-color: #c0f3f8 !important;">
+            <td>
+                <span class="text-bold">Student ID:</span>
+                <span>@student.UserName</span>
+            </td>
+
+            <td>
+                <span class="text-bold">Semester:</span>
+                @{
+                    if (student.User_Account.Aca_Semester.IsNotNull())
+                    {
+                        <span>@student.User_Account.Aca_Semester.Name</span>
+                    }
+                }
+
+            </td>
+
+            <td>
+                <span class="text-bold">Admission Date:</span>
+                <span>@student.User_Account.JoiningDate.ToShortDateString()</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="text-bold">Program:</span>
+                @if (student.Aca_Program.IsNotNull())
+                {
+                    <span>@student.Aca_Program.ShortTitle</span>
+                }
+            </td>
+
+            <td>
+                <span class="text-bold">Department:</span>
+                @if (student.User_Account.HR_Department.IsNotNull())
+                {
+                    <span>@student.User_Account.HR_Department.ShortName</span>
+                }
+            </td>
+            <td>
+                <span class="text-bold">Status:</span>
+                <span>Admitted/Not Admitted</span>
+            </td>
+        </tr>
+        <tr class="group-title">
+            <td colspan="3">
+                Personal Details
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="text-bold">Name (as in SSC Certificate):</span>
+                <span>@student.User_Account.FullName</span>
+            </td>
+            <td>
+                <span class="text-bold">Nationality:</span>
+                <span>@student.User_Account.Nationality</span>
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <span class="text-bold">Mobile:</span>
+                <span>@student.User_Account.UserMobile</span>
+            </td>
+            <td>
+                <span class="text-bold">Email:</span>
+                <span>@student.User_Account.UserEmail</span>
+            </td>
+
+            <td>
+                @if (student.User_Account.NationalIdNumber.IsValid())
+                {
+                    <span class="text-bold">NID:</span>
+                    <span>@student.User_Account.NationalIdNumber</span>
+                }
+                else if (student.User_Account.BirthCertificateNumber.IsValid())
+                {
+                    <span class="text-bold">Birth ID:</span>
+                    <span>@student.User_Account.BirthCertificateNumber</span>
+                }
+                else
+                {
+                    <span class="text-bold">NID/Birth ID:</span>
+                }
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="text-bold">Gender:</span>
+                <span>@student.User_Account.Gender</span>
+            </td>
+            <td>
+                <span class="text-bold">Blood:</span>
+                <span>@student.User_Account.BloodGroup.ToString().AddBloodGroupSignToSentence()</span>
+            </td>
+            <td>
+                <span class="text-bold">Date of Birth:</span>
+                <span>@student.User_Account.DateOfBirth.ToString("dd/MM/yyyy")</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <span class="text-bold">Permanent Address:</span>
+                @{
+                    foreach (var contactAddress in student.User_Account.User_ContactAddress)
+                    {
+                        if (contactAddress.ContactAddressTypeEnumId == (byte) User_ContactAddress.ContactAddressTypeEnum.Permanent)
+                        {
+                            <span>@contactAddress.ToString() </span>
+                        }
+                    }
+                }
+            </td>
+        </tr>
+        <tr class="group-title">
+            <td colspan="3">
+                Parents Information
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><span class="text-bold">Father's Name: </span><span>@student.User_Account.FatherName</span></td>
+            <td><span class="text-bold">Father's Mobile: </span><span>@student.FatherMobile</span></td>
+        </tr>
+        <tr>
+            <td colspan="2"><span class="text-bold">Mother's Name: </span><span>@student.User_Account.MotherName</span></td>
+            <td><span class="text-bold">Mother's Mobile:</span><span>@student.MotherMobile</span></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="text-bold">
+                    Local Guardian Name:
+                </span>
+                @if (student.User_Account.EmergencyContactPersonName.IsValid())
+                {
+                    <span>@student.User_Account.EmergencyContactPersonName</span>
+
+                    if (student.User_Account.User_Relationship != null)
+                    {
+                        <span>(@student.User_Account.User_Relationship.Name)</span>
+                    }
+                }
+
+
+
+            </td>
+            <td><span class="text-bold">Local Guardian Mobile: </span><span>@student.User_Account.EmergencyMobile</span></td>
+        </tr>
+    </table>
+
+    <!-- ============= -->
+    <div class="group-title" style="margin-top: -5px;">
+        Academic Qualification
+    </div>
+    <div class="bor">
+        <table style="text-align: center; width: 100%; max-height: 120px;">
+            <tr>
+                <td style="width: 170px;"><span>Name of Institution</span></td>
+                <td style="width: 170px;"><span>Board / University</span></td>
+                <td style="width: 155px;">
+                    <div style="line-height: 1 !important;">Certification / </div>
+                    <div>Degree Obtained</div>
+                </td>
+                <td style="width: 120px;">
+                    <div style="line-height: 1 !important;">Year of</div>
+                    <div> Passing</div>
+                </td>
+                <td style="width: 140px;">
+                    <div style="line-height: 1 !important;">Division/Class/</div>
+                    <div>Grade</div>
+                </td>
+            </tr>
+            @{
+                foreach (var education in studentEducationList)
+                {
+                    <tr style="height: 20px;">
+                        <td style="font-size: 12px;">
+                            @if (education.InstitutionName.IsNotNull())
+                            {
+                                <span>@education.InstitutionName</span>
+                            }
+                        </td>
+                        <td>
+                            @{
+
+                            }
+                            @if (education.Adm_EducationBoard.IsNotNull())
+                            {
+                                <span>@education.Adm_EducationBoard.Name</span>
+                            }
+                        </td>
+                        <td>
+                            @if (education.DegreeTitle.IsNotNull())
+                            {
+                                <span>@education.DegreeTitle</span>
+                            }
+                        </td>
+                        <td>
+                            @if (education.YearOfPassing.IsNotNull())
+                            {
+                                <span>@education.YearOfPassing</span>
+                            }
+                        </td>
+                        <td>
+                            @if (education.ObtainedGradeOrClass.IsNotNull())
+                            {
+                                <span>@education.ObtainedGradeOrClass</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <!-- ============= -->
+    <div style="margin-top: 15px;">
+        <table>
+            <tr>
+                <td>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <span>
+                        I declare that, to the best of my knowledge, the information provided by me, is true
+                        and complete. I acknowledge that @SiteSettings.Instance.InstituteShortName may change any decision regarding admission or
+                        enrolment made on the basic of incorrect or incomplete information provided by me.
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span>
+                        I understand the above conditions and accept those in full. My sponsor or my self
+                        will be personally responsible for the cost of the academic program for which i am
+                        seeking admission as well as for associated travel and living costs. I shall abide by
+                        all the rules and regulations of the university.
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- ========== -->
+    <div style="margin-top: 20px;">
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div style="text-align: left; font-weight: bold;">
+                        <span>.......................................</span> <br/>
+                        <span>Signature of Applicant</span>
+                    </div>
+                </td>
+
+                <td>
+                    <div style="text-align: right; font-weight: bold;">
+                        <span>......................................</span> <br/>
+                        <span>Signature of Guardian </span>
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <!-- ============= -->
+    <div class="group-title">
+        Waiver Criteria:
+    </div>
+    <div style="margin-top: 10px; text-align: center;">
+        <table style="margin: 0px auto;">
+            <tr>
+                <td class="p-l-10"><span>SSC & HSC Result</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Siblings</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Spouse</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Female</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Freedom Fighters</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Minority</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Special</span></td>
+                <td class="tik"></td>
+                <td class="p-l-10"><span>Others</span></td>
+                <td class="tik"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="group-title">
+        Total Package
+    </div>
+    <div style="margin-top: 10px;" class="bor">
+        <table class="bor" style="text-align: center; width: 100%;">
+            <tr>
+                <td style="width: 115px;"><span>Tuition Fee</span> <br> <span>(Tk.)</span> <br></td>
+                <td style="width: 115px;"><span>Others Fee</span> <br> <span>(Tk.)</span> <br></td>
+                <td style="width: 115px;"><span>Total Payable</span> <br> <span>(Tk.)</span> <br></td>
+                <td style="width: 115px;"><span>Per Credit</span> <br> <span>(Tk.)</span> <br></td>
+                <td style="width: 115px;"><span>Received Adm. Fee</span> <br> <span>(Tk.)</span> <br></td>
+                <td style="width: 115px;"><span>Total Due</span> <br> <span>(Tk.)</span> <br></td>
+
+            </tr>
+            <tr>
+                <td style="height: 25px;">@tutionFee</td>
+                <td style="height: 25px;">@othersFee</td>
+                <td style="height: 25px;">@totalPayable</td>
+                <td style="height: 25px;">@perCredit</td>
+                <td style="height: 25px;"></td>
+                <td style="height: 25px;"></td>
+            </tr>
+        </table>
+    </div>
+    <!-- ============= -->
+    <div style="margin-top: 20px;">
+        <table style="width: 100%; text-align: center; height: 50px;">
+            <tr>
+                <td>
+                    <div class="text-bold">
+                        <span>......................................</span> <br/>
+                        <span>Admission Officer</span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="text-bold">
+                        <span>......................................</span> <br/>
+                        <span>Sr. Admission Officer</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="text-bold">
+                        <span>......................................</span> <br/>
+                        <span>Admission Director</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="text-bold">
+                        <span>......................................</span> <br/>
+                        <span>Approved</span>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+    </td>
+    </tr>
+    </tbody>
+
+    <tfoot>
+    <tr>
+        <td>
+            <table style="margin-top: 10px;">
+                <tr>
+                    <td class="footer-text" style="text-align: left;" >
+                        Developed By: <i>@SiteSettings.PoweredBy</i>
+                    </td>
+                    <td colspan="2" class="footer-text"style="text-align: right;" >
+                        Printed by: @HttpUtil.Profile.Name | @DateTime.Now.ToString("dd/MM/yyyy")
+
+                    </td>
+                    
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    </tfoot>
+    </table>
+    </div>
+}
+
+<style>
+    .bor table,
+    .bor tr,
+    .bor td {
+        border: 1px solid black !important;
+        border-collapse: collapse;
+    }
+
+    .p-l-10 {
+        padding-left: 10px;
+    }
+
+    .tik {
+        background-color: lightblue !important;
+        width: 18px;
+    }
+    /*=================*/
+
+    table {
+        width: 100%;
+        font-family: arial;
+    }
+    table th {
+        font-weight: normal !important;
+    }
+    .img-box {
+        max-width: 95px;
+    }
+    .logo {
+        width: 80px;
+        margin-top: -11px;
+    }
+    .border-black {
+        border: 1px solid black;
+    }
+    .title-text {
+        font-size: 20px;
+    }
+    .text-center {
+        text-align: center;
+    }
+    .text-right {
+        text-align: right;
+    }
+
+    .subtitle-text {
+        font-size: 15px;
+    }
+    .text-bold {
+        font-weight: bold;
+    }
+    .uni-name {
+        font-size: 30px; 
+        text-align: center; 
+        font-weight: bold; 
+        color: #247f3c !important;
+    }
+    .group-title {
+        font-weight: bold;
+        padding: 4px;
+        /*font-size: 17px;*/
+        background-color: #c0f3f8 !important;
+        margin: 10px 0px;
+    }
+    .aca-info-table {
+        
+        font-size: 14px;
+        margin: 5px 0px;
+    }
+    .aca-info-table .text-bold, .personal-details .text-bold {
+        font-weight: normal !important;
+    }
+    .aca-info-table tr:first-child td,.aca-info-table tr:first-child .text-bold {
+        font-weight: bold !important;
+    }
+    .aca-info-table tr td ,.personal-details tr td {
+        padding: 4px;
+    }
+    .footer-text {
+        font-size: 12px;
+    }
+</style>
+<script>
+    window.onload = function () {
+        window.print();
+    }
+</script>

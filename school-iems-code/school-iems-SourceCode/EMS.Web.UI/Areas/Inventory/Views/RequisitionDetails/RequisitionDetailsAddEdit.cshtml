@@ -1,0 +1,154 @@
+﻿
+<!--File:Inv_RequisitionDetails Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Requisition Details";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RequisitionDetailsId = (string) id == null?"0":(string)id;
+    
+    //Inv_RequisitionDetails WebApi Single Row link   
+    var getRequisitionDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "GetRequisitionDetailsById", area = "Inventory" });
+    var getRequisitionDetailsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "GetRequisitionDetailsDataExtra", area = "Inventory" });
+    var saveRequisitionDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "SaveRequisitionDetails", area = "Inventory" });
+    var deleteRequisitionDetailsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "GetDeleteRequisitionDetailsById", area = "Inventory" });
+
+    //Inv_RequisitionDetails WebApi List link 
+    var getPagedRequisitionDetailsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RequisitionDetailsApi", action = "GetPagedRequisitionDetails", area = "Inventory"});
+    var getAllRequisitionDetailsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "GetAllRequisitionDetails", area = "Inventory" });
+    var saveRequisitionDetailsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "SaveRequisitionDetailsList", area = "Inventory" });
+    var getRequisitionDetailsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequisitionDetailsApi", action = "GetRequisitionDetailsListDataExtra", area = "Inventory" });
+
+    var editRequisitionDetailsByIdPageUrl = Url.Action("RequisitionDetailsAddEdit", "RequisitionDetails", new { area = "Inventory" });
+    var listRequisitionDetailsPageUrl = Url.Action("RequisitionDetailsList", "RequisitionDetails", new { area = "Inventory" });
+    
+    //Inv_RequisitionDetails Angular Functions
+    string getRequisitionDetailsById="getRequisitionDetailsById";
+    var saveRequisitionDetails = "saveRequisitionDetails";
+    var getNewRequisitionDetails = "getNewRequisitionDetails";
+    var refreshPage = "loadPage()";
+    string deleteRequisitionDetailsById="deleteRequisitionDetailsById";
+    string loadRequisitionDetailsExtraData="loadRequisitionDetailsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/RequisitionDetails/RequisitionDetailsAddEdit.js"></script>
+}
+
+<div id="RequisitionDetailsAddEdit" class="row" ng-controller="RequisitionDetailsAddEditCtrl" ng-init="Init(
+      '@RequisitionDetailsId'
+      ,'@getRequisitionDetailsByIdUrl'
+      ,'@getRequisitionDetailsDataExtraUrl'
+      ,'@saveRequisitionDetailsUrl'
+      ,'@deleteRequisitionDetailsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="RequisitionDetails.@Inv_RequisitionDetails.Property_Name!=''">{{(RequisitionDetails.@Inv_RequisitionDetails.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="RequisitionDetailsId" ng-Enter="@(getRequisitionDetailsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewRequisitionDetails)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listRequisitionDetailsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Item Name </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_ItemName" class="form-control" placeholder="Enter Item Name" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Item Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_ItemId" class="form-control" placeholder="Enter Item Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Detail </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_Detail" class="form-control" placeholder="Enter Detail" maxlength="500"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Detail." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Quantity </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_Quantity" class="form-control" placeholder="Enter Quantity"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Quantity." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Approved Quantity </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_ApprovedQuantity" class="form-control" placeholder="Enter Approved Quantity"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Approved Quantity." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Requisition </td>
+                            <td class="fieldarea">
+                                <select ng-model="RequisitionDetails.@Inv_RequisitionDetails.Property_RequisitionId"
+                                        ng-options="option.Id as option.Name for option in RequisitionList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Requisition." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveRequisitionDetails)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

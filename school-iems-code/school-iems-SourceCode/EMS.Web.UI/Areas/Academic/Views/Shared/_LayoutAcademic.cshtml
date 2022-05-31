@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    ViewBag.AreaHome = Url.Action("Index", "Dashboard", new {Area = "Academic"});
+}
+@section HeadSection
+{
+    @RenderSection("HeadSection", required: false)
+   
+}
+@section StyleSection
+{
+    @RenderSection("StyleSection", required: false)
+}
+@Html.Partial("~/Views/Shared/Area/_PartialAdminHeader.cshtml")
+
+<div class="main-container container-fluid">
+    <div class="page-container">
+        @Html.Partial("~/Areas/Academic/Views/Shared/_PartialAcademicSidebar.cshtml") @Html.Partial("~/Views/Shared/Area/_PartialAdminChatBar.cshtml")
+        <div class="page-content">
+            @Html.Partial("~/Views/Shared/Area/_PartialAdminPageHeader.cshtml")
+            <div class="page-body">
+                @RenderBody()
+            </div>
+            @Html.Partial("~/Views/Shared/Area/_PartialAdminPageFooter.cshtml")
+        </div>
+    </div>
+</div>
+
+@section ScriptSection
+{
+    @RenderSection("ScriptSection", required: false)
+}
+

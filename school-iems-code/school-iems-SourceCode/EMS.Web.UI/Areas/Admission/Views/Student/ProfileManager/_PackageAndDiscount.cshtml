@@ -1,0 +1,703 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    string getAllScholarshipByStudentId = "getAllScholarshipByStudentId";
+
+    string saveScholarshipListByStudent = "saveScholarshipListByStudent()";
+    string getRegenerateStudentBillByStdId = "getRegenerateStudentBillByStdId";
+    string getRecalculateStudentPerCreditFee = "getRecalculateStudentPerCreditFee";
+
+}
+
+@if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanView)
+     || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanAdd)
+     || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanEdit)
+     || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanDelete)
+    )
+{
+    <div class="row">
+    <div class="col-md-12">
+    <div class="widget1">
+    <div class="widget-body1">
+    <div class="row">
+    <div class="col-md-12">
+        <div class="form-title">
+            Fee Code Information
+        </div>
+    </div>
+    <div class="col-md-5 table-form ">
+        @*<div style="padding: 0px 0px 25px;">
+                                <span style="float: left">Total Credit: <strong ng-show="TotalCredit!=''">{{TotalCredit}}</strong></span>
+                                <span style="float: right">Total Semester: <strong ng-show="TotalSemester!=''">{{TotalSemester}}</strong></span>
+                            </div>*@
+        <div style="padding: 0px 0px 25px;">
+            <span style="float: left">Semester: <strong>{{SelectedAdmissionExam.SemesterName}}</strong></span>
+            <span style="float: right">Class Timing: <strong>{{SelectedProgram.ClassTimingGroup}}</strong></span>
+        </div>
+        <table class="table table-bordered admission-discount-table text-center">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Total Credit</th>
+                <th>Total Semester</th>
+                <th>Year</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Core Curriculum</td>
+                <td>{{TotalCredit}}</td>
+                <td>{{TotalSemester}}</td>
+                <td>{{Year}}</td>
+
+            </tr>
+            <tr>
+                <td>Package</td>
+                <td>{{SelectedFeeCode.TotalCredit}}</td>
+                <td>{{SelectedFeeCode.TotalSemester}}</td>
+                <td>{{SelectedFeeCode.TotalYear}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            @*<tr>
+                                        <td class="fieldlabel">Program<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.Student.@User_Student.Property_ProgramId"
+                                                    ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>*@
+            @*<tr>
+                                        <td class="fieldlabel">Year<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea"><input type="text" ng-model="FeeCode.Name" class="form-control  " placeholder="Enter Year" maxlength="256" required=""></td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Year" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>*@
+            @*<tr>
+                                        <td class="fieldlabel">ClassTime<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="FeeCode.StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control select-inline">
+                                                <option value="0" selected="selected" label="Active">Active</option>
+                                                <option value="1" label="Inactive">Inactive</option>
+                                                <option value="2" label="Disable">Disable</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select ClassTime" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>*@
+            @*<tr>
+                                        <td class="fieldlabel">Department<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Student.Property_DepartmentId"
+                                                    ng-options="option.Id  as option.ShortName for option in DepartmentList" ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Department" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>*@
+            <tr>
+                <td class="fieldlabel">Fee Code</td>
+                <td class="fieldarea">
+                    <select ng-model="SelectedFeeCode"
+                            ng-change="onChangeFeeCode()"
+                            disabled=""
+                            ng-options="option.Name for option in FeeCodeList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="To Change It Goto Academic Tab" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Credit Transfer</td>
+                <td class="fieldarea">
+                    <input type="number"
+                           ng-disabled="Account.@User_Student.Property_EnrollmentTypeEnumId!=@((int) User_Student.EnrollmentTypeEnum.TransfereeStudent)"
+                           ng-model="Account.@User_Student.Property_CreditTransfer" class="form-control " value="" tabindex="2"></td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Transfer" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel"><b>Per-Credit Fee After Discount</b></td>
+                <td class="fieldarea">
+                    <span>{{Account.@User_Student.Property_PerCreditFee}}</span>
+                    @*<input type="number" ng-model="Account.@User_Student.Property_PerCreditFee" class="form-control " value="" tabindex="2">*@
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="To Update Per-Credit Fee Press 'Recalculate Per-Credit' Button." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right; padding-bottom: 7px;">
+                    <button ng-click="@getRecalculateStudentPerCreditFee ()" class="btn btn-warning btn-xs"><i class="fa fa-refresh"></i>Recalculate Per-Credit</button>
+                    <button ng-click="@getRegenerateStudentBillByStdId ()" class="btn btn-warning btn-xs"><i class="fa fa-refresh"></i>Regenerate Bill</button>
+                </td>
+            </tr>
+
+
+            @*<tr>
+                                        <td class="fieldlabel">Duration(Year)<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea"><input type="number" ng-model="FeeCode.Code" class="form-control " value="" tabindex="2"></td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Duration(Year)" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>*@
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7 table-form" ng-show="SelectedFeeCode!=null">
+        <span>Fee Code: </span>
+        <a href="@Url.Action("FeeCodeManager", "FeeCode", new {area = "Accounts"})/?id={{SelectedFeeCode.Id}}" target="_blank">{{SelectedFeeCode.Name}}</a>
+        <table class="table table-bordered admission-discount-table">
+            <thead>
+            <tr>
+                <th>Particular</th>
+                <th>Unit Amount</th>
+                <th>Unit Period</th>
+                <th></th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FeeCodePolicyListJson">
+                <td>{{row.@Acnt_FeeCodePolicy.Property_ParticularTypeName}}</td>
+                <td>{{row.@Acnt_FeeCodePolicy.Property_Amount}}</td>
+                <td>{{row.@Acnt_FeeCodePolicy.Property_FeeGenerateTerm}}</td>
+                <td>{{row.@Acnt_FeeCodePolicy.Property_EquationTxt}}</td>
+                <td>{{row.@Acnt_FeeCodePolicy.Property_Total}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="bold-text">Package Total</td>
+                <td>
+                    <b>{{SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FeeCodePolicyListJson|total:'@Acnt_FeeCodePolicy.Property_Total'|number:0 }}</b>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7" ng-show="SelectedFeeCode==null" style="font-size: 16px; margin-top: 25px; margin-bottom: 35px;">
+        <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <div style="padding-top: 10px; padding-bottom: 10px;">
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention!</strong> Please select valid Fee Code for this Student.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 table-form " ng-show="SelectedFeeCode!=null">
+        <div class="form-title">
+            Fee Information With Discount
+        </div>
+        <table class="table table-bordered admission-discount-table text-center" style="width: 100%">
+            <thead>
+            <tr>
+                <th style="width: 185px;">Package Tuition Fee:</th>
+                <th>{{SelectedFeeCode.@Acnt_FeeCode.Property_PackageTuitionFee}}</th>
+
+                <th style="width: 185px;">Package Adm Fee:</th>
+                <th>{{SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FixedCostOnlyAdmissionFee}}</th>
+
+                <th style="width: 179px;"
+                    ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId!=@((int) User_Student.EnrollmentTypeEnum.TransfereeStudent)
+                    || @((SiteSettings.Instance.CreditTransBillGenType == SiteSettings.CreditTransBillGenTypeEnum.Normal).ToString().ToLower())
+                    ">
+                    Package Fixed Cost:
+                </th>
+                <th ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId!=@((int) User_Student.EnrollmentTypeEnum.TransfereeStudent)
+                    || @((SiteSettings.Instance.CreditTransBillGenType == SiteSettings.CreditTransBillGenTypeEnum.Normal).ToString().ToLower())
+                    ">{{SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FixedCostWithoutAdmissionFee}}</th>
+
+                <th style="width: 162px;">Total Package Amount:</th>
+                <th>{{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount}}</th>
+            </tr>
+            <tr ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId!=@((int) User_Student.EnrollmentTypeEnum.TransfereeStudent)
+               || @((SiteSettings.Instance.CreditTransBillGenType == SiteSettings.CreditTransBillGenTypeEnum.Normal).ToString().ToLower())
+                ">
+
+                @* For Fresh Student *@
+                <th>Tuition Fee After Discount:</th>
+                <th>{{(SelectedFeeCode.@Acnt_FeeCode.Property_PackageTuitionFee)-((Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+
+                <th>Adm Fee After Discount:</th>
+                <th>{{(SelectedFeeCode.FixedCostOnlyAdmissionFee)-((Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnAdmissionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+
+                <th>Fixed Cost After discount:</th>
+                <th>{{(SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FixedCostWithoutAdmissionFee)-((Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnOtherFee)})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+
+                <th>Total Payable Amount:</th>
+                <th>{{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount-((Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+            </tr>
+            <tr ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId==@((int) User_Student.EnrollmentTypeEnum.TransfereeStudent)
+                && @((SiteSettings.Instance.CreditTransBillGenType == SiteSettings.CreditTransBillGenTypeEnum.Eub).ToString().ToLower())">
+                @*For Credit Transfer*@
+                <th>Tuition Fee After Discount:</th>
+                <th>{{(SelectedFeeCode.@Acnt_FeeCode.Property_PackageTuitionFee + SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FixedCostWithoutAdmissionFee)-((Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+                <th>Adm Fee After Discount:</th>
+                <th>{{(SelectedFeeCode.@Acnt_FeeCode.Property_Acnt_FixedCostOnlyAdmissionFee)-((Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnAdmissionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+                <th>Total Payable Amount:</th>
+                <th>{{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount-((Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</th>
+            </tr>
+
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-12 table-form " ng-show="SelectedFeeCode!=null">
+    <div class="form-title">
+        Discount Management
+    </div>
+    <div class="tabbable">
+    <ul class="nav nav-tabs" id="tabProfile">
+        <li class="active">
+            <a data-toggle="tab" href="#ActiveDiscount" aria-expanded="true">
+                <i class="fa fa-check" style="color: #65b951;"></i>Active ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false}).length}})
+            </a>
+        </li>
+        <li class="tab-red">
+            <a data-toggle="tab" href="#TrashDiscount" aria-expanded="true">
+                <i class="fa fa-trash" style="color: #d73d32;"></i>Trash ({{(Account.ScholarshipJsonList| filter:{IsDeleted:true}).length}})
+            </a>
+        </li>
+        <li class="tab-red" style="float: right; border: none !important;">
+            <div class="widget-buttons">
+                <button ng-click="@(getAllScholarshipByStudentId)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </li>
+    </ul>
+    <div class="tab-content radius-bordered no-padding">
+    <div id="ActiveDiscount" class="tab-pane in active">
+        <div class="widget" style="margin-bottom: 5px;">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-list bold"></i>
+                <span class="widget-caption " style="font-weight: bold !important;">
+                    Active Discount Information
+                </span>
+            </div>
+            <div class="widget-body no-padding">
+                <table class="table table-bordered admission-discount-table">
+                    <thead>
+                    <tr>
+                        <th>Scholarship/Discount Reason</th>
+
+                        <th>Valid Period</th>
+                        <th>Discount on</th>
+                        @*<th>Amount in Percent</th>*@
+                        <th style="width: 70px;">%</th>
+                        <th style="width: 80px;">Amount</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in Account.ScholarshipJsonList| filter:{IsDeleted:false}">
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_ScholarshipTypeId"
+                                    ng-disabled="row.IsLocked"
+                                    ng-options="option.Id as option.Name for option in ScholarshipTypeList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_ValidPeriodEnumId"
+                                    ng-disabled="row.IsLocked"
+                                    ng-change="scholarshipCalculation(row,null)"
+                                    ng-options="option.Id as option.Name for option in ValidPeriodEnumList" title="Select Valid Period" ng-init="" class="form-control">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                            @*<select ng-model="row.@Acnt_StdScholarship.Property_SemesterId"
+                                                                    ng-show="row.@Acnt_StdScholarship.Property_ValidPeriodEnumId==@((byte)Acnt_StdScholarship.ValidPeriodEnum.ThisSemesterOnly)"
+                                                                    ng-change="onChangeIsPercent(row)"
+                                                                    ng-disabled="row.IsLocked"
+                                                                    ng-options="option.Id as option.Name for option in SemesterListForScholarship " ng-init="" class="form-control select-inline margin-top-5">
+                                                                <option value="" label="" class="">---Select Semester---</option>
+                                                            </select>*@
+                        </td>
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_AmountTypeEnumId"
+                                    ng-disabled="row.IsLocked"
+                                    ng-change="scholarshipCalculation(row,null)"
+                                    ng-options="option.Id as option.Name for option in AmountTypeEnumList" title="Select Amount Type" ng-init="" class="form-control">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                            @*<div ng-show="row.@Acnt_StdScholarship.Property_ValidPeriodEnumId==@((byte)Acnt_StdScholarship.ValidPeriodEnum.ThisSemesterOnly)"
+                                                                 style="padding-left: 2px; margin-top: 7px">
+                                                                 
+                                                                
+                                                            </div>*@
+                        </td>
+                        @*<td style="text-align: center;">  
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" ng-model="row.@Acnt_StdScholarship.Property_IsPercentAmount"
+                                                                       ng-disabled="row.IsLocked"
+                                                                       ng-change="onChangeIsPercent(row)"
+                                                                />
+                                                            </label>
+                                                        </td>*@
+                        <td>
+                            <span>{{row.@Acnt_StdScholarship.Property_PercentAmount}}</span>
+                            @*<input type="text" ng-model="row.@Acnt_StdScholarship.Property_PercentAmount"
+                                                                   ng-disabled="row.IsLocked || row.@Acnt_StdScholarship.Property_IsPercentAmount==false"
+                                                                   ng-change="scholarshipCalculation(row,'PercentAmount')"
+                                                                   placeholder="%" style="width: 70px;padding-left: 5px;">*@
+                        </td>
+                        <td>
+                            <input type="text" ng-model="row.@Acnt_StdScholarship.Property_RealAmount"
+                                   ng-disabled="row.IsLocked " @*|| row.@Acnt_StdScholarship.Property_IsPercentAmount==true*@
+                                   ng-change="scholarshipCalculation(row,'RealAmount')"
+                                   placeholder="Amount" style="width: 80px; padding-left: 5px;">
+                        </td>
+
+                        <td>
+                            <button ng-click="lockOrUnlockScholarshipByObj(row,false)"
+                                    ng-show="row.IsLocked"
+                                    class="btn btn-xs btn-success">
+                                <i class="fa fa-lock"></i>
+                            </button>
+                            <button ng-click="lockOrUnlockScholarshipByObj(row,true)"
+                                    ng-show="!row.IsLocked"
+                                    class="btn btn-xs btn-warning">
+                                <i class="fa fa-unlock"></i>
+                            </button>
+
+
+                            <button ng-click="viewDetailScholarship(row)"
+                                    class="btn btn-xs btn-primary">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                            <button ng-click="getTrashScholarshipById(row,true)"
+                                    ng-show="!row.IsLocked"
+                                    class="btn btn-xs btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-right" colspan="4">Discount on Tuition Fee @* Total Percent Amount not Show  ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false , @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                        <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnTutionFee)})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-right" colspan="4">Discount on Fixed Cost @*Total Percent Amount not Show ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte)Acnt_StdScholarship.AmountTypeEnum.DiscountOnOtherFee)})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                        <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false, @Acnt_StdScholarship.Property_AmountTypeEnumId:@((byte) Acnt_StdScholarship.AmountTypeEnum.DiscountOnOtherFee)})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-right" colspan="4">Total Discount @* Total Percent Amount not Show ({{(Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_PercentAmount'|number:3}} %)*@:</td>
+                        <td class="bold-text" colspan="2">{{(Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount'|number:3}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold-text text-right" colspan="4">Total Payable Amount:</td>
+                        <td class="bold-text" colspan="2">{{SelectedFeeCode.@Acnt_FeeCode.Property_TotalPackageAmount-((Account.ScholarshipJsonList| filter:{IsDeleted:false})|total:'@Acnt_StdScholarship.Property_RealAmount')|number:3}}</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget-footer" style="text-align: left">
+                @*<button  class="btn btn-md btn-success"><span class="fa fa-save"></span> Save Discount</button>*@
+                <button ng-click="getNewScholarshipByStudentId()" class="btn btn-md btn-primary"><i class="widget-icon fa fa-plus bold"></i>Add New Discount</button>
+                <button ng-click="@saveScholarshipListByStudent" ng-show="Account.ScholarshipJsonList.length>0"class="btn btn-md btn-success"><i class="widget-icon fa fa-save bold"></i>Save Discount</button>
+            </div>
+        </div>
+    </div>
+    <div id="TrashDiscount" class="tab-pane">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-list bold"></i>
+                <span class="widget-caption " style="font-weight: bold !important;">
+                    Deleted or Inactive Discount Information
+                </span>
+            </div>
+            <div class="widget-body no-padding">
+                <table class="table table-bordered admission-discount-table">
+                    <thead>
+                    <tr>
+                        <th>Scholarship Type</th>
+                        <th>Semester</th>
+                        <th>Valid Period</th>
+                        <th>Amount Type</th>
+                        <th style="width: 70px;">%</th>
+                        <th style="width: 80px;">Amount</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in Account.ScholarshipJsonList| filter:{IsDeleted:true}">
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_ScholarshipTypeId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in ScholarshipTypeList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_SemesterId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in SemesterListForScholarship " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_ValidPeriodEnumId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in ValidPeriodEnumList" title="Select Valid Period" ng-init="" class="form-control">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="row.@Acnt_StdScholarship.Property_AmountTypeEnumId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in AmountTypeEnumList" title="Select Amount Type" ng-init="" class="form-control">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="row.@Acnt_StdScholarship.Property_PercentAmount"
+                                   ng-disabled="true"
+                                   placeholder="%" style="width: 70px; padding-left: 5px;">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="row.@Acnt_StdScholarship.Property_RealAmount"
+                                   ng-disabled="true"
+                                   placeholder="Amount" style="width: 80px; padding-left: 5px;">
+                        </td>
+                        <td>
+                            <button ng-click="viewDetailScholarship(row)" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                            <button ng-click="getTrashScholarshipById(row,false)" class="btn btn-xs btn-success tooltip-success" data-toggle="tooltip" data-placement="top" data-original-title="Undo Delete" title="Undo Delete"><i class="fa fa-undo"></i> </button>
+                            @*<button ng-click="hardDeleteScholarshipByObj(row)" class="btn btn-xs btn-danger tooltip-danger" data-toggle="tooltip" data-placement="top" title="Permanently Delete"><i class="fa fa-close"></i> </button>*@
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Add Discount Modal Start -->
+    <div class="modal fade" id="addDiscountModal" tabindex="-1" role="dialog" aria-labelledby="addDiscountModal">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Discount Detail</h4>
+    </div>
+    <div class="modal-body">
+        <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+            <div class="row">
+                <!--text type-->
+                <div class="col-md-6 table-form">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Scholarship Type </td>
+                            <td class="fieldarea">
+                                <select ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_ScholarshipTypeId"
+                                        ng-disabled="true"
+                                        ng-options="option.Id as option.Name for option in ScholarshipTypeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Scholarship Type." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Semester </td>
+                            <td class="fieldarea">
+                                <select ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_SemesterId"
+                                        ng-disabled="true"
+                                        ng-options="option.Id as option.Name for option in SemesterListForScholarship " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <!--dropdown option for EnumList-->
+                        <tr>
+                            <td class="fieldlabel">Valid Period </td>
+                            <td class="fieldarea">
+                                <select ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_ValidPeriodEnumId"
+                                        ng-disabled="true"
+                                        ng-options="option.Id as option.Name for option in ValidPeriodEnumList" title="Select Valid Period" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Valid Period." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <!--dropdown option for EnumList-->
+                        <tr>
+                            <td class="fieldlabel">Amount Type </td>
+                            <td class="fieldarea">
+                                <select ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_AmountTypeEnumId"
+                                        ng-disabled="true"
+                                        ng-options="option.Id as option.Name for option in AmountTypeEnumList" title="Select Amount Type" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Amount Type." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <!--dropdown option for EnumList-->
+                        <tr>
+                            <td class="fieldlabel">Percent Amount </td>
+                            <td class="fieldarea">
+                                <input type="text"
+                                       value="{{SelectedScholarship.@Acnt_StdScholarship.Property_PercentAmount +'%'}}"
+                                       ng-disabled="true"
+                                       class="form-control" placeholder="Enter Percent Amount"/>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Percent Amount." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Real Amount </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_RealAmount"
+                                       ng-disabled="true"
+                                       class="form-control" placeholder="Enter Real Amount"/>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Real Amount." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+
+                        @*<tr>
+                                                    <td class="fieldlabel">Is Deleted </td>
+                                                    <td class="fieldarea">
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" ng-model="StdScholarship.@Acnt_StdScholarship.Property_IsDeleted" />
+                                                        </label>
+                                                    </td>
+                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                                </tr>*@
+                        @*<tr>
+                                                    <td class="fieldlabel">Account </td>
+                                                    <td class="fieldarea">
+                                                        <select ng-model="StdScholarship.@Acnt_StdScholarship.Property_LockedBy"
+                                                                ng-options="option.Id as option.Name for option in AccountList " ng-init="" class="form-control select-inline">
+                                                            <option value="" label="" class="">---Select One---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Account." data-toggle="tooltip"></i></span></td>
+                                                </tr>*@
+                        @*<tr>
+                                                    <td class="fieldlabel">Account </td>
+                                                    <td class="fieldarea">
+                                                        <select ng-model="StdScholarship.@Acnt_StdScholarship.Property_UnlockedBy"
+                                                                ng-options="option.Id as option.Name for option in AccountList " ng-init="" class="form-control select-inline">
+                                                            <option value="" label="" class="">---Select One---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Account." data-toggle="tooltip"></i></span></td>
+                                                </tr>*@
+                        @*<tr>
+                                                    <td class="fieldlabel">Student </td>
+                                                    <td class="fieldarea">
+                                                        <select ng-model="StdScholarship.@Acnt_StdScholarship.Property_StudentId"
+                                                                ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control select-inline">
+                                                            <option value="" label="" class="">---Select One---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Student." data-toggle="tooltip"></i></span></td>
+                                                </tr>*@
+                        @*<tr>
+                                                    <td class="fieldlabel">Id </td>
+                                                    <td class="fieldarea">
+                                                        <input type="number" ng-model="StdScholarship.@Acnt_StdScholarship.Property_Id" class="form-control" placeholder="Enter Id"   />
+                                                    </td>
+                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Id." data-toggle="tooltip"></i></span></td>
+                                                </tr>*@
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Locked By</td>
+                            <td class="fieldarea">
+                                <span ng-bind="SelectedScholarship.@Acnt_StdScholarship.Property_LockedBy"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="fieldlabel">Unlocked By</td>
+                            <td class="fieldarea">
+                                <span ng-bind="SelectedScholarship.@Acnt_StdScholarship.Property_UnlockedBy"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Locked By</td>
+                            <td class="fieldarea">
+                                <span ng-bind="SelectedScholarship.@Acnt_StdScholarship.Property_LockedBy"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Locked By</td>
+                            <td class="fieldarea">
+                                <span ng-bind="SelectedScholarship.@Acnt_StdScholarship.Property_LockedBy"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Order No </td>
+                            <td class="fieldarea">
+                                <input type="number" ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_OrderNo" class="form-control" placeholder="Enter Order No"/>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Remark </td>
+                            <td class="fieldarea">
+                                <textarea type="text" ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_Remark" class="form-control" placeholder="Enter Remark" style="min-height: 36px;"></textarea>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+
+                        <tr>
+                            <td class="fieldlabel">Is Locked </td>
+                            <td class="fieldarea">
+                                <label class="checkbox-inline">
+                                    {{SelectedScholarship.@Acnt_StdScholarship.Property_IsLocked}}
+                                    @*<input type="checkbox" ng-model="SelectedScholarship.@Acnt_StdScholarship.Property_IsLocked"/>*@
+                                </label>
+                            </td>
+                            @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Locked if required." data-toggle="tooltip"></i></span></td>*@
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 table-form">
+                    <div>History</div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tr>
+                            <td>
+                                <div ng-bind="SelectedScholarship.@Acnt_StdScholarship.Property_History" style="text-align: left; min-height: 20px;"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align: center">
+        @*<button type="button" class="btn btn-success"
+                                    ng-click="discountListAddEdit()"
+                                    >
+                                <span class="fa fa-save"></span> Save
+                            </button>*@
+        <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- Add Discount Modal End -->
+    </div>
+    </div>
+}

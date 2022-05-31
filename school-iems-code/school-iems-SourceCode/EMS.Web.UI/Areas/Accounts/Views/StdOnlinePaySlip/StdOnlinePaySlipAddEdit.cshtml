@@ -1,0 +1,275 @@
+﻿
+<!--File:Acnt_StdOnlinePaySlip Add/Edit View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Accounts: View Std Online Pay Slip";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StdOnlinePaySlipId = (string) id == null?"0":(string)id;
+    
+    //Acnt_StdOnlinePaySlip WebApi Single Row link   
+    var getStdOnlinePaySlipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "GetStdOnlinePaySlipById", area = "Accounts" });
+    var getStdOnlinePaySlipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "GetStdOnlinePaySlipDataExtra", area = "Accounts" });
+    var saveStdOnlinePaySlipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "SaveStdOnlinePaySlip", area = "Accounts" });
+    var deleteStdOnlinePaySlipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "GetDeleteStdOnlinePaySlipById", area = "Accounts" });
+
+    //Acnt_StdOnlinePaySlip WebApi List link 
+    var getPagedStdOnlinePaySlipUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StdOnlinePaySlipApi", action = "GetPagedStdOnlinePaySlip", area = "Accounts"});
+    var getAllStdOnlinePaySlipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "GetAllStdOnlinePaySlip", area = "Accounts" });
+    var saveStdOnlinePaySlipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "SaveStdOnlinePaySlipList", area = "Accounts" });
+    var getStdOnlinePaySlipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdOnlinePaySlipApi", action = "GetStdOnlinePaySlipListDataExtra", area = "Accounts" });
+
+    var editStdOnlinePaySlipByIdPageUrl = Url.Action("StdOnlinePaySlipAddEdit", "StdOnlinePaySlip", new { area = "Accounts" });
+    var listStdOnlinePaySlipPageUrl = Url.Action("StdOnlinePaySlipList", "StdOnlinePaySlip", new { area = "Accounts" });
+    
+    //Acnt_StdOnlinePaySlip Angular Functions
+    string getStdOnlinePaySlipById="getStdOnlinePaySlipById";
+    var saveStdOnlinePaySlip = "saveStdOnlinePaySlip";
+    var getNewStdOnlinePaySlip = "getNewStdOnlinePaySlip";
+    var refreshPage = "loadPage()";
+    string deleteStdOnlinePaySlipById="deleteStdOnlinePaySlipById";
+    string loadStdOnlinePaySlipExtraData="loadStdOnlinePaySlipExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/StdOnlinePaySlip/StdOnlinePaySlipAddEdit.js"></script>
+}
+
+<div id="StdOnlinePaySlipAddEdit" class="row" ng-controller="StdOnlinePaySlipAddEditCtrl" ng-init="Init(
+      '@StdOnlinePaySlipId'
+      ,'@getStdOnlinePaySlipByIdUrl'
+      ,'@getStdOnlinePaySlipDataExtraUrl'
+      ,'@saveStdOnlinePaySlipUrl'
+      ,'@deleteStdOnlinePaySlipByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    View
+                    @*<strong ng-show="StdOnlinePaySlip.@HttpUtil.Profile.UserName!=''">{{(StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="StdOnlinePaySlipId" ng-Enter="@(getStdOnlinePaySlipById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    @*<button ng-click="@(getNewStdOnlinePaySlip)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                    <a href="@(listStdOnlinePaySlipPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Particular Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="true" type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_ParticularName" class="form-control" placeholder="Enter Particular Name" maxlength="200" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Particular Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Amount </td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="true" type="number" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_Amount" class="form-control" placeholder="Enter Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Gateway Charge </td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="true" type="number" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_GatewayCharge" class="form-control" placeholder="Enter Gateway Charge"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Gateway Charge." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Paid </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input ng-disabled="true" type="checkbox" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_IsPaid"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Paid if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea ng-disabled="true" type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_Remark" class="form-control" placeholder="No Remark Available">
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Create From Ip <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="true" type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_CreateFromIp" class="form-control" placeholder="Enter Create From Ip" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Create From Ip." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Std Transection Detail Json <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <textarea ng-disabled="true" rows="4" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_StdTransectionDetailJson" class="form-control" placeholder="Enter Std Transection Detail Json"  required="" ></textarea>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Std Transection Detail Json." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Gateway Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_GatewayId" class="form-control" placeholder="Enter Gateway Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Gateway Id." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             @*<tr>
+                                <td class="fieldlabel">Unique Order No <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_UniqueOrderNo" class="form-control" placeholder="Enter Unique Order No" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Unique Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Gateway Trans No </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_GatewayTransNo" class="form-control" placeholder="Enter Gateway Trans No" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Gateway Trans No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Id For Rechek Gateway Payment Status </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_IdForRechekGatewayPaymentStatus" class="form-control" placeholder="Enter Id For Rechek Gateway Payment Status" maxlength="128"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Id For Rechek Gateway Payment Status." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             @*<tr>
+                                <td class="fieldlabel">Response Json </td>
+                                <td class="fieldarea">
+                                    <textarea ng-disabled="true" rows="6" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_ResponseJson" class="form-control" placeholder="Enter Response Json"  ></textarea>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Response Json." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             <tr>
+                                <td class="fieldlabel">Initiate Time </td>
+                                 <td class="fieldarea">
+                                     {{StdOnlinePayslip.@Acnt_StdOnlinePaySlip.Property_InitiateTime | date :'medium'}}
+                                     <input ng-disabled="true" type="datetime" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_InitiateTime" class="form-control" placeholder="Enter Initiate Time"/>
+                                 </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Initiate Time." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Response Time </td>
+                                 <td class="fieldarea">
+                                     <input ng-disabled="true" type="datetime" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_ResponseTime" class="form-control" placeholder="Enter Response Time"/>
+                                 </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Response Time." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Trans Status </td>
+                                <td class="fieldarea">
+                                    @*{{StdOnlinePayslip.TransStatus}}*@
+                                    <select ng-disabled="true" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_TransStatusEnumId" ng-options="option.Id as option.Name for option in TransStatusEnumList" title="Select Trans Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Trans Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Voucher Prefix </td>
+                                <td class="fieldarea">
+                                    <input ng-disabled="true" type="text" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_VoucherPrefix" class="form-control" placeholder="No Voucher Prefix Available" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Voucher Prefix." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+                         @*<tr>
+                            <td class="fieldlabel">Semester </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_SemesterId"
+                                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                        </tr>*@
+                  
+                         @*<tr>
+                            <td class="fieldlabel">Official Bank </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_BankId"
+                                        ng-options="option.Id as option.Name for option in OfficialBankList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Official Bank." data-toggle="tooltip"></i></span></td>
+                        </tr>*@
+                  
+                         @*<tr>
+                            <td class="fieldlabel">Std Transaction </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_StdTransectionId"
+                                        ng-options="option.Id as option.Name for option in StdTransactionList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Std Transaction." data-toggle="tooltip"></i></span></td>
+                        </tr>*@
+                  
+                         @*<tr>
+                            <td class="fieldlabel">Student </td>
+                            <td class="fieldarea">
+                                <select ng-model="StdOnlinePaySlip.@Acnt_StdOnlinePaySlip.Property_StudentId"
+                                        ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Student." data-toggle="tooltip"></i></span></td>
+                        </tr>*@
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <a href="@(listStdOnlinePaySlipPageUrl)" class="btn btn-blue"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

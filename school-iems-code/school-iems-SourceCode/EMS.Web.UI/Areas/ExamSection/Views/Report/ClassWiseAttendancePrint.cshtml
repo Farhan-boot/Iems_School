@@ -1,0 +1,501 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model  EMS.Framework.Objects.MvcModelListResult<User_Student>
+
+@{
+    ViewBag.Title = "Exam Student Attendance Sheet";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+
+    //var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    //var classId = (string)id == null ? "0" : (string)id;
+    //id = Request.QueryString["componentSettingsId"];
+    //var componentSettingsId = (string)id == null ? "0" : (string)id;
+
+    //Aca_ResultComponentSetting ComponentSetting = ViewBag.ComponentSetting;
+    //Aca_Class Class = ViewBag.Class;
+    //Aca_Semester Semester = ViewBag.Semester;
+    //Aca_Exam Exam = ViewBag.Exam;
+
+
+
+    //string Error = ViewBag.Error;
+    var exportPdf = HttpUtil.GetQueryString("exportPdf");//Html.Raw(ViewBag.IncludePdfExportCSS)
+
+}
+@{
+    if (exportPdf.IsValid())
+    {
+        <style>
+            * {
+                box-shadow: none !important;
+            }
+        </style>
+    }
+}
+
+@section ScriptSection
+{
+    <script>
+        $(document).ready(function () {
+            //window.print();
+        });
+    </script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+
+@if (Model.HasError)
+{
+    <div class="alert alert-danger">
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention: </strong> <span>@Html.Raw(Model.ErrorHtml)</span>
+    </div>
+}
+else
+{
+    Aca_Class classObj = Model.DataBag.Aca_Class;
+    Aca_CurriculumCourse curriculumCourse = Model.DataBag.Aca_CurriculumCourse;
+    Aca_Semester semester = Model.DataBag.Aca_Semester;
+    Aca_Program program = Model.DataBag.Aca_Program;
+    List<User_Student> studentList = Model.Data.ToList();
+
+    string Date = Model.DataBag.Date;
+    string Time = Model.DataBag.Time;
+    int ItemPerPage = Model.DataBag.ItemPerPage;
+
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky no-print">
+            <i class="widget-icon fa fa-print bold  "></i>
+            <span class="widget-caption "><b>Print Exam Attendance Sheet </b></span>
+
+            <div class="widget-buttons no-padding-left">
+                @*<button onclick="window.print()" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</button>*@
+                @*<button ng-click="" class="btn btn-success btn-xs"><i class="fa fa-print"></i> Print Mark</button>*@
+
+
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Soft Copy
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="widget-body">
+
+            <!-- Component start -->
+            <div class="no-print" style="text-align: center">
+
+
+                <div class="widget-footer no-print" style="color: black">
+                    <b style="color: red; text-decoration: underline">Attention Before Print: </b>
+                    <div>
+                        1. Please set Paper Size as "<b style="color: red; font-weight: bold">A4</b>" and Orientation as "<b style="color: red; font-weight: bold">Portrait</b>" when print.<br />
+                        2. Use latest "<b style="color: red; font-weight: bold"><a href="https://www.google.com/chrome/browser/" title="click to dwonload" target="_blank">Chrome Browser</a></b>" for best performance.
+                    </div>
+                    <button onclick="window.print()" class="btn btn-darkorange btn-xs"><i class="fa fa-print"></i> Print This Page</button>
+
+                </div>
+
+                @*<div class="margin-bottom-5"><span  class="widget-caption "><b>Step 1 : </b> <button ng-click="@(saveResultComponentListByClassId)()" class="btn btn-xs btn-success"><i class="fa fa-save"></i> Save Marks</button></span></div>
+                    <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 2 : </b> <button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-save"></i> View Draft Mark Sheet</button></span></div>
+                    <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 3 : </b> <button ng-click="saveLockResultComponentListByClassId()" class="btn btn-xs btn-danger"><i class="fa fa-lock"></i> Confirm &amp; Lock Marks</button></span></div>
+                    <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 4 : </b> <button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-print"></i> Print Final Mark Sheet</button></span></div>*@
+                <br />
+            </div>
+            <div id="marks" style="max-width: 7.4in; margin: 0 auto">
+
+                @{
+                    var stdPerPage = ItemPerPage;
+                    var firstPage = 15;
+
+                    var taken = 0;
+                    //Aca_ResultComponent component in Model
+
+                    if (Model != null && studentList.Count > 0)
+                    {
+
+                        var totalStudent = studentList.Count;
+                        var totalPage = (int)Math.Ceiling((double)totalStudent / stdPerPage);//(totalStudent + stdPerPage - 1) / stdPerPage;//
+
+                        List<User_Account> facultylist = HttpUtil.DbContext.Aca_ClassTakenByEmployee
+                                           .Include("User_Employee")
+                                           .Include("User_Employee.User_Account")
+                                           .Where(x => x.ClassId == classObj.Id && x.RoleEnumId == (byte)Aca_ClassTakenByEmployee.RoleEnum.Faculty)
+                                           .Select(x => x.User_Employee.User_Account)
+                                           .ToList();
+
+                        for (int i = 1; i <= totalPage; i++)
+                        {
+                            var studentListPaged
+                                             = studentList.Skip(taken).Take(stdPerPage).ToList();
+
+                            @GenerateMarkSheetPage(studentListPaged, totalStudent, facultylist, stdPerPage, totalPage, i);
+                        if (i != totalPage)
+                        {<div class="pb-after" style="page-break-after: always!important">&nbsp;</div>}
+                        taken += stdPerPage;
+                    }
+
+                }
+                }
+            </div>
+        </div>
+    </div>
+                    }
+
+
+
+@helper  GenerateMarkSheetPage(List<User_Student> studentList, int studentCount, List<User_Account> facultylist, int stdPerPage, int totalPage, int pageNo)
+{
+
+Aca_Class classObj = Model.DataBag.Aca_Class;
+Aca_CurriculumCourse curriculumCourse = Model.DataBag.Aca_CurriculumCourse;
+Aca_Semester semester = Model.DataBag.Aca_Semester;
+Aca_Program program = Model.DataBag.Aca_Program;
+    string ExamName = Model.DataBag.ExamName;
+string Date = Model.DataBag.Date;
+string Time = Model.DataBag.Time;
+int ItemPerPage = Model.DataBag.ItemPerPage;
+
+
+
+var cssClass = pageNo > 1 ? "visible-print" : "";
+
+var pageInfo = (pageNo + "/" + totalPage).ToString();
+
+    <div id="InstituteHeader" style="margin-bottom: 5px">
+        <table class="@cssClass" style="width: 100%">
+            <tr>
+                <td align="left" valign="top" style="width: 110px">
+
+                    <img style="width: 100px" src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoColorSolo)" />
+                </td>
+                <td style="">
+                    <div class="margin-bottom-5" style="text-align: center">
+
+
+                        <div style="font-size: 22px; font-weight: bold">@EMS.Framework.Settings.SiteSettings.Instance.InstituteName</div>
+                        <div style="font-size: 14px; padding-bottom: 4px">@EMS.Framework.Settings.SiteSettings.Instance.InstituteAddress</div>
+                        <div style="font-size: 15px;padding-bottom: 0px"><b>Examination: @ExamName</b></div>
+                        <div style="font-size: 14px;">
+                            Student Attendance Sheet
+                        </div>
+                        <div>
+                            <span class="margin-bottom-5" style="font-size: 10px">Course: @classObj.Code (@classObj.Name, @classObj.Aca_CurriculumCourse.CourseCategory, Cr: @classObj.Aca_CurriculumCourse.CreditLoad)</span>
+                        </div>
+
+
+                    </div>
+                </td>
+                <td valign="top" align="right" style="width: 110px; text-align: right; font-size: 10px">
+                    Page: @pageInfo<br />
+                    Total Student: @studentCount<br />
+                    Printed: @DateTime.Now.ToString("dd/MM/yyyy")
+
+                </td>
+            </tr>
+        </table>
+
+
+
+
+    </div>
+    <div id="body" style="min-height: 740px">
+    <div id="SubHeader" style="margin-bottom: 15px">
+        <table class="visible-print1 SubHeader" style="width: 100%; font-weight: bold">
+            <tr>
+                <td style="width: 90px; ">
+                    Program
+                </td>
+                <td style="width: 5px">
+                    :
+                </td>
+                <td style="padding-left: 4px;  ">
+                    @program.ShortName
+                </td>
+
+                <td style="width: 72px; ">
+                    Semester
+                </td>
+                <td style="width: 5px">
+                    :
+                </td>
+                <td style="padding-left: 4px;width: 150px;">
+                    @semester.Name
+                </td>
+
+            </tr>
+            <tr>
+                <td style="">
+                    Course Title
+                </td>
+                <td style="">
+                    :
+                </td>
+                <td style="padding-left: 5px">
+                    @classObj.Aca_CurriculumCourse.Name
+                </td>
+                <td style="">
+                    Exam Date
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px">
+                    @Date
+                </td>
+            </tr>
+            <tr>
+                <td style="">
+                    Course Code
+                </td>
+                <td style="">
+                    :
+                </td>
+                <td style="padding-left: 5px">
+                    @classObj.Code
+                </td>
+                <td style="">
+                    Exam Time
+                </td>
+                <td style="">
+                    :
+                </td>
+                <td style="padding-left: 5px">
+                    @Time
+                </td>
+            </tr>
+        </table>
+        <div style="font-size: 11px; font-weight: normal; text-align:center">
+            Course Teacher(s):
+            @foreach (var faculty in facultylist)
+            {
+                if (faculty.UserName != "psdeveloper")
+                {
+                    <span style="">@faculty.FullName.ToLower().ToTitleCase();</span>
+                }
+            }
+        </div>
+
+    </div>
+   
+    <div id="StudentItemList" style="">
+        <table class="table table-striped table-bordered table-hover StudentItemList" style="">
+            <tbody>
+
+                <tr class="header-row" style="">
+                    <td class="text-center" style="width: 15px;">SL</td>
+                    <td class="text-center" style="min-width: 180px; max-width: 250px;">
+                        Student's Name
+                    </td>
+                    <td class="text-center" style="min-width: 80px;">ID NO.</td>
+                    <td class="text-center" style="min-width: 50px;">Key</td>
+                    <td style="" class="text-center">Script's SL#</td>
+                    <td class="text-center" style="width: 180px;">Signature</td>
+                    <td class="text-center" style="">Remarks</td>
+
+                </tr>
+    
+                @{
+                    //List<StudentJson> studentList = ClassResult30.DataBag.StudentList;
+                    if (studentList != null)
+                    {
+                        int sl = 1+(stdPerPage* (pageNo-1));
+                        foreach (User_Student student in studentList)
+                        {
+
+                            if (student == null)
+                            {
+                                continue;
+                            }
+                            var fontSize = "11.5px";
+                            if (student.FullName.Length > 25)
+                            {
+                                fontSize = "9.5px";
+                            }
+
+                            <tr  class="item-row" style="">
+                                <td class="text-center">@(sl++)</td>
+
+                                <td class="fittext1">
+                                    <span style="white-space: nowrap; font-size: @fontSize">@student.FullName.ToLower().ToTitleCase().TruncateAtWord(40)</span>
+                                </td>
+                                <td class="text-center std-id">
+                                    @student.ClassRollNo
+                                </td>
+                                <td class="text-center">
+                                   @student.ExamKey
+                                </td>
+                                <td class="text-center"></td>
+                                <td class="text-center" style=""> </td>
+                                <td class="text-center" style=""> </td>
+
+                            </tr>
+                        }
+                    }
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    </div>
+    <div id="Footer" style="">
+
+        <table class="footer1" style="width: 100%; margin-left: 10px; margin-top: 10px;margin-bottom: 15px">
+            <tr>
+                <td style="width: 184px;">
+                    Total No. of Students
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px; ">
+
+                </td>
+                <td style="width: 260px;">
+                    Total No. of Students With Admit Card
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px; "></td>
+            </tr>
+            <tr>
+                <td style="">
+                    Total No. of Students Absent @*Attended*@
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px; "></td> 
+                <td style="">
+                    Total No. of Students Without Admit Card
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px; "></td>
+            </tr>
+            @*<tr>
+                <td style="">
+                    Total No. of Students Absent
+                </td>
+                <td style="width: 10px;">
+                    :
+                </td>
+                <td style="padding-left: 5px; "></td>
+            </tr>*@
+        </table>
+   
+        <table class="footer2" style="width: 100%;margin-bottom: 20px">
+            <tr>
+                <td style="text-align: left; padding-left: 20px; ">
+                    <div style="text-decoration: underline;padding-bottom: 12px !important;">Invigilators :</div> 
+                    <div style="padding-bottom: 12px !important;">1.</div>
+                    <div>2.</div> 
+                </td>
+                <td style="">
+                   
+                </td>
+                <td style="text-decoration: underline;text-align: right; padding-right: 10px;vertical-align: top; ">
+                    <div>Chief Invigilator :</div> 
+                    <div style="padding-bottom: 12px !important;"></div>
+                    <div></div>
+                </td>
+            </tr>
+        </table>
+
+  
+        <table class="footer3" style="width: 100%; font-size: 11px">
+       
+            <tr>
+                <td rowspan="2" style="width: 33%; vertical-align: bottom; text-align: left;">
+                    Developed By: @SiteSettings.PoweredBy
+
+                </td>
+                <td style="vertical-align: bottom; text-align: center;">
+                    @("Page "+pageNo+" of "+ totalPage )
+                </td>
+                <td style="width: 33%; vertical-align: bottom; text-align: right;">
+                    @SiteSettings.Instance.InstituteCreditPrefix @SiteSettings.Instance.InstituteCredit
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+
+
+
+
+
+
+}
+
+@section StyleSection
+{
+
+    <style>
+        .print-footer {
+            display: none !important;
+        }
+        #SubHeader td {
+              font-weight: bold!important;
+            font-size: 12px !important;
+            padding: 3px !important;
+        }
+        .StudentItemList .header-row td{
+            font-weight: bold;
+            font-size: 12.5px;
+         border: 1px solid black !important;
+         min-width: 66px;
+        }
+        .StudentItemList .item-row td.std-id{
+            
+            font-size: 12.5px;
+           line-height: 1!important;
+           padding-left: 1px !important;
+            padding-right: 1px !important;
+        }
+        .StudentItemList .item-row td{
+            border: 1px solid black !important;
+            font-size: 11.5px;
+           line-height: 1.2!important;
+         padding: 5px !important;
+        }
+         .footer1 td {
+              font-weight: bold!important;
+            font-size: 13px !important;
+            padding: 2px !important;
+        }
+         .footer1 td,.footer2 td {
+              font-weight: bold!important;
+            font-size: 12px !important;
+            padding: 3px !important;
+        }
+
+        .footer2 td {
+
+            padding-bottom: 12px !important;
+        }
+
+    @*("@page") :first {margin-top: 0.5cm/* Top margin on first page 10cm */}
+    @("@page") { size: portrait }
+    @("@page") { size: landscape }
+    @("@page") rotated { size: landscape }
+    @("@page") { size: portrait }
+    @("@page") rotated { size: portrait }*@
+    </style>
+
+}

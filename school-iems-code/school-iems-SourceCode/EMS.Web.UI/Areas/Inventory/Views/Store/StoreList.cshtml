@@ -1,0 +1,163 @@
+﻿
+<!--File:Inv_Store List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Store List";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StoreId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getStoreByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreById", area = "Inventory" });
+    var getStoreDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreDataExtra", area = "Inventory" });
+    var saveStoreUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "SaveStore", area = "Inventory" });
+    var deleteStoreByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetDeleteStoreById", area = "Inventory" });
+
+    //WebApi link for List
+    var getPagedStoreUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StoreApi", action = "GetPagedStore", area = "Inventory"});
+    var getAllStoreUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetAllStore", area = "Inventory" });
+    var saveStoreListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "SaveStoreList", area = "Inventory" });
+    var getStoreListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StoreApi", action = "GetStoreListDataExtra", area = "Inventory" });
+
+    var editStoreByIdPageUrl = Url.Action("StoreAddEdit", "Store", new { area = "Inventory" });
+
+    //Angular Function Name
+    var getNewStore = "getNewStore";
+    var saveStore = "saveStore";
+    var deleteStoreById = "deleteStoreById";
+    var deleteStoreByObj = "deleteStoreByObj";
+    //for list
+    var searchStoreList = "searchStoreList";
+    var getPagedStoreList = "getPagedStoreList";
+    var getAllStoreList = "getAllStoreList";
+    var saveStoreList = "saveStoreList";
+    var getStoreListExtraData = "getStoreListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Store/StoreList.js"></script>
+}
+
+
+<div ng-controller="StoreListCtrl"
+     ng-init="Init(
+      '@getPagedStoreUrl'
+     ,'@deleteStoreByIdUrl'
+     ,'@getStoreListDataExtraUrl'
+     ,'@saveStoreListUrl'
+     ,'@getStoreByIdUrl'
+     ,'@getStoreDataExtraUrl'
+     ,'@saveStoreUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Store </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchStoreList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editStoreByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchStoreList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">RoomId</th>
+                    @*<th class="text-center">CampusId</th>*@
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Details</th>
+                    <th class="text-center">Address</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Remark</th>
+
+                    @*<th class="text-center">Is Deleted</th>*@
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                    <tr ng-repeat="row in StoreList">
+                        <td class="text-center" style="display:none">
+                            <input type="checkbox" ng-model="row.@Inv_Store.Property_IsSelected" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="">{{row.@Inv_Store.Property_Name}}</td>
+                        <td class="">{{row.@Inv_Store.Property_RoomId}}</td>
+                        @*<td class="">{{row.@Inv_Store.Property_CampusId}}</td>*@
+                        <td class="">{{row.@Inv_Store.Property_Phone}}</td>
+                        <td class="">{{row.@Inv_Store.Property_Details}}</td>
+                        <td class="">{{row.@Inv_Store.Property_Address}}</td>
+                        <td class="">{{row.@Inv_Store.Property_Description}}</td>
+                        <td class="">{{row.@Inv_Store.Property_Remark}}</td>
+                        @*<td class="">{{row.@Inv_Store.Property_IsDeleted}}</td>*@
+                        <td class="text-center no-print">
+                            <a target="_blank" href="@(editStoreByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                            <button ng-click="@(deleteStoreById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

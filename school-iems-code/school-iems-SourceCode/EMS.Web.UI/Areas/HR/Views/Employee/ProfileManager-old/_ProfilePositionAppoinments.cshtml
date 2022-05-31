@@ -1,0 +1,72 @@
+﻿@using EMS.DataAccess.Data
+    <div class="widget">
+    <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+        <i class="widget-icon fa fa-info-circle"></i>
+        <span  class="widget-caption">Current Appointment Information</span>
+    </div>
+    <div class="widget-body">
+        <p class="text-danger">
+            <i class="fa fa-exclamation-triangle"></i> Only one Appointment would be Primary Appointment. Others are Additional Appointment, Not primary Appointment.
+        </p>
+        <div class="widget radius-bordered no-margin" ng-repeat="row in Obj.AppointmentHistoryList">
+            <div class="widget-header bg-palegreen">
+                <span  class="widget-caption">
+                    {{$index+1}} Appointment
+                </span>
+                <div class="widget-buttons buttons-bordered">
+                    <button type="button" ng-click="deleteAppointment($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete Appointment</button>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Appointed Post/Position <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <select ng-model="row.@HR_AppointmentHistory.Property_PositionId" ng-options="option.Id as option.Name group by option.JobClass for option in PositionList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-8 form-group">
+                        <label class="control-label">
+                            Appointed Office/Faculty/Dept <span  class="red glyphicon glyphicon-asterisk"></span>
+                        </label>
+                        <select ng-model="row.@HR_AppointmentHistory.Property_DepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">
+                            Appointed Date (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span>
+                        </label>
+                        <span  class="input-icon icon-right">
+                            <input ng-model="row.StartDateString" class="form-control " type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">
+                            <i class="glyphicon glyphicon-calendar circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">
+                            End Date (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span>
+                        </label>
+                        <span  class="input-icon icon-right">
+                            <input ng-model="row.EndDateString" class="form-control " type="text" data-mask="99/99/9999" placeholder="dd/mm/yyyy">
+                            <i class="glyphicon glyphicon-calendar circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <div class="checkbox">
+                            <label class="control-label">
+                                <input type="checkbox" ng-model="row.@HR_AppointmentHistory.Property_IsActing"> <strong>Is Acting</strong>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <div class="checkbox">
+                            <label class="control-label">
+                                <input type="checkbox" ng-change="changeIsPrimaryAppointment($index)" ng-model="row.@HR_AppointmentHistory.Property_IsPrimary"> <strong>Is Primary</strong>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="hr"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-footer" ng-hide="true">
+            <button type="button" ng-click="addAppointment()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add Another Appointment</button>
+        </div>
+    </div>

@@ -1,0 +1,84 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model  EMS.Framework.Objects.MvcModelListResult<User_Student>
+
+@{
+    ViewBag.Title = "Print Supple Admit Card";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+
+
+    //string Error = ViewBag.Error;
+    var exportPdf = HttpUtil.GetQueryString("exportPdf");//Html.Raw(ViewBag.IncludePdfExportCSS)
+
+}
+@{
+    if (exportPdf.IsValid())
+    {
+        <style>
+            * {
+                box-shadow: none !important;
+            }
+        </style>
+    }
+}
+
+@section ScriptSection
+{
+    <script>
+        $(document).ready(function () {
+            //window.print();
+        });
+    </script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+@Html.Partial("~/Areas/ExamSection/Views/Report/Shared/_BulkSuppleAdmitCardPrint.cshtml", Model);
+
+@section StyleSection
+{
+
+    <style>
+        .print-footer {
+            display: none !important;
+        }
+
+        #SubHeader td {
+            font-weight: bold !important;
+            font-size: 11px !important;
+            padding: 2px !important;
+        }
+
+        .ItemList .header-row td {
+            font-weight: bold;
+            font-size: 11px;
+            border: 1px solid black !important;
+            padding: 2px;
+        }
+
+        .ItemList .item-row td {
+            border: 1px solid black !important;
+            font-size: 11px;
+            padding: 2px !important;
+        }
+
+        .footer1  {
+           
+            font-size: 10px !important;
+            padding: 2px !important;
+        }
+
+        .footer1 td, .footer2 td {
+            font-weight: bold !important;
+            font-size: 13px !important;
+            padding: 6px !important;
+        }
+
+        .footer2 td {
+            padding-bottom: 12px !important;
+        }
+
+       
+    </style>
+
+}

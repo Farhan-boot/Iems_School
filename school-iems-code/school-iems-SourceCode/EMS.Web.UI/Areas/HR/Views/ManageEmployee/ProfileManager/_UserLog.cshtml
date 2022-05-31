@@ -1,0 +1,266 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var accountId = (string)id == null ? "0" : (string)id;
+
+    var getPagedLoginAuditByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetPagedLoginAuditById", area = "HR" });
+    var getPagedChangeHistoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetPagedChangeHistoryById", area = "HR" });
+    var getPagedPasswordResetHistoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetPagedPasswordResetHistoryById", area = "HR" });
+
+    //Angular js variables.
+    var loadPage = "loadPage";
+
+}
+
+<div ng-controller="UserLogCtrl"
+     ng-init="Init(
+     '@accountId'
+    ,'@getPagedLoginAuditByIdUrl'
+    ,'@getPagedChangeHistoryByIdUrl'
+    ,'@getPagedPasswordResetHistoryByIdUrl'
+     )">
+    <div ng-show="!IsLoadEmployeeLog" class="form-title">
+        User Log Information
+    </div>
+
+    
+    
+    <div style="text-align: center;">
+        <button ng-click="@(loadPage)()"
+                style="margin-top: 20px; margin-bottom: 50px;"
+                ng-show="!IsLoadEmployeeLog"
+                class="btn btn-info btn-size">
+            Load Employee's Log
+        </button>
+    </div>
+
+    <div ng-show="IsLoadEmployeeLog"
+         class="widget">
+        <div class="row">
+           
+            <div class="col-sm-6">
+                <div class="form-title">
+                    User Successful Login History <button ng-click="getPagedLoginAuditById()" class="btn btn-xs btn-info"> <i class="fa fa-refresh"></i>Reload</button>
+                </div>
+                <div class="widget-body no-padding" style="overflow: auto">
+                    <div class="table-footer no-print">
+                        @OptionControlLoginHistory()
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">User Name</th>
+                            <th class="text-center">Audit Date</th>
+                            <th class="text-center">IP Address</th>
+                            <th class="text-center">Login Result</th>
+                            <th class="text-center">Mobile</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in LoginAuditList">
+                            <td>{{$index+1}}</td>
+                            <td class="">{{row.@UAC_LoginAudit.Property_UserName}}</td>
+                            <td class="">{{row.@UAC_LoginAudit.Property_AuditDate | date:'medium'}}</td>
+                            <td class="">{{row.@UAC_LoginAudit.Property_FromIp}}</td>
+                            <td class="text-center">
+                                <span ng-show="row.@UAC_LoginAudit.Property_StatusEnumId==1" class="badge badge-success">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                                <span ng-show="row.@UAC_LoginAudit.Property_StatusEnumId==0" class="badge badge-danger">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                            </td>
+                            <td class="text-center">
+                                <span ng-show="row.@UAC_LoginAudit.Property_IsMobileBrowser" class="badge badge-success">Yes</span>
+                                <span ng-hide="row.@UAC_LoginAudit.Property_IsMobileBrowser" class="badge badge-danger">No</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControlLoginHistory()
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm-6">
+                <div class="form-title">
+                    User Password Reset History <button ng-click="getPagedPasswordResetHistoryById()" class="btn btn-xs btn-info"> <i class="fa fa-refresh"></i>Reload</button>
+                </div>
+                <div class="widget-body no-padding" style="overflow: auto">
+                    <div class="table-footer no-print">
+                        @OptionControlPasswordResetHistory()
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center">SN</th>
+                                <th class="text-center">Request Date</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">From Ip</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in PasswordResetHistoryList">
+                                <td>{{$index+1}}</td>
+                                <td class="">{{row.@UAC_PassReset.Property_RequestDate | date:'medium'}}</td>
+                                <td class="">{{row.@UAC_PassReset.Property_Type}}</td>
+                                <td class="text-center">
+                                    <span ng-show="row.@UAC_PassReset.Property_StatusEnumId==1" class="badge badge-success">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                                    <span ng-show="row.@UAC_PassReset.Property_StatusEnumId==0" class="badge badge-danger">{{row.@UAC_LoginAudit.Property_Status}}</span>
+                                </td>
+                                <td class="text-center">
+                                    {{row.@UAC_PassReset.Property_FromIp}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControlPasswordResetHistory()
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm-12" style="margin-top:10px">
+                <div class="form-title">
+                    User Mobile/Email Change History <button ng-click="getPagedChangeHistoryById()()" class="btn btn-xs btn-info"> <i class="fa fa-refresh"></i>Reload</button>
+                </div>
+                <div class="widget-body no-padding" style="overflow: auto">
+                    <div class="table-footer no-print">
+                        @OptionControlChangeHistory()
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">Action Date</th>
+                            <th class="text-center">Request Type</th>
+                            <th class="text-center">Ip Address</th>
+                            <th class="text-center">Requested By</th>
+                            @*<th class="text-center">Mobile</th>*@
+                            <th class="text-center">Remark</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in ChangeHistoryList">
+                            <td>{{$index+1}}</td>
+                            <td class="">{{row.@UAC_VerificationAudit.Property_InitiatedDate | date:'medium'}}</td>
+                            <td class="">{{row.@UAC_VerificationAudit.Property_RequestType}}</td>
+                            <td class="">{{row.@UAC_VerificationAudit.Property_FromIp}}</td>
+                            <td class="text-center">
+                                {{row.@UAC_VerificationAudit.Property_RequestBy}}
+                            </td>
+                            @*<td class="text-center">
+                                <span ng-show="row.@UAC_VerificationAudit.Property_IsMobileBrowser" class="badge badge-success">Yes</span>
+                                <span ng-hide="row.@UAC_VerificationAudit.Property_IsMobileBrowser" class="badge badge-danger">No</span>
+                            </td>*@
+                            <td class="">{{row.@UAC_VerificationAudit.Property_Remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControlChangeHistory()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Row end-->
+</div>
+
+@helper  OptionControlLoginHistory()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="LoginHistoryTotalServerItems==0">(Showing {{LoginHistoryTotalServerItems*(LoginHistoryPageNo-1)+1}}-{{LoginHistoryTotalServerItems*LoginHistoryPageNo}} of {{LoginHistoryTotalItems}})</label>
+                    <label ng-show="LoginHistoryTotalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="LoginHistoryPageSize" ng-enter="changeLoginHistoryPageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="LoginHistoryPageNo" ng-enter="changeLoginHistoryPageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{LoginHistoryTotalItems/LoginHistoryPageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prevLoginHistory()" ng-hide="LoginHistoryTotalItems == 0 || LoginHistoryPageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="nextLoginHistory()" ng-hide="LoginHistoryTotalItems == 0 || LoginHistoryPageNo >= LoginHistoryTotalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper  OptionControlPasswordResetHistory()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="PasswordResetHistoryTotalServerItems==0">(Showing {{PasswordResetHistoryTotalServerItems*(PasswordResetHistoryPageNo-1)+1}}-{{PasswordResetHistoryTotalServerItems*PasswordResetHistoryPageNo}} of {{PasswordResetHistoryTotalItems}})</label>
+                    <label ng-show="PasswordResetHistoryTotalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PasswordResetHistoryPageSize" ng-enter="changePasswordResetHistoryPageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PasswordResetHistoryPageNo" ng-enter="changePasswordResetHistoryPageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{PasswordResetHistoryTotalItems/PasswordResetHistoryPageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prevPasswordResetHistory()" ng-hide="PasswordResetHistoryTotalItems == 0 || PasswordResetHistoryPageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="nextPasswordResetHistory()" ng-hide="PasswordResetHistoryTotalItems == 0 || PasswordResetHistoryPageNo >= PasswordResetHistoryTotalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@helper  OptionControlChangeHistory()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="ChangeHistoryTotalServerItems==0">(Showing {{ChangeHistoryTotalServerItems*(ChangeHistoryPageNo-1)+1}}-{{ChangeHistoryTotalServerItems*ChangeHistoryPageNo}} of {{ChangeHistoryTotalItems}})</label>
+                    <label ng-show="ChangeHistoryTotalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="ChangeHistoryPageSize" ng-enter="changeChangeHistoryPageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="ChangeHistoryPageNo" ng-enter="changeChangeHistoryPageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{ChangeHistoryTotalItems/ChangeHistoryPageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prevChangeHistory()" ng-hide="ChangeHistoryTotalItems == 0 || ChangeHistoryPageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="nextChangeHistory()" ng-hide="ChangeHistoryTotalItems == 0 || ChangeHistoryPageNo >= ChangeHistoryTotalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

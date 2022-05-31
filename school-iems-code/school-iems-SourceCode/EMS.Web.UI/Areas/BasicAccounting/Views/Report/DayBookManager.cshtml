@@ -1,0 +1,117 @@
+﻿
+
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Facade.BasicAccountingArea;
+@using EMS.DataAccess;
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+
+
+@model EMS.Framework.Objects.MvcModelResult<ReportController.DayBookModel>
+
+@{
+    ViewBag.Title = "Day Book Manager";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+    //WebApi link   
+    var getDayBookDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DayBookApi", action = "GetDayBookDataExtra", area = "BasicAccounting" });
+
+    var dayBoolUrl = Url.Action("DayBookPrint", "Report", new { area = "BasicAccounting" });
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Report/DayBookManager.js"></script>
+    
+}
+
+<div ng-controller="DayBookCtrl" ng-init="Init(
+     '@getDayBookDataExtraUrl'
+     ,'@dayBoolUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption "><b>Day Book Manager </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered" style="width: 500px">
+                        <tbody>
+                        <tr>
+                            <td style="width: 95px;">
+                                Select Branch:
+                            </td>
+                            <td colspan="3" style="width: 160px;">
+                                <select ng-model="BranchId" ng-change="onChangeFilter()"
+                                        ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                                    <option value="" label="" class="">---Select All Branch---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 72px;">Start Date:</td>
+                            <td style="width: 105px">
+                                <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                            </td>
+                            <td style="width: 66px;">End Date:</td>
+                            <td style="width: 105px">
+                                <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="IncludeParameter" colspan="4">
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    Include Narration
+                                </div>
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    <span class="input-icon">
+                                        <input ng-model="IncludeNarration" class="include-checkbox" type="checkbox"/>
+                                    </span>
+                                </div>
+                    
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    Include Details
+                                </div>
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    <span class="input-icon">
+                                        <input ng-model="IncludeDetails" class="include-checkbox" type="checkbox" />
+                                    </span>
+                                </div>
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    Include Code Name
+                                </div>
+                                <div class="widget-buttons buttons-bordered no-padding-right">
+                                    <span class="input-icon">
+                                        <input ng-model="IncludeCodeName" class="include-checkbox" type="checkbox" />
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="padding-left: 5px; text-align: center;">
+                                <a class="btn btn-info btn-xs" target="_blank" href="@dayBoolUrl?narration={{IncludeNarration}}&dtl={{IncludeDetails}}&code={{IncludeCodeName}}&branchid={{BranchId}}&startdate={{StartDate|date:'dd-MM-yyyy'}}&enddate={{EndDate|date:'dd-MM-yyyy'}}"> Print Report </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .IncludeParameter input {
+        vertical-align: middle;
+    }
+</style>
+
+
+
+
+
+
+

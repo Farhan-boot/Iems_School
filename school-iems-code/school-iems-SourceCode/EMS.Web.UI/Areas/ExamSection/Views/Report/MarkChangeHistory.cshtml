@@ -1,0 +1,184 @@
+﻿
+<!--File:Acnt_StdTransaction List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Mark Change History";
+    // Angular Properties
+    var un = Request.QueryString["un"];
+    var stdUserName = (string)un == null ? "" : (string)un;
+
+    //WebApi link for single row
+    var getMarkChangeHistoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MarkChangeHistoryApi", action = "GetMarkChangeHistory", area = "ExamSection" });
+    //WebApi link for List
+
+    //Angular Function Name
+
+    //for list
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/Report/MarkChangeHistory.js?v=1"></script>
+}
+
+<div ng-controller="MarkChangeHistoryCtrl"
+     ng-init="Init(
+     '@stdUserName'
+      ,'@getMarkChangeHistoryUrl'
+     )">
+    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="widget">
+        <div class="widget-body no-padding" style="overflow: auto; padding-bottom: 15px !important;">
+            <table class="table table-bordered educationHistory hide-on-print" style="margin-bottom: 10px;">
+                <tbody>
+                    <tr>
+                        <td style="text-align: center">
+                            Student ID:
+                            <span class="input-icon" style="width: 200px;">
+                                <input type="text" ng-model="StdUserName" ng-enter="getMarkChangeHistory()" class="form-control input-xs" placeholder="Type Student ID" style="">
+                                <i class="glyphicon glyphicon-search blue"></i>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-hide="Report.length==0" class="main-body" style="background-color: white;">
+                <div ng-repeat="semester in Report">
+                    <table style="width: 100%" class="table-bordered table-border semester-table-bordered">
+                        <thead>
+                        <tr>
+                            <td colspan="3"><h2 class="text-align-center">{{semester.SemesterName}}</h2></td>
+                        </tr>
+                        <tr>
+                            <th style="width: 220px;">Component</th>
+                            <th style="padding: 0px;border-bottom: none;">
+                                <table class="table-border table-bordered" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="examName">Exam Name</th>
+                                            <th class="component-mark">Mark</th>
+                                            <th class="history" style="width: auto;">History</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+
+                            @*<th style="width: 125px;">Current Mark</th>*@
+                           
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="course in semester.CourseList">
+                        <tr style="background-color: gainsboro;">
+                            <th colspan="3">{{course.Code}}  {{course.Name}}</th>
+                        </tr>
+                        <tr ng-repeat="componentSetting in course.ComponentSettingJsonList">
+
+                            <td class="text-center">
+                                {{componentSetting.Name}}
+                            </td>
+                            <td class="text-center">
+                                <table class="table-bordered table-border" style="border: none;">
+                                    <tbody>
+                                        <tr ng-repeat="examWiseComponentJson in componentSetting.ExamWiseComponentJsonList">
+                                            <td class="examName">{{examWiseComponentJson.ExamName}}</td>
+                                            <td class="component-mark text-center">{{examWiseComponentJson.Mark}}</td>
+                                            <td class="text-center history" style="width: auto;" ng-bind-html="renderHtml(examWiseComponentJson.History)"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="text-center text-bold">Total Mark</td>
+                            <td class="text-center">
+                                <table class="table-bordered table-border" style="border: none;">
+                                    <tbody>
+                                    <tr ng-repeat="examWiseResultClassJson in course.ExamWiseResultClassJsonList">
+                                        <td class="examName text-bold">{{examWiseResultClassJson.ExamName}}</td>
+                                        <td class="component-mark text-center text-bold">{{examWiseResultClassJson.TotalMark}} ({{examWiseResultClassJson.Grade}})</td>
+                                        <td class="text-center history text-bold" style="width: auto;" ng-bind-html="renderHtml(examWiseResultClassJson.History)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .main-body {
+        width: 10in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .semester-table-bordered {
+        border: 2px solid #afabab !important;
+    }
+    .examName {
+        width: 215px;
+
+
+    }
+    .component-mark {
+        width: 50px;
+
+    }
+    .history {
+        padding: 10px;
+        
+    }
+</style>

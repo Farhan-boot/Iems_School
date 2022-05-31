@@ -1,0 +1,61 @@
+﻿@using BeyondThemes.Bootstrap
+@using EMS.Framework.Settings
+@model EMS.Web.UI.Models.VerifyOrChangeEmailModel
+
+@{
+    ViewBag.Title = "Email Verify";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+    ViewBag.FormTitle = "Email Verify";
+}
+
+
+<div class="form-group">
+    <div style="padding: 5px;">
+        <b>Hi, @Model.FullName (@Model.UserName)</b>
+        <br/>
+        <b>New Email: </b>@Model.Email
+    </div>
+   
+    @if (ViewBag.SuccessMessage == string.Empty)
+    {
+        <div class="thumbnail" style="">
+            <b>Important:</b>
+            A Six Digit Verification Code sent to your new email address. Until you verify the code below, your new email address will not change.
+        </div>
+
+        <label>Verification Code:</label>
+        @Html.TextBoxFor(t => t.Code, new {@class = "form-control", placeholder = "Enter Verification Code", @autocomplete = "off"})
+        @Html.ValidationMessageFor(m => m.Code, "", new {@class = "text-danger"})
+        
+    }
+    
+</div>
+
+<div class="row form-check">
+    <div class="col-md-12 text-center">
+        @if (ViewBag.SuccessMessage == string.Empty)
+        {
+            <a href="@Url.Action("EmailVerify", "CommonManager", new {area = ""})" class="btn btn-default btn-warning">Back</a>
+            <a href="@Url.Action("Logout", "Login", new {area = ""})" class="btn btn-default btn-danger">Logout</a>
+        }
+        @if (ViewBag.SuccessMessage == string.Empty)
+        {
+            @Html.Bootstrap().SubmitButton().Text("Confirm").HtmlAttributes("class=''").Color(BootstrapColors.Success).Shiny()
+        }
+
+        @if (ViewBag.SuccessMessage != string.Empty && !Model.IsNeedMobileVerify)
+        {
+            <a href="@Url.Action("Index", "Home")" class="btn btn-default btn-success">Go to Home</a>
+        }
+        @if (ViewBag.SuccessMessage != string.Empty && Model.IsNeedMobileVerify)
+        {
+            <a href="@Url.Action("Logout", "Login", new {area = ""})" class="btn btn-default btn-danger">Logout</a>
+            <a href="@Url.Action("MobileVerify", "CommonManager", new {area = ""})" class="btn btn-default btn-success">
+                Next (Mobile Verify)
+            </a>
+        }
+    </div>
+</div>
+
+

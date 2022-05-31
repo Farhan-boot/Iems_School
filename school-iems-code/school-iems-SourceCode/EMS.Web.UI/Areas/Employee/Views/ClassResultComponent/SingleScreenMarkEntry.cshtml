@@ -1,0 +1,729 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.Employee.Controllers.WebApi
+@{
+    ViewBag.Title = "Submit Marks";
+    Layout = "~/Areas/Employee/Views/Shared/_LayoutEmployee.cshtml";
+
+    var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    var classId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getSingleScreenMarkEntryResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SingleScreenMarkEntryApi", action = "GetSingleScreenMarkEntryResultByClassId", area = "Employee" });
+    var saveAndLockSingleScreenMarkEntryResultComponentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SingleScreenMarkEntryApi", action = "SaveAndLockSingleScreenMarkEntryResultComponentList", area = "Employee" });
+    var getGenerateClassResultFromSingleScreenMarkEntryByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SingleScreenMarkEntryApi", action = "GetGenerateClassResultFromSingleScreenMarkEntryByClassId", area = "Employee" });
+    var getSingleScreenMarkEntryLockClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SingleScreenMarkEntryApi", action = "GetSingleScreenMarkEntryLockClassResultByClassId", area = "Employee" });
+    var getSingleScreenMarkEntryDeleteAllClassResultByResultClassSettingIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SingleScreenMarkEntryApi", action = "GetSingleScreenMarkEntryDeleteAllClassResultByResultClassSettingId", area = "Employee" });
+
+    var componentExcelUploadUrl = Url.Action("ResultComponentExcelUpload", "ClassResultComponent", new { area = "Employee" });
+
+    var getGenerateClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+    var printFinalExamMarkUrl = Url.Action("Print70PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+
+    var print30PercentTheoryExamMarkUrl = Url.Action("Print30PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var printOnlyFinalGradeSheetUrl = Url.Action("PrintOnlyFinalGradeSheet", "ClassManagement", new { area = "Employee" });
+    var print100ClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+    var individualMarkEntryUrl = Url.Action("SubmitResultComponent", "ClassResultComponent", new { area = "Employee" });
+
+
+    long output;
+    long ClassId = long.TryParse(classId.ToString(), out output) ? output : 0;
+    List<User_Account> facultylist = HttpUtil.DbContext.Aca_ClassTakenByEmployee
+        .Include("User_Employee")
+        .Include("User_Employee.User_Account")
+        .Where(x => x.ClassId == ClassId && x.RoleEnumId == (byte)Aca_ClassTakenByEmployee.RoleEnum.Faculty)
+        .Select(x => x.User_Employee.User_Account)
+        .ToList();
+
+                                        }
+
+@section ScriptSection
+{
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+            collapseSidebar();
+        });
+
+    </script>
+    <script src="~/Areas/Employee/Views/ClassResultComponent/SingleScreenMarkEntry.js"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+
+}
+
+<div ng-controller="SingleScreenMarkEntryCtrl"
+     ng-init="Init(
+       '@classId'
+      ,'@getSingleScreenMarkEntryResultByClassIdUrl'
+      ,'@saveAndLockSingleScreenMarkEntryResultComponentListUrl'
+     ,'@getGenerateClassResultFromSingleScreenMarkEntryByClassIdUrl'
+     ,'@getSingleScreenMarkEntryLockClassResultByClassIdUrl'
+     ,'@getSingleScreenMarkEntryDeleteAllClassResultByResultClassSettingIdUrl'
+     )">
+@*<div class="no-print" style="width: 550px; left: 40%; text-align: center; position: fixed; top: 46px; z-index: 1000;">
+    <div id="settings" style="background-color: whitesmoke; border: 1px solid gray; padding: 3px; display: none;">
+        <b>Mark Input:</b>
+        <samp style="font-size: 12px;">
+            <input type="radio" name="mark-input" class="setting-redio-button"> Vertically
+            <input type="radio" name="mark-input" class="setting-redio-button"> Horizontally
+        </samp>
+        
+        <button>Apply</button>
+    </div>
+    <center>
+        <button onclick="$('#settings').slideToggle();" class="">Input Setting</button>
+    </center>
+</div>*@
+
+<div class="widget">
+<div class="widget-header bordered-bottom bordered-sky hide-on-print">
+    <i class="widget-icon fa fa-list bold  "></i>
+    <span class="widget-caption text-bold">Submit Marks For {{SingleScreenMarkEntryJson.ClassJson.Code}}: {{SingleScreenMarkEntryJson.ClassJson.Name}}</span>
+    <div class="widget-buttons buttons-bordered">
+        <input type="checkbox" ng-model="IsShowStudentDue" ng-change="loadWithStudentDue()"/> <span style="color: #53a93f">Show Student's Due</span>
+
+        <button ng-click="loadPage()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+
+        <div class="btn-group">
+            <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">View & Print</a>
+            <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                <i class="fa fa-angle-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-primary">
+                <li>
+                    <a target="_blank" href="@(print30PercentTheoryExamMarkUrl)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> All Continuous Assessment</a>
+                </li>
+                <li>
+                    <a target="_blank" href="@print100ClassResult/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> Print Full Grade Sheet</a>
+                </li>
+                <li>
+                    <a target="_blank" href="@printOnlyFinalGradeSheetUrl/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"><i class="fa fa-print"></i> Print Only Final Grades</a>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Action</a>
+            <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                <i class="fa fa-angle-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-primary">
+                <li>
+                    <a href="javascript:void(0);"><i class="fa fa-unlock"></i> Request to Unlock For Grade Sheet</a>
+                </li>
+                @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.ClassResultManager.ClassResult.CanDeleteMarks))
+                {
+                    <li>
+                        <a @*ng-click="@(getDeleteAllGradeComponentBreakdownMarksByClassId)(@((byte)Aca_Exam.ExamTypeEnum.FinalTerm))"*@ style="color: red;"><i class="fa fa-remove"></i> Delete All Component Marks And Grade</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a @*ng-click="@(getDeleteAllMarkDistributionByClassId)(@((byte)Aca_Exam.ExamTypeEnum.FinalTerm))"*@ style="color: red;"><i class="fa fa-remove"></i> Delete All Mark Distribution</a>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+   
+
+</div>
+
+
+
+<div class="widget-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention Please!</strong> {{ErrorMsg}}
+            </div>
+        <div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="class-info text-center" style="border: 1px solid #ddd; height: 115px; padding: 10px 5px;">
+                    <div> <span class="text-bold">Program:</span>  {{SingleScreenMarkEntryJson.ClassJson.ProgramShortTitle}}</div>
+                    <div> <span class="text-bold">Course :</span>  {{SingleScreenMarkEntryJson.ClassJson.Code}}: {{SingleScreenMarkEntryJson.ClassJson.Name}}</div>
+                    <div>
+                        <span class="text-bold">Credit Hour:</span> {{SingleScreenMarkEntryJson.ClassJson.Aca_CurriculumCourseJson.CreditHour}};
+                        <span class="text-bold">Course Category:</span> {{SingleScreenMarkEntryJson.ClassJson.Aca_CurriculumCourseJson.CourseCategory}}
+                    </div>
+                    <div>
+                        <span class="text-bold">Total Student:</span> {{SingleScreenMarkEntryJson.TotalClassStudent}};
+                        <span class="text-bold">Semester:</span>{{SingleScreenMarkEntryJson.ClassJson.SemesterName}}
+                    </div>
+                    
+                    
+                    <div> <span class="text-bold">Course Teacher(s):</span>  
+                        @foreach (var faculty in facultylist)
+                        {
+                            if (faculty.UserName != "psdeveloper")
+                            {
+                                <span style="">@faculty.FullName.ToLower().ToTitleCase();</span>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="" style="border: 1px solid #ddd; height: 40px; padding: 10px 5px; margin-top: 10px;">
+                    <kbd class="bg-warning">Note:</kbd> Keep mark field blank for <b>absent</b> student.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align: center" class="hide-on-print">
+                    <table class="table table-striped table-bordered " style="width: 360px; margin: 0 auto">
+                        <tr>
+                            <td style="width: 70px;">
+                                <b>Status : </b>
+                            </td>
+                            <td>
+                                <span ng-if="SingleScreenMarkEntryJson.ResultClassSettingJson.@Aca_ResultClassSetting.Property_IsLockedTabulator" class="label label-danger graded">
+                                    <i class="fa fa-lock"></i>
+                                    Confirmed & Locked
+                                </span>
+                                <span ng-if="!SingleScreenMarkEntryJson.ResultClassSettingJson.@Aca_ResultClassSetting.Property_IsLockedTabulator" class="label label-success graded">
+                                    <i class="fa fa-unlock"></i>
+                                    Unlocked
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Step 1 : </b>
+                            </td>
+                            <td>
+                                <button style="width: 146px; margin-top: 10px"
+                                        class="btn btn-xs btn-success"
+                                        ng-click="saveAndLockSingleScreenMarkEntryResultComponentList()"
+                                        ng-disabled="SingleScreenMarkEntryJson.IsAllComponentLock">
+                                    <i class="fa fa-save"></i> Save Marks
+                                </button>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td><b>Step 2 : </b></td>
+                            <td>
+                                <button ng-disabled="SingleScreenMarkEntryJson.ResultClassSettingJson.IsLockedTabulator"
+                                    ng-click="getGenerateClassResultFromSingleScreenMarkEntryByClassId()"
+                                    class="btn btn-xs btn-success">
+                                    <i class="fa fa-refresh"></i>
+                                    Generate 100% Result
+                                </button>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Step 3 : </b></td>
+                            <td>
+                                <button 
+                                    ng-click="getSingleScreenMarkEntryLockClassResultByClassId()"
+                                    ng-disabled="SingleScreenMarkEntryJson.ResultClassSettingJson.IsLockedTabulator"
+                                    class="btn btn-xs btn-warning">
+                                    <i class="fa fa-lock"></i> Submit & Lock Final Grade Sheet
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Step 4 : </b></td>
+                            <td>
+                                <a href="@(getGenerateClassResult)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"
+                                   target="_blank"
+                                   class="btn btn-xs btn-success">
+                                    <i class="fa fa-print"></i>
+                                    Print Full Grade Sheet
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div style="border: 1px solid #ddd; height: 165px;">
+
+                    <div ng-hide="SingleScreenMarkEntryJson.ResultClassSettingJson.IsLockedTabulator" style="color: #e74b37;">
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="">Final Grade sheet Submission Pending</h4>
+                        </div>
+                        <i style="font-size: 55px;" class="fa fa-hourglass-half"></i>
+                    </div>
+                    
+                    <div ng-show="SingleScreenMarkEntryJson.ResultClassSettingJson.IsLockedTabulator"  style="color: #53a93f;">
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="">Final Grade sheet Submitted</h4>
+                        </div>
+                        <i style="font-size: 55px;" class="fa fa-check-circle-o"></i>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <br/>
+        <div class="form-group no-margin  no-print">
+            <div class="input-icon icon-right input-group-xs">
+                <input ng-model="searchStudent" class="form-control input-xs" id="searchStudent" type="text" placeholder="type to search from below list" autocomplete="on">
+                <i class="white fa fa-times bg-purple" ng-click="searchStudent='';"></i>
+            </div>
+        </div>
+
+        @{
+            ReportHeaderFooterModel ReportModel = ViewBag.ReportModel;
+
+            if (ReportModel == null)
+            {
+                ReportModel = new ReportHeaderFooterModel();
+            }
+
+            if (ReportModel.Title == "")
+            {
+                ReportModel.Title = ViewBag.Title;
+            }
+        }
+
+
+
+        <table class="table table-striped table-bordered table-hover supple-applicants-table">
+            <thead class="bordered-blue sticky" style="">
+            <tr class="no-border">
+                <th rowspan="2" class="text-center ser not-editable" style="vertical-align: middle;">Ser</th>
+                <th rowspan="2" class="text-center student-Name not-editable" style="vertical-align: middle;">Name</th>
+                <th rowspan="2" class="text-center student-id not-editable" style="vertical-align: middle;">Student ID</th>
+                
+                @if (SiteSettings.Instance.IsMidtermExamEnable)
+                {
+                    if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                    {
+                        <th ng-show="IsShowStudentDue" rowspan="2" class="text-center student-id not-editable" style="vertical-align: middle;">Midterm Due Amount</th>
+                    }
+                    <th ng-show="IsShowStudentDue" rowspan="2" class="text-center student-id not-editable" style="vertical-align: middle;">Midterm Payment Status</th>
+                }
+                
+                @if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                {
+                    <th ng-show="IsShowStudentDue" rowspan="2" class="text-center student-id not-editable" style="vertical-align: middle;">Finalterm Due Amount</th>
+                }
+                <th ng-show="IsShowStudentDue" rowspan="2" class="text-center student-id not-editable" style="vertical-align: middle;">Finalterm Payment Status</th>
+
+                <th ng-repeat="componentSetting in SingleScreenMarkEntryJson.ResultComponentSettingJsonList"
+                    class="text-center result-component">
+                    <span ng-if="!componentSetting.IsLockMarkInput" class="label label-success graded">
+                        <i class="fa fa-unlock"></i>
+                    </span>
+                    <span ng-if="componentSetting.IsLockMarkInput" class="label label-danger graded">
+                        <i class="fa fa-lock"></i>
+                    </span>
+                </th>
+                <th rowspan="2" class="text-center total-mark not-editable">
+                    Total Mark ({{SingleScreenMarkEntryJson.ResultClassSettingJson.TotalMark}})
+                </th>
+                @if (SiteSettings.Instance.AutoGradeGraceMark>0)
+                {
+                    <th rowspan="2" class="text-center mark-in not-editable">
+                        Grace Mark
+                    </th>
+                }
+                
+                <th rowspan="2" class="text-center mark-in not-editable">
+                    Mark in {{SingleScreenMarkEntryJson.ResultClassSettingJson.ConvertPercentage}}%
+
+                </th>
+                <th rowspan="2" class="text-center letter-grade not-editable">
+                    Letter Grade
+
+                </th>
+                @*<th rowspan="2" class="text-center hide-on-print" style="width: 200px; vertical-align: middle;">Remark (Optional)</th>*@
+            </tr>
+            <tr>
+                <th ng-repeat="componentSetting in SingleScreenMarkEntryJson.ResultComponentSettingJsonList"
+                    class="text-center result-component">
+                    {{componentSetting.Name}} ({{componentSetting.TotalMark}})
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="student in SingleScreenMarkEntryJson.ClassStudentListJson|filter:searchStudent"
+                @*ng-class="{@((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Referred):'bg-green'
+    , @((byte) Aca_ClassTakenByStudent.EnrollTypeEnum.Backlog):'bg-yellow'}
+    [student.EnrollTypeEnumId]"*@>
+                <td class="text-center not-editable">{{$index+1}}</td>
+                <td class="not-editable">
+                    {{student.FullName}}
+                </td>
+                <td class="text-center not-editable">
+                    {{student.UserName}}
+                </td>
+                @if (SiteSettings.Instance.IsMidtermExamEnable)
+                {
+                    if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                    {
+                        <td class="text-right" ng-show="IsShowStudentDue">{{student.MidTermDueAmount | number:2}}</td>
+                    }
+                    <td ng-show="IsShowStudentDue" class="text-center">
+                        <span ng-show="student.HasMidTermDue" style="color: red"><i class="fa fa-times"></i> Unpaid</span>
+                        <span ng-hide="student.HasMidTermDue" style="color: green"><i class="fa fa-check"></i> paid</span>
+                    </td>
+                }
+
+                @if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                {
+                    <td class="text-right" ng-show="IsShowStudentDue">{{student.FinalTermDueAmount | number:2}}</td>
+                }
+                <td ng-show="IsShowStudentDue" class="text-center">
+                    <span ng-show="student.HasFinalTermDue" style="color: red"> <i class="fa fa-times"></i> Unpaid</span>
+                    <span ng-hide="student.HasFinalTermDue" style="color: green"> <i class="fa fa-check"></i> Paid</span>
+                </td>
+
+                <td ng-repeat="component in student.ResultComponentListJson" class="text-center">
+                    <input next-focus
+                           ng-blur="changeState(component)"
+                           ng-change="changeState(component)"
+                           ng-model="component.TmpMark" type="text" min="0"
+                           ng-if="!component.IsLockMarkInput"
+                           class="form-control input-sm" placeholder="mark" required>
+
+                    <samp ng-if="component.IsLockMarkInput">{{component.TmpMark}}</samp>
+
+                </td>
+                <td class="text-center not-editable">
+                    {{student.FinalMarkJson.Mark}}
+                </td>
+                @if (SiteSettings.Instance.AutoGradeGraceMark > 0)
+                {
+                    <td class="not-editable">
+                        @*{{student.FinalMarkJson.Mark}}*@
+                    </td>
+                }
+                
+                <td class="text-center not-editable">
+                    {{student.FinalMarkJson.ContributedMark}}
+                </td>
+                <td class="text-center not-editable">
+                    @if (SiteSettings.InstituteKey!=SiteSettings.InstituteKeyEnum.smuct.ToString())
+                    {
+                        <span>{{student.FinalMarkJson.Grade}}</span>
+                    }
+                    
+                </td>
+                @*<td class="text-center hide-on-print">
+                    <input type="text"/>
+                </td>*@
+            </tr>
+
+
+            <tr class="no-border">
+                <td colspan="3" class="text-center" style="vertical-align: middle;"></td>
+                @if (SiteSettings.Instance.IsMidtermExamEnable)
+                {
+                    if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                    {
+                        <td class="text-right" ng-show="IsShowStudentDue"></td>
+                    }
+                    <td ng-show="IsShowStudentDue" class="text-center">
+                    </td>
+                }
+
+                @if (SiteSettings.Instance.IsShowAmountInStudentDue)
+                {
+                    <td class="text-right" ng-show="IsShowStudentDue"></td>
+                }
+                <td ng-show="IsShowStudentDue" class="text-center">
+                </td>
+                <td ng-repeat="componentSetting in SingleScreenMarkEntryJson.ResultComponentSettingJsonList"
+                    class="text-center result-component">
+                    <button ng-click="saveComponentListAndLockByComponentSettingId(componentSetting)"
+                            ng-if="!componentSetting.IsLockMarkInput"
+                            class="btn btn-warning btn-xs" style="margin-bottom: 5px;"> <i class="fa fa-lock"></i> Lock It</button>
+                    <br/>
+
+                    <div class="btn-group">
+                        <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Task</a>
+                        <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-primary">
+                            @*<li>
+                                <a disabled=""><span> {{componentSetting.Name}}</span></a>   
+                            </li>*@
+                            <li>
+                                <a target="_blank" href="@printFinalExamMarkUrl/?classId={{ClassId}}&componentSettingsId={{componentSetting.Id}}"><i class="fa fa-print"></i> Print</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@(componentExcelUploadUrl)/?classId={{ClassId}}&componentSettingsId={{componentSetting.Id}}&markTypeEnumId=@((byte)ClassResultComponentExcelUploadApiController.MarkTypeEnum.Component)"
+                                   ng-hide="row.Aca_ResultComponentBreakdownSettingListJson.length>0 || row.@Aca_ResultComponentSetting.Property_IsLockedExaminer">
+                                    <i class="fa fa-upload"></i> Excel Upload
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@(individualMarkEntryUrl)/?classId={{ClassId}}&componentSettingsId={{componentSetting.Id}}"
+                                   ng-hide="row.Aca_ResultComponentBreakdownSettingListJson.length>0 || row.@Aca_ResultComponentSetting.Property_IsLockedExaminer">
+                                    <i class="fa fa-external-link"></i> Entry Separately 
+                                </a>
+                            </li>
+
+                            @*<li>
+                                <a href="javascript:void(0);"><i class="fa fa-unlock"></i> Request Unlock</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-history"></i> History</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-file"></i> Excel Upload</a>
+                            </li>*@
+                            <li>
+                                <a @*ng-click="@(getDeleteAllClassResultByResultClassSettingId)()"*@ style="color: red;"><i class="fa fa-trash"></i> Delete All Marks</a>
+                            </li>
+                            @*<li class="divider"></li>*@
+                            <li>
+                                @*<a ng-click="@(getDeleteResultClassSettingById)()" style="color: red;"><i class="fa fa-remove"></i> Delete {{componentSetting.Name}} Component</a>*@
+                            </li>
+                        </ul>
+                    </div>
+                   
+                </td>
+
+                @{
+                    int colsapn = 3;
+                    if (SiteSettings.Instance.AutoGradeGraceMark > 0)
+                    {
+                        colsapn = 4;
+                    }
+
+                }
+
+                <td colspan="@colsapn" class="text-center">
+
+                    <a target="_blank" href="@(getGenerateClassResult)/?classId={{ClassId}}&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}"
+                       class="btn btn-info btn-xs" style="margin-bottom: 5px;">Print Full Grade Sheet</a>
+                    <br/>
+                    <div class="btn-group">
+                        <a class="btn btn-primary btn-xs shiny" href="javascript:void(0);">Task</a>
+                        <a class="btn btn-primary dropdown-toggle shiny btn-xs" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-primary" style="right: 0; left: auto;">
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-unlock"></i> Request Unlock</a>
+                            </li>
+                            <li>
+                                <a ng-click="getSingleScreenMarkEntryDeleteAllClassResultByResultClassSettingId()" style="color: red;"><i class="fa fa-trash"></i> Delete Grades</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+
+                @*<td class="text-center hide-on-print"></td>*@
+            </tr>
+
+            </tbody>
+        </table>
+
+
+        <div style="text-align: center; padding: 15px;">
+            <button 
+                ng-disabled="SingleScreenMarkEntryJson.IsAllComponentLock"
+                ng-click="saveAndLockSingleScreenMarkEntryResultComponentList()" class="btn btn-success">
+                <i class="fa fa-save"></i>
+                Save All Marks
+            </button>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+
+<style>
+    .table-form td.fieldarea {
+        text-align: left !important;
+    }
+
+    .widget-select2 {
+        width: 500px;
+        display: inline-block;
+        float: left;
+        text-align: left;
+        margin-top: 4px;
+    }
+
+    .course-info-table tr td {
+        font-size: 13px !important;
+        padding-top: 5px;
+    }
+
+    .mark-entry-input {
+        height: 24px !important;
+        padding: 2px 6px 2px 7px;
+        font-size: 11px;
+        line-height: 1.4;
+        font-weight: normal !important;
+        width: 33px !important;
+    }
+
+    .final-grade tbody > tr > td {
+        height: 24px !important;
+        vertical-align: middle;
+    }
+
+    .ser {
+        width: 45px;
+    }
+
+    .student-id {
+        width: 90px;
+    }
+
+    .student-Name {
+        width: 200px;
+    }
+
+    .result-component {
+        width: 90px;
+    }
+
+    .total-mark {
+        width: 50px;
+    }
+
+    .mark-in {
+        width: 55px;
+    }
+
+    .letter-grade {
+        width: 55px;
+    }
+
+    .grade-point {
+        width: 50px;
+    }
+
+    .show-on-print {
+        display: none;
+    }
+
+
+    .bg-green {
+        background-color: #b3e0a8 !important;
+    }
+
+    .bg-yellow {
+        background-color: #EAEA96 !important;
+    }
+
+    .bg-red {
+        background-color: #f5a8a8 !important;
+    }
+
+    .old-new-mark-table thead > tr > th {
+        font-size: 10px !important;
+        padding: 1px;
+        text-align: center;
+        /*font-weight: bold !important;*/
+    }
+
+    .old-new-mark-table tbody > tr > td {
+        padding: 0px !important;
+    }
+
+        .old-new-mark-table tbody > tr > td span {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            color: black;
+        }
+
+    .old-new-mark-table input {
+        height: 23px !important;
+    }
+
+    .font-normal {
+        font-weight: normal !important;
+    }
+
+    input[type="text"].bg-yellow-mark {
+        border: 1px solid yellow;
+        background-color: #EAEA96 !important;
+        -webkit-background-clip: border-box !important;
+    }
+
+    input[type="text"].bg-red-mark {
+        border: 1px solid red;
+        background-color: #f5a8a8 !important;
+        -webkit-background-clip: border-box !important;
+    }
+
+    .input-group-addon {
+        border: none;
+        background-image: none !important;
+        background-color: transparent;
+    }
+    .no-border th {
+        border-bottom: none !important;
+    }
+
+    .not-editable {
+        background-color: #eeefef;
+    }
+    .setting-redio-button {
+        width: 13px !important;
+        vertical-align: middle;
+    }
+
+    .table-hover > tbody > tr:hover td {
+        color: #fff !important;
+        background-color: #5db2ff !important;
+    }
+
+    @@media print {
+        .supple-applicants-table tr th {
+            font-weight: 500 !important;
+        }
+
+        .ser {
+            width: 20px !important;
+        }
+
+        .student-id {
+            width: 20px !important;
+        }
+
+        .student-Name {
+            width: 200px !important;
+            font-weight: normal !important;
+        }
+
+        .result-component {
+            width: 20px !important;
+        }
+
+        .total-mark {
+            width: 20px !important;
+        }
+
+        .mark-in {
+            width: 20px !important;
+        }
+
+        .letter-grade {
+            width: 20px;
+        }
+
+        .grade-point {
+            width: 20px;
+
+        }
+
+        .show-on-print {
+            display: block !important;
+        }
+    }
+</style>

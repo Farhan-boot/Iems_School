@@ -1,0 +1,27 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Custom.BasicAccounting
+
+@model EMS.Framework.Objects.MvcModelResult<LedgerTransactionJson>
+@{
+    ViewBag.Title = "Ledger Account Report";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccountingReport.cshtml";
+
+}
+
+@section ScriptSection
+{
+
+    
+}
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_LedgerAccountReport.cshtml", Model)
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

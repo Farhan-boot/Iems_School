@@ -1,0 +1,80 @@
+﻿@using System.ServiceModel.Channels
+@using System.Net.Http;
+
+@using System.Web;
+@using System.Web.Http;
+
+@using BeyondThemes.Bootstrap
+@using EMS.Framework.Settings
+@model EMS.Web.UI.Models.ResetViewModel
+
+@{
+    ViewBag.Title = "Reset Password";
+    //ViewBag.Description = SiteSettings.Instance.ProductFullName;
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.FormTitle = "Reset Password";
+    var getBankByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ApplicantDashboardApi", action = "GetUnitInformationById", area = "Default" });
+}
+@section ScriptSection
+{
+    @*<script src="~/assets/js/jquery.min.js"></script>
+        
+       <script>
+        // TODO: Replace with the URL of your WebService app
+           var serviceUrl = 'http://localhost:8082/api/Default/ApplicantDashboardApi/GetPersonalInformationByApplicantId?id=1';//'http://mywebservice/api/test';
+           //var serviceUrl = 'http://localhost:8082/api/Default/ApplicantApplyApi/IsEligibleToApply?id=1';//'http://mywebservice/api/test';
+
+        function sendRequest() {
+            var method = $('#method').val();
+
+            $.ajax({
+                type: method,
+                url: serviceUrl,
+               // Data: [""]
+                //crossDomain: true
+            }).done(function (data) {
+                console.log(data);
+                $('#value1').text(JSON.stringify(data));
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                $('#value1').text(jqXHR.responseText || textStatus);
+            });
+        }
+    </script>*@
+
+}
+
+
+@*<div>
+    <select id="method">
+        <option value="get">GET</option>
+        <option value="post">POST</option>
+        <option value="put">PUT</option>
+    </select>
+    <input type="button" value="Try it" onclick="sendRequest()" />
+    <span id='value1'>(Result)</span>
+</div>*@
+
+
+
+
+<div class="form-group">
+    @*@Html.TextBoxFor(t => t.UserName, new { @class = "form-control input-lg", placeholder = "User Id", @autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })*@
+
+    @Html.LabelFor(t => t.UserName, new { @class = "input-label" })
+    @Html.TextBoxFor(t => t.UserName, new { @class = "form-control", placeholder = "User ID" })
+    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+</div>
+
+<div class="row form-check">
+    <div class="col-md-12">
+        @*<button type="submit" class="btn btn-login float-right">Login</button>*@
+        @Html.Bootstrap().SubmitButton().Text("Reset Password").HtmlAttributes("class=''").Color(BootstrapColors.Success).ButtonBlock().Shiny()
+    </div>
+    <div class="col-md-12" style="text-decoration: none !important; padding-top: 18px; text-align: center;">
+        <span>
+            <a href="@Url.Action("Index", "Login")" style="font-size: 14px; color: cadetblue;">Back To Login</a> </span>
+    </div>
+</div>

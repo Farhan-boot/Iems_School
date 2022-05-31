@@ -1,0 +1,41 @@
+﻿@using BeyondThemes.Bootstrap
+@using EMS.Framework.Settings
+@model EMS.Web.UI.Models.ResetConfirmViewModel
+
+@{
+    ViewBag.Title = "Reset Password Confirmation";
+    //ViewBag.Description = SiteSettings.Instance.ProductFullName;
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+    ViewBag.FormTitle = "Reset Confirmation";
+}
+
+@if (ViewBag.ValidEmail == true)
+{
+
+
+    <div class="form-group">
+        <label>Please confirm your email :</label>
+        <label class="text-success">@Model.EmailTitle</label>
+        @Html.TextBoxFor(t => t.Email, new { @class = "form-control", placeholder = "Enter Email Address", @autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="row form-check">
+        <div class="col-md-12">
+            @Html.Bootstrap().SubmitButton().Text("Confirm").HtmlAttributes("class=''").Color(BootstrapColors.Success).ButtonBlock().Shiny()
+        </div>
+    </div>
+}
+<div class="row form-check">
+
+    <div class="col-md-12" style="text-decoration: none !important; padding-top: 18px; text-align: center;">
+        <span>
+            <a href="@Url.Action("Index", "Login")" style="font-size: 14px; color: cadetblue;">Back To Login</a>
+        </span>
+    </div>
+
+</div>
+
+@Html.HiddenFor(t => t.EmailAddress)
+@Html.HiddenFor(t => t.UserId)

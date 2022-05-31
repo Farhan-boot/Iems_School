@@ -1,0 +1,195 @@
+﻿
+<!--File:Acnt_StudentPaySlip Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Student Pay Slip";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StudentPaySlipId = (string) id == null?"0":(string)id;
+    
+    //Acnt_StudentPaySlip WebApi Single Row link   
+    var getStudentPaySlipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "GetStudentPaySlipById", area = "Accounts" });
+    var getStudentPaySlipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "GetStudentPaySlipDataExtra", area = "Accounts" });
+    var saveStudentPaySlipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "SaveStudentPaySlip", area = "Accounts" });
+    var deleteStudentPaySlipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "GetDeleteStudentPaySlipById", area = "Accounts" });
+
+    //Acnt_StudentPaySlip WebApi List link 
+    var getPagedStudentPaySlipUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StudentPaySlipApi", action = "GetPagedStudentPaySlip", area = "Accounts"});
+    var getAllStudentPaySlipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "GetAllStudentPaySlip", area = "Accounts" });
+    var saveStudentPaySlipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "SaveStudentPaySlipList", area = "Accounts" });
+    var getStudentPaySlipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentPaySlipApi", action = "GetStudentPaySlipListDataExtra", area = "Accounts" });
+
+    var editStudentPaySlipByIdPageUrl = Url.Action("StudentPaySlipAddEdit", "StudentPaySlip", new { area = "Accounts" });
+    var listStudentPaySlipPageUrl = Url.Action("StudentPaySlipList", "StudentPaySlip", new { area = "Accounts" });
+    
+    //Acnt_StudentPaySlip Angular Functions
+    string getStudentPaySlipById="getStudentPaySlipById";
+    var saveStudentPaySlip = "saveStudentPaySlip";
+    var getNewStudentPaySlip = "getNewStudentPaySlip";
+    var refreshPage = "loadPage()";
+    string deleteStudentPaySlipById="deleteStudentPaySlipById";
+    string loadStudentPaySlipExtraData="loadStudentPaySlipExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/StudentPaySlip/StudentPaySlipAddEdit.js"></script>
+}
+
+<div id="StudentPaySlipAddEdit" class="row" ng-controller="StudentPaySlipAddEditCtrl" ng-init="Init(
+      '@StudentPaySlipId'
+      ,'@getStudentPaySlipByIdUrl'
+      ,'@getStudentPaySlipDataExtraUrl'
+      ,'@saveStudentPaySlipUrl'
+      ,'@deleteStudentPaySlipByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="StudentPaySlip.@Acnt_StudentPaySlip.Property_Name!=''">{{(StudentPaySlip.@Acnt_StudentPaySlip.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="StudentPaySlipId" ng-Enter="@(getStudentPaySlipById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewStudentPaySlip)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listStudentPaySlipPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Particular Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_ParticularName" class="form-control" placeholder="Enter Particular Name" maxlength="200" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Particular Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Student Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_StudentId" class="form-control" placeholder="Enter Student Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Semester Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_SemesterId" class="form-control" placeholder="Enter Semester Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_Amount" class="form-control" placeholder="Enter Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Bank Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_BankId" class="form-control" placeholder="Enter Bank Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bank Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Std Transection Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_StdTransectionId" class="form-control" placeholder="Enter Std Transection Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Std Transection Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Paid </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_IsPaid"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Paid if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_Remarks" class="form-control" placeholder="Enter Remarks"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Post Status </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_PostStatusEnumId" ng-options="option.Id as option.Name for option in PostStatusEnumList" title="Select Post Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Post Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Posted From Ip </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_PostedFromIp" class="form-control" placeholder="Enter Posted From Ip" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Posted From Ip." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Posted By </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_PostedBy" class="form-control" placeholder="Enter Posted By"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Posted By." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Posted Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_PostedDate" class="form-control" placeholder="Enter Posted Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Posted Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Create From Ip <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentPaySlip.@Acnt_StudentPaySlip.Property_CreateFromIp" class="form-control" placeholder="Enter Create From Ip" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Create From Ip." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveStudentPaySlip)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

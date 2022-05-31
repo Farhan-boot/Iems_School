@@ -1,0 +1,54 @@
+﻿@using BeyondThemes.Bootstrap
+@using EMS.Framework.Settings
+@model EMS.Web.UI.Models.VerifyOrChangeEmailModel
+
+@{
+    ViewBag.Title = "Verify/Change Email";
+    //ViewBag.Description = SiteSettings.Instance.ProductFullName;
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+    ViewBag.FormTitle = "Verify/Change Email";
+}
+@section StyleSection
+{
+   <style>
+    .login-block .container {
+        max-width: 350px;
+        margin: 0 auto;
+    }
+   
+</style> 
+}
+
+
+<div class="form-group">
+    <div style="padding: 5px;">
+        <b>Hi, @Model.FullName (@Model.UserName)</b>
+    </div>
+    <div class="thumbnail" style="">
+        <b>Important:</b>
+        Your Email address will help you receive important notifications as well as retrieve password easily if lost. 
+        Next step we will send a Six Digit code to verify this email. Make Sure you have proper access on email below.
+        Without any verified email you can't access your @SiteSettings.Instance.ProductBrandNameSolo Account.
+    </div>
+    <label>Email to Change:</label>
+    @Html.TextBoxFor(t => t.Email,  new {@class = "form-control", placeholder = "Enter Email Address", type = "email",  @autocomplete = "off"})
+    @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+
+
+
+    <label>Current @SiteSettings.Instance.ProductBrandNameSolo Password :</label>
+    
+    @Html.PasswordFor(t => t.Password, new {@class = "form-control", placeholder = "Enter Current Password", @autocomplete = "off"})
+    @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
+</div>
+
+<div class="row form-check">
+    <div class="col-md-12 text-center">
+        <a href="@Url.Action("Logout", "Login", new {area = ""})" class="btn btn-default btn-danger">Logout</a>
+        @Html.Bootstrap().SubmitButton().Text("Email is Correct and Next").HtmlAttributes("class=''").Color(BootstrapColors.Success).Shiny()
+    </div>
+</div>
+
+@Html.HiddenFor(t => t.Password)
+

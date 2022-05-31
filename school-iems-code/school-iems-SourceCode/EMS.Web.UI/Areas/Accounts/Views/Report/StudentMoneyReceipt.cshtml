@@ -1,0 +1,29 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<Acnt_StdTransaction>
+
+@{
+    ViewBag.Title = "Money Receipt";
+    
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+
+}
+
+@Html.Partial("~/Areas/Accounts/Views/Report/Shared/_StudentMoneyReceipt.cshtml", Model)
+
+
+@section ScriptSection
+{
+    <script>
+        window.onload = function () {
+            window.print();
+        }
+    </script>
+
+}
+
+
+
+

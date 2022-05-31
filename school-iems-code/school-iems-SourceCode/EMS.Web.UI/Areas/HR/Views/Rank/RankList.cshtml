@@ -1,0 +1,163 @@
+﻿
+<!--File:User_Rank List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Rank/Designation List";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RankId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getRankByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "GetRankById", area = "HR" });
+    var getRankDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "GetRankDataExtra", area = "HR" });
+    var saveRankUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "SaveRank", area = "HR" });
+    var deleteRankByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "GetDeleteRankById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedRankUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RankApi", action = "GetPagedRank", area = "HR"});
+    var getAllRankUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "GetAllRank", area = "HR" });
+    var saveRankListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "SaveRankList", area = "HR" });
+    var getRankListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RankApi", action = "GetRankListDataExtra", area = "HR" });
+
+    var editRankByIdPageUrl = Url.Action("RankAddEdit", "Rank", new { area = "HR" });
+
+    //Angular Function Name
+    var getNewRank = "getNewRank";
+    var saveRank = "saveRank";
+    var deleteRankById = "deleteRankById";
+    var deleteRankByObj = "deleteRankByObj";
+    //for list
+    var searchRankList = "searchRankList";
+    var getPagedRankList = "getPagedRankList";
+    var getAllRankList = "getAllRankList";
+    var saveRankList = "saveRankList";
+    var loadRankListExtraData = "loadRankListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Rank/RankList.js"></script>
+}
+
+
+<div ng-controller="RankListCtrl"
+     ng-init="Init(
+      '@getPagedRankUrl'
+     ,'@deleteRankByIdUrl'
+     ,'@getRankListDataExtraUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Rank </span>
+            <div class="widget-buttons buttons-bordered no-padding-right form-inline">
+                <select ng-model="SearchByCategoryEnumId" ng-change="@(searchRankList)()" ng-options="option.Id as option.Name for option in CategoryEnumList" class="form-control input-xs">
+                    <option value="">---Select All Category---</option>
+                </select>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right form-inline">
+                <select ng-model="SearchByJobClassEnumId" ng-change="@(searchRankList)()" ng-options="option.Id as option.Name for option in JobClassEnumList" class="form-control input-xs">
+                    <option value="">---Select All Class---</option>
+                </select>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right form-inline">
+                <select ng-model="SearchByAcademicLevelEnumId" ng-change="@(searchRankList)()" ng-options="option.Id as option.Name for option in AcademicLevelEnumList" class="form-control input-xs">
+                    <option value="">---Select All Level---</option>
+                </select>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchRankList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editRankByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <div style="" class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">Priority</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-center">Job Class</th>
+                    <th class="text-center">Academic Level</th>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanEdit)
+    || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanDelete))
+                    {
+                        <th class="text-center">Action</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="row in RankList">
+                    <td>{{$index+1}}</td>
+                    <td class="">{{row.@User_Rank.Property_Name}}</td>
+                    <td class="">{{row.@User_Rank.Property_ShortName}}</td>
+                    <td class="">{{row.@User_Rank.Property_Priority}}</td>
+                    <td class="">{{row.@User_Rank.Property_Category}}</td>
+                    <td class="">{{row.@User_Rank.Property_JobClass}}</td>
+                    <td class="">{{row.@User_Rank.Property_AcademicLevel}}</td>
+                    <td class="text-center">
+                        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanDelete))
+                        {
+                            <button ng-click="@(deleteRankByObj)(row)" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i> Delete</button>
+                        }
+                        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanEdit))
+                        {
+                            <a target="_blank" href="@(editRankByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        }
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div style="" class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

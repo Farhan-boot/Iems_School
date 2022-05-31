@@ -1,0 +1,84 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Web.UI.Areas.Academic.Controllers.WebApi
+@{
+
+    var id = Request.QueryString["id"];
+    var classId = (string)id == null ? "0" : (string)id;
+
+    var getReferredBacklogStudentManagerDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "GetReferredBacklogStudentManagerDataExtra", area = "Academic" });
+    var getReferredBacklogStudentListByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "GetReferredBacklogStudentListByClassId", area = "Academic" });
+
+    var getExaminerListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "GetExaminerList2", area = "Academic" });
+    var getThisCourseExaminerListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "GetThisCourseExaminerList", area = "Academic" });
+    var saveSuppleExaminerListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "SaveSuppleExaminerList2", area = "Academic" });
+    var saveReferredBacklogStudentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "SaveReferredBacklogStudentList", area = "Academic" });
+    var getTrashOrUnTrashExaminerByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdReferredBacklogRegistrationApi", action = "GetTrashOrUnTrashExaminerById2", area = "Academic" });
+    
+
+var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+}
+
+
+<div ng-controller="ReferredBacklogStudentManagerCtrl"
+     ng-init="Init(
+     '@classId'
+      ,'@getReferredBacklogStudentManagerDataExtraUrl'
+      ,'@getReferredBacklogStudentListByClassIdUrl'
+       ,'@saveReferredBacklogStudentListUrl'
+        ,'@getExaminerListUrl'
+        ,'@getThisCourseExaminerListUrl'
+        ,'@saveSuppleExaminerListUrl'
+        ,'@getTrashOrUnTrashExaminerByIdUrl'
+     )">
+    
+    <div ng-if="!IsAlreadyLoadReferredBacklogData" style="text-align: center; padding: 15px;">
+        <button ng-click="LoadReferredBacklogData()"  class="btn btn-success">Load Referred Backlog Data</button>
+    </div>
+    
+    <div ng-if="IsAlreadyLoadReferredBacklogData">
+        <div class="widget-header bordered-bottom bordered-sky">
+            <i class="widget-icon fa fa-user-secret"></i>
+            <span class="widget-caption">Manage Referred/Improvement & Backlog</span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <span >Exam: </span>
+                    <select ng-model="SelectedExamId"
+                            ng-change="onChangeExam()"
+                            ng-options="option.Id as option.Name for option in ExamList" ng-init="" class="form-control input-xs">
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered">
+                <button ng-click="loadReferredBacklogPage()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="ClassStudentTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#ReferredBacklogStudents" aria-expanded="true">
+                        @*<span class="badge badge-success">{{(ClassStudentList|filter:{@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId:@((byte) Aca_Exam.ExamTypeEnum.FinalTerm)}).length}}</span>*@ 
+                        Students
+                    </a>
+                </li>
+                <li class="tab-blueberry">
+                    <a data-toggle="tab" href="#ReferredBacklogTeachers" aria-expanded="false">
+                        Examiners
+                    </a>
+                </li>
+            </ul>
+
+
+            <div class="tab-content no-padding">
+                <div id="ReferredBacklogStudents" class="tab-pane active">
+                    @Html.Partial("~/Areas/Academic/Views/ClassManager/ReferredBacklogManager/_ReferredBacklogStudent.cshtml")
+                </div>
+                <div id="ReferredBacklogTeachers" class="tab-pane">
+                    @Html.Partial("~/Areas/Academic/Views/ClassManager/ReferredBacklogManager/_ReferredBacklogTeacher.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

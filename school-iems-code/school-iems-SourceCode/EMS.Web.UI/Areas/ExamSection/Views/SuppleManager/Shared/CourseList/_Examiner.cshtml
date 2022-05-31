@@ -1,0 +1,238 @@
+﻿@using EMS.DataAccess.Data
+<div>
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky">
+            <i class="widget-icon fa fa-user-secret"></i>
+            <span class="widget-caption">Manage Examiners</span>
+            <div class="widget-buttons buttons-bordered">
+                <button ng-click="searchTeachers(@((byte) Aca_ClassTakenByEmployee.RoleEnum.Faculty))"
+                        type="button" class="btn btn-xs btn-success"
+                        data-toggle="modal" data-target="#addCourseTeachersModal">
+                    <i class="fa fa-plus"></i> Add New Examiner
+                </button>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div ng-show="TotalUnDeletedExaminer > 0">
+                <div class="widget-header bg-success bordered-bottom">
+                    <span class="widget-caption" style="font-weight: bold !important;">
+                        Active Examiners
+                    </span>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">User ID</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Position</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center hide-on-print" style="width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in SuppleCourse.ExaminerList |filter:{@Aca_SuppleTakenByEmployee.Property_IsDeleted: false}">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td class="text-center">{{row.Employee.UserName}}</td>
+                            <td>
+                                <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{row.Employee.@User_Employee.Property_UserId}}&empId={{row.Employee.@User_Employee.Property_Id}}#Classes" target="_blank" title="click to view profile"> {{row.Employee.FullName}}</a>
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.Employee.PositionShortName}}
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.Employee.DeptShortName}}
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.@Aca_SuppleTakenByEmployee.Property_Status}}
+                            </td>
+                            <td class="text-center">
+                                <button ng-click="getTrashOrUnTrashExaminerById(row.Id,true)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                                <button ng-click="examinerDetailsModalShow(row)" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-show="TotalDeletedExaminer > 0">
+                <div class="widget-header bg-danger bordered-bottom" style="margin-top: 30px;">
+                    <span class="widget-caption" style="font-weight: bold !important;">
+                        Inactive Examiners
+                    </span>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center">SN</th>
+                            <th class="text-center">User ID</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Position</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center hide-on-print" style="width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in SuppleCourse.ExaminerList|filter:{@Aca_SuppleTakenByEmployee.Property_IsDeleted: true}">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td class="text-center">{{row.Employee.UserName}}</td>
+                            <td>
+                                <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{row.Employee.@User_Employee.Property_UserId}}&empId={{row.Employee.@User_Employee.Property_Id}}#Classes" target="_blank" title="click to view profile"> {{row.Employee.FullName}}</a>
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.Employee.PositionShortName}}
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.Employee.DeptShortName}}
+                            </td>
+                            <td class="text-center padding-2">
+                                {{row.@Aca_SuppleTakenByEmployee.Property_Status}}
+                            </td>
+                            <td class="text-center hide-on-print">
+                                <button ng-click="getTrashOrUnTrashExaminerById(row.Id,false)" class="btn btn-xs btn-success"><i class="fa fa-undo"></i> Undo</button>
+                                <button ng-click="examinerDetailsModalShow(row)" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <!-- Add Teacher Modal Start -->
+            <div class="modal fade" id="addCourseTeachersModal" tabindex="-1" role="dialog" aria-labelledby="addCourseTeachersModal">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="addCourseTeachersModalLabel">Add Examiner in this Course</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group form-inline">
+                                <span class="text-info">Select : </span>
+                                <span>Department </span>
+                                <select ng-model="SearchExaminerByDepartmentId" ng-options="option.Id as option.Name for option in AllDepartmentList" class="form-control input-xs" required></select>
+                                @*<select ng-model="SearchTeacherCampusId"
+                                    ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs" style="width: 105px;"></select>*@
+                                <button ng-click="searchExaminers()" class="btn btn-xs btn-primary"><i class="fa fa-search"></i> Search</button>
+                                <button type="button"
+                                        ng-click="saveSuppleExaminerList()"
+                                        class="btn btn-xs btn-success pull-right">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                            <div class="form-group no-margin">
+                                <div class="input-icon icon-right input-group-xs">
+                                    <input ng-model="searchAddFaculty" class="form-control input-xs" id="searchAddFaculty" type="text" placeholder="type to search from below list" autocomplete="on">
+                                    <i class="white fa fa-times bg-purple" ng-click="searchAddFaculty='';"></i>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center">
+                                            @*<input type="checkbox" ng-model="SelectAllTeachers" ng-change="selectAllTeachers()" class="form-control">*@
+                                        </th>
+                                        <th class="text-center">SN</th>
+                                        <th class="text-center">User ID</th>
+                                        <th class="text-center">Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in ExaminerList|filter:searchAddFaculty" ng-class="{ 'success': row.IsAlreadyAdded }">
+                                        <td class="text-center">
+                                            <input type="checkbox"
+                                                   ng-hide="row.IsAlreadyAdded"
+                                                   ng-disabled="row.IsAlreadyAdded"
+                                                   ng-model="row.IsSelected"
+                                                   ng-change="selectExaminer(row)"
+                                                   class="form-control">
+                                        </td>
+                                        <td class="text-center">{{$index+1}}</td>
+                                        <td>{{row.UserName}}</td>
+                                        <td>
+                                            <a href="@Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"})?id={{row.@User_Employee.Property_UserId}}&empId={{row.@User_Employee.Property_Id}}#Classes" target="_blank" title="click to view profile"> {{row.FullName}}</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                            <button type="button"
+                                    ng-click="saveSuppleExaminerList()"
+                                    class="btn btn-success">
+                                <i class="fa fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Add Teacher Modal End -->
+            @* Start Examiner Details Modal *@
+            <div class="modal fade" id="examinerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="examinerDetailsModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">
+                                Examiner Details: {{SelectedExaminer.FullName}}
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                                <div class="row">
+                                    <div class="col-md-12 table-form">
+                                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fieldlabel">Date Created:</td>
+                                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                                        {{SelectedExaminer.@Aca_SuppleTakenByEmployee.Property_CreateDate|date:'d/M/yy h:mm a'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fieldlabel">Created By:</td>
+                                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                                        {{SelectedExaminer.CreateByName}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fieldlabel">Date Updated:</td>
+                                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                                        {{SelectedExaminer.@Aca_SuppleTakenByEmployee.Property_LastChanged|date:'d/M/yy h:mm a'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fieldlabel">Updated By:</td>
+                                                    <td class="fieldarea" style="padding-left: 5px !important;">
+                                                        {{SelectedExaminer.LastChangedByName}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 15px;">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="text-align: left">
+                            <div class="header bg-blue" style="padding: 0 10px;">
+                                History
+                            </div>
+                            @*<div ng-bind-html="renderHtml(SelectedExaminer.@Aca_SuppleTakenByEmployee.Property_History)"></div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* End Examiner Details Modal *@
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,210 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+
+@{
+    ViewBag.Title = "Grade Report by Semester";
+}
+@if (Model.HasError)
+{
+    <h6>@Model.Errors</h6>
+}
+else
+{
+    List<Aca_ClassTakenByStudent> takenClassList = Model.DataBag.TakenClassList;
+    var semesterGroupList = takenClassList.GroupBy(x => x.Aca_Class.SemesterId).ToList();
+    List<Aca_ResultClass> resultClass = Model.DataBag.ResultClass;
+    //List<Aca_SemesterResult> semesterResultsList = Model.DataBag.SemesterResultList;
+    float completedCredit = Model.DataBag.CompletedCredit;
+    float CGPA = Model.DataBag.CGPA;
+    int completedCourse = Model.DataBag.CompletedCourse;
+
+    float TotalCredit = 0;
+    float EarnedCredit = 0;
+    float CTGPA = 0;
+
+    float SemseterTotalCredit = 0;
+    float SemseterEarnedCredit = 0;
+    float STGPA = 0;
+    float SGPA = 0;
+
+    <div class="" style="margin: 15px">
+        <h2 class="text-center">
+            Grade Report by Semester
+            <button href="" class="btn btn-danger btn-xs pull-right" onclick="window.print();return false;">
+                <i class="fa fa-print"></i> Print
+            </button>
+        </h2>
+        <div class="">
+            <table class="table table-bordered margin-bottom-10">
+                <tbody>
+                    <tr>
+                        <td>Student ID</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.User_Account.UserName</td>
+                        <td>Date of Birth</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.User_Account.DateOfBirth.ToString("d")</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.FullName</td>
+                        <td>Program</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.Aca_Program.ShortName</td>
+                    </tr>
+                    <tr>
+                        <td>Class Roll No</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.ClassRollNo</td>
+                        <td>Credit(s) Completed</td>
+                        <td class="text-center">:</td>
+                        <td>@completedCredit</td>
+                    </tr>
+                    <tr>
+                        <td>Registration No</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.RegistrationNo</td>
+                        <td>Course(s) Completed</td>
+                        <td class="text-center">:</td>
+                        <td>@completedCourse</td>
+                    </tr>
+                    <tr>
+                        <td>Session</td>
+                        <td class="text-center">:</td>
+                        <td>@Model.Data.RegistrationSession</td>
+                        <td>CGPA</td>
+                        <td class="text-center">:</td>
+                        <td>@CGPA.ToString("##.00")</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <tbody>
+                    @{
+                        long previousSemester = 0;
+                        List<Aca_SemesterResult> resultList = null;
+                        long SemesterId = 0;
+
+                    }
+                    @foreach (var semester in semesterGroupList)
+                    {
+                        SemseterTotalCredit = 0;
+                        SemseterEarnedCredit = 0;
+                        STGPA = 0;
+                        SGPA = 0;
+                        TotalCredit += SemseterTotalCredit;
+                        EarnedCredit += SemseterEarnedCredit;
+
+                        foreach (var takenClass in takenClassList.Where(x => x.Aca_Class.SemesterId == semester.Key).ToList())
+                        {
+                            SemseterTotalCredit += takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad;
+                            if (previousSemester != semester.Key)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <h3 class="no-margin">@takenClass.Aca_Class.Aca_Semester.Name</h3>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="width: 90px;">Course Code</th>
+                                    <th class="text-center">Course Title</th>
+                                    <th class="text-center" style="width: 90px;">Credit Hours</th>
+                                    <th class="text-center" style="width: 80px;">Grade</th>
+                                    <th class="text-center" style="width: 90px;">Grade Point</th>
+                                    <th class="text-center" style="width: 120px;">Status</th>
+                                </tr>
+                                previousSemester = semester.Key;
+                            }
+
+                            if (takenClass.Aca_Class.Aca_ResultClass.Any())
+                            {
+                                @*<span>@takenClass.Aca_Class.Code :</span>
+                                <span>@takenClass.Aca_Class.Name |</span>*@
+                         
+                                foreach (var result in resultClass.Where(x => x.ClassId == takenClass.ClassId))
+                                {
+                                    var courseGradePoint = result.GradePoint * takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad;
+
+                                    if (result.GradePoint <= 0)
+                                    {//failed x=>x.GradePoint>-1
+                                        <tr style="color: red;">
+                                            <td class="text-center">@takenClass.Aca_Class.Code</td>
+                                            <td>@takenClass.Aca_Class.Name</td>
+                                            <td class="text-center">@takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad</td>
+                                            <td class="text-center">@result.Grade</td>
+                                            <td class="text-center">@courseGradePoint.ToString("##.00")</td>
+                                            @*<td class="text-center">@takenClass.EnrollType</td>*@
+                                            <td class="text-center">@takenClass.RegistrationStatus.ToString().AddSpacesToSentence()</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        SemseterEarnedCredit += takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad;
+                                        STGPA += takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad * result.GradePoint;
+                                        <tr>
+                                            <td class="text-center">@takenClass.Aca_Class.Code</td>
+                                            <td>@takenClass.Aca_Class.Name</td>
+                                            <td class="text-center">@takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad</td>
+                                            <td class="text-center">@result.Grade</td>
+                                            <td class="text-center">@courseGradePoint.ToString("##.00")</td>
+                                            @*<td class="text-center">@result.Aca_Exam.ExamType</td>*@
+                                            <td class="text-center">@takenClass.RegistrationStatus.ToString().AddSpacesToSentence()</td>
+                                        </tr>
+                                    }
+
+                                }
+                            }
+                            else
+                            {//has no result
+                                <tr>
+                                    <td class="text-center">@takenClass.Aca_Class.Code</td>
+                                    <td>@takenClass.Aca_Class.Name</td>
+                                    <td class="text-center">@takenClass.Aca_Class.Aca_CurriculumCourse.CreditLoad</td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center">-</td>
+                                    @*<td class="text-center">-</td>*@
+                                    <td class="text-center">@takenClass.RegistrationStatus.ToString().AddSpacesToSentence()</td>
+                                </tr>
+                            }
+
+                            SemesterId = takenClass.Aca_Class.SemesterId;
+                        }//semester Course Loop End
+
+                        @*if (semesterResultsList.Any(x => x.SemesterId == SemesterId))
+                            {
+                                resultList = semesterResultsList.Where(x => x.SemesterId == SemesterId).ToList();
+                                foreach (var result in resultList)
+                                {
+                                    <tr>
+                                        <th class="text-center" colspan="5">
+                                            Total Credit: @result.TotalCreditHour | Earned Credit: @result.EarnedCreditHour | GPA: @result.GPA
+
+                                        </th>
+                                    </tr>
+                                }
+
+                            }
+                            else*@
+                    {
+                        var roundSgpa = STGPA <= 0 ? 0.00 : Math.Round(STGPA / SemseterEarnedCredit, 2);
+                        <tr>
+                            <th class="text-center" colspan="6">
+                                Total Credit: @(Math.Round(SemseterTotalCredit, 2)) | Earned Credit: @(Math.Round(SemseterEarnedCredit, 2)) | SGPA: @roundSgpa.ToString("#.00")
+                            </th>
+                        </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+                        }
+
+<style>
+    .report-container tr > td tr td {
+        padding-left: 4px;
+    }
+</style>

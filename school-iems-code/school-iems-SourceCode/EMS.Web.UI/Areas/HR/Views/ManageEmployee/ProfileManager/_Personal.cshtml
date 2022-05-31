@@ -1,0 +1,540 @@
+﻿@using EMS.DataAccess.Data;
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget1">
+        <div class="widget-body1">
+        <div class="row">
+        <div class="col-md-12 table-form ">
+            <div class="form-title">
+                Personal Information
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                                
+                        <tr>
+                            <td class="fieldlabel text-bold">Full Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea"><input type="text" ng-model="Account.@User_Account.Property_FullName" class="form-control " placeholder="Enter Full Name" maxlength="256" required=""></td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Bangla Name </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_BanglaName" class="form-control" placeholder="Enter Bangla Name" maxlength="200"  />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bangla Name." data-toggle="tooltip"></i></span></td>
+                        </tr>       
+                        
+                        <tr>
+                            <td class="fieldlabel text-bold">Date of Birth <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_DateOfBirth" class="form-control date-picker" placeholder="Enter Date Of Birth" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Of Birth." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        @*<tr>
+                                    <td class="fieldlabel">Bangla Name</td>
+                                    <td class="fieldarea">
+                                        <input type="text" ng-model="Account.@User_Account.Property_BanglaName" class="form-control " placeholder="Enter Bangla Name" maxlength="256" required="">
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bangla Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                </tr>*@
+
+                        <tr>
+                            <td class="fieldlabel text-bold">Blood Group
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_BloodGroupEnumId" ng-options="option.Id as option.Name for option in BloodGroupEnumList" title="Select Blood Group" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Blood Group" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel text-bold">Gender 
+                                <span class="red glyphicon glyphicon-asterisk"></span></td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_GenderEnumId" ng-options="option.Id as option.Name for option in GenderEnumList" title="Select Gender" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Gender" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel text-bold">Religion
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_ReligionEnumId" ng-options="option.Id as option.Name for option in ReligionEnumList" title="Select Religion" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Religion" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        @*<tr>
+                            <td class="fieldlabel">Student Quota</td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Student.Property_StudentQuotaNameId"
+                                        ng-options="option.Id as option.Name for option in StudentQuotaNameList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Student Quota" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>*@
+                                
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel text-bold">Personal Mobile
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea"><input type="text" ng-model="Account.@User_Account.Property_UserMobile" class="form-control" placeholder="Eg. 016XXXXXXXX" maxlength="50" required="" /></td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Eg. 01633300999. Dont Use +88 or - or space in number." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Personal Mobile 2</td>
+                            <td class="fieldarea"><input type="text" ng-model="Account.@User_Account.Property_UserMobile2" class="form-control" placeholder="Eg. 016XXXXXXXX" maxlength="50" required="" /></td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Eg. 01633300999. Dont Use +88 or - or space in number." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel text-bold">Personal Email
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea"><input type="text" ng-model="Account.@User_Account.Property_UserEmail" class="form-control" placeholder="Enter User Email" maxlength="250" required=""/></td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Personal Email" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Place Of Birth Country</td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_PlaceOfBirthCountryId"
+                                        ng-options="option.Id as option.Name for option in CountryList" title="Select Place Of Birth Country" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Place Of Birth Country" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Nationality</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_Nationality" class="form-control" placeholder="Enter Nationality" maxlength="128" required=""/>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Nationality." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Place Of Birth City</td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="Account.@User_Account.Property_PlaceOfBirthCity" class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" autocomplete="new-password"/>
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                        <li ng-repeat="distric in DistrictList | filter:Account.@User_Account.Property_PlaceOfBirthCity">
+                                            <a ng-click="selectPlaceOfBirthCity(distric.Name)">{{distric.Name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                @*<select ng-model="Account.@User_Account.Property_PlaceOfBirthCity"
+                                                ng-options="option.Id as option.Name for option in CityList" title="Select Place Of Birth City" ng-init="" class="form-control">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>*@
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Place Of Birth City" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        
+                     
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Birth Cer. No</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_BirthCertificateNumber" class="form-control" placeholder="Enter Birth Certificate Number" maxlength="50"/>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Birth Certificate Number." data-toggle="tooltip"></i></span></td>
+                        </tr> 
+                        <tr>
+                            <td class="fieldlabel">National Id No</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_NationalIdNumber" class="form-control" placeholder="Enter National Id Number" maxlength="50" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter National Id Number." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Passport No</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_PassportNo" class="form-control" placeholder="Enter Passport Number" maxlength="50" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Passport Number." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                                
+                        <tr>
+                            <td class="fieldlabel">Marital Status </td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_MaritalStatusEnumId" ng-options="option.Id as option.Name for option in MaritalStatusEnumList" title="Select Marital Status" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Marital Status." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr ng-show="Account.@User_Account.Property_MaritalStatusEnumId==@((byte)User_Account.MaritalStatusEnum.Married)">
+                            <td class="fieldlabel">Spouse Name </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_SpouseName" class="form-control" placeholder="Enter Spouse Name" maxlength="128"  />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Spouse Name." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Height </td>
+                            <td class="fieldarea">
+                                <input type="number" ng-model="Account.@User_Account.Property_Height" class="form-control" placeholder="Enter Height"/>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Height." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Is Late </td>
+                            <td class="fieldarea">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Account.@User_Account.Property_IsLate" />
+                                </label>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Late if required." data-toggle="tooltip"></i></span></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 table-form ">
+                    <div class="form-title">
+                        Parents Information
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel text-bold">Father's Name
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_FatherName" class="form-control" placeholder="Enter Father Name" maxlength="128" required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Father's Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        @*<tr>
+                            <td class="fieldlabel ">Father's Mobile</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Student.Property_FatherMobile" class="form-control" placeholder="Eg. 01633300999" maxlength="50" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Eg. 01633300999. Dont Use +88 or - or space in number." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>*@
+                        <tr>
+                            <td class="fieldlabel text-bold">Mother's Name
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_MotherName" class="form-control" placeholder="Enter Mother Name" maxlength="128" required="" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Mother's Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        @*<tr>
+                            <td class="fieldlabel">Mother's Mobile</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Student.Property_MotherMobile" class="form-control  " placeholder="Eg. 01633300999" maxlength="256" required="">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Eg. 01633300999. Dont Use +88 or - or space in number." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>*@
+                        @*<tr>
+                            <td class="fieldlabel">Parents Primary Job Type</td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Student.Property_ParentsPrimaryJobTypeId"
+                                        ng-options="option.Id as option.Name for option in ParentsPrimaryJobTypeList" title="Select Parents Primary Job Type" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Parents Primary Job Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>*@
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form ">
+                    <div class="form-title">
+                        Emergency Contact With
+                        <span style="margin-left: 10px;">
+                            <input type="radio" ng-model="EmergencyContactWith" ng-click="emergencyContactSelect()" value="Father"> Father
+                            <input type="radio" ng-model="EmergencyContactWith" ng-click="emergencyContactSelect()" value="Mother"> Mother
+                            <input type="radio" ng-model="EmergencyContactWith" ng-click="emergencyContactSelect()" value="Other"> Other
+                        </span>
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Relation</td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.@User_Account.Property_EmergencyContactRelationshipId"
+                                        ng-change="emergencyContactSelectRedioBtn(Account.@User_Account.Property_EmergencyContactRelationshipId)"
+                                        ng-options="option.Id as option.Name for option in RelationshipList" title="Select Emergency Contact Person Relation" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Relation" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Name</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_EmergencyContactPersonName" class="form-control" placeholder="Enter Emergency Contact Person Name" maxlength="250" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel text-bold">Mobile
+                                <span class="red glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_EmergencyMobile" class="form-control" placeholder="Eg. 01633300999" maxlength="50" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Eg. 01633300999. Dont Use +88 or - or space in number." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Address</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.@User_Account.Property_EmergencyContactAdress" class="form-control" placeholder="Enter Emergency Contact Adress" maxlength="500" />
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+                    
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 table-form ">
+                    <div class="form-title">
+                        {{Account.PermanentAddressJson.ContactAddressType}} Address
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel text-bold">Address 1 
+                                    <span class="red glyphicon glyphicon-asterisk"></span>
+                                    </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_Address1"
+                                           ng-change="onChangePermanentAddress()"
+                                           class="form-control  " placeholder="Enter Address 1" maxlength="256" required="">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address 1" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Address 2</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_Address2"
+                                           ng-change="onChangePermanentAddress()"
+                                           class="form-control  " placeholder="Enter Address 2" maxlength="256" required="">
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address 2" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel text-bold">Post Office/Code
+                                    <span class="red glyphicon glyphicon-asterisk"></span>
+                                    </td>
+                                <td class="fieldarea">
+                                    <div class="text-dropdown-toggle dropdown">
+                                        <input ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_PostOffice" class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                               ng-change="onChangePermanentAddress()"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                               autocomplete="new-password" />
+                                        <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                            <li ng-repeat="postOffice in PostOfficeList | filter:Account.PermanentAddressJson.@User_ContactAddress.Property_PostOffice">
+                                                <a ng-click="selectPostOffice(postOffice,Account.PermanentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{postOffice.Name}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Post/Zip Code" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Police Station</td>
+                                <td class="fieldarea">
+                                    <div class="text-dropdown-toggle dropdown">
+                                        <input ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_PoliceStation" class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                               ng-change="onChangePermanentAddress()"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                                        <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                            <li ng-repeat="policeStation in PoliceStationList | filter:Account.PermanentAddressJson.@User_ContactAddress.Property_PoliceStation">
+                                                <a ng-click="selectPoliceStation(policeStation,Account.PermanentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{policeStation.Name}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Police Station" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">District</td>
+                                <td class="fieldarea">
+                                    <div class="text-dropdown-toggle dropdown">
+                                        <input ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_District" class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                               ng-change="onChangePermanentAddress()"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                                        <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                            <li ng-repeat="distric in DistrictList | filter:Account.PermanentAddressJson.@User_ContactAddress.Property_District">
+                                                <a ng-click="selectDistrict(distric.Name,Account.PermanentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{distric.Name}}</a>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select District" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Country</td>
+                                <td class="fieldarea">
+                                    <select ng-model="Account.PermanentAddressJson.@User_ContactAddress.Property_CountryId"
+                                            ng-change="onChangePermanentAddress()"
+                                            ng-options="option.Id as option.Name for option in CountryList" title="Select Country" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Country" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-form ">
+                    <div class="form-title">
+                        {{Account.PresentAddressJson.ContactAddressType}} Address
+                        <span style="margin-left: 26px;">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" ng-model="SameAddress" ng-change="sameAsPermanentAddress(SameAddress)">Same As Permanent Address
+                            </label>
+                        </span>
+                    </div>
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <tr>
+                            <td class="fieldlabel">Address 1</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_Address1"
+                                       ng-disabled="SameAddress"       
+                                       class="form-control  " placeholder="Enter Address 1" maxlength="256" required="">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address 1" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Address 2</td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_Address2"
+                                       ng-disabled="SameAddress"       
+                                       class="form-control  " placeholder="Enter Address 2" maxlength="256" required="">
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address 2" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Post Office/Code</td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_PostOffice" 
+                                           ng-disabled="SameAddress"
+                                           class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                           autocomplete="new-password" />
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                        <li ng-repeat="postOffice in PostOfficeList | filter:Account.PresentAddressJson.@User_ContactAddress.Property_PostOffice">
+                                            <a ng-click="selectPostOffice(postOffice,Account.PresentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{postOffice.Name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Post/Zip Code" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Police Station</td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_PoliceStation"
+                                           ng-disabled="SameAddress"
+                                           class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                        <li ng-repeat="policeStation in PoliceStationList | filter:Account.PresentAddressJson.@User_ContactAddress.Property_PoliceStation">
+                                            <a ng-click="selectPoliceStation(policeStation,Account.PresentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{policeStation.Name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Police Station" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">District</td>
+                            <td class="fieldarea">
+                                <div class="text-dropdown-toggle dropdown">
+                                    <input ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_District" class="dropdown-toggle form-control textDropdownSearch" type="text"
+                                           ng-disabled="SameAddress"      
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                                    <ul class="dropdown-menu text-dropdown" aria-labelledby="dropdownMenu1" style="max-height: 115px;">
+                                        <li ng-repeat="distric in DistrictList | filter:Account.PresentAddressJson.@User_ContactAddress.Property_District">
+                                            <a ng-click="selectDistrict(distric.Name,Account.PresentAddressJson.@User_ContactAddress.Property_ContactAddressType)">{{distric.Name}}</a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                        
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select District" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Country</td>
+                            <td class="fieldarea">
+                                <select ng-model="Account.PresentAddressJson.@User_ContactAddress.Property_CountryId"
+                                        ng-disabled="SameAddress"
+                                        ng-options="option.Id as option.Name for option in CountryList" title="Select Country" ng-init="" class="form-control">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Country" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        </div>
+        </div>
+            <div class="widget-footer" style="margin: 15px 0px;">
+                <div class="row admission-form-common-section">
+                    <div class="col-md-8">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                                <tr>
+                                    <td class="fieldlabel">Remark</td>
+                                    <td class="fieldarea">
+                                        <input ng-model="Account.@User_Account.Property_Remarks"
+                                               type="text" class="form-control " placeholder="Enter Remark" maxlength="256" required="">
+                                    </td>
+                                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Form Number" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

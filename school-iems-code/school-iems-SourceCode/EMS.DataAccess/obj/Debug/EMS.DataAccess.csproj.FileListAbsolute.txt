@@ -1,0 +1,14 @@
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EMS.DataAccess.dll.config
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EMS.DataAccess.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EMS.DataAccess.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EMS.CoreLibrary.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EntityFramework.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EntityFramework.SqlServer.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EMS.CoreLibrary.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EntityFramework.xml
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\bin\Debug\EntityFramework.SqlServer.xml
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\obj\Debug\EMS.DataAccess.csproj.AssemblyReference.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\obj\Debug\EMS.DataAccess.csproj.CoreCompileInputs.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\obj\Debug\EMS.DataAccess.csproj.CopyComplete
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\obj\Debug\EMS.DataAccess.dll
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.DataAccess\obj\Debug\EMS.DataAccess.pdb

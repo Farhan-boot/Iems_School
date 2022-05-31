@@ -1,0 +1,20 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Application Forms";
+}
+
+
+<div class="row">
+    <div class="col-lg-3 col-sm-4 col-xs-12">
+        <div class="small-box bg-green-o">
+            <div class="inner">
+                <h2>New ID Card <br/>Demand Form</h2>
+            </div>
+            <div class="icon">
+                <i class="fa fa-files-o"></i>
+            </div>
+            <a href="@Url.Action("NewIdCardDemandForm", "Application", new {area="Employee"})" class="small-box-footer">Download <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>

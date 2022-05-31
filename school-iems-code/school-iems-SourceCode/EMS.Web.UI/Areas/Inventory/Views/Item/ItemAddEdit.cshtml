@@ -1,0 +1,163 @@
+﻿
+<!--File:Inv_Item Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Item";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemId = (string) id == null?"0":(string)id;
+    
+    //Inv_Item WebApi Single Row link   
+    var getItemByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "GetItemById", area = "Inventory" });
+    var getItemDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "GetItemDataExtra", area = "Inventory" });
+    var saveItemUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "SaveItem", area = "Inventory" });
+    var deleteItemByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "GetDeleteItemById", area = "Inventory" });
+
+    //Inv_Item WebApi List link 
+    var getPagedItemUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ItemApi", action = "GetPagedItem", area = "Inventory"});
+    var getAllItemUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "GetAllItem", area = "Inventory" });
+    var saveItemListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "SaveItemList", area = "Inventory" });
+    var getItemListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemApi", action = "GetItemListDataExtra", area = "Inventory" });
+
+    var editItemByIdPageUrl = Url.Action("ItemAddEdit", "Item", new { area = "Inventory" });
+    var listItemPageUrl = Url.Action("ItemList", "Item", new { area = "Inventory" });
+    
+    //Inv_Item Angular Functions
+    string getItemById="getItemById";
+    var saveItem = "saveItem";
+    var getNewItem = "getNewItem";
+    var refreshPage = "loadPage()";
+    string deleteItemById="deleteItemById";
+    string loadItemExtraData="loadItemExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Item/ItemAddEdit.js"></script>
+}
+
+<div id="ItemAddEdit" class="row" ng-controller="ItemAddEditCtrl" ng-init="Init(
+      '@ItemId'
+      ,'@getItemByIdUrl'
+      ,'@getItemDataExtraUrl'
+      ,'@saveItemUrl'
+      ,'@deleteItemByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="Item.@Inv_Item.Property_Name!=''">{{(Item.@Inv_Item.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ItemId" ng-Enter="@(getItemById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewItem)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listItemPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                         <tbody>
+                             @*<tr>
+            <td class="fieldlabel">Item Status </td>
+            <td class="fieldarea">
+                <input type="number" ng-model="Item.@Inv_Item.Property_ItemStatus" class="form-control" placeholder="Enter Item Status"   />
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Status." data-toggle="tooltip"></i></span></td>
+        </tr>*@
+                             <!--dropdown option for EnumList-->
+                             <tr>
+                                 <td class="fieldlabel">Asset Type </td>
+                                 <td class="fieldarea">
+                                     <select ng-model="Item.@Inv_Item.Property_AssetTypeEnumId" ng-options="option.Id as option.Name for option in AssetTypeEnumList" title="Select Asset Type" ng-init="" class="form-control">
+                                         <option value="" label="" class="">---Select One---</option>
+                                     </select>
+                                 </td>
+                                 <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Asset Type." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                             @*<tr>
+           <td class="fieldlabel">Is Deleted </td>
+           <td class="fieldarea">
+               <label class="checkbox-inline">
+               <input type="checkbox" ng-model="Item.@Inv_Item.Property_IsDeleted"  />
+               </label>
+           </td>
+           <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+        </tr>*@
+
+
+                             <tr>
+                                 <td class="fieldlabel">Product Category </td>
+                                 <td class="fieldarea">
+                                     <select ng-model="Item.@Inv_Item.Property_CategoryId"
+                                             ng-options="option.Id as option.Name for option in ProductCategoryList " ng-init="" class="form-control select-inline">
+                                         <option value="" label="" class="">---Select One---</option>
+                                     </select>
+                                 </td>
+                                 <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Product Category." data-toggle="tooltip"></i></span></td>
+                             </tr>
+
+                             @*<tr>
+             <td class="fieldlabel">Store </td>
+            <td class="fieldarea">
+                <select ng-model="Item.@Inv_Item.Property_StoreId"
+                        ng-options="option.Id as option.Name for option in StoreList " ng-init="" class="form-control select-inline">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Store." data-toggle="tooltip"></i></span></td>
+        </tr>*@
+
+                             <tr>
+                                 <td class="fieldlabel">Item Name </td>
+                                 <td class="fieldarea">
+                                     @*<select ng-model="Item.@Inv_Item.Property_StoreId"
+                                             ng-options="option.Id as option.Name for option in StoreList " ng-init="" class="form-control select-inline">
+                                         <option value="" label="" class="">---Select One---</option>
+                                     </select>*@
+                                     
+                                     <input type="text" ng-model="Item.@Inv_Item.Property_ItemName" class="form-control input-xs " id="glyphicon-search" placeholder="Item Name" >
+                                 </td>
+                                 <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Store." data-toggle="tooltip"></i></span></td>
+                             </tr>
+
+
+
+
+
+                         </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveItem)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

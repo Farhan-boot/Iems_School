@@ -1,0 +1,164 @@
+﻿@using EMS.DataAccess.Data
+<div class="row">
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr ng-hide="StudentScholarship.StudentFullName =='' || StudentScholarship.StudentFullName == null">
+                <td class="fieldlabel">Student Name (ID)</td>
+                <td class="fieldarea">
+                    {{StudentScholarship.StudentFullName}} ({{StudentScholarship.StudentUserName}})
+                </td>
+                <td class="fieldarea-tooltip">
+                    
+                </td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Scholarship Name </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_NameParticularId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in ScholarshipParticularNameList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Scholarship Category </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId" 
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in DiscountCategoryEnumList" title="Select Discount Category" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Discount Category." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr ng-show="StudentScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId==@((byte) Acnt_SemWiseScholarship.DiscountCategoryEnum.DiscountOnSpecificParticular)">
+                <td class="fieldlabel">Specific Particular Name </td>
+                <td class="fieldarea">
+                    <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_DependOnParticularId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in ParticularNameList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Is Allow Max Only </td>
+                <td class="fieldarea">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" 
+                               ng-disabled="true"
+                               ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAllowMaxOnly" />
+                    </label>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Allow Max Only if required." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Remark </td>
+                <td class="fieldarea">
+                    {{StudentScholarship.@Acnt_SemWiseScholarship.Property_Remark}}
+                </td>
+                <td class="fieldarea-tooltip">
+                    
+                </td>
+            </tr>
+
+           
+
+
+            </tbody>
+        </table>
+</div><!--Col end-->
+
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                    <td class="fieldlabel">Program </td>
+                    <td class="fieldarea">
+                        <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_ProgramId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in ProgramList" title="" ng-init="" class="form-control">
+                            <option value="" label="" class="">All Program</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"></td>
+                </tr>
+            <tr>
+                    <td class="fieldlabel">Amount </td>
+                    <td class="fieldarea">
+                        
+                        {{StudentScholarship.@Acnt_SemWiseScholarship.Property_Amount}}
+                        <span ng-if="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> %</span>
+                        <span ng-if="!StudentScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"> BDT</span>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <!--dropdown option for EnumList-->
+
+                <tr>
+                    <td class="fieldlabel">Start Semester </td>
+                    <td class="fieldarea">
+                        <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_StartSemesterId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                <tr>
+                    <td class="fieldlabel">End Semester </td>
+                    <td class="fieldarea">
+                        <select ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">Continuing</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+                
+                <tr>
+                    <td class="fieldlabel">Is Auto Renew Next Semester On Result </td>
+                    <td class="fieldarea">
+                        <label class="checkbox-inline">
+                            <input type="checkbox"
+                                   ng-disabled="true"
+                                   ng-model="StudentScholarship.@Acnt_SemWiseScholarship.Property_IsAutoRenewNextSemesterOnResult" />
+                        </label>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Auto Renew Next Semester On Result if required." data-toggle="tooltip"></i></span></td>
+                </tr>
+
+
+              
+
+
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    
+    <div class="col-md-12 table-form">
+        <div>History</div>
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td>
+                    <div ng-bind-html="renderHtml(StudentScholarship.@Acnt_SemWiseScholarship.Property_History)" ></div>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+    </div>
+</div><!--Row end-->
+
+
+

@@ -1,0 +1,192 @@
+﻿
+<!--File:Inv_Supplier Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Supplier";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var SupplierId = (string) id == null?"0":(string)id;
+    
+    //Inv_Supplier WebApi Single Row link   
+    var getSupplierByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "GetSupplierById", area = "Inventory" });
+    var getSupplierDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "GetSupplierDataExtra", area = "Inventory" });
+    var saveSupplierUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "SaveSupplier", area = "Inventory" });
+    var deleteSupplierByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "GetDeleteSupplierById", area = "Inventory" });
+
+    //Inv_Supplier WebApi List link 
+    var getPagedSupplierUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "SupplierApi", action = "GetPagedSupplier", area = "Inventory"});
+    var getAllSupplierUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "GetAllSupplier", area = "Inventory" });
+    var saveSupplierListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "SaveSupplierList", area = "Inventory" });
+    var getSupplierListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SupplierApi", action = "GetSupplierListDataExtra", area = "Inventory" });
+
+    var editSupplierByIdPageUrl = Url.Action("SupplierAddEdit", "Supplier", new { area = "Inventory" });
+    var listSupplierPageUrl = Url.Action("SupplierList", "Supplier", new { area = "Inventory" });
+    
+    //Inv_Supplier Angular Functions
+    string getSupplierById="getSupplierById";
+    var saveSupplier = "saveSupplier";
+    var getNewSupplier = "getNewSupplier";
+    var refreshPage = "loadPage()";
+    string deleteSupplierById="deleteSupplierById";
+    string loadSupplierExtraData="loadSupplierExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Supplier/SupplierAddEdit.js"></script>
+}
+
+<div id="SupplierAddEdit" class="row" ng-controller="SupplierAddEditCtrl" ng-init="Init(
+      '@SupplierId'
+      ,'@getSupplierByIdUrl'
+      ,'@getSupplierDataExtraUrl'
+      ,'@saveSupplierUrl'
+      ,'@deleteSupplierByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="Supplier.@Inv_Supplier.Property_Name!=''">{{(Supplier.@Inv_Supplier.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="SupplierId" ng-Enter="@(getSupplierById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewSupplier)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listSupplierPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Company Name </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_CompanyName" class="form-control" placeholder="Enter Company Name" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Company Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Contact Name </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_ContactName" class="form-control" placeholder="Enter Contact Name" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Contact Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Contact Designation </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_ContactDesignation" class="form-control" placeholder="Enter Contact Designation"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Contact Designation." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Address <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_Address" class="form-control" placeholder="Enter Address"  required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Address." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Phone <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_Phone" class="form-control" placeholder="Enter Phone" maxlength="50" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Phone." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Fax </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_Fax" class="form-control" placeholder="Enter Fax" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Fax." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Email </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_Email" class="form-control" placeholder="Enter Email" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Website U R L </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_WebsiteURL" class="form-control" placeholder="Enter Website U R L"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Website U R L." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Contact Person Name </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_ContactPersonName" class="form-control" placeholder="Enter Contact Person Name" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Contact Person Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Contact Person Phone </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_ContactPersonPhone" class="form-control" placeholder="Enter Contact Person Phone" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Contact Person Phone." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Contact Person Email </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_ContactPersonEmail" class="form-control" placeholder="Enter Contact Person Email" maxlength="100"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Contact Person Email." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Description </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Supplier.@Inv_Supplier.Property_Description" class="form-control" placeholder="Enter Description"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Supplier.@Inv_Supplier.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveSupplier)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

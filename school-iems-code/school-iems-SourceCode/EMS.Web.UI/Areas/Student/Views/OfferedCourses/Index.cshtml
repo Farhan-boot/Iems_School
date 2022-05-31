@@ -1,0 +1,54 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model List<EMS.DataAccess.Data.Aca_Class>
+
+@{
+    ViewBag.Title = "Offered Courses";
+    var depts = Model.Select(x => x.HR_Department).Distinct();
+    var campusList = HttpUtil.DbContext.General_Campus.ToList();
+}
+
+@foreach (var dept in depts)
+{
+    <h2 class="text-center">Offered Courses for @Model.First().Aca_Semester.Name</h2>
+    <h4 class="text-center">@dept.Name (@dept.ShortName)</h4>
+    var levels = Model.Where(x => x.DepartmentId == dept.Id)
+        .Select(x => x.Aca_StudyLevelTerm.Aca_StudyLevel).Distinct();
+    foreach (var level in levels)
+    {
+        <table class="table table-bordered">
+            <tr>
+                <th class="text-left" colspan="6">@level.Name</th>
+            </tr>
+            <tr>
+                <th class="text-center" style="width: 88px;">Status</th>
+                <th class="text-center" style="width: 73px;">Capacity</th>
+                <th class="text-center" style="width: 87px;">Registered</th>
+                <th class="text-center" style="width: 90px;">Code</th>
+                <th class="text-center">Name</th>
+                <th class="text-center" style="width: 70px;">Campus</th>
+            </tr>
+            @foreach (var course in Model.Where(x => x.DepartmentId == dept.Id
+            && x.Aca_StudyLevelTerm.Aca_StudyLevel.Id == level.Id))
+            {
+                <tr>
+                    <td class="text-center">@course.Status</td>
+                    <td class="text-center">@course.RegularCapacity</td>
+                    <td class="text-center">@HttpUtil.DbContext.Aca_ClassTakenByStudent.Count(x => x.ClassId == course.Id)</td>
+                    <td class="text-center">@course.Code</td>
+                    <td>@course.Name</td>
+                    @{ var campus = campusList.SingleOrDefault(x=>x.Id==course.CampusId);}
+                    @if (campus != null)
+                    {
+                        <td class="text-center">@campus.Name</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">&nbsp;</td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+    <hr class="pb-after"/>
+}

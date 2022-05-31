@@ -1,0 +1,271 @@
+﻿@{
+    ViewBag.Title = "Product Information: Add/Edit";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemInformationId = (string)id == null ? "0" : (string)id;
+
+    //BAcnt_Voucher WebApi Single Row link
+    var getItemInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "GetItemInformation", area = "Academic" });
+
+    var saveItemInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "SaveItemInformation", area = "Academic" });
+    
+
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/ProductCardManager/ProductCardAddEdit.js"></script>
+}
+
+
+    <!--File:BAcnt_Voucher Add/Edit View-->
+    <div id="ProductCardAddEdit" class="row ng-scope" ng-controller="ProductCardAddEditCtrl" ng-init="Init(
+        '@getItemInformationUrl'
+        ,'@saveItemInformationUrl'
+         );">
+
+        <div class="col-lg-12 col-sm-12 col-xs-12 voucher-entry-form">
+            <div ng-hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed ng-binding ng-hide">
+                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention Please!</strong>
+            </div>
+            <div ng-show="HasViewPermission" class="">
+                <div class="widget">
+                    <div class="widget-header bordered-bottom bordered-sky ">
+                        <i class="widget-icon fa fa-edit bold  "></i>
+                        <span class="widget-caption ">
+                            Add/Edit
+
+                        </span>
+                        <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                            <span class="input-icon">
+                                <input type="text" ng-model="VoucherId" ng-enter="getVoucherById()" class="form-control input-xs  ng-pristine ng-untouched ng-valid" id="glyphicon-search" placeholder="Search">
+                                <i class="glyphicon glyphicon-search blue"></i>
+                            </span>
+
+                        </div>
+                        <div class="widget-buttons no-padding-left">
+                            @*<button ng-click="getNewVoucher()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                            <a href="/BasicAccounting/Voucher/VoucherList" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                            <button ng-click="loadPage()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                        </div>
+                    </div><!--Widget Header end-->
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-md-5 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fieldlabel">Purchase Code <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="PurchaseInformation.PurchaseCode" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength" placeholder="Enter Purchase Code" maxlength="50" required="">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Purchase Code." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Purchase Date <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="PurchaseInformation.PurchaseDate" class="form-control date-picker ng-pristine ng-valid ng-valid-datetime ng-valid-min ng-valid-max ng-touched" placeholder="Enter Purchase Date" datetime="dd/MM/yyyy">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Purchase Date." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Supplier Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <select ng-model="PurchaseInformation.SupplierId" ng-options="" ng-init="" class="form-control select-inline ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                    <option value="0" label="Jesy">Jesy</option>
+                                                    <option value="1" label="Jitu">Jitu</option>
+                                                    <option value="2" label="Jisa">Jisa</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip">
+                                                <span>
+                                                    <i class="fa fa-question-circle" data-title="Select Voucher Type." data-toggle="tooltip" data-original-title="" title="">
+                                                    </i>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+
+                                        <!--dropdown option for EnumList-->
+
+                                        <tr>
+                                            <td class="fieldlabel">Invoice No </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="PurchaseInformation.InvoiceNo" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-maxlength ng-touched" placeholder="Enter Invoice No" maxlength="50" required="">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Manual Slip ID." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div><!--Col end-->
+
+                            <div class="col-md-12">
+                                <div ng-show="IsShowDeleteUnDeleteMessage" class="alert alert-warning fade in radius-bordered alert-shadowed ng-binding ng-hide" style="margin-bottom: 5px;">
+                                    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                                    <i class="fa-fw fa fa-warning"></i>
+                                    <strong>Attention Please!</strong>
+                                </div>
+                                <div class="no-padding">
+                                    <div class="widget-main fast-payment-collection-tabs">
+                                        <div class="tabbable">
+                                            <ul class="nav nav-tabs" id="myTab9">
+                                                <li class="active">
+                                                    <a data-toggle="tab" href="#product-items" aria-expanded="true" class="ng-binding">
+                                                        <i class="fa fa-check" style="color: #65b951;"></i>
+                                                        Add Item Inventory
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                            <div class="tab-content no-padding">
+                                                <div id="product-items" class="tab-pane active">
+                                                    <table class="table table-striped table-bordered" width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                @*<th style="width: 65px; text-align: center;">SL</th>*@
+                                                                <th style="text-align: center; width: 300px">Item</th>
+                                                                <th style="text-align: center; width: 300px">Batch No</th>
+                                                                <th style="width: 100px; text-align: center; width: 500px">Attach Document</th>
+                                                                <th style="width: 55px; text-align: center; width: 500px">Total Purchase Price</th>
+                                                                <th style="width: 55px; text-align: center; width: 300px">Unit Type</th>
+                                                                <th style="width: 55px; text-align: center; width: 300px">Unit</th>
+                                                                <th style="width: 55px; text-align: center; width: 300px">Warhouse</th>
+                                                                <th style="width: 55px; text-align: center; width: 300px">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- ngRepeat: voucherDtlRow in Voucher.BAcnt_VoucherDetailListJson| filter:{IsDeleted:false} -->
+                                                            <tr ng-repeat="productDtlRow in PurchaseInformation.ProductList">
+                                                                @*<td>
+                                                                    <input ng-value="{{$index+1}}" style="padding-left: 3px; width: 100%;" placeholder="SL" type="text" class="ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                                </td>*@
+
+                                                                <td style="text-align: center;">
+                                                                    <select ng-model="productDtlRow.ItemId" ng-change="" ng-options="" ng-init="" class="form-control select-inline transType1 ng-touched ng-dirty ng-valid-parse">
+                                                                        <option value="0" selected="selected" label="Cricket Bat">Cricket Bat</option>
+                                                                        <option value="1" label="Ball">Ball</option>
+                                                                    </select>
+                                                                </td>
+
+                                                                <td>
+                                                                    <input ng-model="productDtlRow.BatchNo" style="padding-left: 3px; width: 100%;" placeholder="Batch No" type="text" class="ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                                </td>
+
+                                                                <td>
+                                                                    <button ng-click="uploadDocument()" class="btn btn-xs btn-azure">Upload</button>
+                                                                </td>
+
+                                                                <td>
+                                                                    <input ng-model="productDtlRow.TotalPurchasePrice" style="padding-left: 3px; width: 100%;" placeholder="Total Purchase Price" type="text" class="ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                                </td>
+
+                                                                <td style="text-align: center;">
+                                                                    <select ng-model="productDtlRow.UnitTypeEnumId" ng-change="" ng-options="" ng-init="" class="form-control select-inline transType1 ng-touched ng-dirty ng-valid-parse">
+                                                                        <option value="0" selected="selected" label="Kg">Kg</option>
+                                                                        <option value="1" label="Pic">Pic</option>
+                                                                    </select>
+                                                                </td>
+
+                                                                <td>
+                                                                    <input ng-model="productDtlRow.Unit" style="padding-left: 3px; width: 100%;" placeholder="Unit" type="text" class="ng-valid ng-dirty ng-valid-parse ng-touched">
+                                                                </td>
+
+                                                                <td style="text-align: center;">
+                                                                    <select ng-model="productDtlRow.WarhouseId" ng-change="" ng-options="" ng-init="" class="form-control select-inline transType1 ng-touched ng-dirty ng-valid-parse">
+                                                                        <option value="0" selected="selected" label="Warhouse 1">Warhouse 1</option>
+                                                                        <option value="1" label="Warhouse 2">Warhouse 2</option>
+                                                                    </select>
+                                                                </td>
+
+                                                                <td class="text-center">
+                                                                    <button ng-click="delete(productDtlRow)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                                                </td>
+                                                            </tr><!-- end ngRepeat: voucherDtlRow in Voucher.BAcnt_VoucherDetailListJson| filter:{IsDeleted:false} -->
+                                                            <tr>
+                                                                <td>
+                                                                    <button ng-click="addNewProductDtl(productDtlRow)" class="btn btn-xs btn-azure">Add To Cart</button>
+                                                                </td>
+                                                                <td class="text-bold" style="text-align: right;" colspan="2">
+                                                                    Total:
+                                                                </td>
+                                                                <td class="text-bold">{{PurchaseInformation.ProductList| total:'TotalPurchasePrice'|number:0 }}</td>
+                                                                
+                                                                <td></td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div><!--Widget Body end-->
+                                </div>
+                            </div>
+                        </div><!--Row end-->
+                    </div><!--Widget Body end-->
+                    <div class="widget-footer text-center">
+                        <div class="row">
+                            <div class="col-md-10 text-center">
+
+
+                                <button ng-click="saveProductInformation()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--view permission end-->
+        </div>
+    </div><!--controller end-->
+
+
+    <style>
+
+        .voucher-entry-form input,
+        .voucher-entry-form optgroup,
+        .voucher-entry-form select,
+        .voucher-entry-form textarea {
+            height: 25px !important;
+            font-size: 12px;
+        }
+
+        .text-dropdown-toggle .dropdown-menu li a:hover {
+            background: #1884e6;
+            color: #fff;
+        }
+
+        .text-dropdown {
+            max-height: 115px;
+            overflow-y: auto;
+            font-size: 13px;
+            padding: 6px 12px;
+            width: 100%;
+            line-height: 1.42857143;
+            background-image: none;
+        }
+
+        .text-dropdown-toggle ul {
+            max-height: 115px !important;
+            padding: 0px !important;
+            overflow-x: hidden !important;
+        }
+
+            .text-dropdown-toggle ul li a {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+                padding: 2px 10px !important;
+            }
+    </style>
+
+
+
+

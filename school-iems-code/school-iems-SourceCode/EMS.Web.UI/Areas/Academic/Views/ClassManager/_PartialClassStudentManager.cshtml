@@ -1,0 +1,67 @@
+{{row.@Aca_ClassTakenByStudent.Property_RegistrationStatus}}@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@{
+    // Angular Properties
+    var id = Request.QueryString["id"]; //ViewContext.RouteData.Values["id"];
+    var ClassId = (string)id == null ? "0" : (string)id;
+}
+<div class="widget-header bordered-bottom bordered-sky"  style="display: none;">
+    <i class="widget-icon fa fa-user-secret"></i>
+    <span  class="widget-caption">Manage Students</span>
+    
+</div>
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="ClassStudentTab">
+        <li class="active">
+            <a data-toggle="tab" href="#Regular" aria-expanded="true">
+                <span  class="badge badge-success">{{(ClassStudentList|filter:{@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId:@((byte)Aca_Exam.ExamTypeEnum.FinalTerm)}).length}}</span> Regular
+            </a>
+        </li>
+        @if (SiteSettings.InstituteKey.ToLower()=="baust")
+        {
+            <li class="tab-blueberry">
+                <a data-toggle="tab" href="#ReferredBacklogManager" aria-expanded="false">Referred/Improvement & Backlog Manager
+                </a>
+            </li>
+        }
+        
+        @*<li class="tab-blueberry">
+            <a data-toggle="tab" href="#Referred" aria-expanded="false">
+                <span  class="badge badge-success">{{(ClassStudentList|filter:{@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId:@((byte)Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)}).length}}</span> Referred
+            </a>
+        </li>
+        <li class="tab-blueberry">
+            <a data-toggle="tab" href="#Backlog" aria-expanded="false">
+                <span  class="badge badge-success">{{(ClassStudentList|filter:{@Aca_ClassTakenByStudent.Property_EnrollTypeEnumId:@((byte)Aca_Exam.ExamTypeEnum.ImprovementMidTerm)}).length}}</span> Backlog
+            </a>
+        </li>
+        <li class="tab-blueberry">
+            <a data-toggle="tab" href="#Waiver" aria-expanded="false">
+                <span  class="badge badge-success">{{ClassWaiverStudentList.length}}</span> Waiver
+            </a>
+        </li>*@
+    </ul>
+    <div class="tab-content no-padding">
+        <div id="Regular" class="tab-pane active">
+            @Html.Partial("~/Areas/Academic/Views/ClassManager/AddEditClassStudent/_RegularStudent.cshtml")
+        </div>
+        
+        @if (SiteSettings.InstituteKey.ToLower() == "baust")
+        {
+            <div id="ReferredBacklogManager" class="tab-pane">
+                @Html.Partial("~/Areas/Academic/Views/ClassManager/ReferredBacklogManager/_ReferredBacklogManager.cshtml")
+            </div>
+        }
+
+        @*<div id="Referred" class="tab-pane">
+            @Html.Partial("~/Areas/Academic/Views/ClassManager/AddEditClassStudent/_ReferredStudent.cshtml") 
+        </div>
+        <div id="Backlog" class="tab-pane">
+            @Html.Partial("~/Areas/Academic/Views/ClassManager/AddEditClassStudent/_BacklogStudent.cshtml") 
+        </div>
+        <div id="Waiver" class="tab-pane">
+            @Html.Partial("~/Areas/Academic/Views/ClassManager/AddEditClassStudent/_WaiverStudent.cshtml")
+            
+        </div>*@
+    </div>
+</div>

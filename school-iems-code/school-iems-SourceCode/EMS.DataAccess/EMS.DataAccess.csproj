@@ -1,0 +1,928 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{772BF7CE-F2A1-466D-883D-CD3D19AF8AE4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.DataAccess</RootNamespace>
+    <AssemblyName>EMS.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common.cs" />
+    <Compile Include="CustomEntity\SmsResult.cs" />
+    <Compile Include="DataManager.cs" />
+    <Compile Include="Data\Aca_Class.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassAttendance.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassAttendanceSetting.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassAttendanceSmsLog.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassMaterialFileMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassNotice.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassRoutine.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassSection.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassTakenByEmployee.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassTakenByStudent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ClassWaiverStudent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_Course.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CoursePrerequisiteMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CreditTransfer.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CreditTransferCourses.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CreditTransferInstitute.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_Curriculum.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CurriculumCourse.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CurriculumElectiveGroup.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_CurriculumStudentMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_DeptBatch.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_Exam.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ExamRoll.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ExamSupple.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_GradingPolicy.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_GradingPolicyOption.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_HomeWork.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_HomeWorkSubmission.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_MarkDistributionPolicy.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_MarkDistributionPolicyBreakdown.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_MarkDistributionPolicyComponent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OfferedCourse.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OfferedCourseForCurriculum.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OnlineClass.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OnlineExam.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OnlineExamResultDetail.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_OnlineExamTakenByStudent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_Program.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_ProgramTakenByStudent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_QuestionBank.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_QuestionBankOnlineExamMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_QuestionGroup.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_QuestionOption.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_Semester.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_StudentHouse.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_StudentRegistration.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_StudyLevel.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_StudyLevelTerm.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_StudyTerm.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_TPEQuestion.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_TPEQuestionAnswer.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_TPEQuestionAnswer2.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Aca_TPEQuestionCategory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Acnt_OfficialBank.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Adm_AdmissionExam.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Adm_DegreeCategory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Adm_EducationBoard.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Adm_ParentsPrimaryJobType.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Adm_StudentQuotaName.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_Branch.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_CompanyAccount.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_Ledger.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_Voucher.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_VoucherDetail.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BAcnt_VoucherType.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EmsDataModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmsDataModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EmsDataModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EmsDataModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmsDataModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_AllSmsLog.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Bank.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Building.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_CalendarEvent.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Campus.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Country.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_District.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Division.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_File.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Floor.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Language.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Notice.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_PoliceStation.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_PostOffice.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\General_Room.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_AppointmentHistory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_Attendance.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_CalendarYear.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_Department.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_EmpLeaveAllocationSettings.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_EmpLeaveAllocationSettingsDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_EmpLeaveApplication.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_EmployementHistory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_HolidaySettings.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_LeaveAllocationTemplateDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_MonthlyPayslip.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_MonthlyPayslipDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_Organization.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_Payroll.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_Position.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_SalarySettings.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_SalarySettingsDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_SalaryTemplate.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_SalaryTemplateDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\HR_WorkWeek.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_Floor.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_FloorHostelBuildingMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_HostalBuilding.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_HostelBuildingStudentMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_MealType.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_Room.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_Routine.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Htl_StudentMealCancel.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Invt_EquipmentDetailIT.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_Inventory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_InventoryDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_InventoryPurchaseRequisitionMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_Item.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemAllocation.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemAllocationRequisitionMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemDelivery.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemDescription.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemMaintainance.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemRequest.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemReturn.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemReturnAllocationMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemsEquipmentDetailITMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemsInventoryMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ItemWarrentyDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ProductCategory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_ProductCategoryDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_PurchaseRequisition.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_PurchaseRequisitionDetail.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_RequestedItem.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_RequestedItemAssign.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_Requisition.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_RequisitionDetails.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_Store.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_StoreManager.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Inv_Supplier.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_Book.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookActivityLog.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookAuthor.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookAuthorMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookCopy.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookCopyTransaction.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookDeptMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookSubject.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BookSubjectMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_Borrower.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_BorrowerActivityLog.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_Branch.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_Fine.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Lib_Supplier.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sysdiagrams.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Temp_JoiningSemesterUpdate.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Temp_MissingResult.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Temp_ResultBlock.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Temp_ResultMigration.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_LoginAudit.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_PassReset.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_Role.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_RolePremissionMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_RoleUserMap.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UAC_VerificationAudit.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UCS_SmsLog.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UCS_SmsProvider.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UCS_SmtpSetting.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Account.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_ContactAddress.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_ContactEmail.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_ContactNumber.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Education.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Employee.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Experience.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Image.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_ProfileChangeAudit.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Publication.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Rank.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_RankHistory.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Relationship.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_Student.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\User_UserNameChangeAudit.cs">
+      <DependentUpon>EmsDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="EntityPartials\Aca_Class.cs" />
+    <Compile Include="EntityPartials\Aca_ClassAttendance.cs" />
+    <Compile Include="EntityPartials\Aca_ClassAttendanceSetting.cs" />
+    <Compile Include="EntityPartials\Aca_ClassAttendanceSmsLog.cs" />
+    <Compile Include="EntityPartials\Aca_ClassMaterialFileMap.cs" />
+    <Compile Include="EntityPartials\Aca_ClassNotice.cs" />
+    <Compile Include="EntityPartials\Aca_ClassRoutine.cs" />
+    <Compile Include="EntityPartials\Aca_ClassSection.cs" />
+    <Compile Include="EntityPartials\Aca_ClassTakenByEmployee.cs" />
+    <Compile Include="EntityPartials\Aca_ClassTakenByStudent.cs" />
+    <Compile Include="EntityPartials\Aca_ClassWaiverStudent.cs" />
+    <Compile Include="EntityPartials\Aca_Course.cs" />
+    <Compile Include="EntityPartials\Aca_CoursePrerequisiteMap.cs" />
+    <Compile Include="EntityPartials\Aca_CreditTransfer.cs" />
+    <Compile Include="EntityPartials\Aca_CreditTransferCourses.cs" />
+    <Compile Include="EntityPartials\Aca_CreditTransferInstitute.cs" />
+    <Compile Include="EntityPartials\Aca_Curriculum.cs" />
+    <Compile Include="EntityPartials\Aca_CurriculumCourse.cs" />
+    <Compile Include="EntityPartials\Aca_CurriculumElectiveGroup.cs" />
+    <Compile Include="EntityPartials\Aca_CurriculumStudentMap.cs" />
+    <Compile Include="EntityPartials\Aca_DeptBatch.cs" />
+    <Compile Include="EntityPartials\Aca_Exam.cs" />
+    <Compile Include="EntityPartials\Aca_ExamRoll.cs" />
+    <Compile Include="EntityPartials\Aca_ExamSupple.cs" />
+    <Compile Include="EntityPartials\Aca_HomeWorkSubmission.cs" />
+    <Compile Include="EntityPartials\Aca_OnlineClass.cs" />
+    <Compile Include="EntityPartials\Aca_StudentRegistration.cs" />
+    <Compile Include="EntityPartials\Aca_GradingPolicy.cs" />
+    <Compile Include="EntityPartials\Aca_GradingPolicyOption.cs" />
+    <Compile Include="EntityPartials\Aca_MarkDistributionPolicy.cs" />
+    <Compile Include="EntityPartials\Aca_MarkDistributionPolicyBreakdown.cs" />
+    <Compile Include="EntityPartials\Aca_MarkDistributionPolicyComponent.cs" />
+    <Compile Include="EntityPartials\Aca_Program.cs" />
+    <Compile Include="EntityPartials\Aca_Semester.cs" />
+    <Compile Include="EntityPartials\Aca_StudyLevel.cs" />
+    <Compile Include="EntityPartials\Aca_StudyLevelTerm.cs" />
+    <Compile Include="EntityPartials\Aca_StudyTerm.cs" />
+    <Compile Include="EntityPartials\Aca_TPE.cs" />
+    <Compile Include="EntityPartials\Aca_TPEComment.cs" />
+    <Compile Include="EntityPartials\Aca_TPEQuestion.cs" />
+    <Compile Include="EntityPartials\Aca_TPEQuestionAnswer.cs" />
+    <Compile Include="EntityPartials\Aca_TPEQuestionAnswer2.cs" />
+    <Compile Include="EntityPartials\Aca_TPEQuestionCategory.cs" />
+    <Compile Include="EntityPartials\Adm_AdmissionExam.cs" />
+    <Compile Include="EntityPartials\Adm_DegreeCategory.cs" />
+    <Compile Include="EntityPartials\Adm_EducationBoard.cs" />
+    <Compile Include="EntityPartials\Adm_ParentsPrimaryJobType.cs" />
+    <Compile Include="EntityPartials\Adm_StudentQuotaName.cs" />
+    <Compile Include="EntityPartials\BAcnt_Branch.cs" />
+    <Compile Include="EntityPartials\BAcnt_CompanyAccount.cs" />
+    <Compile Include="EntityPartials\BAcnt_Ledger.cs" />
+    <Compile Include="EntityPartials\BAcnt_Voucher.cs" />
+    <Compile Include="EntityPartials\BAcnt_VoucherDetail.cs" />
+    <Compile Include="EntityPartials\BAcnt_VoucherType.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassAttendanceBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassAttendanceSettingBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassAttendanceSmsLogBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassMaterialFileMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassNoticeBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassRoutineBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassSectionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassTakenByEmployeeBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassTakenByStudentBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ClassWaiverStudentBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CourseBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CoursePrerequisiteMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CreditTransferBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CreditTransferCoursesBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CreditTransferInstituteBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CurriculumBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CurriculumCourseBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CurriculumElectiveGroupBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_CurriculumStudentMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_DeptBatchBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ExamBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ExamRollBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ExamSuppleBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_HomeWorkSubmissionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_OnlineClassBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_StudentRegistrationBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_GradingPolicyBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_GradingPolicyOptionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_MarkDistributionPolicyBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_MarkDistributionPolicyBreakdownBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_MarkDistributionPolicyComponentBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_ProgramBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_SemesterBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_StudyLevelBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_StudyLevelTermBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_StudyTermBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_TPEQuestionAnswer2Base.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_TPEQuestionAnswerBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_TPEQuestionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Aca_TPEQuestionCategoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\Adm_AdmissionExamBase.cs" />
+    <Compile Include="EntityPartials\Bases\Adm_DegreeCategoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\Adm_EducationBoardBase.cs" />
+    <Compile Include="EntityPartials\Bases\Adm_ParentsPrimaryJobTypeBase.cs" />
+    <Compile Include="EntityPartials\Bases\Adm_StudentQuotaNameBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_BranchBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_CompanyAccountBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_LedgerBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_VoucherBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_VoucherDetailBase.cs" />
+    <Compile Include="EntityPartials\Bases\BAcnt_VoucherTypeBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_BankBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_BuildingBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_CampusBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_CountryBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_DistrictBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_DivisionBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_FileBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_FloorBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_LanguageBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_NoticeBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_PoliceStationBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_PostOfficeBase.cs" />
+    <Compile Include="EntityPartials\Bases\General_RoomBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_AppointmentHistoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_AttendanceBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_CalendarYearBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_DepartmentBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_EmpLeaveAllocationSettingsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_EmpLeaveAllocationSettingsDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_EmpLeaveApplicationBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_EmployementHistoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_HolidaySettingsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_LeaveAllocationTemplateDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_MonthlyPayslipBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_MonthlyPayslipDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_OrganizationBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_PayrollBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_PositionBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_SalarySettingsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_SalarySettingsDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_SalaryTemplateBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_SalaryTemplateDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\HR_WorkWeekBase.cs" />
+    <Compile Include="EntityPartials\Bases\Invt_EquipmentDetailITBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_InventoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_InventoryDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemDeliveryBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemAllocationBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemDescriptionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemMaintainanceBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemReturnBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ItemWarrentyDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_ProductCategoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_PurchaseRequisitionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_PurchaseRequisitionDetailBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_RequisitionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_RequisitionDetailsBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_RequestedItemBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_StoreBase.cs" />
+    <Compile Include="EntityPartials\Bases\Inv_SupplierBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_LoginAuditBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_RoleBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_RolePremissionMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_RoleUserMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_VerificationAuditBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ExperienceBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ImageBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookActivityLogBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookAuthorBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookAuthorMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookCopyBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookCopyTransactionBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookDeptMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookSubjectBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BookSubjectMapBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BorrowerActivityLogBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BorrowerBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_BranchBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_FineBase.cs" />
+    <Compile Include="EntityPartials\Bases\Lib_SupplierBase.cs" />
+    <Compile Include="EntityPartials\Bases\UAC_PassResetBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_AccountBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ContactAddressBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ContactEmailBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ContactNumberBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_EducationBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_EmployeeBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_ProfileChangeAuditBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_RankBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_RankHistoryBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_RelationshipBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_StudentBase.cs" />
+    <Compile Include="EntityPartials\Bases\User_UserNameChangeAuditBase.cs" />
+    <Compile Include="EntityPartials\General_Bank.cs" />
+    <Compile Include="EntityPartials\General_Building.cs" />
+    <Compile Include="EntityPartials\General_Campus.cs" />
+    <Compile Include="EntityPartials\General_Country.cs" />
+    <Compile Include="EntityPartials\General_District.cs" />
+    <Compile Include="EntityPartials\General_Division.cs" />
+    <Compile Include="EntityPartials\General_File.cs" />
+    <Compile Include="EntityPartials\General_Floor.cs" />
+    <Compile Include="EntityPartials\General_Language.cs" />
+    <Compile Include="EntityPartials\General_Notice.cs" />
+    <Compile Include="EntityPartials\General_PoliceStation.cs" />
+    <Compile Include="EntityPartials\General_PostOffice.cs" />
+    <Compile Include="EntityPartials\General_Room.cs" />
+    <Compile Include="EntityPartials\HR_AppointmentHistory.cs" />
+    <Compile Include="EntityPartials\HR_Attendance.cs" />
+    <Compile Include="EntityPartials\HR_CalendarYear.cs" />
+    <Compile Include="EntityPartials\HR_Department.cs" />
+    <Compile Include="EntityPartials\HR_EmpLeaveAllocationSettings.cs" />
+    <Compile Include="EntityPartials\HR_EmpLeaveAllocationSettingsDetails.cs" />
+    <Compile Include="EntityPartials\HR_EmpLeaveApplication.cs" />
+    <Compile Include="EntityPartials\HR_EmployementHistory.cs" />
+    <Compile Include="EntityPartials\HR_HolidaySettings.cs" />
+    <Compile Include="EntityPartials\HR_LeaveAllocationTemplateDetails.cs" />
+    <Compile Include="EntityPartials\HR_MonthlyPayslip.cs" />
+    <Compile Include="EntityPartials\HR_MonthlyPayslipDetails.cs" />
+    <Compile Include="EntityPartials\HR_Organization.cs" />
+    <Compile Include="EntityPartials\HR_Payroll.cs" />
+    <Compile Include="EntityPartials\HR_Position.cs" />
+    <Compile Include="EntityPartials\HR_SalarySettings.cs" />
+    <Compile Include="EntityPartials\HR_SalarySettingsDetails.cs" />
+    <Compile Include="EntityPartials\HR_SalaryTemplate.cs" />
+    <Compile Include="EntityPartials\HR_SalaryTemplateDetails.cs" />
+    <Compile Include="EntityPartials\HR_WorkWeek.cs" />
+    <Compile Include="EntityPartials\Invt_EquipmentDetailIT.cs" />
+    <Compile Include="EntityPartials\Inv_Inventory.cs" />
+    <Compile Include="EntityPartials\Inv_InventoryDetails.cs" />
+    <Compile Include="EntityPartials\Inv_Item.cs" />
+    <Compile Include="EntityPartials\Inv_ItemAllocation.cs" />
+    <Compile Include="EntityPartials\Inv_ItemDescription.cs" />
+    <Compile Include="EntityPartials\Inv_ItemMaintainance.cs" />
+    <Compile Include="EntityPartials\Inv_ItemReturn.cs" />
+    <Compile Include="EntityPartials\Inv_ItemWarrentyDetails.cs" />
+    <Compile Include="EntityPartials\Inv_ProductCategory.cs" />
+    <Compile Include="EntityPartials\Inv_PurchaseRequisition.cs" />
+    <Compile Include="EntityPartials\Inv_PurchaseRequisitionDetail.cs" />
+    <Compile Include="EntityPartials\Inv_Requisition.cs" />
+    <Compile Include="EntityPartials\Inv_RequestedItem.cs" />
+    <Compile Include="EntityPartials\Inv_RequisitionDetails.cs" />
+    <Compile Include="EntityPartials\Inv_ItemDelivery.cs" />
+    <Compile Include="EntityPartials\Inv_Store.cs" />
+    <Compile Include="EntityPartials\Inv_Supplier.cs" />
+    <Compile Include="EntityPartials\UAC_LoginAudit.cs" />
+    <Compile Include="EntityPartials\UAC_Role.cs" />
+    <Compile Include="EntityPartials\UAC_RolePremissionMap.cs" />
+    <Compile Include="EntityPartials\UAC_RoleUserMap.cs" />
+    <Compile Include="EntityPartials\UAC_VerificationAudit.cs" />
+    <Compile Include="EntityPartials\User_Experience.cs" />
+    <Compile Include="EntityPartials\User_Image.cs" />
+    <Compile Include="EntityPartials\Lib_Book.cs" />
+    <Compile Include="EntityPartials\Lib_BookActivityLog.cs" />
+    <Compile Include="EntityPartials\Lib_BookAuthor.cs" />
+    <Compile Include="EntityPartials\Lib_BookAuthorMap.cs" />
+    <Compile Include="EntityPartials\Lib_BookCopy.cs" />
+    <Compile Include="EntityPartials\Lib_BookCopyTransaction.cs" />
+    <Compile Include="EntityPartials\Lib_BookDeptMap.cs" />
+    <Compile Include="EntityPartials\Lib_BookSubject.cs" />
+    <Compile Include="EntityPartials\Lib_BookSubjectMap.cs" />
+    <Compile Include="EntityPartials\Lib_Borrower.cs" />
+    <Compile Include="EntityPartials\Lib_BorrowerActivityLog.cs" />
+    <Compile Include="EntityPartials\Lib_Branch.cs" />
+    <Compile Include="EntityPartials\Lib_Fine.cs" />
+    <Compile Include="EntityPartials\Lib_Supplier.cs" />
+    <Compile Include="EntityPartials\UAC_PassReset.cs" />
+    <Compile Include="EntityPartials\User_Account.cs" />
+    <Compile Include="EntityPartials\User_ContactAddress.cs" />
+    <Compile Include="EntityPartials\User_ContactEmail.cs" />
+    <Compile Include="EntityPartials\User_ContactNumber.cs" />
+    <Compile Include="EntityPartials\User_Education.cs" />
+    <Compile Include="EntityPartials\User_Employee.cs" />
+    <Compile Include="EntityPartials\User_ProfileChangeAudit.cs" />
+    <Compile Include="EntityPartials\User_Rank.cs" />
+    <Compile Include="EntityPartials\User_RankHistory.cs" />
+    <Compile Include="EntityPartials\User_Relationship.cs" />
+    <Compile Include="EntityPartials\User_Student.cs" />
+    <Compile Include="EntityPartials\User_UserNameChangeAudit.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Data\EmsDataModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EmsDataModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Data\EmsDataModel.edmx.diagram">
+      <DependentUpon>EmsDataModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{c943ac10-d3e5-4bf4-9519-e3083dcd5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\EmsDataModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EmsDataModel.edmx</DependentUpon>
+      <LastGenOutput>EmsDataModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data\EmsDataModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EmsDataModel.edmx</DependentUpon>
+      <LastGenOutput>EmsDataModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

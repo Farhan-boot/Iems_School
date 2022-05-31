@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Student Payment Collection";
+} 
+
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/Student/FastPaymentCollection/_FastPaymentCollection.js?v=23"></script>
+    <!--For exporting html table-->
+    @*<script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>*@
+
+}
+
+@Html.Partial("~/Areas/Accounts/Views/Student/FastPaymentCollection/_FastPaymentCollection.cshtml")

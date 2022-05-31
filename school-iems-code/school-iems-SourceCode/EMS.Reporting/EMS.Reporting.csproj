@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8CF5B10D-31EA-4FD5-9C5C-EF051D5151D3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.Reporting</RootNamespace>
+    <AssemblyName>EMS.Reporting</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Reporting, Version=9.1.15.624, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Library\LibraryReports.cs" />
+    <Compile Include="Library\ReportFiles\rptBarcodeLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Library\ReportFiles\rptBarcodeLabel.Designer.cs">
+      <DependentUpon>rptBarcodeLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\ReportFiles\rptCallNoLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Library\ReportFiles\rptCallNoLabel.Designer.cs">
+      <DependentUpon>rptCallNoLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\ReportFiles\rptTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Library\ReportFiles\rptTest.Designer.cs">
+      <DependentUpon>rptTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\Source\dsBook.cs">
+      <DependentUpon>dsBook.xsd</DependentUpon>
+      <SubType>code</SubType>
+    </Compile>
+    <Compile Include="Library\Source\dsBook.Designer.cs">
+      <DependentUpon>dsBook.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ReportUtils.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Library\ReportFiles\rptBarcodeLabel.resx">
+      <DependentUpon>rptBarcodeLabel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\ReportFiles\rptCallNoLabel.resx">
+      <DependentUpon>rptCallNoLabel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\ReportFiles\rptTest.resx">
+      <DependentUpon>rptTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Library\Source\dsBook.xsc">
+      <DependentUpon>dsBook.xsd</DependentUpon>
+    </None>
+    <None Include="Library\Source\dsBook.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsBook.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Library\Source\dsBook.xss">
+      <DependentUpon>dsBook.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{C943AC10-D3E5-4BF4-9519-E3083DCD5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Project>{772BF7CE-F2A1-466D-883D-CD3D19AF8AE4}</Project>
+      <Name>EMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Project>{AB834801-EE9A-44A7-873A-9C9F123C02CE}</Project>
+      <Name>EMS.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logoMIST.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LogoBW85x77.jpg" />
+    <None Include="Resources\AdmissionForm1.jpg" />
+    <None Include="Resources\AdmissionForm2.jpg" />
+    <None Include="Resources\BUP_logo.jpg" />
+    <None Include="Resources\BUP_RegistrationForm1.jpg" />
+    <None Include="Resources\BUP_RegistrationForm2.jpg" />
+    <Content Include="Resources\favicon.png" />
+    <Content Include="Resources\Logo.png" />
+    <None Include="Resources\Logo_bw1.jpg" />
+    <None Include="Resources\Logo_bw.jpg" />
+    <None Include="Resources\MIST-Logo-BW.JPG" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

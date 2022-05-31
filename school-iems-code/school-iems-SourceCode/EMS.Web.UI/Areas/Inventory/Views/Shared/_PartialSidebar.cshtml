@@ -1,0 +1,518 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea().AddSpacesToSentence();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li class="active">
+            <a title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "BasicAccounting"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">Inventory Home</span>
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Supplier </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("SupplierAddEdit", "Supplier", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("SupplierList", "Supplier", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Store </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("StoreAddEdit", "Store", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("StoreList", "Store", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Product Category </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("ProductCategoryAddEdit", "ProductCategory", new {area = "Inventory"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text"> Add New </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ProductCategoryList", "ProductCategory", new {area = "Inventory",id=0})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">List </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Inventory Manager </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("InventoryAddEdit", "InventoryManager", new {area = "Inventory"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text"> Add New </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("InventoryList", "InventoryManager", new {area = "Inventory",id=0})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">List </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+    
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Inventory </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("InventoryAddEdit", "Inventory", new {area = "Inventory"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text"> Add New </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("InventoryList", "Inventory", new {area = "Inventory",id=0})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">List </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Inventory Details </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("InventoryDetailsAddEdit", "InventoryDetails", new {area = "Inventory"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text"> Add New </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("InventoryDetailsList", "InventoryDetails", new {area = "Inventory",id=0})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">List </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+    
+    
+    
+    
+
+    @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Product Category Manager </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ProductCategoryAddEdit", "ProductCategoryManager", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ProductCategoryList", "ProductCategoryManager", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+
+
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemAddEdit", "Item", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemList", "Item", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Requisition Manager </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("RequisitionAddEdit", "RequisitionManager", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("RequisitionList", "RequisitionManager", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
+
+
+
+
+
+    
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Product Category Details </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ProductCategoryDetailsAddEdit", "ProductCategoryDetails", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ProductCategoryDetailsList", "ProductCategoryDetails", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Purchase Requisition </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("PurchaseRequisitionAddEdit", "PurchaseRequisition", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("PurchaseRequisitionList", "PurchaseRequisition", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Pur Requisition Detail </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("PurchaseRequisitionDetailAddedit", "PurchaseRequisitionDetail", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("PurchaseRequisitionDetailList", "PurchaseRequisitionDetail", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+       
+
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item Description </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemDescriptionAddEdit", "ItemDescription", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemDescriptionList", "ItemDescription", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item Warrenty Details </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemWarrentyDetailsAddEdit", "ItemWarrentyDetails", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemWarrentyDetailsList", "ItemWarrentyDetails", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Requisition </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("RequisitionAddEdit", "Requisition", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("RequisitionList", "Requisition", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Requisition Details </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("RequisitionDetailsAddEdit", "RequisitionDetails", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("RequisitionDetailsList", "RequisitionDetails", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item Allocation </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemAllocationAddEdit", "ItemAllocation", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemAllocationList", "ItemAllocation", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item Return </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemReturnAddEdit", "ItemReturn", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemReturnList", "ItemReturn", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Item Maintainance </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("ItemMaintainanceAddEdit", "ItemMaintainance", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ItemMaintainanceList", "ItemMaintainance", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Requested Item </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("RequestedItemAddEdit", "RequestedItem", new {area = "Inventory"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("RequestedItemList", "RequestedItem", new {area = "Inventory",id=0})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text"> Item Delivery </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            <li>
+                <a href="@Url.Action("ItemDeliveryAddEdit", "ItemDelivery", new {area = "Inventory"})">
+                    <i class="menu-icon fa fa-plus"></i>
+                    <span class="menu-text"> Add New </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ItemDeliveryList", "ItemDelivery", new {area = "Inventory",id=0})">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">List </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+
+
+
+
+
+
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

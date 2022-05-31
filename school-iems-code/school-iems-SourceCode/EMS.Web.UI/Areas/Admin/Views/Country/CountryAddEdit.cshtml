@@ -1,0 +1,149 @@
+﻿<!--File:General_Country Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Country";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CountryId = (string)id == null ? "0" : (string)id;
+
+    //General_Country WebApi Single Row link
+    var getCountryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryById", area = "Admin" });
+    var getCountryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryDataExtra", area = "Admin" });
+    var saveCountryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "SaveCountry", area = "Admin" });
+    var deleteCountryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetDeleteCountryById", area = "Admin" });
+
+    //General_Country WebApi List link
+    var getPagedCountryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetPagedCountry", area = "Admin" });
+    var getAllCountryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetAllCountry", area = "Admin" });
+    var saveCountryListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "SaveCountryList", area = "Admin" });
+    var getCountryListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryListDataExtra", area = "Admin" });
+
+    var editCountryByIdPageUrl = Url.Action("CountryAddEdit", "Country", new { area = "Admin" });
+    var listCountryPageUrl = Url.Action("CountryList", "Country", new { area = "Admin" });
+
+    //General_Country Angular Functions
+    string getCountryById = "getCountryById";
+    var saveCountry = "saveCountry";
+    var getNewCountry = "getNewCountry";
+    var refreshPage = "loadPage()";
+    string deleteCountryById = "deleteCountryById";
+    string loadCountryExtraData = "loadCountryExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Country/CountryAddEdit.js"></script>
+}
+
+<div id="CountryAddEdit" class="row" ng-controller="CountryAddEditCtrl" ng-init="Init(
+      '@CountryId'
+      ,'@getCountryByIdUrl'
+      ,'@getCountryDataExtraUrl'
+      ,'@saveCountryUrl'
+      ,'@deleteCountryByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="Country.@General_Country.Property_Name!=''">{{(Country.@General_Country.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="CountryId" ng-Enter="@(getCountryById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewCountry)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listCountryPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Country.@General_Country.Property_Name" class="form-control" placeholder="Enter Name" maxlength="50" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Nationality </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Country.@General_Country.Property_Nationality" class="form-control" placeholder="Enter Nationality" maxlength="50" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Nationality." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Calling Code </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Country.@General_Country.Property_CallingCode" class="form-control" placeholder="Enter Calling Code" maxlength="10" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Calling Code." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Time Zone </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Country.@General_Country.Property_TimeZone" class="form-control" placeholder="Enter Time Zone" maxlength="10" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Time Zone." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Order No </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="Country.@General_Country.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Active </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Country.@General_Country.Property_IsActive" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Active if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Deleted </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Country.@General_Country.Property_IsDeleted" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(saveCountry)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

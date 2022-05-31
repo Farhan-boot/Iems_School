@@ -1,0 +1,1047 @@
+﻿@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Grade Report by Level Term";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div class="margin5">
+        <fieldset>
+            <legend>
+                Semester Grade Report
+
+                <a href="/Common/GradeReport/PrintGradeReportBySemester" class="btn btn-danger btn-xs pull-right">Print</a>
+            </legend>
+
+            <div class="grade-report">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>Student ID</td>
+                            <td>:</td>
+                            <td>10-16377-1</td>
+                            <td>Core</td>
+                            <td>:</td>
+                            <td>BScCSE, Fall 2010-2011 Core</td>
+                        </tr>
+                        <tr>
+
+                            <td>Student Name</td>
+                            <td>:</td>
+                            <td>@HttpUtil.Profile.Name.ToUpper()</td>
+                            <td>Major</td>
+                            <td>:</td>
+                            <td>- </td>
+                        </tr>
+                        <tr>
+
+                            <td>Credit(s) Completed</td>
+                            <td>:</td>
+                            <td>148</td>
+                            <td>Second Major</td>
+                            <td>:</td>
+                            <td>- </td>
+                        </tr>
+                        <tr>
+
+                            <td>Course(s) Completed</td>
+                            <td>:</td>
+                            <td>56</td>
+                            <td>Minor</td>
+                            <td>:</td>
+                            <td>- </td>
+                        </tr>
+                        <tr>
+
+                            <td>Cgpa</td>
+                            <td>:</td>
+                            <td>3.94</td>
+                            <td>Elective</td>
+                            <td>:</td>
+                            <td>BScCSE, Fall 2010-2011 Elective </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>Class ID</td>
+                            <td>Description</td>
+                            <td>Credits</td>
+                            <td>MTG</td>
+                            <td>FTG</td>
+                            <td>FG</td>
+                            <td>TGP</td>
+                            <td>ECR</td>
+                            <td>GPA</td>
+                            <td>CGPA</td>
+                            <td>STS</td>
+                            <td>PRN</td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2009-2010, Level-1 Term-I</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>01317</td>
+                            <td>ENGLISH READING SKILLS &amp; PUBLIC SPEAKING</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01363</td>
+                            <td>COMPUTER FUNDAMENTALS</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01395</td>
+                            <td>DIFF CALCULUS AND COORDINATE GEOMETRY</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01407</td>
+                            <td>PHYSICS 1</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01419</td>
+                            <td>PHYSICS 1 LAB</td>
+                            <td>1.00</td>
+                            <td>A-</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>43.25</td>
+                            <td>13.00</td>
+                            <td>3.33</td>
+                            <td>3.33</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2009-2010, Level-1 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00537</td>
+                            <td>PROGRAMMING LANGUAGE 1</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00562</td>
+                            <td>INTEGRAL CALCULUS &amp; ORD. DIFF EQUATION</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>5.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00615</td>
+                            <td>PHYSICS 2</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>6.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00646</td>
+                            <td>PHYSICS 2 LAB</td>
+                            <td>1.00</td>
+                            <td>A-</td>
+                            <td>A-</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01454</td>
+                            <td>ENGLISH WRITING SKILLS &amp; COMMUNICATIONS</td>
+                            <td>3.00</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>38.00</td>
+                            <td>13.00</td>
+                            <td>2.92</td>
+                            <td>3.13</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2010-2011, Level-2 Term-I</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00334</td>
+                            <td>PRINCIPLES OF ACCOUNTING</td>
+                            <td>(3.00)</td>
+                            <td>A+</td>
+                            <td>F</td>
+                            <td>A+</td>
+                            <td>0.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>RT</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00636</td>
+                            <td>DISCRETE MATHEMATICS</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00642</td>
+                            <td>PROGRAMMING LANGUAGE 2</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>B</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00894</td>
+                            <td>DIGITAL LOGIC DESIGN</td>
+                            <td>3.00</td>
+                            <td>B</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>10.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01139</td>
+                            <td>DIGITAL LOGIC DESIGN LAB</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01265</td>
+                            <td>ENGINEERING DRAWING 1</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>3.75</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>39.25</td>
+                            <td>11.00</td>
+                            <td>3.57</td>
+                            <td>3.26</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2010-2011, Level-2 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00108</td>
+                            <td>ELECTRICAL CIRCUITS -1 (DC)</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00438</td>
+                            <td>BUSINESS COMMUNICATION</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00724</td>
+                            <td>ELECTRICAL CIRCUITS -1  LAB (DC)</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>3.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01127</td>
+                            <td>MATRICES, VECTORS, FOURIER ANALYSIS</td>
+                            <td>3.00</td>
+                            <td>C</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>5.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01230</td>
+                            <td>DATA COMMUNICATION</td>
+                            <td>3.00</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01231</td>
+                            <td>DATA STRUCTURE</td>
+                            <td>3.00</td>
+                            <td>A</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>54.25</td>
+                            <td>16.00</td>
+                            <td>3.39</td>
+                            <td>3.30</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2010-2011, Level-2 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00108</td>
+                            <td>MATHEMATICAL METHODS OF ENGINEERING</td>
+                            <td>3.00</td>
+                            <td>C</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>6.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01363</td>
+                            <td>ALGORITHMS</td>
+                            <td>3.00</td>
+                            <td>A-</td>
+                            <td>B</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01364</td>
+                            <td>COMPUTER ORGANIZATION AND ARCHITECTURE</td>
+                            <td>3.00</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>27.00</td>
+                            <td>9.00</td>
+                            <td>3.00</td>
+                            <td>3.25</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2011-2012, Fall</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00031</td>
+                            <td>INTRODUCTION TO DATABASE</td>
+                            <td>3.00</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00790</td>
+                            <td>PRINCIPLES OF ECONOMICS</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>10.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00838</td>
+                            <td>PRINCIPLES OF ACCOUNTING</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01501</td>
+                            <td>THEORY OF COMPUTATION</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>10.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01506</td>
+                            <td>OBJECT ORIENTED PROGRAMMING 1 (JAVA)</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>B</td>
+                            <td>9.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>512.00</td>
+                            <td>15.00</td>
+                            <td>3.60</td>
+                            <td>3.32</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2011-2012, Level-3 Term-I</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00020</td>
+                            <td>ADVANCED COMPUTER NETWORKS</td>
+                            <td>3.00</td>
+                            <td>A-</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00050</td>
+                            <td>OBJECT ORIENTED PROGRAMMING 2 </td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00053</td>
+                            <td>OBJECT ORIENTED ANALYSIS AND DESIGN</td>
+                            <td>3.00</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00304</td>
+                            <td>ELECTRICAL CIRCUITS 2 (AC)</td>
+                            <td>3.00</td>
+                            <td>B</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>7.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00372</td>
+                            <td>MICROPROCESSOR &amp; I/O SYSTEM</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>6.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00535</td>
+                            <td>ELECTRICAL CIRCUITS-2 (AC) LAB</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>3.75</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00627</td>
+                            <td>MICROPROCESSOR &amp; I/O SYSTEM LAB [0-0-0]</td>
+                            <td>0.00</td>
+                            <td>A-</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>0.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>N</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>51.75</td>
+                            <td>16.00</td>
+                            <td>3.23</td>
+                            <td>3.31</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2011-2012, Level-3 Term-I</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00045</td>
+                            <td>SOFTWARE ENGINEERING</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>C</td>
+                            <td>6.75</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00147</td>
+                            <td>STATISTICS AND PROBABILITY</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00232</td>
+                            <td>DIGITAL ELECTRONICS</td>
+                            <td>3.00</td>
+                            <td>C</td>
+                            <td>A</td>
+                            <td>A-</td>
+                            <td>10.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00310</td>
+                            <td>ELECTRONIC DEVICES</td>
+                            <td>3.00</td>
+                            <td>C</td>
+                            <td>C</td>
+                            <td>C</td>
+                            <td>6.75</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00424</td>
+                            <td>DIGITAL ELECTRONICS LAB</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>B</td>
+                            <td>3.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00521</td>
+                            <td>ELECTRONIC DEVICES LAB</td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>40.75</td>
+                            <td>112.00</td>
+                            <td>2.91</td>
+                            <td>3.25</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2012-2013, Level-3 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00017</td>
+                            <td>ADVANCED TOPICS IN PROGRAMMING II</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00026</td>
+                            <td>EMBEDDED PROGRAMMING</td>
+                            <td>3.00</td>
+                            <td>A</td>
+                            <td>A-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00053</td>
+                            <td>OPERATING SYSTEM</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00082</td>
+                            <td>WEB TECHNOLOGIES</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00405</td>
+                            <td>TELECOMMUNICATIONS ENGINEERING </td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>-</td>
+                            <td>B</td>
+                            <td>9.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00602</td>
+                            <td>TELECOMMUNICATIONS ENGINEERING LAB </td>
+                            <td>1.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>512.00</td>
+                            <td>16.00</td>
+                            <td>3.73</td>
+                            <td>3.32</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2012-2013, Level-4 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00002</td>
+                            <td>ADVANCE DATABASE MANAGEMENT SYSTEM</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>-</td>
+                            <td>A</td>
+                            <td>11.25</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00009</td>
+                            <td>ARTIFICIAL INTELLIGENCE AND EXPERT SYSTEM</td>
+                            <td>3.00</td>
+                            <td>C</td>
+                            <td>A-</td>
+                            <td>B</td>
+                            <td>9.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00011</td>
+                            <td>COMPILER DESIGN</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00092</td>
+                            <td>COMPUTER GRAPHICS</td>
+                            <td>3.00</td>
+                            <td>A-</td>
+                            <td>B</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00610</td>
+                            <td>ELECTRONICS SHOP</td>
+                            <td>1.00</td>
+                            <td>A</td>
+                            <td>A+</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>00885</td>
+                            <td>ENGINEERING MANAGEMENT</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>7.50</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>55.25</td>
+                            <td>16.00</td>
+                            <td>3.45</td>
+                            <td>3.33</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <label>*** 2012-2013, Level-4 Term-II</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>00088</td>
+                            <td>RESEARCH METHODOLOGY</td>
+                            <td>3.00</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01448</td>
+                            <td>INTERNSHIP</td>
+                            <td>3.00</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td>01603</td>
+                            <td>PROJECT &amp; THESIS </td>
+                            <td>3.00</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>A+</td>
+                            <td>12.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>VAL</td>
+                            <td>Y</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td>36.00</td>
+                            <td>9.00</td>
+                            <td>12.00</td>
+                            <td>3.37</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

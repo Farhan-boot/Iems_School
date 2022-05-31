@@ -1,0 +1,152 @@
+﻿<!--File:Aca_GradingPolicyOption Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Exam Section: Add/Edit Grading Policy Option";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var GradingPolicyOptionId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getGradingPolicyOptionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionById", area = "Academic" });
+    var getGradingPolicyOptionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionDataExtra", area = "Academic" });
+    var saveGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "SaveGradingPolicyOption", area = "Academic" });
+    var deleteGradingPolicyOptionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetDeleteGradingPolicyOptionById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetPagedGradingPolicyOption", area = "Academic" });
+    var getAllGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetAllGradingPolicyOption", area = "Academic" });
+    var saveGradingPolicyOptionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "SaveGradingPolicyOptionList", area = "Academic" });
+    var getGradingPolicyOptionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionListDataExtra", area = "Academic" });
+
+    var editGradingPolicyOptionByIdPageUrl = Url.Action("GradingPolicyOptionAddEdit", "GradingPolicyManager", new { area = "Academic" });
+    var listGradingPolicyOptionPageUrl = Url.Action("GradingPolicyOptionList", "GradingPolicyManager", new { area = "Academic" });
+
+    // Angular Functions
+    string getGradingPolicyOptionById = "getGradingPolicyOptionById";
+    var saveGradingPolicyOption = "saveGradingPolicyOption";
+    var getNewGradingPolicyOption = "getNewGradingPolicyOption";
+    var refreshPage = "loadPage()";
+    string deleteGradingPolicyOptionById = "deleteGradingPolicyOptionById";
+    string loadGradingPolicyOptionExtraData = "loadGradingPolicyOptionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/GradingPolicyManager/GradingPolicyOptionAddEdit.js"></script>
+}
+
+<div id="GradingPolicyOptionAddEdit" class="row" ng-controller="GradingPolicyOptionAddEditCtrl" ng-init="Init(
+      '@GradingPolicyOptionId'
+      ,'@getGradingPolicyOptionByIdUrl'
+      ,'@getGradingPolicyOptionDataExtraUrl'
+      ,'@saveGradingPolicyOptionUrl'
+      ,'@deleteGradingPolicyOptionByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">Add/Edit</span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="GradingPolicyOptionId" ng-Enter="@(getGradingPolicyOptionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewGradingPolicyOption)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listGradingPolicyOptionPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <!--text type-->
+                    @*<div class="col-sm-6 form-group">
+                            <label class="control-label">Id </label>
+                            <input type="number" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_Id" class="form-control" placeholder="Enter Id" readonly/>
+                        </div>*@
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Grading Policy </label>
+                        <select ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_GradingPolicyId"
+                                ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Grade <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <input type="text" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_Grade" class="form-control" placeholder="Enter Grade" maxlength="50" required="" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Grade Point </label>
+                        <input type="number" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_GradePoint" class="form-control" placeholder="Enter Grade Point" />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label">Description </label>
+                        <input type="text" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_Description" class="form-control" placeholder="Enter Description" maxlength="256" />
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label"> Limit Operator  </label>
+                        <select ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_LimitOperatorEnumId" ng-options="option.Id as option.Name for option in LimitOperatorEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-4  no-padding-left no-padding-right">
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label">Score Start Limit(%)</label>
+                            <input type="number" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_ScoreStartLimit" class="form-control" placeholder="Enter Score Start Limit" />
+                        </div>
+
+                        <div class="col-sm-6 form-group"
+                             ng-show="GradingPolicyOption.@Aca_GradingPolicyOption.Property_LimitOperatorEnumId==@((int)Aca_GradingPolicyOption.LimitOperatorEnum.Between)">
+                            <label class="control-label">Score End Limit(%)</label>
+                            <input type="number" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_ScoreEndLimit" class="form-control" placeholder="Enter Score End Limit" />
+                        </div>
+                    </div>
+                    
+                    <!--dropdown option for EnumList-->
+                    <div class="col-sm-6 ">
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Count Credit </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsCountCredit" class="form-control" placeholder="Enter Is Count Credit"/>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Count G P A </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsCountGPA" class="form-control" placeholder="Enter Is Count G P A"/>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Display Score </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsDisplayScore" class="form-control" placeholder="Enter Is Display Score" />
+                        </div>
+
+                    </div>
+                    <div class="col-sm-6 ">
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Incomplete </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsIncomplete" class="form-control" placeholder="Enter Is Incomplete"/>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Withdrawn </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsWithdrawn" class="form-control" placeholder="Enter Is Withdrawn" />
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="control-label">Is Continuation </label>
+                            <input type="checkbox" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_IsContinuation" class="form-control" placeholder="Enter Is Continuation" />
+                        </div>
+                    </div>
+                 
+
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Sequence No </label>
+                        <input type="number" ng-model="GradingPolicyOption.@Aca_GradingPolicyOption.Property_SerNo" class="form-control" placeholder="Enter Ser No" />
+                    </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(saveGradingPolicyOption)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

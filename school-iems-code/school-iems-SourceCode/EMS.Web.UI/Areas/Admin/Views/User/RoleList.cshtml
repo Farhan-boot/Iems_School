@@ -1,0 +1,235 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Objects;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "List of Use Role";
+    var roleResult = (MvcModelListResult<UAC_Role>)ViewBag.RoleResult;
+    var index = 1;
+
+    var pageNo = 0; Int32.TryParse(Request.Params["pageNo"], out pageNo);
+    var pageSize = 0; Int32.TryParse(Request.Params["pageSize"], out pageSize);
+    var searchKey = Request.Params["searchkey"] ?? string.Empty;
+
+    pageSize = pageSize == 0 ? 50 : pageSize;
+    pageNo = pageNo == 0 ? 1 : pageNo;
+
+    var paging = roleResult.Count / pageSize;
+    if (roleResult.Count % pageSize != 0 || roleResult.Count == 0)
+    {
+        paging += 1;
+    }
+
+    int[] pageSizes = { 50, 100, 200, 400, 800 };
+
+    var successMessage = ViewBag.SuccessMessage ?? string.Empty;
+    var errorMessage = ViewBag.ErrorMessage ?? string.Empty;
+}
+
+@if (EMS.CoreLibrary.Helpers.ValidationHelper.IsValid(successMessage))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+         @successMessage
+    </div>
+}
+else if (EMS.CoreLibrary.Helpers.ValidationHelper.IsValid(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+         @errorMessage
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-3 form-group">
+        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+        {
+            <a href="@Url.Action("RoleUpdate","User",new{area="Admin",id="-1"})" class="btn btn-sm btn-success">
+                <i class="glyphicon glyphicon-plus-sign"></i>&nbsp;New
+            </a>
+        }
+        <a href="@Url.Action("RoleList","User",new{area="Admin",searchkey="",pageNo=1,pageSize=50})" class="btn btn-sm btn-info">
+            <i class="glyphicon glyphicon-refresh"></i>&nbsp;Refresh
+        </a>
+    </div>
+
+    <div class="col-md-5 form-group">
+        <div class="input-group">
+            <input type="text" class="form-control input-sm" value="@searchKey" id="searchKey" placeholder="Search for..." />
+            <span  class="input-group-btn"><input type="button" class="btn btn-sm btn-primary" value="Search" onclick=" ChangeUrl() " /></span>
+        </div>
+    </div>
+    <div class="col-md-3" align="right">
+        <table>
+            <tr>
+                <td>
+                    <a type="button" class="btn btn-sm btn-default" onclick="PreviousPage()" title="Previous"><span  class="glyphicon glyphicon-chevron-left"></span></a>
+                </td>
+                <td>
+                    <select id="ddlPages" class="form-control input-sm" onchange="ChangeUrl()">
+                        @for (var i = 1; i <= paging; i++)
+                        {
+                            if (i == pageNo)
+                            {
+                                <option selected="selected" value="@i">@i</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <a onclick="NextPage()" class="btn btn-sm btn-default" title="Previous"><span  class="glyphicon glyphicon-chevron-right"></span></a>
+                </td>
+                <td>
+                    <select id="ddlPagesizes" class="form-control input-sm" onchange="ChangeUrl()">
+                        @foreach (int size in pageSizes)
+                        {
+                            if (size == pageSize)
+                            {
+                                <option selected="selected" value="@size">@size</option>
+                            }
+                            else
+                            {
+                                <option value="@size">@size</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 10px">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">Role No</th>
+                    <th class="text-center">Name</th>
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit)
+                || PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanDelete))
+                    {
+                        <th class="text-center">Action</th>
+                    }
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var uc in roleResult.Data)
+                {
+                    <tr>
+                        <td class="text-center">@uc.Id</td>
+                        <td>@uc.Name</td>
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit)
+            || PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanDelete))
+                        {
+                            <td class="text-center">
+                                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+                                {
+                                    <a href="@Url.Action("RoleUpdate", "User", new {area = "Admin", id = uc.Id})" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-edit"></i>&nbsp;Edit
+                                    </a>
+                                }
+                                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanView))
+                                {
+                                    <a href="@Url.Action("RoleUser", "User", new {area = "Admin", id = uc.Id})" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-users"></i>&nbsp;Users in role
+                                    </a>
+                                }
+                                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanDelete))
+                                {
+                                    <a href="#" onclick="showModal('@uc.Id') " class="btn btn-danger btn-xs">
+                                        <i class="fa fa-trash"></i>&nbsp;Delete
+                                    </a>
+                                }
+                            </td>
+                        }
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span  aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are You Sure?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="Conirm()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var selectedID = -1;
+    function ChangeUrl() {
+
+        var pageNo = document.getElementById("ddlPages").value;
+        var pageSize = document.getElementById("ddlPagesizes").value;
+        var searchKey = document.getElementById("searchKey").value;
+
+        var url = '@Url.Action("RoleList","User",new{area="Admin"})' + "?searchkey=" + searchKey + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+
+        window.location.replace(url);
+    }
+
+    function NextPage() {
+        var pageNo = parseInt('@pageNo');
+        var paging = parseInt('@paging');
+        var searchKey = document.getElementById("searchKey").value;
+        pageNo++;
+        if (pageNo <= paging) {
+            var pageSize = document.getElementById("ddlPagesizes").value;
+
+            var url = '@Url.Action("RoleList","User",new{area="Admin"})' + "?searchkey=" + searchKey + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+
+            window.location.replace(url);
+        }
+    }
+
+    function PreviousPage() {
+        var pageNo = parseInt('@pageNo');
+        var searchKey = document.getElementById("searchKey").value;
+        pageNo--;
+        if (pageNo >= 1) {
+            var pageSize = document.getElementById("ddlPagesizes").value;
+
+            var url = '@Url.Action("RoleList","User",new{area="Admin"})' + "?searchkey=" + searchKey + "&pageNo=" + pageNo + "&pageSize=" + pageSize;
+
+            window.location.replace(url);
+        }
+    }
+
+    function showModal(id) {
+        selectedID = id;
+        $('#myModal').modal('show');
+    }
+
+    function Conirm() {
+        $('#myModal').modal('hide');
+
+        var pageNo = document.getElementById("ddlPages").value;
+        var pageSize = document.getElementById("ddlPagesizes").value;
+        var searchKey = document.getElementById("searchKey").value;
+
+        var url = '@Url.Action("RoleDelete","User",new{area="Admin"})' + "?id=" + selectedID + "&searchkey=" + searchKey + "&pageNo=" + pageNo + "&pageSize=" + pageSize;;
+        window.location.replace(url);
+    }
+
+</script>

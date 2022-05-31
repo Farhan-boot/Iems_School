@@ -1,0 +1,109 @@
+﻿@using EMS.Framework.Utils
+@model EMS.Web.UI.Areas.Employee.Models.ClassAttendanceViewModel
+
+@{
+    ViewBag.Title = "Print All Attendance";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    var classId = (string)id == null ? "0" : (string)id;
+    var index = 0;
+    var lectureNo = 0;
+}
+
+@section HeadSection
+{
+    <style>
+        html {
+            overflow: auto!important;
+        }
+    </style>
+}
+@if (Model.ClassAttendanceSettingList == null || Model.ClassAttendanceSettingList.Count<=0)
+{
+    <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <i class="fa-fw fa fa-times"></i>
+        <strong>Not Found!</strong> There is no class attendance in this Course. Or you don't have sufficient permission.
+    </div>
+}
+else
+{
+@section ScriptSection
+{
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+ <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky no-print">
+            <i class="widget-icon fa fa-print bold  "></i>
+            <span  class="widget-caption "><b>Print Student's Class Attendance </b></span>
+            <div class="widget-buttons no-padding-left">
+                <button onclick="window.print()" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</button>
+              
+            </div>
+            <div class="widget-buttons">
+                <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId=@classId#ClassAttendance" target="_blank" class="btn btn-xs btn-blue"><i class="fa fa-backward"></i>Back to Attendance List</a>
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Marks
+                        <span  class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentAttendance', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentAttendance', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentAttendance', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <div class="tabbable">
+                <ul class="nav nav-tabs no-print" id="myTab">
+                    <li class="active tab-green">
+                        <a data-toggle="tab" href="#ByMe" aria-expanded="true">
+                           Taken by Me
+                        </a>
+                    </li>
+                    <li class="tab-red">
+                        <a data-toggle="tab" href="#All" aria-expanded="true">
+                            All
+                        </a>
+                    </li>
+                    <li class="tab-red">
+                        <a data-toggle="tab" href="#NonCollegiate" aria-expanded="false">
+                            Non-Collegiate
+                        </a>
+                    </li>
+                    <li class="tab-red">
+                        <a data-toggle="tab" href="#DisCollegiate" aria-expanded="false">
+                            Dis-Collegiate
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="ByMe" class="tab-pane active">
+                        @Html.Partial("~/Areas/Employee/Views/ClassAttendanceManager/_PartialPrintAttendanceByFaculty.cshtml", Model)
+                    </div>
+                    <div id="All" class="tab-pane ">
+                        @Html.Partial("~/Areas/Employee/Views/ClassAttendanceManager/_PartialPrintAllAttendance.cshtml", Model)
+                    </div>
+                    <div id="NonCollegiate" class="tab-pane">
+                        @Html.Partial("~/Areas/Employee/Views/ClassAttendanceManager/_PartialPrintNonCollegiateAttendance.cshtml", Model)
+                    </div>
+                    <div id="DisCollegiate" class="tab-pane">
+                        @Html.Partial("~/Areas/Employee/Views/ClassAttendanceManager/_PartialPrintDisCollegiateAttendance.cshtml", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<style>
+    html{overflow: auto;}
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 2px !important;
+        border: 1px solid #000;
+    }
+</style>

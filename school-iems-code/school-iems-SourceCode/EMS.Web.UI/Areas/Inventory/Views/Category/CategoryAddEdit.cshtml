@@ -1,0 +1,122 @@
+﻿
+<!--File:Invt_Category Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Category";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CategoryId = (string) id == null?"0":(string)id;
+
+    //Invt_Category WebApi Single Row link   
+    var getCategoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "GetCategoryById", area = "Inventory" });
+    var getCategoryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "GetCategoryDataExtra", area = "Inventory" });
+    var saveCategoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "SaveCategory", area = "Admin" });
+    var deleteCategoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "GetDeleteCategoryById", area = "Inventory" });
+
+    //Invt_Category WebApi List link 
+    var getPagedCategoryUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "CategoryApi", action = "GetPagedCategory", area = "Inventory" });
+    var getAllCategoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "GetAllCategory", area = "Inventory" });
+    var saveCategoryListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "SaveCategoryList", area = "Inventory" });
+    var getCategoryListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CategoryApi", action = "GetCategoryListDataExtra", area = "Inventory" });
+
+    var editCategoryByIdPageUrl = Url.Action("CategoryAddEdit", "Category", new { area = "Inventory" });
+    var listCategoryPageUrl = Url.Action("CategoryList", "Category", new { area = "Inventory" });
+
+    //Invt_Category Angular Functions
+    string getCategoryById="getCategoryById";
+    var saveCategory = "saveCategory";
+    var getNewCategory = "getNewCategory";
+    var refreshPage = "loadPage()";
+    string deleteCategoryById="deleteCategoryById";
+    string loadCategoryExtraData="loadCategoryExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/Category/CategoryAddEdit.js"></script>
+}
+
+<div id="CategoryAddEdit" class="row" ng-controller="CategoryAddEditCtrl" ng-init="Init(
+      '@CategoryId'
+      ,'@getCategoryByIdUrl'
+      ,'@getCategoryDataExtraUrl'
+      ,'@saveCategoryUrl'
+      ,'@deleteCategoryByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Category.@Invt_Category.Property_Name!=''">{{(Category.@Invt_Category.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="CategoryId" ng-Enter="@(getCategoryById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewCategory)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listCategoryPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Category.@Invt_Category.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Description </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Category.@Invt_Category.Property_Description" class="form-control" placeholder="Enter Description"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Category.@Invt_Category.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveCategory)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

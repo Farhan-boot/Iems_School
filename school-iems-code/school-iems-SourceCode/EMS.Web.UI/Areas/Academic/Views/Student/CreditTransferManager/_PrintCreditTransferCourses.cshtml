@@ -1,0 +1,190 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@{
+
+    var sid = Request.QueryString["sid"];//ViewContext.RouteData.Values["id"];
+    var studentId = (string)sid == null ? "0" : (string)sid;
+
+
+    //WebApi link for List
+    var getPrintCreditTransferCoursesUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CreditTransferManagerApi", action = "GetPrintCreditTransferCourses", area = "Academic" });
+
+}
+<div ng-controller="PrintCreditTransferCoursesCtrl"
+     ng-init="Init(
+     '@studentId',
+     '@getPrintCreditTransferCoursesUrl'
+     )" class="border-black main-body">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div ng-hide="HasError">
+        <button href="" class="btn btn-danger btn-xs pull-right" onclick="window.print();return false;">
+            <i class="fa fa-print"></i> Print
+        </button>
+        <div class="">
+            <table class="table no-bordered crTransfer">
+                <tbody>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <h2 class="text-center" style="text-decoration: underline; font-size: 22px; margin-bottom: 4px;">
+                            Transferee Student's Accepted Courses & Credits
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right text-bold" style="width: 155px;">Student’s Name: </td>
+                    <td class="text-bold">
+                        {{CreditTransferSummary.StudentName}}
+                    </td>
+
+                    <td class="text-right text-bold">Student’s ID: </td>
+                    <td class="text-bold">
+                        {{CreditTransferSummary.StdUserName}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">Department: </td>
+                    <td>
+                        {{CreditTransferSummary.DepartmentName}}
+                    </td>
+                    <td class="text-right">Program: </td>
+                    <td>
+                        {{CreditTransferSummary.ProgramName}}
+                    </td>
+                </tr>
+
+                
+                    <tr>
+                        <td class="text-right">Total Accepted Credit: </td>
+                        <td>
+                            {{CreditTransferSummary.TotalAcceptedCredit}}
+                        </td>
+                        <td class="text-right">Accepted CGPA: </td>
+                        <td>
+                            {{CreditTransferSummary.CGPAAccepted}}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div ng-repeat="crTransfer in CreditTransferJsonList" style="margin: 20px 0px;">
+                <table class="report-table crTransfer table-bordered table-border">
+                    <thead>
+                    <tr>
+                        <td colspan="3" style="text-align: left">
+                            <span class="text-bold" style="padding-left: 5px;">Former University Name: </span>{{crTransfer.PreviousUniversity}}
+                        </td>
+                        <td class="text-bold" colspan="2" style="text-align: right">
+                            Total Credit :
+                        </td>
+                        <td style="padding-left: 5px;">{{crTransfer.TotalCredit}}</td>
+                       
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: left">
+                            <span class="text-bold" style="padding-left: 5px;">Former Program Name: </span> {{crTransfer.FormerProgramName}}
+                        </td>
+                        
+                        <td class="text-bold" colspan="2" style="text-align: right">
+                            CGPA:
+                        </td>
+                        <td style="padding-left: 5px;">{{crTransfer.CGPAAccepted}}</td>
+
+                    </tr>
+                    <tr style="border: 1px solid lightgray;">
+                        <td class="text-center text-bold">SN</td>
+                        <td class="text-center text-bold">Former Code</td>
+                        <td class="text-center text-bold">Mapped Course</td>
+                        <td class="text-center text-bold">Credit</td>
+                        <td class="text-center text-bold">Grade</td>
+                        <td class="text-center text-bold">Grade Point</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="crTransCourse in crTransfer.CreditTransferCourseJsonList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{crTransCourse.FormerCourseCode}}</td>
+                        <td style="padding-left: 5px;">{{crTransCourse.MappedCourse}}</td>
+                        <td class="text-center">{{crTransCourse.AcceptedCredit}}</td>
+                        <td class="text-center">{{crTransCourse.AcceptedGrade}}</td>
+                        <td class="text-center">{{crTransCourse.AcceptedGradePoint}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .main-body {
+        width: 9.29in;
+        margin: 0 auto;
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .no-bordered, .no-bordered th, .no-bordered tr {
+        border: none !important;
+    }
+
+        .no-bordered td {
+            border: none !important;
+        }
+
+    .table-area-bordered table {
+        border: 1px solid lightgray !important;
+    }
+    /*table td, table th{
+        border: 1px solid gray !important;
+    }*/
+    .no-bordered th {
+        border-top: 1px solid lightgray !important;
+        border-bottom: 1px solid lightgray !important;
+    }
+
+        .no-bordered th:first-child {
+            border-left: 1px solid lightgray !important;
+        }
+
+        .no-bordered th:last-child {
+            border-right: 1px solid lightgray !important;
+        }
+
+    .GradingPolicy tr td {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        border: 1px solid lightgray !important;
+        text-align: center;
+    }
+
+    .show-on-print {
+        Display: none;
+    }
+
+
+    .course-table th, 
+    .course-table.table > tfoot > tr > th, 
+    .course-table.table > thead > tr > td, 
+    .course-table.table > tbody > tr > td, 
+    .course-table.table > tfoot > tr > td {
+        padding: 1.5px;
+    }
+    .crTransfer tr {
+        font-size: 13px !important;
+        line-height: 1.728571;
+        font-weight: normal;
+    }
+
+    @@media print {
+        .show-on-print {
+            Display: block !important;
+        }
+    }
+</style>

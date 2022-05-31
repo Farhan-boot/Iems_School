@@ -1,0 +1,160 @@
+﻿
+<!--File:HR_HolidaySettings Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Holiday Settings";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var HolidaySettingsId = (string) id == null?"0":(string)id;
+    
+    //HR_HolidaySettings WebApi Single Row link   
+    var getHolidaySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsById", area = "HR" });
+    var getHolidaySettingsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsDataExtra", area = "HR" });
+    var saveHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "SaveHolidaySettings", area = "HR" });
+    var deleteHolidaySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetDeleteHolidaySettingsById", area = "HR" });
+
+    //HR_HolidaySettings WebApi List link 
+    var getPagedHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "HolidaySettingsApi", action = "GetPagedHolidaySettings", area = "HR"});
+    var getAllHolidaySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetAllHolidaySettings", area = "HR" });
+    var saveHolidaySettingsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "SaveHolidaySettingsList", area = "HR" });
+    var getHolidaySettingsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HolidaySettingsApi", action = "GetHolidaySettingsListDataExtra", area = "HR" });
+
+    var editHolidaySettingsByIdPageUrl = Url.Action("HolidaySettingsAddEdit", "HolidaySettings", new { area = "HR" });
+    var listHolidaySettingsPageUrl = Url.Action("HolidaySettingsList", "HolidaySettings", new { area = "HR" });
+    
+    //HR_HolidaySettings Angular Functions
+    string getHolidaySettingsById="getHolidaySettingsById";
+    var saveHolidaySettings = "saveHolidaySettings";
+    var getNewHolidaySettings = "getNewHolidaySettings";
+    var refreshPage = "loadPage()";
+    string deleteHolidaySettingsById="deleteHolidaySettingsById";
+    string loadHolidaySettingsExtraData="loadHolidaySettingsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/HolidaySettings/HolidaySettingsAddEdit.js"></script>
+}
+
+<div id="HolidaySettingsAddEdit" class="row" ng-controller="HolidaySettingsAddEditCtrl" ng-init="Init(
+      '@HolidaySettingsId'
+      ,'@getHolidaySettingsByIdUrl'
+      ,'@getHolidaySettingsDataExtraUrl'
+      ,'@saveHolidaySettingsUrl'
+      ,'@deleteHolidaySettingsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="HolidaySettings.@HR_HolidaySettings.Property_Name!=''">{{(HolidaySettings.@HR_HolidaySettings.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="HolidaySettingsId" ng-Enter="@(getHolidaySettingsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewHolidaySettings)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listHolidaySettingsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="HolidaySettings.@HR_HolidaySettings.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Start Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="HolidaySettings.@HR_HolidaySettings.Property_StartDate" class="form-control" placeholder="Enter Start Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Start Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">End Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="HolidaySettings.@HR_HolidaySettings.Property_EndDate" class="form-control" placeholder="Enter End Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter End Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Working Day Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="HolidaySettings.@HR_HolidaySettings.Property_WorkingDayTypeEnumId" ng-options="option.Id as option.Name for option in WorkingDayTypeEnumList" title="Select Working Day Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Working Day Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Half Day </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="HolidaySettings.@HR_HolidaySettings.Property_IsHalfDay"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Half Day if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="HolidaySettings.@HR_HolidaySettings.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Calendar Year </td>
+                            <td class="fieldarea">
+                                <select ng-model="HolidaySettings.@HR_HolidaySettings.Property_CalendarYearId"
+                                        ng-options="option.Id as option.Name for option in CalendarYearList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Calendar Year." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveHolidaySettings)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

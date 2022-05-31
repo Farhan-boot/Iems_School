@@ -1,0 +1,77 @@
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Download Official Forms";
+}
+
+@if (HttpUtil.Profile.UserId == 24262)
+{
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>@SiteSettings.Instance.InstituteShortName Assignment Cover Form (.doc)</h4>
+                    <p>Download @SiteSettings.Instance.InstituteShortName Assignment Cover (.doc) form.</p>
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>@SiteSettings.Instance.InstituteShortName Assignment Cover Form (.pdf)</h4>
+                    <p>Download @SiteSettings.Instance.InstituteShortName Assignment Cover (.pdf) form.</p>
+
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>Course Adjustment Form</h4>
+                    <p>Download Course Adjustment form.</p>
+
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>Application for Transfer Waive Courses Form</h4>
+                    <p>Download Application for Transfer Waive Courses form.</p>
+
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>Thesis Group List Form</h4>
+                    <p>Download Thesis Group List OSA form.</p>
+
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h4>Transfer Credit Request Form</h4>
+                    <p>Download Transfer Credit Request form.</p>
+
+                </div>
+                <p><a href="#" class="btn btn-primary" role="button"><i class="fa fa-download"></i> Download</a> </p>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Under Construction</h2>
+}

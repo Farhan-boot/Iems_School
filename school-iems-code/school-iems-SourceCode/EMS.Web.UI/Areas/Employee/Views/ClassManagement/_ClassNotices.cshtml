@@ -1,0 +1,148 @@
+﻿<!--File:Aca_ClassNotice List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+
+    // Angular Properties
+    //var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    //var classId = (string)id == null ? "0" : (string)id;
+    //id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    //var ClassNoticeId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getClassNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeById", area = "Academic" });
+    var getClassNoticeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeDataExtra", area = "Academic" });
+    var saveClassNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "SaveClassNotice", area = "Academic" });
+    var deleteClassNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetDeleteClassNoticeById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedClassNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetPagedClassNotice", area = "Academic" });
+    var getClassNoticeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassNoticeApi", action = "GetClassNoticeListDataExtra", area = "Academic" });
+    
+    //Angular Function Name
+    var getNewClassNotice = "getNewClassNotice";
+    var saveClassNotice = "saveClassNotice";
+    var deleteClassNoticeById = "deleteClassNoticeById";
+    var deleteClassNoticeByObj = "deleteClassNoticeByObj";
+    //for list
+    var searchClassNoticeList = "searchClassNoticeList";
+    var getPagedClassNoticeList = "getPagedClassNoticeList";
+    var getAllClassNoticeList = "getAllClassNoticeList";
+    var saveClassNoticeList = "saveClassNoticeList";
+    var getClassNoticeListExtraData = "getClassNoticeListExtraData";
+
+    var refreshPageClassNotice = "refreshClassNotice()";
+
+}
+
+<div>
+    <div class="widget-header">
+        <i class="widget-icon fa fa-list bold  "></i>
+        <span  class="widget-caption ">Manage Class Notice </span>
+        <div class="widget-buttons buttons-bordered no-padding-right">
+            <span  class="input-icon">
+                <input type="text" ng-model="SearchTextClassNotice" ng-Enter="@(searchClassNoticeList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                <i class="glyphicon glyphicon-search blue"></i>
+            </span>
+        </div>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="@(getNewClassNotice)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+        </div>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="@(refreshPageClassNotice)()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+        </div>
+    </div>
+    <div class="widget-body no-padding">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="alert alert-warning fade in radius-bordered alert-shadowed" ng-show="ClassNoticeList.length<=0">
+                    <i class="fa-fw fa fa-edit"></i>
+                    No Notice posted yet for student.
+                </div>
+                <div ng-show="ClassNoticeList!=null && ClassNoticeList.length>0">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                        <tr>
+                            <th class="text-center" style="">SN</th>
+                            <th class="text-center" style="">Date</th>
+                            <th class="text-center">Subject</th>
+                            <th class="text-center">Faculty Name</th>
+                            <th class="text-center no-print">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in ClassNoticeList" ng-click="editClassNotice($index)" ng-class="{ 'active': $index == selectedClassNoticeIndex }">
+                            <td class="text-center">{{ClassNoticeList.length-$index}}</td>
+                            <td class="">{{row.@Aca_ClassNotice.Property_PostDate | date:'medium'}}</td>
+                            <td class="">{{row.@Aca_ClassNotice.Property_Subject}}</td>
+                            <td class="">{{row.EmployeeName}}</td>
+                            <td class="text-center">
+                                <button ng-click="@(deleteClassNoticeById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer no-print">
+                        @OptionControlClassNotice()
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#ClassNoticeDetails">Notice Details</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="ClassNoticeDetails" class="tab-pane in active">
+                            <div class="row">
+                                <div class="col-sm-12 form-group">
+                                    <label class="control-label">Notice Subject <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="ClassNotice.@Aca_ClassNotice.Property_Subject" class="form-control" placeholder="Enter Notice Subject" maxlength="50" required="" />
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label class="control-label">Description <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <textarea ng-model="ClassNotice.@Aca_ClassNotice.Property_Description" class="form-control" placeholder="Enter Notice Description" required="required" rows="12"></textarea>
+                                </div>
+                            </div>
+                            <div class="footer text-center">
+                                <button ng-click="saveClassNotice()" class="btn btn-lg btn-success"><span  class="fa fa-save"></span> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControlClassNotice()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalClassNoticeServerItems==0">Showing {{totalClassNoticeServerItems*(PageNoClassNotice-1)+1}} to {{totalClassNoticeServerItems*PageNoClassNotice}} of {{totalClassNoticeItems}} </label>
+                    <label ng-show="totalClassNoticeServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSizeClassNotice" ng-enter="changePageSizeClassNotice()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNoClassNotice" ng-enter="changePageNoClassNotice()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalClassNoticeItems/PageSizeClassNotice| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prevClassNotice()" ng-hide="totalItems == 0 || PageNoClassNotice <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="nextClassNotice()" ng-hide="totalItems == 0 || PageNoClassNotice >= totalPageClassNotice" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,137 @@
+﻿
+<!--File:HR_Designation List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Designation List";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var DesignationId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getDesignationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationById", area = "HR" });
+    var getDesignationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationDataExtra", area = "HR" });
+    var saveDesignationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "SaveDesignation", area = "HR" });
+    var deleteDesignationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDeleteDesignationById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedDesignationUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "DesignationApi", action = "GetPagedDesignation", area = "HR"});
+    var getAllDesignationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetAllDesignation", area = "HR" });
+    var saveDesignationListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "SaveDesignationList", area = "HR" });
+    var getDesignationListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DesignationApi", action = "GetDesignationListDataExtra", area = "HR" });
+
+    var editDesignationByIdPageUrl = Url.Action("DesignationAddEdit", "Designation", new { area = "HR" });
+
+    //Angular Function Name
+    var getNewDesignation = "getNewDesignation";
+    var saveDesignation = "saveDesignation";
+    var deleteDesignationById = "deleteDesignationById";
+    var deleteDesignationByObj = "deleteDesignationByObj";
+    //for list
+    var searchDesignationList = "searchDesignationList";
+    var getPagedDesignationList = "getPagedDesignationList";
+    var getAllDesignationList = "getAllDesignationList";
+    var saveDesignationList = "saveDesignationList";
+    var loadDesignationListExtraData = "loadDesignationListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Designation/DesignationList.js"></script>
+}
+
+
+<div ng-controller="DesignationListCtrl"
+     ng-init="Init(
+      '@getPagedDesignationUrl'
+     ,'@deleteDesignationByIdUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Designation </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchDesignationList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editDesignationByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Local Name</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Priority</th>
+                    <th class="text-center">Job Class Id</th>
+                    <th class="text-center">Status Enum Id</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Is Academic</th>
+                    <th class="text-center" style="width: 150px;">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="row in DesignationList">
+                    <td>{{$index+1}}</td>
+                    <td class="">{{row.@HR_Designation.Property_Name}}</td>
+                    <td class="">{{row.@HR_Designation.Property_LocalName}}</td>
+                    <td class="">{{row.@HR_Designation.Property_Description}}</td>
+                    <td class="">{{row.@HR_Designation.Property_Priority}}</td>
+                    <td class="">{{row.@HR_Designation.Property_JobClassId}}</td>
+                    <td class="">{{row.@HR_Designation.Property_StatusEnumId}}</td>
+                    <td class="">{{row.@HR_Designation.Property_Status}}</td>
+                    <td class="">{{row.@HR_Designation.Property_IsAcademic}}</td>
+                    <td class="text-center">
+                        <button ng-click="@(deleteDesignationByObj)(row)" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i> Delete</button>
+                        <a target="_blank" href="@(editDesignationByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div style="" class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

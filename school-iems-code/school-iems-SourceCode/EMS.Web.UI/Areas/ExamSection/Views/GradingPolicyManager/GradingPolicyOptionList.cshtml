@@ -1,0 +1,182 @@
+﻿<!--File:Aca_GradingPolicyOption List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Exam Section: Grading Policy Option List";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var GradingPolicyOptionId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getGradingPolicyOptionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionById", area = "ExamSection" });
+    var getGradingPolicyOptionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionDataExtra", area = "ExamSection" });
+    var saveGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "SaveGradingPolicyOption", area = "ExamSection" });
+    var deleteGradingPolicyOptionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetDeleteGradingPolicyOptionById", area = "ExamSection" });
+
+    //WebApi link for List
+    var getPagedGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetPagedGradingPolicyOption", area = "ExamSection" });
+    var getAllGradingPolicyOptionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetAllGradingPolicyOption", area = "ExamSection" });
+    var saveGradingPolicyOptionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "SaveGradingPolicyOptionList", area = "ExamSection" });
+    var getGradingPolicyOptionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GradingPolicyOptionApi", action = "GetGradingPolicyOptionListDataExtra", area = "ExamSection" });
+
+    var editGradingPolicyOptionByIdPageUrl = Url.Action("GradingPolicyOptionAddEdit", "GradingPolicyManager", new { area = "ExamSection" });
+
+    //Angular Function Name
+    var getNewGradingPolicyOption = "getNewGradingPolicyOption";
+    var saveGradingPolicyOption = "saveGradingPolicyOption";
+    var deleteGradingPolicyOptionById = "deleteGradingPolicyOptionById";
+    var deleteGradingPolicyOptionByObj = "deleteGradingPolicyOptionByObj";
+    //for list
+    var searchGradingPolicyOptionList = "searchGradingPolicyOptionList";
+    var getPagedGradingPolicyOptionList = "getPagedGradingPolicyOptionList";
+    var getAllGradingPolicyOptionList = "getAllGradingPolicyOptionList";
+    var saveGradingPolicyOptionList = "saveGradingPolicyOptionList";
+    var getGradingPolicyOptionListExtraData = "getGradingPolicyOptionListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/GradingPolicyManager/GradingPolicyOptionList.js"></script>
+}
+
+
+<div ng-controller="GradingPolicyOptionListCtrl"
+     ng-init="Init(
+      '@getPagedGradingPolicyOptionUrl'
+     ,'@deleteGradingPolicyOptionByIdUrl'
+     ,'@getGradingPolicyOptionListDataExtraUrl'
+     ,'@saveGradingPolicyOptionListUrl'
+     ,'@getGradingPolicyOptionByIdUrl'
+     ,'@getGradingPolicyOptionDataExtraUrl'
+     ,'@saveGradingPolicyOptionUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Grading Policy Option </span>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:inline">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Grading Policy</span>*@
+                    <select ng-model="SelectedGradingPolicyId" ng-change="@(searchGradingPolicyOptionList)()"
+                            ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Grading Policy---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchGradingPolicyOptionList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editGradingPolicyOptionByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding" style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center" style="display:none">
+                            <input type="checkbox" ng-click="selectAll($event)">
+                        </th>
+                        <th class="text-center">SN</th>
+                        <th class="text-center">Grade</th>
+                        <th class="text-center">Grade Point</th>
+                        <th class="text-center">Limit Operator</th>
+                        <th class="text-center">Score Start Limit</th>
+                        <th class="text-center">Score End Limit</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Grading Policy Name</th>
+                        @*<th class="text-center">Limit Operator Enum Id</th>*@
+                        @*<th class="text-center">Ser No</th>
+                            <th class="text-center">Is Count Credit</th>
+                            <th class="text-center">Is Count G P A</th>
+                            <th class="text-center">Is Display Score</th>*@
+                        @*<th class="text-center">Is Incomplete</th>
+                            <th class="text-center">Is Withdrawn</th>
+                            <th class="text-center">Is Continuation</th>*@
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="row in GradingPolicyOptionList | orderBy:'@Aca_GradingPolicyOption.Property_SerNo'">
+                        <td class="text-center" style="display:none">
+                            <input type="checkbox" ng-model="row.@Aca_GradingPolicyOption.Property_IsSelected" />
+                        </td>
+                        <td class="text-center">{{row.@Aca_GradingPolicyOption.Property_SerNo}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_Grade}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_GradePoint}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_LimitOperator}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_ScoreStartLimit}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_ScoreEndLimit}}</td>
+                        <td class="">{{row.@Aca_GradingPolicyOption.Property_Description}}</td>
+                        <td class="">
+                            <select disabled="disabled" ng-model="row.@Aca_GradingPolicyOption.Property_GradingPolicyId" ng-change="@(searchGradingPolicyOptionList)()"
+                                    ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control input-xs ">
+                                <option value="" label="" class="">---Select All Grading Policy---</option>
+                            </select>
+
+                        </td>
+                        
+                        @*<td class="">{{row.@Aca_GradingPolicyOption.Property_LimitOperatorEnumId}}</td>*@
+
+                        @*
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsCountCredit}}</td>
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsCountGPA}}</td>
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsDisplayScore}}</td>
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsIncomplete}}</td>
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsWithdrawn}}</td>
+                            <td class="">{{row.@Aca_GradingPolicyOption.Property_IsContinuation}}</td>*@
+                        <td class="text-center">
+                            <a target="_blank" href="@(editGradingPolicyOptionByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                            <button ng-click="@(deleteGradingPolicyOptionByObj)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

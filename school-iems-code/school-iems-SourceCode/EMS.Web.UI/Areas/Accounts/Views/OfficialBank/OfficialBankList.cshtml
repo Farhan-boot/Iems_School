@@ -1,0 +1,163 @@
+﻿
+<!--File:Acnt_OfficialBank List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Official Bank List";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var OfficialBankId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getOfficialBankByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "GetOfficialBankById", area = "Accounts" });
+    var getOfficialBankDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "GetOfficialBankDataExtra", area = "Accounts" });
+    var saveOfficialBankUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "SaveOfficialBank", area = "Accounts" });
+    var deleteOfficialBankByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "GetDeleteOfficialBankById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedOfficialBankUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "OfficialBankApi", action = "GetPagedOfficialBank", area = "Accounts"});
+    var getAllOfficialBankUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "GetAllOfficialBank", area = "Accounts" });
+    var saveOfficialBankListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "SaveOfficialBankList", area = "Accounts" });
+    var getOfficialBankListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OfficialBankApi", action = "GetOfficialBankListDataExtra", area = "Accounts" });
+
+    var editOfficialBankByIdPageUrl = Url.Action("OfficialBankAddEdit", "OfficialBank", new { area = "Accounts" });
+
+    //Angular Function Name
+    var getNewOfficialBank = "getNewOfficialBank";
+    var saveOfficialBank = "saveOfficialBank";
+    var deleteOfficialBankById = "deleteOfficialBankById";
+    var deleteOfficialBankByObj = "deleteOfficialBankByObj";
+    //for list
+    var searchOfficialBankList = "searchOfficialBankList";
+    var getPagedOfficialBankList = "getPagedOfficialBankList";
+    var getAllOfficialBankList = "getAllOfficialBankList";
+    var saveOfficialBankList = "saveOfficialBankList";
+    var getOfficialBankListExtraData = "getOfficialBankListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/OfficialBank/OfficialBankList.js"></script>
+}
+
+
+<div ng-controller="OfficialBankListCtrl"
+     ng-init="Init(
+      '@getPagedOfficialBankUrl'
+     ,'@deleteOfficialBankByIdUrl'
+     ,'@getOfficialBankListDataExtraUrl'
+     ,'@saveOfficialBankListUrl'
+     ,'@getOfficialBankByIdUrl'
+     ,'@getOfficialBankDataExtraUrl'
+     ,'@saveOfficialBankUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Official Bank </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchOfficialBankList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editOfficialBankByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchOfficialBankList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">Ac Name</th>
+                    <th class="text-center">Ac No</th>
+                    <th class="text-center">Branch Name</th>
+                    @*<th class="text-center">Address</th>*@
+                    <!--th class="text-center">Status Enum Id</th-->
+                    <th class="text-center">Status</th>
+                    <!--th class="text-center">Type Enum Id</th-->
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Order No</th>
+         
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in OfficialBankList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@Acnt_OfficialBank.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_Name}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_ShortName}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_AcName}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_AcNo}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_BranchName}}</td>
+                    @*<td class="">{{row.@Acnt_OfficialBank.Property_Address}}</td>*@
+                    @*<td class="">{{row.@Acnt_OfficialBank.Property_StatusEnumId}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_Status}}</td>*@
+                    <!--td class="">{{row.@Acnt_OfficialBank.Property_TypeEnumId}}</td-->
+                    <td class="">{{row.@Acnt_OfficialBank.Property_Type}}</td>
+                    <td class="">{{row.@Acnt_OfficialBank.Property_OrderNo}}</td>
+                   
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editOfficialBankByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteOfficialBankById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

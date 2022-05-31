@@ -1,0 +1,453 @@
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li class="active">
+            <a title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "Accounts"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">@currentArea Home</span>
+            </a>
+        </li>
+        <li >
+            <a href="@Url.Action("FastPaymentCollection", "Student", new {area = "Accounts"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text"> Collect Std. Payment </span>
+            </a>
+        </li>
+
+        <li>
+            <a href="@Url.Action("CollectionVoucherList", "CollectionVoucher", new {area = "Accounts"})">
+                <i class="menu-icon fa fa-search-plus"></i>
+                <span class="menu-text"> Search Std. Voucher </span>
+            </a>
+        </li>
+    <li>
+        <a href="@Url.Action("StdTransactionList", "StdTransaction", new {area = "Accounts"})">
+            <i class="menu-icon fa fa-search-plus"></i>
+            <span class="menu-text"> Search Std. Money Receipt </span>
+        </a>
+    </li>
+    
+    
+
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-files-o"></i>
+            <span class="menu-text">Collection Reports</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu" style="display: none;">
+            <li>
+                <a href="@Url.Action("ParticularWiseCollectionSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Part. Wise Coll. Summary</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="@Url.Action("ParticularWiseCollectionDetailsReport", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Part. Wise Coll. Report</span>
+                </a>
+            </li>
+            
+
+            <li>
+                <a href="@Url.Action("VoucherWiseParticularSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Voucher Wise Summary</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("VoucherWiseCollectionReport", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Voucher Wise Coll. Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("BankWiseCollectionSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Bank Wise Coll. Summary</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("IncomeForecastReport", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Income Forecast Report</span>
+                </a>
+            </li>
+
+        </ul>
+    </li>
+    
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-files-o"></i>
+            <span class="menu-text">Due Reports</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu" style="display: none;">
+            <li>
+                <a href="@Url.Action("StudentDueReport", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Student Detailed Due Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("StudentDueReportSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Std Due Report Summary</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("StudentDueReportSummary2", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Std Due Report Summary 2</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-files-o"></i>
+            <span class="menu-text">Billing Reports</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu" style="display: none;">
+            <li>
+                <a href="@Url.Action("DebitTransactionList", "StdTransaction", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text"> Search Std. Billing </span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ParticularWiseBillingSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Part. Wise Bill. Summary</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ParticularWiseBillingDetailsReport", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Part. Wise Bill. Report</span>
+                </a>
+            </li>
+            @*<li>
+                <a href="@Url.Action("ParticularWiseCollectionSummary", "Report", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text" style="font-size: 10px;">Part. Wise Coll. Summary</span>
+                </a>
+            </li>*@
+
+        </ul>
+    </li>
+    
+        <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span class="menu-text" style="font-size: 10px;">Waiver/Scholarship Reports</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                <li>
+                    <a href="@Url.Action("ParticularWiseWaiverSummary", "Report", new {area = "Accounts"})">
+                        <i class="menu-icon fa fa-search-plus"></i>
+                        <span class="menu-text" style="font-size: 10px;">Part. Wise Waiver Summary</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ParticularWiseWaiverDetailsReport", "Report", new {area = "Accounts"})">
+                        <i class="menu-icon fa fa-search-plus"></i>
+                        <span class="menu-text" style="font-size: 10px;">Part. Wise Waiver Report</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("WaiverOnFullPackageList", "StdTransaction", new {area = "Accounts"})">
+                        <i class="menu-icon fa fa-search-plus"></i>
+                        <span class="menu-text" style="font-size: 10px;">Full Pack. Waiver Details</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("FullPackageWaiverSummary", "Report", new {area = "Accounts"})">
+                        <i class="menu-icon fa fa-search-plus"></i>
+                        <span class="menu-text" style="font-size: 10px;">Full Pack. Waiver Summary</span>
+                    </a>
+                </li>
+                @*<li>
+                    <a href="@Url.Action("ParticularWiseCollectionSummary", "Report", new {area = "Accounts"})">
+                        <i class="menu-icon fa fa-search-plus"></i>
+                        <span class="menu-text" style="font-size: 10px;">Part. Wise Coll. Summary</span>
+                    </a>
+                </li>*@
+            </ul>
+        </li>
+        
+        <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text">Online Payments</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+
+                @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.BankIntegration.CanUploadBankPaymentExcel))
+            {
+                    <li class="">
+                        <a href="@Url.Action("StdOnlinePaySlipList", "StdOnlinePaySlip", new {area = "Accounts"})" class="menu-dropdown">
+                            <i class="menu-icon fa fa-location-arrow"></i>
+                            <span class="menu-text">Payment History</span>
+                        </a>
+                    </li>
+                }
+                @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.DataMigration.CanUploadBillExcel))
+            {
+                    <li class="">
+                        <a href="@Url.Action("PaymentGatewayList", "PaymentGateway", new {area = "Accounts"})" class="menu-dropdown">
+                            <i class="menu-icon fa fa-location-arrow"></i>
+                            <span class="menu-text">Payment Gateway</span>
+                        </a>
+                    </li>
+                }
+
+
+            </ul>
+        </li>
+
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text">Sem Wise Scholarship</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu" style="display: none;">
+            <li class="">
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-location-arrow"></i>
+                    <span class="menu-text">Global Settings</span>
+                    <i class="menu-expand"></i>
+                </a>
+
+                <ul class="submenu" style="display: none;">
+                    <li>
+                        <a href="@Url.Action("GlobalScholarshipList", "SemWiseScholarship", new {area = "Accounts"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text">List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("GlobalScholarshipAddEdit", "SemWiseScholarship", new {area = "Accounts", id = 0})">
+                            <i class="menu-icon fa fa-plus"></i>
+                            <span class="menu-text">Add New</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="@Url.Action("IndividualStudentSettingsList", "SemWiseScholarship", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text" style="font-size: 10px;">1<sup>st</sup> Sem Scholarships Mgt.</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("ScholarshipEligibilityManager", "SemWiseScholarship", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text" style="font-size: 10px;">Scholarship Eligibility Mgt.</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("IndividualStudentSettingsList2", "SemWiseScholarship", new {area = "Accounts"})">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text" style="font-size: 10px;">Individual Student Manager</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+
+
+        
+
+    @*@if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanEdit))
+        {
+
+            <li class="">
+
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text">Fee Code Mgt.</span>
+                    <i class="menu-expand"></i>
+                </a>
+
+                <ul class="submenu" style="display: none;">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanView))
+                    {
+
+
+                        <li>
+                            <a href="@Url.Action("FeeCodeList", "FeeCode", new {area = "Accounts"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">Fee Code Mgt.</span>
+                            </a>
+                        </li>
+
+                        if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanAdd))
+                        {
+                            <li>
+                                <a href="@Url.Action("FeeCodeManager", "FeeCode", new {area = "Accounts",id=0})">
+                                    <i class="menu-icon fa fa-plus"></i>
+                                    <span class="menu-text">Add New</span>
+                                </a>
+                            </li>
+                        } 
+                    }
+                </ul>
+            </li>
+            
+
+        }*@
+
+    <li class="">
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-cog"></i>
+            <span class="menu-text">Excel Upload Tools</span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu" style="display: none;">
+                    
+            @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.BankIntegration.CanUploadBankPaymentExcel))
+            {
+                <li class="">
+                    <a href="@Url.Action("PaymentExcelUpload", "BankIntegration", new {area = "Accounts"})" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Payment Excel Upload</span>
+                    </a>
+                </li>
+            }
+            @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.DataMigration.CanUploadBillExcel))
+            {
+                <li class="">
+                    <a href="@Url.Action("BillExcelUpload", "ExcelUploader", new {area = "Accounts"})" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Bill Excel Upload</span>
+                    </a>
+                </li>
+            }
+
+
+        </ul>
+    </li>
+
+    <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text">General Options</span>
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu" style="display: none;">
+
+                @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanEdit))
+                {
+                    if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.FeeCode.CanView))
+                    {
+                        <li>
+                            <a href="@Url.Action("FeeCodeList", "FeeCode", new {area = "Accounts"})">
+                                <i class="menu-icon fa fa-location-arrow"></i>
+                                <span class="menu-text">Fee Code Mgt.</span>
+                            </a>
+                        </li>
+                    }
+                }
+                <li class="">
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Particular Name Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+
+                        <li>
+                            <a href="@Url.Action("ParticularNameList", "ParticularName", new {area = "Accounts"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.ParticularName.CanAdd))
+                        {
+                            <li>
+                                <a href="@Url.Action("ParticularNameAddEdit", "ParticularName", new {area = "Accounts", id = 0})">
+                                    <i class="menu-icon fa fa-plus"></i>
+                                    <span class="menu-text">Add New</span>
+                                </a>
+                            </li>}
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Official Bank Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+                        <li>
+                            <a href="@Url.Action("OfficialBankList", "OfficialBank", new {area = "Accounts"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text"> Official Bank List</span>
+                            </a>
+                        </li>
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.OfficialBank.CanAdd))
+                        {
+                            <li>
+                                <a href="@Url.Action("OfficialBankAddEdit", "OfficialBank", new {area = "Accounts", id = 0})">
+                                    <i class="menu-icon fa fa-plus"></i>
+                                    <span class="menu-text">Add New</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Discount Name Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+                        <li>
+                            <a href="@Url.Action("ScholarshipTypeList", "ScholarshipType", new {area = "Accounts"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                        @if (PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanAdd))
+                        {
+                            <li>
+                                <a href="@Url.Action("ScholarshipTypeAddEdit", "ScholarshipType", new {area = "Accounts", id = 0})">
+                                    <i class="menu-icon fa fa-plus"></i>
+                                    <span class="menu-text">Add New</span>
+                                </a>
+                            </li>}
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

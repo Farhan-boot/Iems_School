@@ -1,0 +1,296 @@
+﻿@using EMS.Web.UI.Areas.Inventory.Controllers.WebApi
+@{
+    ViewBag.Title = "Product Information: Add/Edit";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ProductCategoryId = (string)id == null ? "0" : (string)id;
+
+    //ProductCardManager WebApi Single Row link
+    var getProductCategoryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryManagerApi", action = "GetProductCategoryById", area = "Inventory" });
+    var getProductCategoryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryManagerApi", action = "GetProductCategoryDataExtra", area = "Inventory" });
+    var saveProductCategoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCategoryManagerApi", action = "SaveProductCategory", area = "Inventory" });
+
+    //var getPurchaseDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "GetPurchaseListDataExtra", area = "Inventory" });
+    //var saveItemInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProductCardManagerApi", action = "SaveItemInformation", area = "Inventory" });
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ProductCategoryManager/ProductCategoryAddEdit.js"></script>
+}
+
+
+    <!--File:BAcnt_Voucher Add/Edit View-->
+<div id="ProductCardAddEdit" class="row ng-scope" ng-controller="ProductCategoryAddEditCtrl" ng-init="Init(
+        '@ProductCategoryId'
+        ,'@getProductCategoryByIdUrl'
+        ,'@getProductCategoryDataExtraUrl'
+        ,'@saveProductCategoryUrl');">
+
+        <div class="col-lg-12 col-sm-12 col-xs-12 voucher-entry-form">
+            <div ng-hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention Please!</strong>
+            </div>
+            <div ng-show="HasViewPermission" class="">
+                <div class="widget">
+                    <div class="widget-header bordered-bottom bordered-sky ">
+                        <i class="widget-icon fa fa-edit bold  "></i>
+                        <span class="widget-caption ">
+                            Add/Edit
+
+                        </span>
+                        <div class="widget-buttons buttons-bordered" style="display: none">
+                            <span class="input-icon">
+                                <input type="text" ng-model="VoucherId" ng-enter="" class="form-control input-xs" id="glyphicon-search" placeholder="Search">
+                                <i class="glyphicon glyphicon-search blue"></i>
+                            </span>
+
+                        </div>
+                        <div class="widget-buttons no-padding-left">
+                            @*<button ng-click="getNewVoucher()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>*@
+                            <a href="/Inventory/ProductCategoryManager/ProductCategoryList" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                            <button ng-click="loadPage()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                        </div>
+                    </div><!--Widget Header end-->
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-md-5 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Title <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="ProductCategoryInformation.Title" class="form-control" placeholder="Enter Title" maxlength="50" required="">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Title." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Sub Title </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="ProductCategoryInformation.SubTitle" class="form-control" placeholder="Enter Sub Title">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Sub Title." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Description </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.Description" class="form-control" placeholder="Enter Description">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fieldlabel">Asset Type <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                            <td class="fieldarea">
+                                                <select ng-model="ProductCategoryInformation.AssetTypeEnumId" ng-options="option.Id as option.Name for option in AssetTypeList" title="Select Asset Type" ng-init="" class="form-control">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip">
+                                                <span>
+                                                    <i class="fa fa-question-circle" data-title="Select Asset Type." data-toggle="tooltip" data-original-title="" title="">
+                                                    </i>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Name  </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.Name" class="form-control" placeholder="Enter Name">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+                                        
+                                    <tr>
+                                        <td class="fieldlabel">ParentId </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="ProductCategoryInformation.ParentId" class="form-control" placeholder="Enter ParentId">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter ParentId." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                    </tr>
+                                    
+                                    
+                                    
+
+                                    <tr>
+                                            <td class="fieldlabel">ProductCode </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.ProductCode" class="form-control" placeholder="Enter ProductCode">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter ProductCode." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">IsBarCoded </td>
+                                            <td class="fieldarea">
+                                                <input type="checkbox" ng-model="ProductCategoryInformation.IsBarCoded" class="form-control" placeholder="Enter IsBarCoded">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter IsBarCoded." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Default Store Id </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.DefaultStoreId" class="form-control" placeholder="Enter Default Store Id">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default Store Id ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">Unit Type <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ProductCategoryInformation.UnitTypeEnumId" ng-options="option.Id as option.Name for option in UnitTypeEnumList" title="Select Asset Type" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip">
+                                            <span>
+                                                <i class="fa fa-question-circle" data-title="Select Unit Type." data-toggle="tooltip" data-original-title="" title="">
+                                                </i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+
+
+
+                                    <tr>
+                                            <td class="fieldlabel">Category Unit EnumId  </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.CategoryUnitEnumId" class="form-control" placeholder="Enter Category Unit EnumId ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Category Unit EnumId ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Category Type EnumId </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.CategoryTypeEnumId" class="form-control" placeholder="Enter Category Type EnumId ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Category Type EnumId ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Barcode Type EnumId </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.BarcodeTypeEnumId" class="form-control" placeholder="Enter Barcode Type EnumId ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Barcode Type EnumId  ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Warning Quantity  </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.WarningQuantity" class="form-control" placeholder="Enter Warning Quantity ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Warning Quantity ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Remark </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.Remark" class="form-control" placeholder="Enter Remark ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Parent Category Id  </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="ProductCategoryInformation.ParentCategoryId" class="form-control" placeholder="Enter Parent Category Id ">
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Parent Category Id ." data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                        </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">Store <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="ProductCategoryInformation.StoreId" ng-options="option.Id as option.Name for option in StoreList" title="Select Store" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip">
+                                            <span>
+                                                <i class="fa fa-question-circle" data-title="Select Store." data-toggle="tooltip" data-original-title="" title="">
+                                                </i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                    
+
+
+
+                                    </tbody>
+                                </table>
+                            </div><!--Col end-->
+
+                           
+                        </div><!--Row end-->
+                    </div><!--Widget Body end-->
+                    <div class="widget-footer text-center">
+                        <div class="row">
+                            <div class="col-md-10 text-center">
+                                <button ng-click="saveProductCategory()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--view permission end-->
+        </div>
+    </div><!--controller end-->
+
+    <style>
+        .voucher-entry-form input,
+        .voucher-entry-form optgroup,
+        .voucher-entry-form select,
+        .voucher-entry-form textarea {
+            height: 25px !important;
+            font-size: 12px;
+        }
+
+        .text-dropdown-toggle .dropdown-menu li a:hover {
+            background: #1884e6;
+            color: #fff;
+        }
+
+        .text-dropdown {
+            max-height: 115px;
+            overflow-y: auto;
+            font-size: 13px;
+            padding: 6px 12px;
+            width: 100%;
+            line-height: 1.42857143;
+            background-image: none;
+        }
+
+        .text-dropdown-toggle ul {
+            max-height: 115px !important;
+            padding: 0px !important;
+            overflow-x: hidden !important;
+        }
+
+            .text-dropdown-toggle ul li a {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+                padding: 2px 10px !important;
+            }
+    </style>
+
+
+
+

@@ -1,0 +1,202 @@
+﻿
+<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getFullPackageWaiverDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetFullPackageWaiverSummaryDataExtra", area = "Accounts" });
+    //WebApi link for List 
+    var getFullPackageWaiverUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetFullPackageWaiverSummary", area = "Accounts" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="FullPackageWaiverCtrl"
+     ng-init="Init(
+     '@getFullPackageWaiverDataExtraUrl'
+     ,'@getFullPackageWaiverUrl'
+     )">
+    <div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false;ErrorMsg=''" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                    <tr>
+                        <th style="text-align: center;" colspan="12"><strong>Report of Waiver On Full Package Summary</strong></th>
+                    </tr>
+                    <tr class="show-on-print">
+                        <th style="text-align: center;" colspan="12">
+                            <div>Program: <span ng-if="SelectedProgram==null">All Program</span>{{SelectedProgram.Name}} </div>
+                            <div>Admission Session: <span ng-if="SelectedSemester==null">All Semester</span>{{SelectedSemester.Name}}</div>
+                            <div>Scholarship Type: <span ng-if="SelectedScholarshipType==null">All Scholarship Type</span> {{SelectedParticularName.Name}}</div>
+                            <div>Period: <span ng-if="SelectedValidPeriod==null">All Valid Period</span> {{SelectedValidPeriod.Name}}</div>
+                            <div>Amount Type: <span ng-if="SelectedAmountType==null">All Amount Type</span> {{SelectedAmountType.Name}}</div>
+                            <div ng-if="SelectedSemester==null">Start Date: {{StartDate |date:'dd/M/yyyy'}}</div>
+                            <div ng-if="SelectedSemester==null">End Date: {{EndDate |date:'dd/M/yyyy'}} </div>
+                        </th>
+                    </tr>
+                    @*<tr ng-show="VoucherNo!=''" class="show-on-print">
+                        <th style="text-align: center;" colspan="12">
+                            <table class="no-border">
+                                <tr>
+                                    <td style="text-align: left;">Voucher No: {{VoucherNo}}</td>
+                                    <td ng-show="!HasReportError" style="text-align: right;">Voucher Date: {{VoucherDate |date:'dd/MM/yyyy'}}</td>
+                                    <td ng-show="HasReportError" style="text-align: right;">
+                                        {{ReportErrorMessage}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>*@
+                    </thead>
+                    <tbody class="hide-on-print">
+                    <tr>
+                        <td style="width: 50px;">Program:</td>
+                        <td style="">
+                            <select ng-model="SelectedProgram"
+                                    ng-options="option as option.Name for option in ProgramList"
+                                    title="Select Program" class="form-control">
+                                <option value="" label="" class="">All Program</option>
+                            </select>
+                        </td>
+
+                        <td style="width: 25px;">Admission Session: </td>
+                        <td>
+                            <select ng-model="SelectedSemester"
+                                    ng-options="option as option.Name for option in SemesterList" title="Select Semester" class="form-control">
+                                <option value="" label="" class="">All Semester</option>
+                            </select>
+                        </td>
+
+                        <td style="width: 75px;">Scholarship Type: </td>
+                        <td colspan="3">
+                            <select ng-model="SelectedScholarshipType"
+                                    ng-options="option as option.Name for option in ScholarshipTypeList" title="Select scholarship Type" class="form-control">
+                                <option value="" label="" class="">All Scholarship Type</option>
+                            </select>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td style="width: 55px;">Valid Period: </td>
+                            <td>
+                                <select ng-model="SelectedValidPeriod"
+                                        ng-options="option as option.Name for option in ValidPeriodEnumList" title="Select Valid Period" class="form-control">
+                                    <option value="" label="" class="">Any Period</option>
+                                </select>
+                            </td>
+                            <td style="width: 55px;">Amount Type: </td>
+                            <td>
+                                <select ng-model="SelectedAmountType"
+                                        ng-options="option as option.Name for option in AmountTypeEnumList" title="Select Amount Type" class="form-control">
+                                    <option value="" label="" class="">All Amount Type</option>
+                                </select>
+                            </td>
+                            <td style="width: 72px;">Start Date:</td>
+                            <td>
+                                <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                            </td>
+                            <td style="width: 66px;">End Date:</td>
+                            <td>
+                                <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                            </td>
+                        </tr>
+                    <tr class="hide-on-print">
+                        <td style="text-align: center;" colspan="12">
+                            <button class="btn btn-info" ng-click="getFullPackageWaiver()">
+                                View Report
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div  style="margin-top: 10px;" class="border-black main-body">
+            <table class="table-bordered table-border" style="width: 100%; text-align: center;">
+                <thead>
+                <tr style="font-weight: bold; font-size: 14px;">
+                    <th>No</th>
+                    <th>Scholarship Name</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="row in Report">
+                <tr style="font-weight: bold">
+                    <td>{{$index+1}}</td>
+                    <td>{{row.ScholarshipTypeName}}</td>
+                    <td>{{row.TotalAmount|number:2}}</td>
+                </tr>
+                </tbody>
+                <tbody ng-hide="Report.length==0">
+                <tr style="font-size: 13px; font-weight: bold;">
+                    <td style="text-align: right;" colspan="2">Grand Total:</td>
+                    <td style="text-align: center;">{{GrandTotal|number:2}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top; 
+    }
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+    .no-border tr  td {
+        border: none !important;
+    }
+</style>

@@ -1,0 +1,44 @@
+﻿.nav-tabs > li .close {
+	margin: -2px 0 0 10px;/**/
+	font-size: 13px;
+	padding: 0;
+	border: 0;
+	float: right;
+	right: 0;
+
+}
+ #dynamicTab   iframe
+        {
+            margin: 0; padding: 0; border: 0; height: 100%;width: 100%;
+        }
+    #dynamicTab .tab-content {
+    background-color: #fbfbfb;
+    /*padding: 1px 0px;*/
+    padding-bottom: 0;
+}
+ #dynamicTab  .fa-close:hover,#dynamicTab  .fa-refresh:hover {
+     cursor: pointer;
+ }
+
+.page-body {
+    padding: 0px !important;
+}
+ #dynamicTab .horizontal-space
+{margin: 0!important}
+
+/*.marginBottom {
+	margin-bottom :1px !important;
+}
+.operationDiv {
+	padding:5px 10px 5px 5px;
+}
+.operationDivWrapper {
+	margin-top:-1px;
+}
+.leftMenu {
+	height :70%;
+	background-color: #E6E6E6;
+	border-right: 2px solid #BFBFBF;
+	
+}*/
+			

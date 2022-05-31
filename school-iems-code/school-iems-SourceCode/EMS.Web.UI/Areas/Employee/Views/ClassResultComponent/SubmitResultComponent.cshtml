@@ -1,0 +1,291 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Web.UI.Areas.Employee.Controllers.WebApi
+
+@{
+    ViewBag.Title = "Submit Marks";
+    Layout = "~/Areas/Employee/Views/Shared/_LayoutEmployee.cshtml";
+
+    var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    var classId = (string)id == null ? "0" : (string)id;
+    id = Request.QueryString["componentSettingsId"];
+    var componentSettingsId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getClassComponentResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultComponentApi", action = "GetClassComponentResultByClassId", area = "Employee" });
+
+    var saveResultComponentListByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultComponentApi", action = "SaveResultComponentList", area = "Employee" });
+    var saveLockResultComponentListByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultComponentApi", action = "SaveLockResultComponentList", area = "Employee" });
+
+    var getGenerateAttendanceMarkByComponentSettingIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultComponentApi", action = "GetGenerateAttendanceMarkByComponentSettingId", area = "Employee" });
+    var getGenerateResultFromBreakdownByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultComponentApi", action = "GetGenerateResultFromBreakdownByClassId", area = "Employee" });
+
+
+    var saveResultComponentListByClassId = "saveResultComponentListByClassId";
+    var saveLockResultComponentListByClassId = "saveLockResultComponentListByClassId";
+    var getAttendanceMarkFromAttendanceSystemByComponentId = "getAttendanceMarkFromAttendanceSystemByComponentId";
+    var getGenerateResultFromBreakdownByClassId = "getGenerateResultFromBreakdownByClassId";
+
+    //print Url
+    var printFinalExamMarkUrl = Url.Action("Print70PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var print30PercentTheoryExamMarkUrl = Url.Action("Print30PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var getGenerateClassResultUrl = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+
+    var componentExcelUploadUrl = Url.Action("ResultComponentExcelUpload", "ClassResultComponent", new { area = "Employee" });
+
+    @*@(getGenerateClassResult)/? classId ={ { SelectedClass.Id} }
+    &examType ={ {@((int)Aca_Exam.ExamTypeEnum.FinalTerm)} }*@
+}
+
+
+
+@section ScriptSection
+{
+    <script src="~/Areas/Employee/Views/ClassResultComponent/SubmitResultComponent.js?v=8"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+<div ng-controller="ClassResultComponentCtrl"
+     ng-init="Init(
+       '@classId'
+     , '@componentSettingsId'
+     , '@getClassComponentResultByClassIdUrl'
+     , '@saveResultComponentListByClassIdUrl'
+     , '@saveLockResultComponentListByClassIdUrl'
+     , '@getGenerateAttendanceMarkByComponentSettingIdUrl',
+     '@getGenerateResultFromBreakdownByClassIdUrl')">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption "><b>Submit Marks For  {{ComponentSetting.@Aca_ResultComponentSetting.Property_Name}} </b></span>
+            <div class="widget-buttons no-padding-left">
+
+                <a href="@(componentExcelUploadUrl)/?classId=@classId&componentSettingsId=@componentSettingsId&markTypeEnumId=@((byte) ClassResultComponentExcelUploadApiController.MarkTypeEnum.Component)"
+                   type="button" class="btn btn-xs btn-success">
+                    <span><i class="fa fa-upload"></i> Excel Upload</span>
+                </a>
+
+
+                @*<button ng-click="@(getAttendanceMarkFromAttendanceSystemByComponentId)()" style=""
+                            ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.Attendance)" class="btn btn-xs btn-success"
+                            ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                                title="This will auto generate Marks from Attendance System and replace current Marks with generated Attendance Marks, according to @(EMS.Framework.Settings.SiteSettings.Instance.InstituteShortName) Attendace Marking Policy."
+                            >
+                        <i class="fa fa-gears"></i> Auto Generate Marks from Attendance System
+                    </button>*@
+                <button ng-click="loadPage()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+            <div class="widget-buttons">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Marks
+                        <span  class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+                    <div class="alert alert-danger" ng-show="HasError">
+                        <button type="button" class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention: </strong> <span >{{ErrorMsg}}</span>
+                    </div>
+                    <br />
+                    <div class="">
+                        <!-- Component start -->
+                        <div style="text-align: center">
+                            <div>
+                                <span  class="widget-caption "><b>{{SemesterLevelTerm}} : {{ComponentSetting.@Aca_ResultComponentSetting.Property_Name}} Marks </b></span>
+                            </div>
+                            <div>
+                                <span  class="widget-caption margin-bottom-5"><b>Class: {{ResultComponentList[0].Aca_ClassJson.@Aca_Class.Property_Code}} ({{ResultComponentList[0].Aca_ClassJson.@Aca_Class.Property_Name}}) </b></span>
+                            </div><br />
+                            <table class="table table-striped table-bordered " style="width: 310px; margin: 0 auto">
+
+                                <tr>
+                                    <td style="width: 60px;">
+                                        <b>Status : </b>
+                                    </td>
+                                    <td>
+                                        <span  ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="label label-danger graded"><i class="fa fa-lock"></i> Confirmed & Locked</span>
+                                        <span  ng-hide="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer" class="label label-success graded"><i class="fa fa-unlock"></i> Unlocked</span>
+                                    </td>
+                                </tr>
+                                @*<tr>
+                                    <td>
+                                        <b>Step 1 : </b>
+                                    </td>
+                                    <td>
+                                        <button ng-click="@(getGenerateResultFromBreakdownByClassId)()" class="btn btn-maroon btn-xs" ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-gears"></i> Auto Generate Marks</button>
+                                    </td>
+                                </tr>*@
+                                <tr>
+                                    <td>
+                                        <b>Step 1 : </b>
+                                    </td>
+                                    <td>
+                                        <button ng-click="@(getAttendanceMarkFromAttendanceSystemByComponentId)()" style=""
+                                                ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.Attendance)" class="btn btn-xs btn-maroon"
+                                                ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                                                title="This will auto generate Marks from Attendance System and replace current Mark Sheet with generated Attendance Marks (according to @SiteSettings.Instance.InstituteShortName Attendace Marking Policy).">
+                                            <i class="fa fa-gears"></i> Auto Generate Marks <br />from Attendance System
+                                        </button>
+                                        
+
+                                        <button ng-click="@(getGenerateResultFromBreakdownByClassId)()" class="btn btn-maroon btn-xs"
+                                                ng-show="HasBreakDown"
+                                                ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                                                 title="This will auto generate Marks from Breakdown and replace current Mark Sheet with generated Marks.">
+                                              
+                                            <i class="fa fa-gears"></i> Auto Generate Marks <br/>from Breakdown
+                                        </button>
+
+                                        <button style="width: 146px; margin-top: 10px" 
+                                                ng-hide1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.Attendance)"
+                                                ng-click="@(saveResultComponentListByClassId)()" class="btn btn-xs btn-success" 
+                                                ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-save"></i> Save Marks</button>
+                                    </td>
+
+                                </tr>
+               
+                                <tr>
+                                    <td><b>Step 2 : </b></td>
+                                    <td>
+                                        <a style="width: 146px;" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId< @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" href="@getGenerateClassResultUrl/?classId=@(classId)&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}" target="_blank" class="btn btn-xs btn-success" ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-eye"></i> View Draft Mark Sheet</a>
+                                        <a style="width: 148px;" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId>= @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" target="_blank" href="@(print30PercentTheoryExamMarkUrl)/?classId=@(classId)&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}" class="btn btn-xs btn-success" ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-eye"></i> View Draft Mark Sheet</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Step 3 : </b></td>
+                                    <td><button style="width: 146px;" ng-click="@(saveLockResultComponentListByClassId)()" class="btn btn-xs btn-danger" ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"><i class="fa fa-lock"></i> Confirm &amp; Lock Marks</button></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Step 4 : </b></td>
+                                    <td>
+                                        @*Print 70% Section A B*@
+                                        <a style="width: 146px;" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId< @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" href="@getGenerateClassResultUrl/?classId=@(classId)&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}" target="_blank" class="btn btn-xs btn-success"><i class="fa fa-print"></i> Print Final Mark Sheet</a>
+                                        @*Print 30% only for UG Theory*@
+                                        <a style="width: 148px;" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId>= @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest) && ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId!= @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.AssesmentOrExam)" target="_blank" href="@(print30PercentTheoryExamMarkUrl)/?classId=@(classId)&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}" class="btn btn-xs btn-success"><i class="fa fa-print"></i>Print Mark Sheet</a>
+
+                                        <a style="width: 148px;" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.AssesmentOrExam)" target="_blank" href="@(getGenerateClassResultUrl)/?classId=@(classId)&examType={{@((int) Aca_Exam.ExamTypeEnum.FinalTerm)}}" class="btn btn-xs btn-success"><i class="fa fa-print"></i>Print Final Mark Sheet</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            @*<div class="margin-bottom-5"><span  class="widget-caption "><b>Step 1 : </b> <button ng-click="@(saveResultComponentListByClassId)()" class="btn btn-xs btn-success"><i class="fa fa-save"></i> Save Marks</button></span></div>
+                                <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 2 : </b> <a href="@printFinalExamMarkUrl/?classId=@(classId)&componentSettingsId=@(componentSettingsId)" target="_blank" class="btn btn-xs btn-success"><i class="fa fa-save"></i> View Draft Mark Sheet</a></span></div>
+                                <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 3 : </b> <button ng-click="saveLockResultComponentListByClassId()" class="btn btn-xs btn-danger"><i class="fa fa-lock"></i> Confirm &amp; Lock Marks</button></span></div>
+                                <div class="margin-bottom-5"><span  class="widget-caption "><b>Step 4 : </b> <a href="@printFinalExamMarkUrl/?classId=@(classId)&componentSettingsId=@(componentSettingsId)" target="_blank" class="btn btn-xs btn-success"><i class="fa fa-print"></i> Print Final Mark Sheet</a></span></div>*@
+                        </div>
+                        <br />
+                        <div class="form-group no-margin  no-print">
+                            <div class="input-icon icon-right input-group-xs">
+                                <input ng-model="searchStudent" class="form-control input-xs" id="searchStudent" type="text" placeholder="type to search from below list" autocomplete="on">
+                                <i class="white fa fa-times bg-purple" ng-click="searchStudent='';"></i>
+                            </div>
+                        </div>
+                        <table id="marks" class="table table-striped table-bordered table-hover mark-input">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center hidden">
+                                        <input type="checkbox" ng-click="selectAll($event)">
+                                    </th>
+                                    <th class="text-center">
+                                        Ser
+                                    </th>
+                                    <th class="text-center" ng-hide1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                        Name
+                                    </th>
+                                    <th class="text-center" ng-hide1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">Class Roll</th>
+                                    @*<th class="text-center" ng-show="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">Exam Roll</th>*@
+                                    <th style="width: 150px" class="text-center">Mark Obtained ({{ComponentSetting.@Aca_ResultComponentSetting.Property_TotalMark}})</th>
+                                    <th style="width: 111px" class="text-center" ng-hide="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.Attendance)">Status</th>
+                                    <th class="text-center">Remark (Optional)</th>
+                                    @*<th class="text-center no-print hidden">Previous Mark</th>
+                                    <th class="text-center">Contributed Mark ({{ComponentSetting.@Aca_ResultComponentSetting.Property_ConvertPercentage}} %)</th>*@
+                                    @*<th class="text-center">Submited By </th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @*orderBy:['User_StudentJson.@User_Student.Property_RegistrationSession','User_StudentJson.ClassRollNo']
+                                    ({{row.User_StudentJson.@User_Student.Property_RegistrationSession}})*@
+                            <tr ng-class="row.@Aca_ResultComponent.Property_AttendanceTypeEnumId == 1 ? 'bg-gold' : (row.@Aca_ResultComponent.Property_AttendanceTypeEnumId == 2? 'bg-danger' : '')"
+                                ng-repeat="row in ResultComponentList |filter:searchStudent">
+                                    <td class="text-center hidden">
+                                        <input type="checkbox" ng-model="row.User_StudentJson.@User_Student.Property_IsSelected" />
+                                    </td>
+                                    <td class="text-center">
+                                        {{$index+1}}
+                                    </td>
+                                    <td ng-hide1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                        {{row.User_StudentJson.FullName}}
+                                    </td>
+                                    <td class="text-center" ng-hide1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                        {{row.User_StudentJson.@User_Student.Property_ClassRollNo}}
+                                    </td>
+                                    @*<td class="text-center" ng-show1="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                      
+                                       <span ng-show="row.User_StudentJson.ExamRollNo!=0">
+                                           {{row.User_StudentJson.ExamRollNo}}
+                                        </span> 
+                                        <span ng-show="row.User_StudentJson.ExamRollNo==0" title="please contact at exam section to update Exam Roll">
+                                            [0000]
+                                        </span> 
+                                    </td>*@
+                                    <td style="background-color: #abd8ef !important;">
+                                        <input next-focus
+                                               ng-blur="changeState(row)"
+                                               ng-change="changeState(row)"
+                                               @*ng-change="if(row.TmpMark==null || row.TmpMark=='') row.@Aca_ResultComponent.Property_AttendanceTypeEnumId=1; else row.@Aca_ResultComponent.Property_AttendanceTypeEnumId=0;"*@
+                                               @*ng-focus="row.TmpMark===0?row.TmpMark='':row.TmpMark"*@
+
+                                               ng-model="row.TmpMark" type="text" min="0" @*Aca_ResultComponent.Property_Mark*@
+                                               ng-disabled="ComponentSetting.@(Aca_ResultComponentSetting.Property_IsLockedExaminer) || HasBreakDown"
+                                               @*max2="{{ComponentSetting.@Aca_ResultComponentSetting.Property_TotalMark}}"*@
+                                               @*change="validateInput(row,ComponentSetting.@Aca_ResultComponentSetting.Property_TotalMark)"*@
+                                               @*ng-change="row.@Aca_ResultComponent.Property_Mark>0?row.@Aca_ResultComponent.Property_AttendanceTypeEnumId=0:row.@Aca_ResultComponent.Property_AttendanceTypeEnumId=1"*@
+                                               
+                                               class="form-control input-sm" placeholder="mark" required>
+                                    </td>
+                                    <td align="center" class="text-center"
+                                        ng-hide="ComponentSetting.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.Attendance)">
+                                        <select class="form-control" style="width: 100px"
+                                                  ng-change="row.@Aca_ResultComponent.Property_AttendanceTypeEnumId==1?row.TmpMark='':rowTmpMark"
+                                                ng-model="row.@Aca_ResultComponent.Property_AttendanceTypeEnumId" ng-options="option.Id as option.Name for option in AttendanceTypeEnumList " 
+                                                ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer || HasBreakDown">
+                                        </select>
+                                    </td>
+                                    
+                                    <td class="">
+                                        <input type="text" ng-model="row.@Aca_ResultComponent.Property_Remark"
+                                               ng-disabled="ComponentSetting.@Aca_ResultComponentSetting.Property_IsLockedExaminer"
+                                               class="form-control" placeholder="remark optional"/>
+                                    </td>
+
+                                    @*<td class="text-center no-print hidden">{{row.@Aca_ResultComponent.Property_PreviousMark}}</td>
+                                    <td class="text-center">{{row.@(Aca_ResultComponent.Property_Mark) / ComponentSetting.@(Aca_ResultComponentSetting.Property_TotalMark) * ComponentSetting.@Aca_ResultComponentSetting.Property_ConvertPercentage | number:2}}</td>*@
+                                    @*<td class="">{{row.@(Aca_ResultComponent.Property_TotalMark}</td>*@
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+

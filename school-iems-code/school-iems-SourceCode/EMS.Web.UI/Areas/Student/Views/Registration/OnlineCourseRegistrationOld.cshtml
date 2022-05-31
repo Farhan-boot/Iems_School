@@ -1,0 +1,717 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@model EMS.DataAccess.Data.User_Student
+@{
+    ViewBag.Title = "Online Course Registration";
+
+    // Angular Properties
+    var userId = HttpUtil.Profile.UserId;
+    //var semester = HttpUtil.DbContext.Aca_Semester.FirstOrDefault(x => x.StatusEnumId == (byte) Aca_Semester.StatusEnum.Ongoing);
+
+    //WebApi link for single row
+    var getClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassById", area = "Student" });
+    var getClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassDataExtra", area = "Student" });
+    var saveClassesUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "SaveClasses", area = "Student" });
+    var courseAddRemoveUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "CourseAddRemove", area = "Student" });
+    var deleteClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetDeleteClassById", area = "Student" });
+    var confirmRegistrationUrl=Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "ConfirmRegistration", area = "Student" });
+
+
+    var printCourseRegistrationUrl = Url.Action("PrintCourseRegistration","Registration", new { area = "Student" });
+    var printPaySlipUrl = Url.Action("PrintPaySlip", "Registration", new { area = "Student" });
+    var viewPaymentDetailsBySemesterIdUrl = Url.Action("ViewPaymentDetailsBySemesterId", "Registration", new { area = "Student" });
+    var downloadCourseRegistrationPdfUrl = Url.Action("DownloadCourseRegistrationPdf","Registration",new {area="Student"});
+
+
+    //WebApi link for List
+    var getClassForRegistrationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassForRegistration", area = "Student" });
+    var getAllClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetAllClass", area = "Student" });
+    var saveClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "SaveClassList", area = "Student" });
+    var getClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RegistrationApi", action = "GetClassListDataExtra", area = "Student" });
+
+    //var editClassByIdPageUrl = Url.Action("ClassAddEdit", "Class", new { area = "Student" });
+
+    //Angular Function Name
+    var getNewClass = "getNewClass";
+    var saveClasses = "saveClasses";
+    var deleteClassById = "deleteClassById";
+    var deleteClassByObj = "deleteClassByObj";
+    var confirmRegistration = "confirmRegistration";
+    //for list
+    var searchClassList = "searchClassList";
+    var getPagedClassList = "getPagedClassList";
+    var getAllClassList = "getAllClassList";
+    var saveClassList = "saveClassList";
+    var getClassListExtraData = "getClassListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Registration/OnlineCourseRegistration.js"></script>
+
+    <!--Easy Pie Charts Needed Scripts-->
+    <script src="~/assets/js/charts/easypiechart/jquery.easypiechart.min.js"></script>
+@*    <script src="~/assets/js/charts/easypiechart/jquery.easypiechart.js"></script>*@
+    <script src="~/assets/js/charts/easypiechart/easypiechart-init.js"></script>
+
+    <script>
+        var actualWidth = $(".taken-courses").width();
+        // This function will be executed when the user scrolls the page.
+        //console.log(actualWidth);
+        $(window).scroll(function (e) {
+            if ($(window).width() < 768) {
+
+                return;
+            }
+            // Get the position of the location where the scroller starts.
+            var scroller_anchor = $(".scroller_anchor").offset().top;
+
+            // Check if the user has scrolled and the current position is after the scroller start location and if its not already fixed at the top
+            if ($(this).scrollTop() >= scroller_anchor && $('.scroller').css('position') != 'fixed') {    // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
+                $('.scroller').css({
+                    'max-width': actualWidth + 'px'
+                }).addClass("fixd-top");
+                // Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
+                $('.scroller_anchor').css('height', '50px');
+            }
+            else if ($(this).scrollTop() < scroller_anchor && $('.scroller').css('position') != 'relative') {    // If the user has scrolled back to the location above the scroller anchor place it back into the content.
+
+                // Change the height of the scroller anchor to 0 and now we will be adding the scroller back to the content.
+                $('.scroller_anchor').css('height', '0px');
+
+                // Change the CSS and put it back to its original position.
+                $('.scroller').css({
+                    //'background': '#FFF',
+                    //'border': '1px solid #CCC',
+                    //'position': 'relative',
+                    //'right': '0px',
+                    //'float': 'left'
+
+                }).removeClass("fixd-top");
+            }
+        });
+
+        var LoadPaymentDetails = function (semesterId) {
+            $.get("@viewPaymentDetailsBySemesterIdUrl/?semesterId=" + semesterId, function (data) {
+                $(".payment-details").html(data);
+                $(".assessment").addClass("table table-hover table-responsive");
+                $('#showAssesmentModal').modal('show');
+            }).done(function (result) {
+
+            }).fail(function (result) {
+                $(".payment-details").html("Data loading failed!");
+            });
+        }
+
+    </script>
+
+}
+
+
+@section StyleSection
+{
+    <style>
+        .profile-container .header-avatar {
+            width: 160px;
+            height: 160px;
+            -webkit-border-radius: 50%;
+            -webkit-background-clip: padding-box;
+            -moz-border-radius: 50%;
+            -moz-background-clip: padding;
+            border-radius: 50%;
+            background-clip: padding-box;
+            border: 5px solid #ffffff;
+            -webkit-box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            -moz-box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            box-shadow: 0 0 20px rgba(0, 84, 255, 0.35);
+            margin: 25px auto;
+            margin-left: 16px;
+        }
+
+        .item-more-remove {
+            position: absolute;
+            right: 2px;
+            -lh-property: 0;
+            top: -webkit-calc(50% - 13px);
+            top: -moz-calc(50% - 13px);
+            top: calc(50% - 13px);
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 3px solid #ffffff;
+            vertical-align: middle;
+            color: #fb6e52;
+            -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroller {
+            /*background:#FFF;*/ 
+            /*border:1px solid #CCC;*/ 
+            /*margin:0 0 10px;*/ 
+            z-index:100; 
+            /*height:50px;*/ 
+            /*font-size:18px;*/ 
+            /*font-weight:bold;*/ 
+            /*text-align:center;*/ 
+            /*width:960px;*/
+        }
+        .scroller_anchor {
+            height:0px; 
+            margin:0; 
+            padding:0;
+        }
+        .fixd-top {
+         
+            /*background: #CCC;
+            border: 1px solid #000;*/
+            position: fixed;
+            top: 0px;
+            right: 7px;
+            float: none;
+            /*max-width: 320px;*/
+        }
+
+        .slim-scroll::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        .slim-scroll::-webkit-scrollbar
+        {
+            width: 8px;
+            background-color: #F5F5F5;
+        }
+
+        .slim-scroll::-webkit-scrollbar-thumb
+        {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+
+        .course-list {
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .colon {
+            width: 5px;
+        }
+        .assessment-name {
+            width: 175px !important;
+        }
+        .bordered-warning {
+            border-color: #00b0f4 !important;
+        }
+        .popover.top > .arrow:after {
+
+            border-top-color: #f4b400;
+
+        }
+        .popoverexample .popover {
+            width: auto;
+            max-width: none;
+        }
+        .assessment tr td {
+            padding: 0px !important;
+            font-size: 11px !important;
+        }
+    </style>
+}
+
+<div ng-controller="OnlineCourseRegistrationCtrl"
+     ng-init="Init(
+        '@userId'
+     ,'@getClassForRegistrationUrl'
+     ,'@courseAddRemoveUrl'
+     ,'@confirmRegistrationUrl'
+     )">
+    @*Student Information*@
+<div class="widget-body hidden-sm hidden-xs">
+    <div class="row profile-container margin-bottom-10">
+        <div class="col-sm-3 ">
+            <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" alt="@HttpUtil.Profile.Name" class="header-avatar">
+        </div>
+        <div class="col-sm-5">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <th class="text-uppercase">@HttpUtil.Profile.Name</th>
+                </tr>
+                <tr>
+                    <td>Department</td>
+                    <td>@Model.User_Account.HR_Department.ShortName</td>
+
+                </tr>
+                <tr>
+                    <td>Program</td>
+                    <td>@Model.Aca_Program.ShortTitle</td>
+
+                </tr>
+                <tr>
+                    <td>Curriculum</td>
+                    <td>@Model.Aca_Curriculum.ShortName</td>
+                </tr>
+                <tr>
+                    <td>Level Term</td>
+                    <td>@*@Model.Aca_StudyLevel.Name @Model.Aca_StudyTerm.Name*@</td>
+                </tr>
+                <tr>
+                    <td>Dept Batch</td>
+                    <td>@Model.Aca_DeptBatch.Name</td>
+                </tr>
+                <tr>
+                    <td>Group</td>
+                    @if (Model.Aca_CurriculumElectiveGroup != null)
+                    {
+                        <td>@Model.Aca_CurriculumElectiveGroup.Name</td>
+                    }
+                    else
+                    {
+                        <td>&nbsp;</td>
+                    }
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Username</th>
+                    <th>@HttpUtil.Profile.UserName</th>
+                </tr>
+                <tr>
+                    <td>Class Roll No.</td>
+                    <td>@Model.ClassRollNo</td>
+                </tr>
+                <tr>
+                    <td>Exam Roll No.</td>
+                    <td>@Model.ExamRollNo</td>
+                </tr>
+                <tr>
+                    <td>Registration No.</td>
+                    <td>@Model.RegistrationNo</td>
+                </tr>
+                <tr>
+                    <td>Registration Session</td>
+                    <td>@Model.RegistrationSession</td>
+                </tr>
+                <tr>
+                    <td>CGPA</td>
+                    <td>@Model.CGPA.ToString("F")</td>
+                </tr>
+                <tr>
+                    <td>Credit Completed</td>
+                    <td>@ViewBag.CompletedCredit.ToString("F")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+    <div ng-if="RegHasError" class="row" style="text-align: center;">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="popoverexample">
+            <div class="popover top">
+                <div class="arrow"></div>
+                <h3 class="popover-title bordered-warning bg-warning">
+                    Important Message for you
+                </h3>
+                <div class="popover-content bg-warning">
+                    <div style="font-size: 30px;">
+                        {{RegErrorMsg}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div ng-if="!RegHasError" >
+        @*Registration Messages*@
+        <div class="row">
+            <h3 class="text-center">Course Advising for {{RegistrationFor}}</h3>
+            <div ng-show="IsRegistrationConfirm" class="alert alert-success fade in">
+                <i class="fa-fw fa fa-check"></i>
+                You have been completed your registration.
+            </div>
+            <div ng-hide="IsRegistrationConfirm" class="alert alert-danger fade in">
+                <i class="fa-fw fa fa-times"></i>
+                You have to completed your registration.
+            </div>
+        </div>
+        @*Load Percentage*@
+        <div class="row hidden-sm hidden-xs">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 ">
+                <div class="row">
+                    <div class="col-lg-3  col-sm-6 col-xs-6">
+                        <div class="databox bg-white radius-bordered">
+                            <div class="databox-left bg-primary">
+                                <div class="databox-piechart">
+                                    <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="50" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px; color: #1235de;">
+                                        <span class="white font-90">
+                                            {{(TotalCredits/MaxCrAllowed)*100 | number : 1}} %
+                                        </span>
+                                        <canvas width="70" height="70" style="width: 47px; height: 47px; border: 3px solid #ffff; border-radius: 50%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="databox-right">
+                                <span class="databox-number primary" style="text-align: center; font-weight: bold;">
+                                    Total Credit<br />
+                                    <span title="Taken Credits">{{TotalCredits | number : 2}}</span>/<span title="Max Credits Allowed">{{MaxCrAllowed}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3  col-sm-6 col-xs-6">
+                        <div class="databox bg-white radius-bordered">
+                            <div class="databox-left bg-success">
+                                <div class="databox-piechart">
+                                    <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="50" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px; color: #1235de;">
+                                        <span class="white font-90">
+                                            {{(TotalCredits/MaxCrAllowed)*100 | number : 1}} %
+                                        </span><canvas width="70" height="70" style="width: 47px; height: 47px; border: 3px solid #ffff; border-radius: 50%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="databox-right">
+                                <span class="databox-number success" style="text-align: center; font-weight: bold;">
+                                    Total Course <br /> {{TotalCourse }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3  col-sm-6 col-xs-6">
+                        <div class="databox bg-white radius-bordered">
+                            <div class="databox-left bg-purple">
+                                <div class="databox-piechart">
+                                    <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="50" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px; color: #1235de;">
+                                        <span class="white font-90">
+                                            {{(TotalTheory/TotalCourse)*100 | number : 1}} %
+                                        </span>
+                                        <canvas width="70" height="70" style="width: 47px; height: 47px; border: 3px solid #ffff; border-radius: 50%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="databox-right">
+                                <span class="databox-number purple" style="text-align: center; font-weight: bold;">
+                                    Total Theory<br />
+                                    <span title="Total Theory">{{TotalTheory}}</span>/<span title="Total Course">{{TotalCourse}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-6">
+                        <div class="databox bg-white radius-bordered">
+                            <div class="databox-left bg-magenta">
+                                <div class="databox-piechart">
+                                    <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="50" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px; color: #1235de;">
+                                        <span class="white font-90">
+                                            {{(TotalLab/TotalCourse)*100 | number : 1}} %
+                                        </span>
+                                        <canvas width="70" height="70" style="width: 47px; height: 47px; border: 3px solid #ffff; border-radius: 50%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="databox-right">
+                                <span class="databox-number magenta" style="text-align: center; font-weight: bold;">
+                                    Total Lab<br />
+                                    <span title="Total Lab">{{TotalLab}}</span>/<span title="Total Course">{{TotalCourse}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @ButtonStripes(saveClasses, printPaySlipUrl, printCourseRegistrationUrl, confirmRegistration)
+
+        <div class="row">
+            @*Show registrable course list*@
+            <div class="col-md-8">
+                <div class="widget">
+                    @*Core Courses*@
+                    <div class="widget-header bordered-bottom bordered-sky ">
+                        <i class="widget-icon fa fa-list bold"></i>
+                        <span class="widget-caption " style="font-weight: bold !important;">
+                            Registrable Offered Core Courses for {{RegistrationFor}} | Total Core Credit
+                            <span class="badge badge-primary" style="font-weight: bold">
+                                {{TotalCoreCredit}}
+                            </span>
+                        </span>
+
+
+
+
+                    </div>
+                    <div class="widget-body no-padding">
+                        <table class="table table-striped table-bordered ">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center" style="width: 29px;">
+                                        <input type="checkbox"
+                                               @*                                           ng-hide="IsRegistrationConfirm"*@
+                                               @*                                           ng-disabled="IsRegistrationConfirm"*@
+                                               ng-model="SelectAllClasses"
+                                               ng-change="selectAllClasses()">
+                                    </th>
+                                    <th class="text-center" style="width: 35px;">SN</th>
+                                    <th class="text-center" style="width: 71px;">Capacity</th>
+                                    <th class="text-center">Course</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in ClassList
+                    | filter:{
+                        CourseTypeEnumId : @((byte) Aca_CurriculumCourse.CourseTypeEnum.Core)
+                    }:true"
+                      >
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               ng-change="courseAddRemove(row)"
+                                               ng-model="row.@Aca_Class.Property_IsAlreadyAdded" />
+                                    </td>
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="text-center">[{{row.TotalStudent}}/{{row.@Aca_Class.Property_RegularCapacity}}]<br /><span class="label label-success">{{row.@Aca_Class.Property_Status}}</span></td>
+                                    <td class="">
+                                        <span style="font-weight: bold;">
+                                            {{row.@Aca_Class.Property_Code}}-
+                                            {{row.@Aca_Class.Property_Name}}
+                                        </span>
+                                        <span class="label label-primary">
+                                            Cr:
+                                            {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditLoad | number:2}}
+                                        </span>
+                                        <span class="label label-warning">
+                                            {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseCategory}}
+                                        </span>
+                                        <br />
+                                        <div class="item-time" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="font-size: 11px; margin-bottom: 2px; color: #180f90;">
+                                            <span ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                <i class="fa fa-clock-o"></i>
+                                                <strong>{{cr.RoutineDetails}}</strong>,
+                                                <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.ShortRoomDetails}}</em>
+                                                <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @*Elective Courses*@
+                    <div class="widget-header bordered-bottom bordered-sky ">
+                        <i class="widget-icon fa fa-list bold"></i>
+                        <span class="widget-caption " style="font-weight: bold !important;">
+                            Registrable Offered Elective Courses for {{RegistrationFor}} | Total Elective Credit
+                            <span class="badge badge-primary" style="font-weight: bold">
+                                {{TotalElectiveCredit}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="widget-body no-padding">
+                        <table class="table table-striped table-bordered">
+                            <thead class="bordered-blue">
+                                <tr>
+                                    <th class="text-center" style="width: 29px;">
+                                        <input type="checkbox"
+                                               @*ng-hide="IsRegistrationConfirm"*@
+                                               @*ng-disabled="IsRegistrationConfirm"*@
+                                               ng-model="SelectAllClasses"
+                                               ng-change="selectAllClasses()">
+                                    </th>
+                                    <th class="text-center" style="width: 35px;">SN</th>
+                                    <th class="text-center" style="width: 71px;">Capacity</th>
+                                    <th class="text-center">Course</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in ClassList
+                    | filter:{
+                        CourseTypeEnumId : @((byte) Aca_CurriculumCourse.CourseTypeEnum.Elective)
+                    }:true"
+                        >
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               ng-change="courseAddRemove(row)"
+                                               ng-model="row.@Aca_Class.Property_IsAlreadyAdded" />
+                                    </td>
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td class="text-center">[{{row.TotalStudent}}/{{row.@Aca_Class.Property_RegularCapacity}}]<br /><span class="label label-success">{{row.@Aca_Class.Property_Status}}</span></td>
+                                    <td class="">
+                                        <span style="font-weight: bold;">
+                                            {{row.@Aca_Class.Property_Code}}-
+                                            {{row.@Aca_Class.Property_Name}}
+                                        </span>
+                                        <span class="label label-primary">
+                                            Cr:
+                                            {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CreditLoad | number:2}}
+                                        </span>
+                                        <span class="label label-warning">
+                                            {{row.Aca_CurriculumCourseJson.@Aca_CurriculumCourse.Property_CourseCategory}}
+                                        </span>
+                                        <br />
+                                        <div class="item-time" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="font-size: 11px; margin-bottom: 2px; color: #180f90;">
+                                            <span ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                <i class="fa fa-clock-o"></i>
+                                                <strong>{{cr.RoutineDetails}}</strong>,
+                                                <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.ShortRoomDetails}}</em>
+                                                <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @*Show taken course list*@
+            <div class="scroller_anchor"></div>
+            <div class="col-md-4 scroller  pull-right">
+                <div class="orders-container taken-courses">
+                    <div class="orders-header">
+                        <h6>
+                            <span style="font-weight: bold">
+                                Taken Courses | Total Credit
+                            </span>
+                            <span class="badge badge-primary" style="font-weight: bold">
+                                {{TotalCredits}}
+                            </span>
+                        </h6>
+                    </div>
+                    <div class="slim-scroll course-list">
+                        <ul class="orders-list">
+                            <li class="order-item top" ng-repeat="row in ClassList
+                    |filter:{IsAlreadyAdded: true}">
+                                <div class="row">
+                                    <div class="col-md-11 ">
+                                        <div class="item-booker">
+                                            {{row.@Aca_Class.Property_Code}}-
+                                            {{row.@Aca_Class.Property_Name}}
+                                        </div>
+                                        <div class="item-time" style="font-size: 9px; margin-bottom: 2px;">
+
+                                            <span ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                <i class="fa fa-clock-o"></i>
+                                                <strong>{{cr.RoutineDetails}}</strong>,
+                                                <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.ShortRoomDetails}}</em>
+                                                <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                                <br />
+                                            </span>
+                                            @*<i class="fa fa-clock-o"></i>*@
+                                            @*<span style="color: black">
+                                                    Sun 10:00 AM - 10:50 AM 501-Class Room
+                                                </span>
+                                                <br/>
+                                                <i class="fa fa-clock-o"></i>
+                                                <span style="color: black">
+                                                    Tue 11:30 AM - 1:20 PM 501-Class Room
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="item-more-remove" href="" ng-click="courseRemove(row)">
+                                    <i class="fa fa-remove" title="Course Remove from Registration"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget-footer text-center">
+                        <a class="btn btn-success"
+                           id="{{SemesterId}}"
+                           onclick="LoadPaymentDetails(this.id)">
+                            Show Payments
+                        </a>
+                        <a class="btn btn-danger"
+                           ng-click="@(confirmRegistration)()">
+                            Confirm Registration
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @ButtonStripes(saveClasses, printPaySlipUrl, printCourseRegistrationUrl, confirmRegistration)
+        <!--Assesment Modal -->
+        <div class="modal fade" id="showAssesmentModal" tabindex="-1" role="dialog" aria-labelledby="showAssesmentModal">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" style="color: white;" id="showAssesmentModalLabel">Semester Payments</h4>
+                    </div>
+                    <div class="modal-body">
+                        @*<div class="show-assesment well with-header">*@
+                        @*<div class="header bg-blue">
+                                Semester Payments
+                            </div>*@
+                        <div class="payment-details"></div>
+                        @*</div>*@
+                        <div class="modal-footer" style="text-align: center">
+                            @*<button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-paypal"></i> Online Payment</button>*@
+                            <button type="button" class="btn btn-blue" data-dismiss="modal"><i class="fa fa-print"></i>Print Payslip</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal End -->
+        </div>
+        @helper ButtonStripes(string saveClasses,string printPaySlipUrl, string printCourseRegistrationUrl,string confirmRegistration)
+        {
+    <div class="well" style="text-align: center;">
+        <a class="btn btn-success"
+           id="{{SemesterId}}"
+           onclick="LoadPaymentDetails(this.id)">
+            Show Payments
+        </a>
+        <a class="btn btn-danger"
+           style="margin: 0px 5px 0px 5px;"
+           ng-click="@(confirmRegistration)()"
+           >
+            Confirm Registration
+        </a>
+
+        <a type="button" class="btn btn-blue" data-dismiss="modal"
+           style="margin: 0px 5px 0px 5px;"
+           href="@(printPaySlipUrl)/?semesterId={{SemesterId}}"
+           target="_blank"
+                >
+            <i class="fa fa-print"></i> Print Payslip 
+        </a>
+        <a  class="btn btn-blue" data-dismiss="modal"
+            style="margin: 0px 5px 0px 5px;"
+            href="@(printCourseRegistrationUrl)/?semesterId={{SemesterId}}"
+            target="_blank"
+            >
+            <i class="fa fa-print"></i> Print Registration
+        </a>
+        <button type="button" class="btn btn-success" data-dismiss="modal"
+                style="margin: 0px 5px 0px 5px;">
+            <i class="fa fa-paypal"></i> Online Payment
+        </button>
+        <a type="button" class="btn btn-purple" data-dismiss="modal"
+                style="margin: 0px 5px 0px 5px;"
+           href="/Student/Registration"
+           target="_blank"
+                >
+            Go to Previous Registration
+        </a>
+    </div>
+}
+
+    </div>
+@*controller End*@
+
+</div>

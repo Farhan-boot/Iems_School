@@ -1,0 +1,447 @@
+﻿
+
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.Accounts.Controllers.WebApi
+@{
+    ViewBag.Title = "Payment Excel Upload";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+
+    var uploadBankPaymentExcelFileUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentExcelUploadApi", action = "UploadBankPaymentGenericExcelFile", area = "Accounts" });
+    var saveBankPaymentExcelDataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentExcelUploadApi", action = "SaveBankPaymentGenericExcelData", area = "Accounts" });
+    var getBankPaymentExcelUploadDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PaymentExcelUploadApi", action = "GetBankPaymentGenericExcelUploadDataExtra", area = "Accounts" });
+    //Angular Function Name
+    string uploadBankPaymentExcelFile = "uploadBankPaymentExcelFile";
+    string saveBankPaymentExcelData = "saveBankPaymentExcelData";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/BankIntegration/PaymentExcelUpload.js?v=1"></script>
+}
+
+<script>
+    $(document).ready(function () {
+        //console.log("ready!");
+        collapseSidebar();
+    });
+
+</script>
+
+<div ng-controller="BankPaymentExcelUploadCtrl"
+     ng-init="Init(
+         '@uploadBankPaymentExcelFileUrl'
+         ,'@saveBankPaymentExcelDataUrl'
+        ,'@getBankPaymentExcelUploadDataExtraUrl'
+     )"
+     class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky">
+                <span class="widget-caption">Upload Payment Excel File</span>
+            </div><!--Widget Header-->
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-palegreen">
+                                <span class="widget-caption">Upload Payment Excel File</span>
+                            </div>
+                            <div class="widget-body" style="height: 288px;">
+                                <div class="table-form">
+                                    <table class="form ebl-drop-box" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                            <tr>
+                                                <td class="fieldlabel">Collection Semester: <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea" colspan="3">
+                                                    <select ng-model="BankPaymentExcelTransactionJson.CollectionSemesterId"
+                                                            ng-options="option.Id as option.Name for option in SemesterList" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Bank Name: <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea" colspan="3">
+                                                    <select ng-model="BankPaymentExcelTransactionJson.BankId"
+                                                            ng-options="option.Id as option.Name for option in BankList" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                @*<td class="fieldlabel">Voucher No: <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                <td class="fieldarea" style="">
+                                                    <input next-focus id="VoucherNoText" ng-model="BankPaymentExcelTransactionJson.VoucherNome" type="text"
+                                                           class="form-control  input-inline" placeholder="Manual Voucher No">
+                                                </td>*@
+                                                <td class="fieldlabel">Date Created:</td>
+                                                <td class="fieldarea" style="padding-left: 5px !important;">
+                                                    @DateTime.Now.ToString("MMM-dd-yyyy h:mm:ss tt")
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <form class="form-horizontal form-bordered" role="form">
+                                        <div class="form-group">
+                                            <div class="col-sm-4 no-padding-right">
+                                                <button type="file" class="btn btn-primary shiny"
+                                                        ngf-drop ng-model="myFile" name="photoImage"
+                                                        ngf-pattern="'.xlsx'"
+                                                        ngf-accept="'.xlsx'"
+                                                        accept=".xlsx"
+                                                        ngf-max-files="1"
+                                                        ngf-max-size="5MB"
+                                                        ngf-select="progress=0;"
+                                                        ng-click="cleanUIData()">
+                                                    <i class="fa fa-file-excel-o"></i><span>1. Select file</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-sm-8" style="font-weight: bold">
+                                                <p ng-show="myFile==null" class="red"><span>No file selected! {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}</span></p>
+                                                <p ng-hide="myFile==null" class="colored-success">1.{{myFile.name}} (Size: {{myFile.size/1000+' KB'}}) </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-hide="myFile==null">
+                                            <div class="col-sm-4 no-padding-right">
+                                                <div class="">
+                                                    <button class="btn btn-success" ng-click="@uploadBankPaymentExcelFile ()"><i class="fa fa-check"></i>2. Validated File</button>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8 ">
+                                                <div class="progress progress-shadowed progress-bordered" ng-show="progress>0 && myFile!=null">
+                                                    <div class="progress-bar progress-bar-success" role="progressbar"
+                                                         aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: {{progress}}% " ng-bind="progress + '%'">
+                                                        <span>
+                                                            {{progress}}% Complete
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span ng-show="progress==100"><i class="fa fa-check"></i> File uploaded, please wait for processing!</span>
+                                                <span class="err" ng-show="HasError">{{errorMsg}}</span>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div @*ng-show="IsSummaryShow"*@ class="col-lg-6 col-sm-6 col-xs-12">
+
+                        <div class="widget">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs" id="myTab9">
+                                    <li class="active"><a data-toggle="tab" href="#UploadInstructions" aria-expanded="true">Upload Instructions</a></li>
+                                    <li class="tab-info"><a data-toggle="tab" href="#FileSummery" aria-expanded="false">File Summery</a></li>
+                                    <li class="tab-info"><a data-toggle="tab" href="#Help" aria-expanded="false">Help</a></li>
+                                </ul>
+                                <div class="tab-content no-padding">
+                                    <div id="UploadInstructions" class="tab-pane active">
+                                        <div class="widget-body" style="height: 279px;">
+                                            <form class="form-horizontal form-bordered" role="form">
+                                                <div id="horizontal-form">
+
+                                                    <div class="alert alert-warning fade in">
+                                                        <i class="fa-fw fa fa-exclamation-triangle"></i>
+                                                        <strong>Attention!</strong> You must upload only .xlsx file and follow the instructions:
+                                                        <p>
+                                                            <span class="badge badge-success">Step 1</span> Select Valid Excel File for Upload. (You can download a Valid Example File Format).
+                                                            <a href="~/Uploads/SampleFiles/PaymentExcelUploadFileFormat.xlsx" class="btn btn-xs btn-default">click here to download <i class="fa fa-download"></i></a>
+                                                        </p>
+                                                        <p>
+                                                            <span class="badge badge-success">Step 2</span> Validated Excel File Before Final Submit.
+                                                        </p>
+                                                        <p>
+                                                            <span class="badge badge-success">Step 3</span> Must Correct if Any Error (Red Color) found in the Excel, then upload corrected file again. You can Ignore Warnings (Yellow Color).
+                                                        </p>
+                                                        <p>
+                                                            <span class="badge badge-success">Step 4</span> Must Review Summery of the uploading Excel before upload.
+                                                        </p>
+                                                        <p>
+                                                            <span class="badge badge-success">Step 5</span> Once all Errors are found correct, Then Press <kbd>Confirm & Save</kbd> for final Submission.
+                                                        </p>
+                                                        <p>
+                                                            <span class="badge badge-success">Step 6</span> If all data update successfully system will give a green message.
+                                                        </p>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="FileSummery" class="tab-pane">
+                                        <div class="widget-body" style="height: 279px;">
+                                            <div class="table-form">
+                                                <table class="form ebl-drop-box" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="fieldlabel">Total Credit Amount </td>
+                                                            <td class="fieldarea" colspan="3">
+                                                                {{TotalCreditAmount}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fieldlabel">Total Transactions </td>
+                                                            <td class="fieldarea" colspan="3">
+                                                                {{TotalTransactions}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fieldlabel">Total Student </td>
+                                                            <td class="fieldarea" colspan="3">
+                                                                {{TotalStudent}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fieldlabel">Transaction Start-End </td>
+                                                            <td class="fieldarea" colspan="3">
+                                                                {{TransactionStartToEnd}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="Help" class="tab-pane">
+                                        <div class="widget-header bordered-bottom bordered-sky ">
+                                            <i class="widget-icon fa fa-list bold  "></i>
+                                            <span class="widget-caption ">Particular Name List </span>
+
+
+                                        </div>
+                                        <div class="widget-body no-padding" style="overflow: auto; height: 245px;">
+
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead class="bordered-blue">
+                                                    <tr>
+                                                        <th class="text-center" style="display:none">
+                                                            <input type="checkbox" ng-click="selectAll($event)">
+                                                        </th>
+                                                       
+                                                        <th class="text-center">Id</th>
+                                                        <th class="text-center">Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <tr ng-repeat="row in ParticularNameList">
+                                                        <td class="text-center" style="display:none">
+                                                            <input type="checkbox" ng-model="row.@Acnt_ParticularName.Property_IsSelected" />
+                                                        </td>
+                                                       
+                                                        <td class="text-center">{{row.@Acnt_ParticularName.Property_Id}}</td>
+                                                        <td class="">{{row.@Acnt_ParticularName.Property_Name}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="widget-header bordered-bottom bordered-palegreen">
+                                    <span class="widget-caption">Upload Information</span>
+                                </div>*@
+
+                        </div>
+                    </div>
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    @* Validation or Other Error *@
+                    <div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention Please!</strong> {{ErrorMsg}}
+                    </div>
+                    @* Error data found *@
+                    <div ng-Hide="!HasErrorData" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasErrorData=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention Please!</strong> Error data found! First solve those, then try again.
+                    </div>
+
+                    <div ng-Hide="!IsSuccessfullyCreditSaving" class="alert alert-success fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasErrorData=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Successfully all data upload.</strong>
+                    </div>
+
+                    <div class="widget"
+                         ng-show="(BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Error)}).length>0">
+                        <div class="widget-header bg-danger bordered-bottom">
+                            <span class="widget-caption">Invalid Transaction Found (Below Transaction will not Update in Database)</span>
+                        </div>
+                        <div class="widget-body">
+                            <div>
+                                <table class="table table-striped table-bordered table-hover mark-input">
+                                    <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Date</th>
+                                        <th style="width: 150px" class="text-center"> Credit Amount</th>
+                                        <th class="text-center">Particular</th>
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Transaction ID</th>
+                                        <th class="text-center">Voucher No</th>
+                                        <th class="text-center" style="width: 350px;">Error</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="row in BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Error)}">
+                                        <td class="text-center">
+                                            {{$index+1}}
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-if="row.IsDateError">{{row.ExcelDate}}</span>
+                                            <span ng-if="!row.IsDateError">{{row.TransDateTime|date:'MMM-dd-yyyy h:mm:ss a'}}</span>
+                                        </td>
+                                        <td class="text-center">{{row.CreditAmountStr}}</td>
+                                        <td class="text-center">{{row.ParticularName}}</td>
+                                        <td>{{row.StdUserName}}</td>
+                                        <td class="text-center">{{row.TransactionId}}</td>
+                                        <td class="text-center">{{row.VoucherNo}}</td>
+                                        <td class="text-center" ng-bind-html="renderHtml(row.Error)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget"
+                         ng-show="(BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.UnSuccess)}).length>0">
+                        <div class="widget-header bordered-bottom bg-warning">
+                            <span class="widget-caption">Below Transaction will not Update in Database</span>
+                        </div>
+                        <div class="widget-body">
+                            <div>
+                                <table class="table table-striped table-bordered table-hover mark-input">
+                                    <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Date</th>
+                                        <th style="width: 150px" class="text-center"> Credit Amount</th>
+                                        <th class="text-center">Particular</th>
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Transaction ID</th>
+                                        <th class="text-center">Voucher No</th>
+                                        <th class="text-center" style="width: 350px;">warning</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="row in BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.UnSuccess)}">
+                                        <td class="text-center">
+                                            {{$index+1}}
+                                        </td>
+                                        <td class="text-center">{{row.TransDateTime|date:'MMM-dd-yyyy h:mm:ss a'}}</td>
+                                        <td class="text-center">{{row.CreditAmount}}</td>
+                                        <td class="text-center">{{row.ParticularName}}</td>
+                                        <td>{{row.StdUserName}}</td>
+                                        <td class="text-center">{{row.TransactionId}}</td>
+                                        <td class="text-center">{{row.VoucherNo}}</td>
+                                        <td class="text-center" ng-bind-html="renderHtml(row.Error)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget"
+                         ng-show="(BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Success)}).length>0">
+                        
+                        <div ng-hide="(BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Error)}).length>0
+                             || BankPaymentExcelDataJsonList == null || BankPaymentExcelDataJsonList.length == 0" style="margin-bottom: 15px;">
+                            <span class="badge badge-warning" style="font-size: 22px !important; padding: 10px;">
+                                <b>Note:</b>
+                                Must Check "Date" Column's Values Before Press Final "Confirm & Save" Button.
+                            </span>
+                                
+                        </div>
+
+                        <div class="widget-header bordered-bottom bg-success">
+                            <span class="widget-caption">Valid Transaction (Press Confirm Button, to Update Below Transaction in Database)</span>
+                        </div>
+                        <div class="widget-body">
+                            <div>
+                                <table class="table table-striped table-bordered table-hover mark-input">
+                                    <thead class="bordered-blue">
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Date</th>
+                                        <th style="width: 150px" class="text-center"> Credit Amount</th>
+                                        <th class="text-center">Particular</th>
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Transaction ID</th>
+                                        <th class="text-center">Voucher No</th>
+                                        <th class="text-center" style="width: 350px;">Narration</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="row in BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Success)}">
+                                        <td class="text-center">
+                                            {{$index+1}}
+                                        </td>
+                                        <td class="text-center">{{row.TransDateTime|date:'MMM-dd-yyyy h:mm:ss a'}}</td>
+                                        <td class="text-center">{{row.CreditAmount}}</td>
+                                        <td class="text-center">{{row.ParticularName}}</td>
+                                        <td>{{row.StdUserName}}</td>
+                                        <td class="text-center">{{row.TransactionId}}</td>
+                                        <td class="text-center">{{row.VoucherNo}}</td>
+                                        <td class="text-center">{{row.Narration}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-hide="(BankPaymentExcelDataJsonList| filter:{ReportStatusEnumId:@((byte) PaymentExcelUploadApiController.ReportStatusEnum.Error)}).length>0
+                             || BankPaymentExcelDataJsonList == null || BankPaymentExcelDataJsonList.length == 0"
+                         class="text-center" style="margin-top: 10px;">
+                        <div style="margin-bottom: 10px; font-size: 14px;">
+                            <input ng-model="IsEnableSaveButton" style="vertical-align: middle;" type="checkbox"/>
+                            I have carefully checked date and other data and all are correct.
+                        </div>
+                        <button ng-click="@saveBankPaymentExcelData ()"
+                                ng-disabled="!IsEnableSaveButton"
+                                class="btn btn-success">
+                            <i class="fa fa-upload"></i>3. Confirm & Save
+                        </button>
+                    </div>
+                </div>
+
+                </div><!--Widget Body-->
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .ebl-drop-box input, .ebl-drop-box optgroup, .ebl-drop-box select, .ebl-drop-box textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .upload-information {
+        color: red;
+    }
+</style>
+
+<script>
+    function getFileSize(bytes, decimals) {
+        alert(bytes)
+        if (bytes == 0) return '0 Byte';
+        var k = 1000; // or 1024 for binary
+        var dm = decimals + 1 || 3;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+</script>

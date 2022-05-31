@@ -1,0 +1,314 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Web.Jsons.Custom.BasicAccounting
+@model EMS.Framework.Objects.MvcModelResult<LedgerTransactionJson>
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+
+
+    //Narration
+    var narration = Request.QueryString["narration"];
+    bool IsShowNarration = narration.IsValid() && narration == "true" ? true : false;
+
+    //Details
+    var dtl = Request.QueryString["dtl"];
+    bool IsShowDetails = dtl.IsValid() && dtl == "true" ? true : false;
+
+    //Code Name
+    var code = Request.QueryString["code"];
+    bool IsShowCodeName = code.IsValid() && code == "true" ? true : false;
+
+    var ledgerTrans = Model.Data;
+    var startDate = Model.DataBag.StartDate;
+    var endDate = Model.DataBag.EndDate;
+
+    <div class="main-body" style="background-color: white !important;">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 15px;">
+            <div style="font-size: 20px;">Ledger: @ledgerTrans.LedgerParentCode-@ledgerTrans.LedgerName</div>
+            <div> @startDate.ToString("dd/MM/yyyy") to @endDate.ToString("dd/MM/yyyy")</div>
+        </div>
+        
+        <div>
+            <table class="table-bordered table-border voucher-table" width="100%">
+                <thead>
+                <tr class="voucher-table-thead">
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Voucher No</th>
+                    <th class="text-center">Voucher Type</th>
+                    <th class="text-center">Debit</th>
+                    <th class="text-center">Credit</th>
+                   
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5" style="padding-top: 10px; border: none !important;"></td>
+                </tr>
+                @foreach (var voucher in ledgerTrans.VoucherJsonList)
+                {
+                    <tr style="@(IsShowDetails ? "background-color: #d0cece !important;" : "")">
+                        <td class="text-center">@voucher.Date.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@voucher.VoucherNo</td>
+                        <td class="text-center">@voucher.VoucherType</td>
+                        <td class="text-center">
+                            @if (voucher.SelectedLedgerDrAmount != 0)
+                            {
+                                <span>@voucher.SelectedLedgerDrAmount</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (voucher.SelectedLedgerCrAmount != 0)
+                            {
+                                <span>@voucher.SelectedLedgerCrAmount</span>
+                            }
+                        </td>
+                    </tr>
+
+                    if (IsShowDetails || IsShowNarration)
+                    {
+                        <tr>
+                            <td colspan="5" style="padding: 5px; background-color: #e6e6e6 !important;">
+                                <table style="width: 100%; background-color: #fff !important;" class="table-bordered table-border voucher-dlt-table">
+                                    @if (IsShowDetails)
+                                    {
+                                        <thead>
+                                            <tr>
+                                                <th>Particulars</th>
+                                                <th>Debit</th>
+                                                <th>Credit</th>
+                                            </tr>
+                                        </thead>
+                                    }
+
+                                    <tbody>
+                                        @if (IsShowDetails)
+                                        {
+                                            foreach (var voucherDtl in voucher.VoucherDetailsJsonList)
+                                            {
+                                                <tr>
+                                                    <td style="padding-left: 5px;">
+                                                        @if (voucherDtl.CodeName.IsValid() && IsShowCodeName)
+                                                        {
+                                                            <span>[@voucherDtl.CodeName]</span>
+                                                        }
+                                                        @voucherDtl.Particular
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if (voucherDtl.DebitAmount != 0)
+                                                        {
+                                                            <span>@voucherDtl.DebitAmount</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+
+                                                        @if (voucherDtl.CreditAmount != 0)
+                                                        {
+                                                            <span>@voucherDtl.CreditAmount</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                        @if (IsShowNarration)
+                                        {
+                                            <tr>
+                                                <td colspan="3" class="text-left" style="padding: 5px 5px; font-style: italic;">
+                                                    <strong>Narration: </strong>
+                                                    @voucher.Narration
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="padding-top: 15px; border: none !important;"></td>
+                        </tr>
+                    }
+
+                }
+
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table class="text-bold" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-center">Dr:</th>
+                        <th class="text-center">Cr:</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: right;">
+                    <tr>
+                        <td>Opening Balance:</td>
+                        <td style="width: 120px;" class="ng-binding">
+                            @if (ledgerTrans.PeriodOpeningDebitBalance != 0)
+                            {
+                                <span>@ledgerTrans.PeriodOpeningDebitBalance</span>
+                            }
+                        </td>
+                        <td style="width: 120px;" class="ng-binding">
+                            @if (ledgerTrans.PeriodOpeningCreditBalance != 0)
+                            {
+                                <span>@ledgerTrans.PeriodOpeningCreditBalance</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">Current Total:</td>
+                        <td class="ng-binding">
+                            @*Dr:*@
+                            @if (ledgerTrans.PeriodTotalDebitAmount != 0)
+                            {
+                                <span>@ledgerTrans.PeriodTotalDebitAmount</span>
+                            }
+                        </td>
+                        <td class="ng-binding">
+                            @*Cr:*@
+                            @if (ledgerTrans.PeriodTotalCreditAmount != 0)
+                            {
+                                <span>@ledgerTrans.PeriodTotalCreditAmount</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">Closing Balance:</td>
+                        <td class="ng-binding">
+                            @if (ledgerTrans.PeriodClosingDebitBalance != 0)
+                            {
+                                <span>@ledgerTrans.PeriodClosingDebitBalance</span>
+                            }
+                        </td>
+                        <td class="ng-binding">
+                            @if (ledgerTrans.PeriodClosingCreditBalance != 0)
+                            {
+                                <span>@ledgerTrans.PeriodClosingCreditBalance</span>
+                            }
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+}
+
+
+
+
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+    .text-top {
+        vertical-align: text-top;
+    }
+    .text-center {
+        text-align: center !important;
+    }
+    .text-right {
+        text-align: right !important;
+    }
+
+
+    .voucher-dlt-table thead > tr >th {
+        line-height: normal;
+        padding: 0px;
+    }
+    .voucher-dlt-table thead > tr >th, .voucher-dlt-table tbody > tr >td {
+        font-size: 11px !important;
+    }
+
+    .voucher-table-thead  > th {
+        line-height: normal;
+        border: 1px solid black !important;
+    }
+
+
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #a09f9f;
+    }
+    @@media print {
+
+        .main-body table {
+            border: none !important;
+        }
+        .voucher-dlt-table thead > tr >th {
+            line-height: normal;
+            padding: 1px;
+        }
+        .voucher-dlt-table thead > tr >th, .voucher-dlt-table tbody > tr >td {
+            font-size: 11px !important;
+        }
+
+        .voucher-table-thead  > th {
+            line-height: normal;
+            border: 1px solid black !important;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border:none !important;
+        }
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 0.5px solid #a09f9f !important;
+        }
+    }
+</style>

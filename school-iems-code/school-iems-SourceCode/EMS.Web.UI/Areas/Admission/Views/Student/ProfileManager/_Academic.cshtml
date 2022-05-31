@@ -1,0 +1,678 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@using EMS.Web.UI.Areas.Academic.Controllers.WebApi
+
+@{
+    var canChangeProgram = PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanChangeProgram);
+    var canChangeFeeCode = PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanChangeFeeCode);
+    var canChangeCurriculum= PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanChangeCurriculum);
+
+    //javascript variable 
+    var saveUpdateStudentNameGroup = "saveUpdateStudentNameGroup";
+}
+
+<div class="form-title">
+    <div class="row">
+        <div class="col-md-12"> User Academic Information</div>
+    </div>
+</div>
+<div class="row">
+<div class="col-md-6 table-form">
+    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+        <tbody>
+        <tr>
+            <td class="fieldlabel text-bold title-text-width">
+                Student ID
+                <span class="red glyphicon glyphicon-asterisk"></span>
+            </td>
+            <td class="fieldarea">
+                <input type="text" ng-model="Account.@User_Account.Property_UserName"
+                       ng-disabled="IsDisabledUserNameGroup"
+                       class="form-control  " placeholder="Enter Student ID" maxlength="256" required="">
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student ID" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+        </tr>
+        <tr @*ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId==@((byte)User_Student.EnrollmentTypeEnum.TransfereeStudent)"*@>
+            <td class="fieldlabel text-bold title-text-width">
+                Previous ID
+                @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+            </td>
+            <td class="fieldarea">
+                <input type="text" ng-model="Account.@User_Student.Property_PreviousStudentUserName"
+                       ng-disabled="IsDisabledUserNameGroup"
+                       class="form-control  " placeholder="Enter Previous Student ID" maxlength="256" required="">
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Previous Student ID" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel text-bold title-text-width">
+                UGC Unique Id
+                @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+            </td>
+            <td class="fieldarea">
+                <input type="text" ng-model="Account.UgcUniqueId"
+                       ng-disabled="IsDisabledUserNameGroup"
+                       class="form-control  " placeholder="Enter UGC Unique ID" maxlength="256" required="">
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter UGC Unique ID" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+        </tr>
+        @*<tr>
+            <td class="fieldlabel text-bold">Class Roll No
+                <span class="red glyphicon glyphicon-asterisk"></span></td>
+            $1$<td class="fieldarea">
+                        <span class="padding-l-10">{{Account.@User_Student.Property_ClassRollNo}}</span>
+                    </td>#1#
+            <td class="fieldarea">
+                <input type="text" ng-model="Account.@User_Student.Property_ClassRollNo" 
+                       ng-disabled="IsDisabledUserNameGroup"
+                       class="form-control" placeholder="Enter Class Roll No" maxlength="50" required=""/>
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Class Roll No." data-toggle="tooltip"></i></span></td>
+        </tr>*@
+        
+        <tr>
+            <td></td>
+            <td class="fieldarea" style="text-align: center;"colspan="2">
+                <button ng-click="IsDisabledUserNameGroup=false"
+                        ng-show="IsDisabledUserNameGroup"
+                        type="button" class="btn btn-default">Edit</button>
+                <button
+                    ng-hide="IsDisabledUserNameGroup"
+                    ng-click="saveUpdateUserNameGroup()"
+                    type="button" class="btn btn-default">Update</button>
+            </td>
+        </tr>
+        
+        
+        </tbody>
+    </table>
+    
+    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+        <tbody>
+            <tr>
+                <td class="fieldlabel text-bold title-text-width">
+                    Student's Full Name
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Account.Property_FullName"
+                           ng-disabled="IsDisabledStudentNameGroup"
+                           class="form-control  " placeholder="Enter Student Name" maxlength="256" required="">
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            @*<tr>
+                    <td class="fieldlabel text-bold">Class Roll No
+                        <span class="red glyphicon glyphicon-asterisk"></span></td>
+                    $1$<td class="fieldarea">
+                                <span class="padding-l-10">{{Account.@User_Student.Property_ClassRollNo}}</span>
+                            </td>#1#
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_ClassRollNo"
+                               ng-disabled="IsDisabledUserNameGroup"
+                               class="form-control" placeholder="Enter Class Roll No" maxlength="50" required=""/>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Class Roll No." data-toggle="tooltip"></i></span></td>
+                </tr>*@
+            
+            <tr>
+                <td></td>
+                <td class="fieldarea" style="text-align: center;" colspan="2">
+                    <button ng-click="IsDisabledStudentNameGroup=false"
+                            ng-show="IsDisabledStudentNameGroup"
+                            type="button" class="btn btn-default">
+                        Edit
+                    </button>
+                    <button ng-hide="IsDisabledStudentNameGroup"
+                            ng-click="@(saveUpdateStudentNameGroup)()"
+                            type="button" class="btn btn-default">
+                        Update
+                    </button>
+                </td>
+            </tr>
+            
+
+        </tbody>
+    </table>
+
+    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+        <tbody>
+        <tr>
+            <td class="fieldlabel text-bold title-text-width">
+                Program
+                <span class="red glyphicon glyphicon-asterisk"></span>
+            </td>
+            <td class="fieldarea">
+                @if (canChangeProgram)
+                {
+                    <select ng-model="SelectedProgram"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-change="onChangeProgram()"
+                            ng-options="option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="SelectedProgram"
+                            ng-disabled="true"
+                            ng-change="onChangeProgram()"
+                            ng-options="option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                    
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel text-bold title-text-width">
+                Semester Duration
+                <span class="red glyphicon glyphicon-asterisk"></span>
+            </td>
+            <td class="fieldarea">
+                <span>{{Account.@User_Student.Property_SemesterDurationEnumId}} M</span>
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester Duration." data-toggle="tooltip"></i></span></td>
+        </tr>
+
+        <tr ng-show="Account.@User_Student.Property_EnrollmentTypeEnumId==@((byte)User_Student.EnrollmentTypeEnum.InternalDepartmentChange)">
+            <td class="fieldlabel text-bold title-text-width">
+                Previous Program
+                <span class="red glyphicon glyphicon-asterisk"></span>
+            </td>
+            <td class="fieldarea">
+                @if (canChangeProgram)
+                {
+                    <select ng-model="Account.@User_Student.Property_PreviousProgramId"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="Account.@User_Student.Property_PreviousProgramId"
+                            ng-disabled="true"
+                            ng-options="option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                    
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Previous Program." data-toggle="tooltip"></i></span></td>
+        </tr>
+
+            <tr>
+                <td class="fieldlabel text-bold">
+                    Department
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <span class="padding-l-10">{{SelectedProgram.DepartmentName}}</span>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Department." data-toggle="tooltip"></i></span></td>
+            </tr>
+        <tr>
+            <td class="fieldlabel text-bold">
+                Fee Code
+                <span class="red glyphicon glyphicon-asterisk"></span>
+            </td>
+            <td class="fieldarea">
+                    
+                @if (canChangeProgram || canChangeFeeCode)
+                {
+                    <select ng-model="SelectedFeeCode"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-change="onChangeFeeCode()"
+                            ng-options="option.Name for option in FeeCodeList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="SelectedFeeCode"
+                            ng-disabled="true"
+                            ng-change="onChangeFeeCode()"
+                            ng-options="option.Name for option in FeeCodeList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                    
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Fee Code" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Joining Dept Batch </td>
+            <td class="fieldarea">
+                @if (canChangeProgram)
+                {
+                    <select ng-model="Account.@User_Student.Property_JoiningBatchId"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="Account.@User_Student.Property_JoiningBatchId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Dept Batch." data-toggle="tooltip"></i></span></td>
+        </tr>
+            <tr>
+                <td class="fieldlabel">Grading Policy </td>
+                <td class="fieldarea">
+                @if (canChangeProgram)
+                {
+                    <select ng-model="Account.@User_Student.Property_GradingPolicyId"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="Account.@User_Student.Property_GradingPolicyId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in GradingPolicyList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                    
+                   
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Grading Policy." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <!--dropdown option for EnumList-->
+            <tr>
+                <td class="fieldlabel">Class Timing</td>
+                <td class="fieldarea">
+                    <span class="padding-l-10">{{SelectedProgram.ClassTimingGroup}}</span>
+                </td>
+                @*<td class="fieldarea">
+                <select ng-model="Account.@User_Student.Property_ClassTimingGroupEnumId" ng-options="option.Id as option.Name for option in ClassTimingGroupEnumList" title="Select Class Timing Group" ng-init="" class="form-control">
+                    <option value="" label="" class="">---Select One---</option>
+                </select>
+            </td>*@
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Class Timing." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel text-bold">
+                    Core Curriculum
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    @if (canChangeProgram || canChangeCurriculum)
+                    {
+                        <select ng-model="Account.@User_Student.Property_CurriculumId"
+                                ng-disabled="IsDisabledAcademicGroup"
+                                ng-change="filterSelectedCurriculum()"
+                                ng-options="option.Id as option.ShortName for option in CurriculumList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select ng-model="Account.@User_Student.Property_CurriculumId"
+                                ng-disabled="true"
+                                ng-change="filterSelectedCurriculum()"
+                                ng-options="option.Id as option.ShortName for option in CurriculumList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    }
+                    
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Curriculum." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Major Curriculum</td>
+                <td class="fieldarea">
+                @if (canChangeProgram || canChangeCurriculum)
+                {
+                    <select ng-model="Account.@User_Student.Property_MajorCurriculumId"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                    <select ng-model="Account.@User_Student.Property_MajorCurriculumId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+
+                }
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Major Curriculum." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Second Major Curriculum</td>
+                <td class="fieldarea">
+                    @if (canChangeProgram || canChangeCurriculum)
+                    {
+                        <select ng-model="Account.@User_Student.Property_SecondMajorCurriculumId"
+                                ng-disabled="IsDisabledAcademicGroup"
+                                ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select ng-model="Account.@User_Student.Property_SecondMajorCurriculumId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+
+                    }
+                    
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Second Major Curriculum." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Minor Curriculum</td>
+                <td class="fieldarea">
+                    @if (canChangeProgram || canChangeCurriculum)
+                    {
+                        <select ng-model="Account.@User_Student.Property_MinorCurriculumId"
+                                ng-disabled="IsDisabledAcademicGroup"
+                                ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select ng-model="Account.@User_Student.Property_MinorCurriculumId"
+                                ng-disabled="true"
+                                ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+
+                    }
+                    
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Minor Curriculum." data-toggle="tooltip"></i></span></td>
+            </tr>
+        <tr>
+            <td class="fieldlabel">Elective Curriculum </td>
+            <td class="fieldarea">
+                @if (canChangeProgram || canChangeCurriculum)
+                {
+                    <select ng-model="Account.@User_Student.Property_ElectiveCurriculumId"
+                            ng-disabled="IsDisabledAcademicGroup"
+                            ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+                else
+                {
+                        
+                    <select ng-model="Account.@User_Student.Property_ElectiveCurriculumId"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                }
+               
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Curriculum Elective." data-toggle="tooltip"></i></span></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td class="fieldarea" style="text-align: center;" colspan="2">
+                <button ng-click="IsDisabledAcademicGroup=false"
+                        ng-show="IsDisabledAcademicGroup"
+                        type="button" class="btn btn-default">
+                    Edit
+                </button>
+                <button ng-hide="IsDisabledAcademicGroup"
+                        ng-click="saveUpdateAcademicInfoGroup()"
+                        type="button" class="btn btn-default">
+                    Update
+                </button>
+            </td>
+        </tr>
+        
+        
+        </tbody>
+    </table>
+</div><!--Col end-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <!--dropdown option for EnumList-->
+            <tr>
+                <td class="fieldlabel">Enrollment Status </td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_EnrollmentStatusEnumId" ng-options="option.Id as option.Name for option in EnrollmentStatusEnumList" title="Select Enrollment Status" ng-init="" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Enrollment Status." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel title-text-width">Date Graduated </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Account.Property_LeavingDate"
+                           ng-disabled="true"
+                           class="form-control date-picker" placeholder="Enter Date Graduated" datetime="dd/MM/yyyy"/>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Graduated." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Certificate Registration No </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Student.Property_CertificateRegistrationNo"
+                           ng-disabled="true"
+                           class="form-control" placeholder="Enter Certificate Registration No" maxlength="50"/>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Certificate Registration No." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">CGPA</td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="Account.@User_Student.Property_CGPA"
+                               ng-disabled="true"
+                               class="form-control" placeholder="Enter CGPA" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter C G P A." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Credit Completed </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="Account.@User_Student.Property_CreditCompleted" 
+                               ng-disabled="true"
+                               class="form-control" placeholder="Enter Credit Completed" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Completed." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Course Completed </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="Account.@User_Student.Property_CourseCompleted" 
+                               ng-disabled="true"
+                               class="form-control" placeholder="Enter Course Completed" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Course Completed." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Incomplete Credits </td>
+                <td class="fieldarea">
+                    <input type="number" ng-model="Account.@User_Student.Property_IncompleteCredits"
+                           ng-disabled="true"
+                           class="form-control" placeholder="Enter Incomplete Credits" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Incomplete Credits." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Credit Transfer</td>
+                <td class="fieldarea"><input type="number" ng-model="Account.@User_Student.Property_CreditTransfer"
+                                             ng-disabled="true"
+                                             class="form-control " value="" tabindex="2"></td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Transfer" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Credit Waiver</td>
+                <td class="fieldarea"><input type="number" ng-model="Account.@User_Student.Property_CreditWaiver"
+                                             ng-disabled="true"
+                                             class="form-control " value="" tabindex="2"></td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Waiver" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Continuing Batch </td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_ContinuingBatchId"
+                            ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Dept Batch." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Class Section</td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_ClassSectionId"
+                            ng-options="option.Id as option.Name for option in ClassSectionList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select ClassSection." data-toggle="tooltip"></i></span></td>
+            </tr>
+            
+
+            <tr>
+                <td class="fieldlabel">Study Level Term</td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_LevelTermId"
+                            ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Study Level Term." data-toggle="tooltip"></i></span></td>
+            </tr>
+            @*<tr>
+                    <td class="fieldlabel">Study Level </td>
+                    <td class="fieldarea">
+                        <select ng-model="Account.@User_Student.Property_LevelTermId"
+                                ng-options="option.Id as option.Name for option in StudyLevelList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Study Level." data-toggle="tooltip"></i></span></td>
+                </tr>*@
+                @*<tr>
+                    <td class="fieldlabel">Study Term </td>
+                    <td class="fieldarea">
+                        <select ng-model="Account.@User_Student.Property_TermId"
+                                ng-options="option.Id as option.Name for option in StudyTermList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Study Term." data-toggle="tooltip"></i></span></td>
+                </tr>*@
+                <tr>
+                    <td class="fieldlabel">Registration No </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_RegistrationNo" class="form-control" placeholder="Enter Registration No" maxlength="50" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Registration No." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Registration Session </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Student.Property_RegistrationSession" class="form-control" placeholder="Enter Registration Session" maxlength="50" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Registration Session." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Joining Semester</td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Account.Property_JoiningSemesterId"
+                            ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Joining Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr> 
+            <tr>
+                <td class="fieldlabel">Admission Date</td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Account.Property_JoiningDate" class="form-control date-picker" placeholder="Enter Admission Date" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Admission Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Admission Test Roll No </td>
+                @*<td class="fieldarea">
+                        <span class="padding-l-10">{{Account.@User_Student.Property_AdmissionTestRollNo}}</span>
+                    </td>*@
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Student.Property_AdmissionTestRollNo" class="form-control" placeholder="Enter Admission Test Roll No" maxlength="50" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Admission Test Roll No." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Admission Status</td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_AdmissionStatusEnumId"
+                            ng-options="option.Id as option.Name for option in AdmissionStatusEnumList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Admission Status" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Campus List</td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Account.Property_CampusId"
+                            ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Campus List" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+            </tr>
+            
+            <tr class="text-danger">
+                <td class="fieldlabel">Force Disable Online Registration?</td>
+                <td class="fieldarea">
+                    <div class="checkbox">
+                        <label>
+                            <input ng-model="Account.@User_Student.Property_ForceDisableOnlineRegistration" class="checkbox-slider yesno slider-icon colored-purple" name="form-field-checkbox" type="checkbox" value="true">
+                            <input name="form-field-checkbox" type="hidden" value="false"><span class="text"></span>
+                        </label>
+                    </div>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check If Force Disable Online Registration." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr class="text-danger">
+                <td class="fieldlabel">Enable Open Credit Registration?</td>
+                <td class="fieldarea">
+                    <div class="checkbox">
+                        <label>
+                            <input ng-model="Account.@User_Student.Property_EnableOpenCreditRegistration" class="checkbox-slider yesno slider-icon colored-purple" name="form-field-checkbox" type="checkbox" value="true">
+                            <input name="form-field-checkbox" type="hidden" value="false"><span class="text"></span>
+                        </label>
+                    </div>
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check If Enable Open Credit Registration." data-toggle="tooltip"></i></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+</div><!--Row end-->
+<style>
+    .title-text-width {
+        width: 160px;
+    }
+</style>

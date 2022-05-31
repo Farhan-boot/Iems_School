@@ -1,0 +1,99 @@
+﻿
+<!--File:BAcnt_Ledger List View-->
+@using System.Collections
+@using System.Web.Razor.Parser.SyntaxTree
+@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Models
+@model EMS.Framework.Objects.MvcModelListResult<EMS.Web.Jsons.Models.BAcnt_LedgerJson>
+@{
+    ViewBag.Title = "BasicAccounting : Chart of Accounts (Ledger List)";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+
+    var refreshPage = "loadPage()";
+
+}
+
+@section ScriptSection
+{
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=2"></script>
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+            collapseSidebar();
+        });
+    </script>
+}
+
+
+@if (Model.HasError)
+{
+    <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> @Html.Raw(Model.ErrorHtml)
+    </div>
+}
+else
+{
+    <div class="widget" @*ng-show="HasViewPermission"*@>
+
+        <div class="widget-header bordered-bottom bordered-sky">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Ledger </span>
+            <div class="widget-buttons no-padding-left">
+                <div class="dropdown form-group margin-right-10">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Ledger
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                        <li><a href="#" onclick="$('#ChartOfAccounts').tableExport({ fileName: 'ChartOfAccounts', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel(.xls)</a></li>
+                        <li><a href="#" onclick="$('#ChartOfAccounts').tableExport({ fileName: 'ChartOfAccounts', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word(.doc)</a></li>
+                        <li><a href="#" onclick="$('#ChartOfAccounts').tableExport({ fileName: 'ChartOfAccounts', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV(.csv)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="widget-body no-padding" style="overflow: auto">
+            <table class="table table-striped table-bordered table-hover"
+                   id="ChartOfAccounts">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Parent Id</th>
+                        <th class="text-center">Branch Id</th>
+                        <th class="text-center">Company Id</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Group/Ledger</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Head Name (Group)</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Head Name (Group)</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Head Name (Group)</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Head Name (Group)</th>
+                        <th colspan="2" class="text-center">Ledger Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @DisplayTree(Model.Data)
+                </tbody>
+        </table>
+            
+        </div>
+    </div>
+}
+
+@helper DisplayTree(ICollection<BAcnt_LedgerJson> model) {
+        foreach (var data in model)
+        {
+            @Html.Raw(@data.RowString)
+        }
+    }
+
+
+
+
+

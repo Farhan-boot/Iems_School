@@ -1,0 +1,162 @@
+﻿
+<!--File:General_Notice List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Notice List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var NoticeId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeById", area = "Admin" });
+    var getNoticeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeDataExtra", area = "Admin" });
+    var saveNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "SaveNotice", area = "Admin" });
+    var deleteNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetDeleteNoticeById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedNoticeUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "NoticeApi", action = "GetPagedNotice", area = "Admin"});
+    var getAllNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetAllNotice", area = "Admin" });
+    var saveNoticeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "SaveNoticeList", area = "Admin" });
+    var getNoticeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeListDataExtra", area = "Admin" });
+
+    var editNoticeByIdPageUrl = Url.Action("NoticeAddEdit", "Notice", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewNotice = "getNewNotice";
+    var saveNotice = "saveNotice";
+    var deleteNoticeById = "deleteNoticeById";
+    var deleteNoticeByObj = "deleteNoticeByObj";
+    //for list
+    var searchNoticeList = "searchNoticeList";
+    var getPagedNoticeList = "getPagedNoticeList";
+    var getAllNoticeList = "getAllNoticeList";
+    var saveNoticeList = "saveNoticeList";
+    var getNoticeListExtraData = "getNoticeListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Notice/NoticeList.js"></script>
+}
+
+
+<div ng-controller="NoticeListCtrl"
+     ng-init="Init(
+      '@getPagedNoticeUrl'
+     ,'@deleteNoticeByIdUrl'
+     ,'@getNoticeListDataExtraUrl'
+     ,'@saveNoticeListUrl'
+     ,'@getNoticeByIdUrl'
+     ,'@getNoticeDataExtraUrl'
+     ,'@saveNoticeUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Notice </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchNoticeList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editNoticeByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchNoticeList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Title</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">File Path</th>
+                    <th class="text-center">Order No</th>
+                    <!--th class="text-center">Visibility Type Enum Id</th-->
+                    <th class="text-center">Visibility Type</th>
+                    <th class="text-center">Publish Date</th>
+                    <th class="text-center">Expiry Date</th>
+                    <th class="text-center">Is Deleted</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in NoticeList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Notice.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@General_Notice.Property_Title}}</td>
+                    <td class="">{{row.@General_Notice.Property_Description}}</td>
+                    <td class="">{{row.@General_Notice.Property_FilePath}}</td>
+                    <td class="">{{row.@General_Notice.Property_OrderNo}}</td>
+                    <!--td class="">{{row.@General_Notice.Property_VisibilityTypeEnumId}}</td-->
+                    <td class="">{{row.@General_Notice.Property_VisibilityType}}</td>
+                    <td class="">{{row.@General_Notice.Property_PublishDate}}</td>
+                    <td class="">{{row.@General_Notice.Property_ExpiryDate}}</td>
+                    <td class="">{{row.@General_Notice.Property_IsDeleted}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editNoticeByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteNoticeById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

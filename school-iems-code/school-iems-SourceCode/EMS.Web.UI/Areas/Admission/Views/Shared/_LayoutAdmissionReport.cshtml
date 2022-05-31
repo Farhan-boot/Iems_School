@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmission.cshtml";
+}
+@section HeadSection
+{
+    @RenderSection("HeadSection", required: false)
+}
+@section StyleSection
+{
+    @RenderSection("StyleSection", required: false)
+<style>
+    .print-footer {
+        display: none !important;
+    }
+
+    @@media print {
+        .print-footer {
+            display: none !important;
+        }
+    }
+</style>
+}
+
+
+<div class="report-container ">
+    <table>
+        <thead class="report-header-row show-on-print">
+            <tr>
+                <th class="report-header">
+                    @RenderSection("ReportHeaderSection", required: true)
+                </th>
+            </tr>
+        </thead>
+        <tbody class="report-body-row">
+            <tr>
+                <td class="report-body">
+                    @RenderBody()
+                </td>
+            </tr>
+        </tbody>
+        <tfoot class="report-footer-row show-on-print">
+            <tr>
+                <td class="report-footer">
+                    @RenderSection("ReportFooterSection", required: true)
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+
+
+
+@section ScriptSection
+{
+    @RenderSection("ScriptSection", required: false)
+}
+

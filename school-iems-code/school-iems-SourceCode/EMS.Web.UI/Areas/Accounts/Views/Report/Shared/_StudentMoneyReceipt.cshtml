@@ -1,0 +1,275 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@using EMS.Framework.Utils
+@model EMS.Framework.Objects.MvcModelResult<Acnt_StdTransaction>
+
+
+@helper Header(string reportCopyName)
+{
+    var reportModel = new ReportHeaderFooterModel();
+    reportModel.ReportNo = "SACNT/001/201901";
+    reportModel.HtmlRightArea = "<img class=\"logo-size\" src=\"/assets/img/logo/barcode.png\" >";
+    reportModel.Subtitle = reportCopyName;
+    ViewBag.ReportModel = reportModel;
+@Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+@helper Footer()
+{
+    <div style="margin-top: 10px;">
+        @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+    </div>
+}
+
+@if (Model.HasError == true || Model.Data == null)
+{
+    foreach (var error in Model.Errors)
+    {
+        <div class="alert alert-danger radius-bordered ">
+
+            <strong>Attention Please!</strong> @error
+        </div>
+        <br />
+    }
+}
+else
+{
+
+    //Print Button
+    @*<div class="widget-buttons no-padding-left">
+            <button onclick="window.print()" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</button>
+     </div>*@
+
+
+
+    <div class="main-body">
+        <div style="min-height: 500px;">
+            @MoneyReceiptHtlm("Office Copy")
+        </div>
+       
+        <div class="divider-border">
+            <div style="border-top: 1px dotted black;"></div>
+        </div>
+
+        <div>
+            @MoneyReceiptHtlm("Student Copy")
+        </div>
+       
+    </div>
+
+}
+
+@helper MoneyReceiptHtlm(string reportCopyName){
+    @Header(reportCopyName)
+    <div style="margin-top: 10px;">
+        
+        <table style="width: 100%">
+            <tbody>
+            <tr>
+                <td style="font-weight: bold;"><span>User ID: </span> 
+                    @if (Model.Data!=null)
+                    {
+                        <span>@Model.Data.User_Student.UserName</span>  
+                    }
+                    </td>
+                <td style="font-weight: bold;">
+                    <span>Name:</span> @Model.Data.User_Student.User_Account.FullName
+                </td>
+                <td style="width: 180px;">
+                    @if (Model.Data.Aca_Semester.IsNotNull())
+                    {
+                        <span>Semester:</span> @Model.Data.Aca_Semester.Name
+                    }
+                </td>
+                <td>
+                    @if (Model.Data.User_Student.Aca_Program.IsNotNull())
+                    {
+                        <span>Program:</span> @Model.Data.User_Student.Aca_Program.ShortTitle
+                    }
+                </td>
+
+            </tr>
+            <tr>
+                
+                <td>
+                    @if (Model.Data.IsNotNull())
+                    {
+                        <span>Bank Name:</span> @Model.Data.BankName
+                    }
+                </td>
+                <td>
+                    <span>Voucher No:</span>@Model.Data.VoucherNo
+                </td>
+                <td>
+                    <span>Slip ID:
+                    </span>
+                   
+                    @if (Model.Data.PaySlipId != null)
+                    {
+                        <span>@Model.Data.PaySlipId</span>
+                    }
+                    else
+                    {
+                        @Model.Data.Id.ToString()
+                    }
+                    @if (Model.Data.ManualPaySlipNo.IsValid())
+                    {
+                        <span> [@Model.Data.ManualPaySlipNo]</span>
+                    }
+
+                </td>
+                <td><span>Date: @Model.Data.Date.ToString("dd/MM/yyy")</span> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top: 15px;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="vertical-align: baseline;">
+                    <div class="bor transaction-info">
+                        <table style="width: 300px;">
+                            <tr class="header" style="background-color: lightgray !important; text-align: center; font-weight: bold;">
+                                <td style="width: 250px; text-align: left;padding-left: 6px;">Particular Name</td>
+                                <td style="width: 120px;">Amount [BDT]</td>
+                            </tr>
+                            @foreach (var transDetail in Model.Data.Acnt_StdTransactionDetail)
+                            {
+                                <tr class="items">
+                                    <td style="padding-left: 6px;">
+                                        <span class="particular">
+                                            @transDetail.Name
+                                        </span>
+                                        @if (transDetail.Remark.IsValid())
+                                        {
+                                            <span class="remark" style="">(@Html.Raw(transDetail.Remark)) </span>
+                                        }
+                                    </td>
+                                    <td style="padding-right: 10px;  text-align: right">@(String.Format("{0:n}", transDetail.Amount))</td>
+                                </tr>
+                            }
+
+                            <tr style="background-color: lightgray; text-align: right; font-weight: bold;">
+                                <td style="padding-right: 10px;">Total</td>
+                                <td style="padding-right: 10px;">@(String.Format("{0:n}", Model.Data.CreditAmount))</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </td>
+                <!-- ==== -->
+                <td style="width: 100%;">
+                    <div style="text-align: center;">
+                        <span>Paid Amount [BDT]</span>
+                    </div>
+                    <div style="text-align: center; font-weight: bold;">
+                        <span  style="font-size: 25px !important; line-height: 2; border: 1px solid; padding: 0px 10px;">
+                            =@(Model.Data.CreditAmount)=
+                        </span>
+                    </div>
+                    <div style="text-align: center; font-weight: bold;">
+                        <span style="font-size: 11px !important; color: #656060; line-height: 2; padding: 0px 10px;">
+                            [@(Model.Data.CreditAmount.ToWordsInBDT().ToTitleCase()) Only]
+                        </span>
+                    </div>
+
+                    <div style="margin-top: 75px">
+                        <table style="width: 100%;">
+
+                            <tr>
+                                <td style="text-align: center; width: 50%"> </td>
+                                <td style="text-align: center;width: 50%"> </td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center; ">
+                                    <div style="text-align: center; margin: 0 20px; border-top: 1px dotted black">
+                                        <span>@Model.Data.CreateByName</span><br /><span>(Collected By)</span>
+                                    </div>
+
+
+                                </td>
+                                <td style="text-align: center;">
+
+
+                                    <div style="text-align: center; margin: 0 20px; border-top: 1px dotted black">
+                                        <br/><span>(Checked By)</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    @Footer()
+
+}
+
+<style>
+
+    * {
+        font-size: 10px !important;
+        line-height: 1.728571 !important;
+        /*font-size: 14px;
+        font-family: 'Times New Roman', Times, serif;*/
+    }
+
+    .bor table, .bor tr, .bor td {
+
+                                    border: 1px solid black;
+                                    border-collapse: collapse;
+                                }
+    .transaction-info td {
+        font-size: 12px !important;
+    }  
+
+    .transaction-info  .items td{
+        font-size: 13px !important;
+        font-weight: bold;
+    }     
+    .transaction-info td .remark {
+        font-size: 8px !important;
+        display: block;
+    }
+    .transaction-info td .particular {
+        font-size: 13px !important;
+        font-weight: bold;
+        display: block;
+    }
+
+    .main-body {
+         width: 7.27in;
+         margin: 0 auto;
+     }
+
+    .title-text-bold {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    .logo-size {
+        max-width: 55px;
+    }
+
+    .divider-border {
+        padding-bottom: 20px;
+        padding-top: 20px;
+    }
+</style>
+
+
+@*<script>
+
+    window.onload = function () {
+        window.print();
+    }
+
+</script>*@

@@ -1,0 +1,181 @@
+﻿
+<!--File:General_OnlineClass List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Academic: Online Class List";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var OnlineClassId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getOnlineClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "GetOnlineClassById", area = "Admin" });
+    var getOnlineClassDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "GetOnlineClassDataExtra", area = "Admin" });
+    var saveOnlineClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "SaveOnlineClass", area = "Admin" });
+    var deleteOnlineClassByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "GetDeleteOnlineClassById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedOnlineClassUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "OnlineClassApi", action = "GetPagedOnlineClass", area = "Admin"});
+    var getAllOnlineClassUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "GetAllOnlineClass", area = "Admin" });
+    var saveOnlineClassListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "SaveOnlineClassList", area = "Admin" });
+    var getOnlineClassListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlineClassApi", action = "GetOnlineClassListDataExtra", area = "Admin" });
+
+    var editOnlineClassByIdPageUrl = Url.Action("OnlineClassAddEdit", "OnlineClass", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewOnlineClass = "getNewOnlineClass";
+    var saveOnlineClass = "saveOnlineClass";
+    var deleteOnlineClassById = "deleteOnlineClassById";
+    var deleteOnlineClassByObj = "deleteOnlineClassByObj";
+    //for list
+    var searchOnlineClassList = "searchOnlineClassList";
+    var getPagedOnlineClassList = "getPagedOnlineClassList";
+    var getAllOnlineClassList = "getAllOnlineClassList";
+    var saveOnlineClassList = "saveOnlineClassList";
+    var getOnlineClassListExtraData = "getOnlineClassListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/OnlineClass/OnlineClassList.js"></script>
+}
+
+
+<div ng-controller="OnlineClassListCtrl"
+     ng-init="Init(
+      '@getPagedOnlineClassUrl'
+     ,'@deleteOnlineClassByIdUrl'
+     ,'@getOnlineClassListDataExtraUrl'
+     ,'@saveOnlineClassListUrl'
+     ,'@getOnlineClassByIdUrl'
+     ,'@getOnlineClassDataExtraUrl'
+     ,'@saveOnlineClassUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Online Class </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Class Shift Section Map</span>*@
+                     <select ng-model="SelectedClassShiftSectionMapId" ng-change="@(searchOnlineClassList)()" 
+                        ng-options="option.Id as option.Name for option in ClassShiftSectionMapList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Class Shift Section Map---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchOnlineClassList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editOnlineClassByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchOnlineClassList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Class Title</th>
+                    <th class="text-center">Class Duration</th>
+                    <!--th class="text-center">Live Class Medium Enum Id</th-->
+                    <th class="text-center">Live Class Medium</th>
+                    <!--th class="text-center">Class Shift Section Map Id</th-->
+                    <th class="text-center">Class Url</th>
+                    <th class="text-center">Password</th>
+                    <th class="text-center">Host Video</th>
+                    <th class="text-center">Participant Video</th>
+                    <th class="text-center">Auto Recording</th>
+                    <th class="text-center">Sms Sent</th>
+                    <th class="text-center">Remark</th>
+                    <th class="text-center">History</th>
+                    <th class="text-center">Is Deleted</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in OnlineClassList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_OnlineClass.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_ClassTitle}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_ClassDuration}}</td>
+                    <!--td class="">{{row.@General_OnlineClass.Property_LiveClassMediumEnumId}}</td-->
+                    <td class="">{{row.@General_OnlineClass.Property_LiveClassMedium}}</td>
+                    <!--td class="">{{row.@General_OnlineClass.Property_ClassShiftSectionMapId}}</td-->
+                    <td class="">{{row.@General_OnlineClass.Property_ClassUrl}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_Password}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_HostVideo}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_ParticipantVideo}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_AutoRecording}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_SmsSent}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_Remark}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_History}}</td>
+                    <td class="">{{row.@General_OnlineClass.Property_IsDeleted}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editOnlineClassByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteOnlineClassById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

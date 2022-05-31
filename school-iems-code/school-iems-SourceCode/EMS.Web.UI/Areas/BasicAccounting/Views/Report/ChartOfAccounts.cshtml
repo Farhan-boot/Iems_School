@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Chart of Accounts Report";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccountingReport.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Report/Shared/_ChartOfAccounts.js?v=0"></script>
+}
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/BasicAccounting/Views/Report/Shared/_ChartOfAccounts.cshtml")
+
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}
+
+

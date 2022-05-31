@@ -1,0 +1,362 @@
+
+<div class="row">
+    <!--Col start-->
+<div class="col-md-6 table-form">
+    @*<div class="form-title">
+        Basic Settings
+    </div>*@
+    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+        <tbody>
+        <tr>
+            <td class="fieldlabel">Is Student Login Off</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.IsStudentLoginOff" class="radio-inline" ng-value="true" /> Yes
+                <input type="radio" ng-model="SiteSettings.Student.IsStudentLoginOff" class="radio-inline" ng-value="false" /> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Student Login Off." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Semester Wise Registration Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.SemesterWiseRegistrationCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.SemesterWiseRegistrationCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Wise Registration Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Semester Wise Registration Can Print</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.SemesterWiseRegistrationCanPrint" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.SemesterWiseRegistrationCanPrint" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Wise Registration Can Print." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Result By Single Semester Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.ResultBySingleSemesterCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.ResultBySingleSemesterCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Result By Single Semester Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+
+        <tr>
+            <td class="fieldlabel">Transferred Course Result Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.TransferredCourseResultCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.TransferredCourseResultCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Transferred Course Result Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+
+        <tr>
+            <td class="fieldlabel">Supple Result Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.SuppleResultCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.SuppleResultCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Result Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Debit Transaction Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.DebitTransactionCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.DebitTransactionCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Debit Transaction Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Credit Transaction Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.CreditTransactionCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.CreditTransactionCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Transaction Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Semester Payment Summary Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.SemesterPaymentSummaryCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.SemesterPaymentSummaryCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Semester Payment Summary Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Overall Payment Summary Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.OverallPaymentSummaryCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.OverallPaymentSummaryCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Overall Payment Summary Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Online Payment History Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.OnlinePaymentHistoryCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.OnlinePaymentHistoryCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Payment History Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Bank Payment Slip Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.BankPaymentSlipCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.BankPaymentSlipCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Bank Payment Slip Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Curriculum Or Syllabus Can View</td>
+            <td class="fieldarea">
+                <input type="radio" ng-model="SiteSettings.Student.CurriculumOrSyllabusCanView" class="radio-inline" ng-value="true"/> Yes
+                <input type="radio" ng-model="SiteSettings.Student.CurriculumOrSyllabusCanView" class="radio-inline" ng-value="false"/> No
+            </td>
+            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Curriculum Or Syllabus Can View." data-toggle="tooltip"></i></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td class="fieldlabel">Online Student Payment Test Id's </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="SiteSettings.Student.OnlineStudentPaymentTestIds" class="form-control" placeholder="Enter Online Student Payment Test Id's" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Student Payment Test Id's." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">Is Open Online Payment</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.Student.IsOpenOnlinePayment" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.Student.IsOpenOnlinePayment" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Open Online Payment." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Is Enable Sandbox Mode bKash</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.IsEnableSandboxModebKash" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.IsEnableSandboxModebKash" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Enable Sandbox Mode bKash." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Is Only Other Amount Pay On Online</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.IsOnlyOtherAmountPayOnOnline" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.IsOnlyOtherAmountPayOnOnline" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Only Other Amount Pay On Online." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+            <tr>
+                <td class="fieldlabel">Is Auto Select LevelTerm On OnlineRegistration</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.IsAllowAutoSelectLevelTermOnOnlineRegistration" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.IsAllowAutoSelectLevelTermOnOnlineRegistration" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Auto Select LevelTerm On OnlineRegistration." data-toggle="tooltip"></i></span></td>
+            </tr>
+
+                <tr>
+                    <td class="fieldlabel">Faculty Evaluation Can View</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.Student.FacultyEvaluationCanView" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.Student.FacultyEvaluationCanView" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Faculty Evaluation Can View." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Admit Card Can View</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.AdmitCardCanView" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.AdmitCardCanView" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Admit Card Can View." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">Show Photo On Admit Card</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.ShowPhotoOnAdmitCard" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.ShowPhotoOnAdmitCard" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Show Photo On Admit Card." data-toggle="tooltip"></i></span></td>
+            </tr>
+                <tr>
+                    <td class="fieldlabel">Library Can View</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.Student.LibraryCanView" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.Student.LibraryCanView" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Library Can View." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Offered Courses Can View</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.Student.OfferedCoursesCanView" class="radio-inline" ng-value="true" /> Yes
+                        <input type="radio" ng-model="SiteSettings.Student.OfferedCoursesCanView" class="radio-inline" ng-value="false" /> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Offered Courses Can View<." data-toggle="tooltip"></i></span></td>
+                </tr>
+               
+            <tr>
+                <td class="fieldlabel">Supple Exam Can View</td>
+                <td class="fieldarea">
+                    <input type="radio" ng-model="SiteSettings.Student.SuppleExamCanView" class="radio-inline" ng-value="true" /> Yes
+                    <input type="radio" ng-model="SiteSettings.Student.SuppleExamCanView" class="radio-inline" ng-value="false" /> No
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Supple Exam Can View." data-toggle="tooltip"></i></span></td>
+            </tr>
+            <tr>
+                <td class="fieldlabel">SuppleExamId </td>
+                <td class="fieldarea">
+                    <select ng-model="SiteSettings.Student.SuppleExamIdStr" ng-options="option.Id as option.Name for option in ExamList" title="Select Type" class="form-control">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                    @*<input type="number" ng-model="SiteSettings.Suplee.SuppleExamId" class="form-control" placeholder="Enter SuppleExamId" required=""/>*@
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter SuppleExamId." data-toggle="tooltip"></i></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-4 table-form">
+            <div class="form-title" style="color: black;font-weight: bold">
+                Class Settings
+            </div>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel">Attendances Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Class.AttendancesCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Class.AttendancesCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Attendances Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Results Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Class.ResultsCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Class.ResultsCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Results Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Course Materials Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Class.CourseMaterialsCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Class.CourseMaterialsCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Course Materials Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Course Notices Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Class.CourseNoticesCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Class.CourseNoticesCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Course Notices Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4 table-form">
+            <div class="form-title" style="color: black;font-weight: bold">
+                Profile Settings
+            </div>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel"> Can Edit</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CanEdit" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CanEdit" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter CanEdit." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel"> CGPA Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CGPACanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CGPACanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter CGPA Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Completed Credits Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CompletedCreditsCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CompletedCreditsCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Completed Credits Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel"> Completed Courses Can View</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CompletedCoursesCanView" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.Profile.CompletedCoursesCanView" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Completed Courses Can View." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4 table-form">
+            <div class="form-title" style="color: black;font-weight: bold">
+                Online Course Registration Settings
+            </div>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel">Online Course Registration Can Apply</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.OnlineCourseRegistrationCanApply" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.OnlineCourseRegistrationCanApply" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Course Registration Can Apply." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Is Show Retakeable Course In Open Credit Registration</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.IsShowRetakeableCourseInOpenCreditRegistration" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.IsShowRetakeableCourseInOpenCreditRegistration" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Show Retakeable Course In Open Credit Registration." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Is Show Improvementable Course In Open Credit Registration</td>
+                        <td class="fieldarea">
+                            <input type="radio" ng-model="SiteSettings.Student.IsShowImprovementableCourseInOpenCreditRegistration" class="radio-inline" ng-value="true" /> Yes
+                            <input type="radio" ng-model="SiteSettings.Student.IsShowImprovementableCourseInOpenCreditRegistration" class="radio-inline" ng-value="false" /> No
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Show Improvementable Course In Open Credit Registration." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Registration Allowed Payment Due Upto </td>
+                        <td class="fieldarea">
+                            <input type="number" ng-model="SiteSettings.Student.OnlineCourseRegistration.RegistrationAllowedPaymentDueUpto" class="form-control" placeholder="Enter Registration Allowed Payment Due Upto" required="" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Registration Allowed Payment Due Upto." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Minimum Advance Payment </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="SiteSettings.Student.OnlineCourseRegistration.MinimumAdvancePayment" class="form-control" placeholder="Enter Minimum Advance Payment" required="" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Minimum Advance Payment." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+

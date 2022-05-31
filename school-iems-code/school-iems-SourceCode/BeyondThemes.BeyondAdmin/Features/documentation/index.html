@@ -1,0 +1,1301 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>BeyondAdmin | Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description">
+    <meta name="author" content="Autor">
+
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/app.min.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- Various Icons (Favicon, Touch Icon,... -->
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/img/apple-touch-icon-114x114.png">
+
+</head>
+
+
+
+<body data-spy="scroll" data-target=".navbar" id="top">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand p-5 p-l-15" href="#">
+                    <img src="assets/img/logo.png" class="w-40 h-40" />
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#overview">Overview</a></li>
+                    <li><a href="#folders">Folder Structure</a></li>
+                    <li><a href="#markup">Markup</a></li>
+                    <li><a href="#styling">Styling</a></li>
+                    <li><a href="#javascripts">JavaScripts</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#update">Update</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <section id="overview">
+            <div class="widget" style="margin-top:100px;">
+                <div class="widget-header bordered-bottom bordered-sky">
+                    <span class="widget-caption">Documentation</span>
+                </div>
+                <div class="widget-body" style="padding:20px;">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h1>BeyondAdmin</h1>
+                            <h4>Multi-Platform Web App</h4>
+                        </div>
+                        <div class="col-lg-6" style="">
+                            <div class="release-info">
+                                <div>Current Version: 1.6.0</div>
+                                <div>Documentation Version: 1.1.0</div>
+                                <div>Update: 2016-04-14</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="well bordered-left bordered-themeprimary margin-top-50">
+                <h4>Thanks for choosing BeyondAdmin</h4>
+                <p>
+                    If you have any questions that are beyond the scope of this help file, please feel free to email via my user page contact form <a href="https://wrapbootstrap.com/user/beyondthemes">here</a>. Thanks so much!
+                </p>
+            </div>
+        </section>
+        <section id="folders">
+            <h5 class="row-title before-themeprimary">BeyondAdmin App Folder Structure</h5>
+
+            <p>
+                <pre>
+                <code>
+    .
+    ├── assets
+    |   ├── css/                        --> All stylings are located here
+    |       ├── beyond-less/            --> Styles related to main app
+    |       ├── bootstrap-less/                
+    |       └── bootstrap-rtl-less/      
+    |       └── other-less/             --> All third party less libraries
+    |       └── skins/                  --> Skins
+    |   └── fonts/
+    |   └── img/
+    |   └── js/                         --> All JavaScript Libraries
+    |   └── sound/
+    |   └── swf/
+    ├── upload                          --> Upload folder for file uplaod and editor purposes
+                    </code>
+                    </pre>
+            </p>
+        </section>
+        <section id="markup">
+            <h5 class="row-title before-themeprimary">Markup Structure</h5>
+
+            <p>
+                BeyondAdmin general layout is shown here. There are five main containers in the layout.
+            </p>
+            <p>
+                1. The sidebar's menu content is within a div with "page-sidebar" class.
+            </p>
+            <p>
+                2. Chatbar with "page-chatbar" class.
+            </p>
+            <p>3. Navbar</p>
+            <p>4. Breadcrumbs</p>
+            <p>5. Page Header</p>
+            <p>6. Page Content</p>
+            <p>
+                You can find detailed information about each of this sections and how to manipulate those in your project below:
+            </p>
+            <div class="widget" style="margin-top:20px;">
+                <div class="widget-header">
+                    <span class="widget-caption">Genaral Markup Overview</span>
+                </div>
+                <div class="widget-body" style="padding:20px;">
+                    <img src="assets/img/layout.jpg" style="width:100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <h3>General Markup</h3>
+                    <p> The general template structure is the same throughout the template. Here is the general structure.</p>
+                </div>
+
+                <div class="col-lg-9">
+
+                    <!-- Code Block >> Start -->
+                    <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                        <![CDATA[
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <!-- Head -->
+                        <head>
+                            <!--Meta Tags-->
+                            <meta charset="utf-8" />
+                            <title>Blank Page</title>
+
+                            <!--Basic Styles-->
+                            <!--Fonts-->
+                            <!--Beyond styles-->
+                            <!--Skin Script-->
+                        </head>
+                        <!-- /Head -->
+                        <!-- Body -->
+                        <body>
+                            <!-- Loading Container -->
+                            <div class="loading-container">
+                                <div class="loader"></div>
+                            </div>
+                            <!--  /Loading Container -->
+                            <!-- Navbar -->
+                            <div class="navbar">
+                            </div>
+                            <!-- /Navbar -->
+                            <!-- Main Container -->
+                            <div class="main-container container-fluid">
+                                <!-- Page Container -->
+                                <div class="page-container">
+                                    <!-- Page Sidebar -->
+                                    <div class="page-sidebar" id="sidebar">
+                                        <!-- Page Sidebar Header-->
+                                        <!-- /Page Sidebar Header -->
+                                        <!-- Sidebar Menu -->
+                                        <ul class="nav sidebar-menu"></ul>
+                                        <!-- /Sidebar Menu -->
+                                    </div>
+                                    <!-- /Page Sidebar -->
+                                    <!-- Chat Bar -->
+                                    <div id="chatbar" class="page-chatbar">
+                                    </div>
+                                    <!-- /Chat Bar -->
+                                    <!-- Page Content -->
+                                    <div class="page-content">
+                                        <!-- Page Breadcrumb -->
+                                        <div class="page-breadcrumbs">
+                                        </div>
+                                        <!-- /Page Breadcrumb -->
+                                        <!-- Page Header -->
+                                        <div class="page-header position-relative">
+                                            <div class="header-title">
+                                            </div>
+                                            <!--Header Buttons-->
+                                            <div class="header-buttons">
+                                            </div>
+                                            <!--Header Buttons End-->
+                                        </div>
+                                        <!-- /Page Header -->
+                                        <!-- Page Body -->
+                                        <div class="page-body">
+                                            <!-- Your Content Goes Here -->
+                                        </div>
+                                        <!-- /Page Body -->
+                                    </div>
+                                    <!-- /Page Content -->
+                                </div>
+                                <!-- /Page Container -->
+                                <!-- Main Container -->
+
+                            </div>
+
+                            <!--Basic Scripts-->
+                            <!--Beyond Scripts-->
+                            <!--Page Related Scripts-->
+
+                        </body>
+                        <!--  /Body -->
+                    </html>
+
+                    ]]>
+                </script>
+                <!-- Code Block >> End -->
+
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>SideBar Menu</h3>
+                <p>
+                    Sidebar menu structure is shown here:
+                </p>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <img src="assets/img/sidebar-menu.jpg" style="width:100%;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9" style="padding-top:75px;">
+
+                <!-- Code Block >> Start -->
+                <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                    <![CDATA[
+                    <!-- Page Sidebar -->
+                    <div class="page-sidebar" id="sidebar">
+                        <!-- Page Sidebar Header-->
+                        <div class="sidebar-header-wrapper">
+                            <input type="text" class="searchinput" />
+                            <i class="searchicon fa fa-search"></i>
+                            <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+                        </div>
+                        <!-- /Page Sidebar Header -->
+                        <!-- Sidebar Menu -->
+                        <ul class="nav sidebar-menu">
+                            <!--Dashboard-->
+                            <li>
+                                <a href="index.html">
+                                    <i class="menu-icon glyphicon glyphicon-home"></i>
+                                    <span class="menu-text"> Dashboard </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- /Sidebar Menu -->
+                    </div>
+                    <!-- /Page Sidebar -->
+                    ]]>
+                </script>
+                <!-- Code Block >> End -->
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Chatbar</h3>
+                <p>
+                    Chatbar enables you to add dynamic chat view to your application.
+                </p>
+                <div class="panel panel-default">
+                    <div class="panel-body bg-muted">
+                        <img src="assets/img/sidebar-form.jpg" style="width:100%;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+
+                <!-- Code Block >> Start -->
+                <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                    <![CDATA[
+                    <!-- Chat Bar -->
+                    <div id="chatbar" class="page-chatbar">
+                        <div class="chatbar-contacts">
+                            <div class="contacts-search">
+                                <input type="text" class="searchinput" placeholder="Search Contacts" />
+                                <i class="searchicon fa fa-search"></i>
+                                <div class="searchhelper">Search Your Contacts and Chat History</div>
+                            </div>
+                            <ul class="contacts-list">
+                                <li class="contact">
+                                    <div class="contact-avatar">
+                                        <img src="assets/img/avatars/divyia.jpg" />
+                                    </div>
+                                    <div class="contact-info">
+                                        <div class="contact-name">Divyia Philips</div>
+                                        <div class="contact-status">
+                                            <div class="online"></div>
+                                            <div class="status">online</div>
+                                        </div>
+                                        <div class="last-chat-time">
+                                            last week
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chatbar-messages" style="display: none;">
+                            <div class="messages-contact">
+                                <div class="contact-avatar">
+                                    <img src="assets/img/avatars/divyia.jpg" />
+                                </div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Divyia Philips</div>
+                                    <div class="contact-status">
+                                        <div class="online"></div>
+                                        <div class="status">online</div>
+                                    </div>
+                                    <div class="last-chat-time">
+                                        a moment ago
+                                    </div>
+                                    <div class="back">
+                                        <i class="fa fa-arrow-circle-left"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="messages-list">
+                                <li class="message">
+                                    <div class="message-info">
+                                        <div class="bullet"></div>
+                                        <div class="contact-name">Me</div>
+                                        <div class="message-time">10:14 AM, Today</div>
+                                    </div>
+                                    <div class="message-body">
+                                        Hi, Hope all is good. Are we meeting today?
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="send-message">
+                                <span class="input-icon icon-right">
+                                    <textarea rows="4" class="form-control" placeholder="Type your message"></textarea>
+                                    <i class="fa fa-camera themeprimary"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Chat Bar -->
+                    ]]>
+                </script>
+                <!-- Code Block >> End -->
+
+            </div>
+        </div>
+        <hr />
+        <div class="panel panel-default">
+            <div class="panel-body bg-muted">
+                <img src="assets/img/navbar.jpg" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Navbar</h3>
+                <p>In Navabr area you have controll to configurations, actions and User Settings.</p>
+            </div>
+            <div class="col-lg-9">
+                <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                    <![CDATA[
+                    <!-- Navbar -->
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="navbar-container">
+                                <!-- Navbar Barnd -->
+                                <div class="navbar-header pull-left">
+                                    <a href="#" class="navbar-brand">
+                                        <small>
+                                            <img src="assets/img/logo.png" alt="" />
+                                        </small>
+                                    </a>
+                                </div>
+                                <!-- /Navbar Barnd -->
+                                <!-- Sidebar Collapse -->
+                                <div class="sidebar-collapse" id="sidebar-collapse">
+                                    <i class="collapse-icon fa fa-bars"></i>
+                                </div>
+                                <!-- /Sidebar Collapse -->
+                                <!-- Account Area and Settings --->
+                                <div class="navbar-header pull-right">
+                                    <div class="navbar-account">
+                                        <ul class="account-area"></ul>
+                                        <div class="setting">
+                                            <a id="btn-setting" title="Setting" href="#">
+                                                <i class="icon glyphicon glyphicon-cog"></i>
+                                            </a>
+                                        </div><div class="setting-container">
+                                        </div>
+                                        <!-- Settings -->
+                                    </div>
+                                </div>
+                                <!-- /Account Area and Settings -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Navbar -->
+                    ]]>
+                </script>
+            </div>
+        </div>
+        <hr />
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <img src="assets/img/breadcrumbs.jpg" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h4 class="m-t-50">
+                    Breadcurmbs
+                </h4>
+                <p>
+                    Breadcrumbs is very simple and similar to bootstrap default breadcrumbs. You can add any icons that you want to your pages links.
+                    <div class="f-11">
+                        <!-- Code Block >> Start -->
+                        <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                            <![CDATA[
+                            <!-- Page Breadcrumb -->
+                            <div class="page-breadcrumbs">
+                                <ul class="breadcrumb">
+                                    <li>
+                                        <i class="fa fa-home"></i>
+                                        <a href="#">Home</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">More Pages</a>
+                                    </li>
+                                    <li class="active">Blank Page</li>
+                                </ul>
+                            </div>
+                            <!-- /Page Breadcrumb -->
+                            ]]>
+                        </script>
+                        <!-- Code Block >> End -->
+                    </div>
+                </p>
+            </div>
+        </div>
+
+        <hr />
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <img src="assets/img/header.jpg" style="width:100%;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Page Header</h3>
+                <p>
+                    As you can see, Header is consisted of two main parts:
+                    <ul>
+                        <li>
+                            Page Title
+                        </li>
+                        <li>
+                            Header Actions
+                        </li>
+                    </ul>
+                </p>
+
+            </div>
+
+            <div class="col-lg-9">
+
+                <!-- Code Block >> Start -->
+                <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                    <![CDATA[
+                    <!-- Page Header -->
+                    <div class="page-header position-relative">
+                        <div class="header-title">
+                            <h1>
+                                Blank Page
+                            </h1>
+                        </div>
+                        <!--Header Buttons-->
+                        <div class="header-buttons">
+                            <a class="sidebar-toggler" href="#">
+                                <i class="fa fa-arrows-h"></i>
+                            </a>
+                            <a class="refresh" id="refresh-toggler" href="">
+                                <i class="glyphicon glyphicon-refresh"></i>
+                            </a>
+                            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                                <i class="glyphicon glyphicon-fullscreen"></i>
+                            </a>
+                        </div>
+                        <!--Header Buttons End-->
+                    </div>
+                    <!-- /Page Header -->
+                    ]]>
+                </script>
+                <!-- Code Block >> End -->
+
+            </div>
+        </div>
+    </section>
+    <section id="styling">
+        <h5 class="row-title before-themeprimary">Styling of BeyondAdmin</h5>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Color Palette</h3>
+                <p>Here's the color palette of BeyondAdmin.</p>
+            </div>
+            <div class="col-lg-9 m-t-20">
+                <ul class="colors-palette pull-right">
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color">
+                                danger
+                            </div>
+                            <div class="color">
+                                #d73d32
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #d73d32"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color">
+                                success
+                            </div>
+                            <div class="color">
+                                #53a93f
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #53a93f"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color">
+                                warning
+                            </div>
+                            <div class="color">
+                                #f4b400
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #f4b400"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color">
+                                info
+                            </div>
+                            <div class="color">
+                                #57b5e3
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #57b5e3"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Skin Colors</h3>
+                <p>
+                    These are default skins that are added to BeyondAdmin. You can add or modify this skins as you wish. All skins are places in skin folder in following address:
+                    <br />
+                    <code>/assets/css/skins</code>
+                </p>
+            </div>
+            <div class="col-lg-9 m-t-20">
+                <ul class="colors-palette  pull-right">
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #ed4e2a;">
+                                Green
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #53a93f"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #ed4e2a;">
+                                Teal
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #03b3b2"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #fb6e52;">
+                                Azure
+                            </div>
+
+                        </div>
+                        <div class="color-main" style="background-color: #2dc3e8"></div>
+                    </li>
+
+
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #ed4e2a;">
+                                Blue
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #5db2ff"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #fb6e52;">
+                                Dark Blue
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #0072c6"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #d73d32;">
+                                Deep Blue
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #001940"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #7bd148;">
+                                Orange
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #ff8f32"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #7bd148;">
+                                Dark Red
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #ac193d"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #8cc474;">
+                                Pink
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #cc324b"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #8cc474;">
+                                Purple
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #cc324b"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #fb6e52;">
+                                Gray
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #585858"></div>
+                    </li>
+                    <li data-color="#bdc3c7" class="">
+                        <div class="color-name">
+                            <div class="color skin" style="background-color: #d73d32;">
+                                Black
+                            </div>
+                        </div>
+                        <div class="color-main" style="background-color: #474544"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Stylesheets</h3>
+                <p>Here's a list of the stylesheet files we are using with this template, you can find more information opening each file:</p>
+            </div>
+            <div class="col-lg-9">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>bootstrap.min.css</td>
+                                <td>minified of latest bootstrap css file. must be included in all pages.</td>
+                            </tr>
+                            <tr>
+                                <td>bootstrap.min.css</td>
+                                <td>RTL version of Bootstrap. find more information  <a href="https://github.com/morteza/bootstrap-rtl">here.</a></td>
+                            </tr>
+                            <tr>
+                                <td>animate.min.css</td>
+                                <td>
+                                    A bunch of cool, fun, and cross-browser animations. find how to customize <a href="https://github.com/daneden/animate.css">here.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>beyond.min.css</td>
+                                <td>Main application css. All layouts and parts css are centered in this file. <a href="">Learn how to customize</a>.</td>
+                            </tr>
+                            <tr>
+                                <td>beyond-rtl.min.css</td>
+                                <td>Main application css in RTL. </td>
+                            </tr>
+                            <tr>
+                                <td>demo.min.css</td>
+                                <td>Remove this from your application. it is only for demo purpose and is removed from Seed project.</td>
+                            </tr>
+                            <tr>
+                                <td>font-awesome.min.css</td>
+                                <td>
+                                    If you intend to use FontAwesome icon fonts in your project, this file must be present.
+                                    Otherwise you can remove it.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>typicons.css</td>
+                                <td>Typicons icon fonts.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>LESS Structure</h3>
+                <p>The app.less file contains all of the specific stylings for the template. The file is separated into sections. Each section contains related LESS files:</p>
+                <p>
+                    <ol class="p-l-20">
+                        <li>
+                            <strong>General Mixins:</strong>
+                            <br />
+                            We used <a href="https://github.com/madebysource/lesshat">LESS Hat 3.0</a> as our mixin library.
+                            For building the LESS files you must include lesshat and other mixins in first section.
+                        </li>
+                        <li class="p-t-20">
+                            <strong>Helper Classes:</strong>
+                            <br />
+                            Helper classes for simpler developement. See what is inside!
+                        </li>
+                        <li class="p-t-20">
+                            <strong>Page Components:</strong>
+                            <br />
+                            Styles for general layout of the BeyondAdmin. Do not remove these LESS files before the build.
+                        </li>
+                        <li class="p-t-20">
+                            <strong>UI Elements:</strong>
+                            <br />
+                            All bootstrap css components are implemented in this section. Feel free to remove each component that you don't need.
+                        </li>
+                        <li class="p-t-20">
+                            <strong>Forms:</strong>
+                            <br />
+                            All Form components are implemented in this section. Feel free to remove each component that you don't need.
+                        </li>
+                        <li class="p-t-20">
+                            <strong>Pages, Widgets and errors:</strong>
+                            <br />
+                            All other components, third party and pages styling are placed in other sections.
+                            If you do not use a plugin or don't include a page remove it's LESS and rebuild the app.less. It will reduce the css file size drastically.
+                        </li>
+                    </ol>
+                </p>
+            </div>
+
+            <div class="col-lg-9">
+                <script type="syntaxhighlighter" class="brush: css; toolbar: false;">
+                    <![CDATA[
+                    // Import LessHat Mixins
+                    @import "other-less/LessHat.less";
+
+                    // Variables
+                    @import "beyond-less/variables.less";
+
+                    // Animations
+                    @import "beyond-less/animations.less";
+
+                    // Helper Classes
+                    @import "beyond-less/colors.less";
+                    @import "beyond-less/spaces.less";
+                    @import "beyond-less/fonts.less";
+                    @import "beyond-less/helpers.less";
+
+                    // Body
+                    @import "beyond-less/body.less";
+
+                    // Typography
+                    @import "beyond-less/typography.less";
+
+                    /*--------Page Components--------*/
+                    // Navbar
+                    @import "beyond-less/navbar.less";
+
+                    // Main-Container
+                    @import "beyond-less/main-container.less";
+
+                    // Sidebar
+                    @import "beyond-less/sidebar.less";
+
+                    // Page Content
+                    @import "beyond-less/page-content.less";
+
+                    // Breadcrumbs
+                    @import "beyond-less/breadcrumbs.less";
+
+                    // Page Header & Body
+                    @import "beyond-less/page-header-body.less";
+
+
+                    /*--------Elements--------*/
+                    // Widget
+                    @import "beyond-less/widget.less";
+
+                    // Databoxes
+                    @import "beyond-less/databoxes.less";
+
+                    // Alerts
+                    @import "beyond-less/alerts.less";
+
+                    // Tabs
+                    @import "beyond-less/tabs.less";
+
+                    // Buttons
+                    @import "beyond-less/buttons.less";
+
+                    // Accordions
+                    @import "beyond-less/accordions.less";
+
+                    // Labels & Badges
+                    @import "beyond-less/labels-badges.less";
+
+                    // progressbars
+                    @import "beyond-less/progressbars.less";
+
+                    // Wells
+                    @import "beyond-less/wells.less";
+
+                    // Popovers
+                    @import "beyond-less/popovers.less";
+
+                    // Tooltips
+                    @import "beyond-less/tooltips.less";
+
+                    // Notifications
+                    @import "beyond-less/notifications.less";
+
+                    // Modals
+                    @import "beyond-less/modals.less";
+
+                    // Dropdowns
+                    @import "beyond-less/dropdowns.less";
+
+                    // Pagination
+                    @import "beyond-less/pagination.less";
+
+                    // Tables
+                    @import "beyond-less/tables.less";
+
+                    // Nestable Lists
+                    @import "beyond-less/nestable-lists.less";
+
+                    // Treeview
+                    @import "beyond-less/treeview.less";
+
+                    // Wizards
+                    @import "beyond-less/wizards.less";
+
+                    // Charts
+                    @import "beyond-less/charts.less";
+
+                    /*--------Forms--------*/
+                    // Forms, Inputs and Labels
+                    @import "beyond-less/forms-inputs.less";
+
+                    // Checkbox & Radiobox
+                    @import "beyond-less/checkbox-radiobox.less";
+
+                    // Switches
+                    @import "beyond-less/switches.less";
+
+                    // Sliders
+                    @import "beyond-less/sliders.less";
+
+                    // Spinners
+                    @import "beyond-less/spinners.less";
+
+                    // Select2
+                    @import "beyond-less/select2.less";
+
+                    // TagsInput
+                    @import "beyond-less/tagsinput.less";
+
+                    // ColorPicker
+                    @import "beyond-less/colorpicker.less";
+
+                    // DatePicker
+                    @import "beyond-less/datepicker.less";
+
+                    // DateRangePicker
+                    @import "beyond-less/daterangepicker.less";
+
+                    // TimePicker
+                    @import "beyond-less/timepicker.less";
+
+                    // Editors
+                    @import "beyond-less/editors.less";
+
+                    // Validator
+                    @import "beyond-less/validator.less";
+
+                    /*--------Pages and Widgets--------*/
+                    // Login
+                    @import "beyond-less/login.less";
+
+                    // Register
+                    @import "beyond-less/register.less";
+
+                    // Lock Screen
+                    @import "beyond-less/lockscreen.less";
+
+                    // Pricing Tables
+                    @import "beyond-less/pricing.less";
+
+                    // Invoice
+                    @import "beyond-less/invoice.less";
+
+                    // Timeline
+                    @import "beyond-less/timeline.less";
+
+                    // Profile
+                    @import "beyond-less/profile.less";
+
+                    // Comment
+                    @import "beyond-less/comment.less";
+
+                    // Mail
+                    @import "beyond-less/mail.less";
+
+                    // FullCalendar
+                    @import "beyond-less/fullcalendar.less";
+
+                    // Tasks
+                    @import "beyond-less/tasks.less";
+
+                    // Tickets
+                    @import "beyond-less/tickets.less";
+
+                    // Dashboard
+                    @import "beyond-less/dashboard.less";
+
+                    // Orders
+                    @import "beyond-less/orders.less";
+
+                    // Error 400 & Error 500 Pages
+                    @import "beyond-less/400-500.less";
+
+                    // Search & Help Bar
+                    @import "beyond-less/search-help-bar.less";
+
+                    // Loading
+                    @import "beyond-less/loading.less";
+
+                    // Chat
+                    @import "beyond-less/chat.less";
+
+                    // Dropzone
+                    @import "beyond-less/dropzone.less";
+
+
+                    ]]>
+                </script>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>How to Build LESS Files</h3>
+                <p>After customizing your LESS files you need to compile app.less to get css files for using in your site. Here are some common ways of compiling LESS files:</p>
+
+                <br />
+                <h4>Using Visual Studio</h4>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li><a href="http://vswebessentials.com/download">Install Web Essentials</a> and just save the <code>beyond.less</code></li>
+                        <li>Web Essentials uses NodeJS to run the compiler. It's the fastest and most accurate compiler for LESS available.</li>
+                        <li>When a LESS file is compiled, it can now also be minified to produce a much smaller CSS file.</li>
+                    </ol>
+                </p>
+                <br />
+                <h4>Using node.js</h4>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li><a href="http://nodejs.org/download/">Install node.js</a></li>
+                        <li>Install the LESS compiler: <code>npm install -g less</code></li>
+                        <li>Run the LESS compiler on your LESS source to produce CSS: <code>lessc beyond.less &gt; app.css</code> </li>
+
+                    </ol>
+                </p>
+                <br />
+                <h4>Using Sublime Text</h4>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li><a href="http://nodejs.org/download/">Install node.js</a></li>
+                        <li>Install the LESS compiler: <code>npm install -g less</code></li>
+                        <li>Install Sublime Text package: Open Sublime Text, press <span class="b-400">Ctrl+Shift+P</span>, select Package Control: <span class="b-400">Install Package</span>. Then find <span class="b-400">Less2Css</span> package and press enter.</li>
+                        <li>
+                            You should now have this plugin installed. To use it, simply open app.less file and resave it. A new file with the same name but with .css extension should appear in your css folder.
+                        </li>
+                    </ol>
+                </p>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>How to change the default skin</h3>
+                <p>
+                    There are three different ways to change the default skin:
+                    <ol>
+                        <li>Add a reference to your desired skin in page after beyond.css</li>
+                        <li>Change default colors set in variables.less and rebuild the beyond.less</li>
+                        <li>
+                            Add a cookie with your desired skin (e.g. <code>azure</code>).<br />
+                            <span class="b-400">Note:</span> This way, you need to refresh the page after setting the cookie.
+                            <br />
+                            <span class="b-400">Note:</span> The name of cookie must be exactly the name of the file in <code>/assets/css/skins/</code>.
+                        </li>
+                    </ol>
+                </p>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>How to create your own skins</h3>
+                <p>
+                    <ol>
+                        <li>
+                            Add another file with your desired name in <code>/assets/css/skins/</code>.
+                            <br />
+                            <span class="b-400">Tip:</span> You can copy one of other skins less files and change it as you want.
+                        </li>
+                        <li>
+                            Build the file with your prefered colors.
+                        </li>
+                        <li>
+                            If you want your users to be able to change their skins programmatically, you need to add new skin to setting. The code must be like this:
+                            <br />
+                <p class="f-11">
+                    <script type="syntaxhighlighter" class="brush:xml; toolbar:false;">
+                        <![CDATA[
+                        <li><a class="colorpick-btn" href="#" style="background-color:#your-skin-primary-color;" rel="assets/css/skins/yourskin.min.css"></a></li>
+                        ]]>
+                    </script>
+                </p>
+                </li>
+                </ol>
+                </p>
+            </div>
+        </div>
+    </section>
+    <section id="javascripts">
+        <h5 class="row-title before-themeprimary">JavaScript customization and highlights of BeyondAdmin</h5>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>JavaScript Files</h3>
+                <p>Vestibulum id ligula porta felis euismod semper. Curabitur blandit tempus porttitor. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+            </div>
+            <div class="col-lg-9">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped m-t-25">
+                        <thead>
+                            <tr>
+                                <th>Tag</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>jquery.min.js</code></td>
+                                <td>latest JQuery minified.</td>
+                            </tr>
+                            <tr>
+                                <td><code>bootstrap.min.js</code></td>
+                                <td>Bootstrap js.</td>
+                            </tr>
+                            <tr>
+                                <td><code>jquery.slimscroll.min.js</code></td>
+                                <td>Responsible for changing scrollbar in all template.</td>
+                            </tr>
+                            <tr>
+                                <td><code>beyond.js</code></td>
+                                <td>All BeyondAdmin related general scripts are placed here. </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+    </section>
+    <section id="installation">
+        <h5 class="row-title before-themeprimary">Install BeyondAdmin</h5>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Install Theme</h3>
+                <p>Here's a brief information about how to install BeyondAdmin from scratch</p>
+            </div>
+
+            <div class="col-lg-9">
+                <h3>Install HTML veriosn in IIS</h3>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Use the Seed Project as your starting point.</li>
+                        <li>Remove unnecessary references from app.less and build your LESS file respectively.</li>
+                        <li>
+                <p>Open IIS Manager. </p>
+                <ul>
+                    <li class="unordered">
+                        For Windows Server 2012, on the <strong>Start</strong> page click the <strong>Server Manager</strong> tile, and then click <strong>OK</strong>. In the <strong>Server Manager</strong>, click the <strong>Tools</strong> menu, and then click <strong>Internet Information Services (IIS) Manager</strong>.<br><br>
+                    </li>
+                    <li class="unordered">
+                        For Windows 8, on the <strong>Start</strong> page type <strong>Control Panel</strong>, and then click the <strong>Control Panel</strong> icon in the search results. On the <strong>Control Panel</strong> screen, click <strong>System and Security</strong>, click <strong>Administrative Tools</strong>, and then <strong>click Internet Information Services (IIS) Manager</strong>.<br><br>
+                    </li>
+                </ul>
+                </li>
+                <li>
+                    <p>In the <strong>Connections</strong> pane, right-click the <strong>Sites</strong> node in the tree, and then click <strong>Add Website</strong>.</p>
+                </li>
+                <li>
+                    <p>In the <strong>Add Website</strong> dialog box, enter a friendly name for your website in the <strong>Site name</strong> box.</p>
+                </li>
+                <li>
+                    <p>If you want to select a different application pool than the one listed in the <strong>Application Pool</strong> box, click <strong>Select</strong>. In the <strong>Select Application Pool </strong>dialog box, select an application pool from the <strong>Application Pool</strong> list and then click <strong>OK</strong>.</p>
+                </li>
+                <li>
+                    <p>In the <strong>Physical path</strong> box, enter the physical path of the website's folder, or click the browse button (<strong>...</strong>) to navigate the file system to find the folder.</p>
+                </li>
+                <li>
+                    <p>If the physical path that you entered in the previous step is to a remote share, click <strong>Connect as</strong> to specify credentials that have permission to access the path. If you do not use specific credentials, select the <strong>Application user (pass-through authentication)</strong> option in the <strong>Connect As</strong> dialog box.</p>
+                </li>
+                <li>
+                    <p>Select the protocol for the website from the <strong>Type</strong> list.</p>
+                </li>
+                <li>
+                    <p>. If you must specify a static IP address for the website (by default, this is set to <strong>All Unassigned</strong>), enter the IP address in the <strong>IP address</strong> box.</p>
+                </li>
+                <li>
+                    <p>Enter a port number in the <strong>Port</strong> text box.</p>
+                </li>
+                <li>
+                    <p>Optionally, enter a host header name for the website in the <strong>Host Header</strong> box.</p>
+                </li>
+                <li>
+                    <p>If you do not have to make any changes to the site, and you want the website to be immediately available, select the <strong>Start Web site immediately</strong> check box.</p>
+                </li>
+                <li>
+                    <p>Click <strong>OK</strong>.</p>
+                </li>
+                </ol>
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+    <hr />
+    <section id="update">
+        <h5 class="row-title before-themeprimary">Update BeyondAdmin to latest version</h5>
+        <div class="row">
+            <div class="col-lg-3">
+                <h3>Update BeyondAdmin</h3>
+                <p>For updating to the latest BeyondAdmin version do the following:</p>
+            </div>
+
+            <div class="col-lg-9">
+                <h2>MVC version</h2>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Replace "asset" folder of your project (or any plugin of asset folder that you used) with the one in new version of BeyondAdmin.</li>
+                        <li>Consider that packages folder of MVC solution is removed in favor of reducing the size of the zip file. Therefor you need to add the packages for first use. Enable your internet connection and just rebuild the solution. Nuget package manager will automatically download all needed packages.</li>
+                        <li>
+                            If you changed Layouts you must consider comparing the new layouts with your changed ones and just commit the changes in your customized files.
+                        </li>
+                        <li>
+                            If the syntax or usage of one helpers that you previously used are changed (you can find the changes in Changelog: https://wrapbootstrap.com/theme/beyondadmin-adminapp-angularjs-mvc-WB06R48S4#changelog), you can find your usages and simply replace them with new ones. Resharper is a fascinating tool for doing this.
+                        </li>
+                        <li>
+                            If you Updated MvcSiteMapProvider package note that the update process will overwrite the templates in “Views/Shared/DisplayTemplates” Folder. Therefor after updating the package you will not be able to use sidebar menu and breadcrumbs. After updating the package just replace the new templates with original ones in BeyondAdmin source folder.
+                        </li>
+                        <li>
+                            From v 1.5.0 you can use either the source of helpers in your project or use the dll from bin folder of the BeyondThemes.Boostrap project. 
+                        </li>
+                    </ol>
+                </p>
+
+                <hr />
+                <h2>Asp.Net WebForms Version</h2>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Replace "asset" folder of your project (or any plugin of asset folder that you used) with the one in new version of BeyondAdmin.</li>
+                        <li>Consider that packages folder of WebForms solution is removed in favor of reducing the size of the zip file. Therefor you need to add the packages for first use. Enable your internet connection and just rebuild the solution. Nuget package manager will automatically download all needed packages.</li>
+                        <li>
+                            If you changed Master Pages you must consider comparing the new master pages with your changed ones and just commit the changes in your customized files.
+                        </li>
+                    </ol>
+                </p>
+                <hr />
+                <h2>AngularJs Version</h2>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Replace "asset" folder of your project (or any plugin of asset folder that you used) with the one in new version of BeyondAdmin.</li>
+                    </ol>
+                </p>
+                <hr />
+                <h2>Html/JQuery Version</h2>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Replace "asset" folder of your project (or any plugin of asset folder that you used) with the one in new version of BeyondAdmin.</li>
+                        <li>Compare markup of the pages if you see something is not displaying right after update.</li>
+                    </ol>
+                </p>
+                <hr />
+                <h2>Landing Pages</h2>
+                <p>
+                    <ol class="f-15 b-300">
+                        <li>Consider that Video is removed in favor of reducing pakage size. You can replace the video with any video file that you want.</li>
+                    </ol>
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+    <hr />
+    <div class="goodbye">
+        <p>Once again, thank you so much for purchasing this theme. </p>
+    </div>
+
+    <hr />
+
+    <footer>
+        <p>&copy; BeyondThemes 2016</p>
+    </footer>
+
+</div>
+<!-- loading javascripts -->
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<link href="assets/js/syntaxhighlighter/shCore.css" rel="stylesheet" />
+<link href="assets/js/syntaxhighlighter/shThemeDefault.css" rel="stylesheet" />
+
+<script src="assets/js/syntaxhighlighter/shCore.js"></script>
+<script src="assets/js/syntaxhighlighter/shBrushCss.js"></script>
+<script src="assets/js/syntaxhighlighter/shBrushCSharp.js"></script>
+<script src="assets/js/syntaxhighlighter/shBrushJScript.js"></script>
+<script src="assets/js/syntaxhighlighter/shBrushXml.js"></script>
+
+<!-- init javascripts -->
+<script src="assets/js/init.js"></script>
+
+</body>
+
+</html>

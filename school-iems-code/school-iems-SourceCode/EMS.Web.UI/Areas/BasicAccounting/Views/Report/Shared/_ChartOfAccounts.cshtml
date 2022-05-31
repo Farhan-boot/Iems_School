@@ -1,0 +1,157 @@
+﻿
+<!--File:ChartOfAccounts List View-->
+@using EMS.DataAccess.Data;
+@{
+    var getChartOfAccountsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ChartOfAccountsApi", action = "GetChartOfAccountsDataExtra", area = "BasicAccounting" });
+    //WebApi link for List
+    var getChartOfAccountsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ChartOfAccountsApi", action = "GetChartOfAccounts", area = "BasicAccounting" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="ChartOfAccountsCtrl"
+     ng-init="Init(
+     '@getChartOfAccountsDataExtraUrl'
+     ,'@getChartOfAccountsUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                        <tr>
+                            <th style="text-align: center;" colspan="12"><strong>Report of Chart Of Accounts</strong></th>
+                        </tr>
+                        <tr class="show-on-print">
+                            <th style="text-align: center;" colspan="12">
+                                <div>Branch: <span ng-if="SelectedBranch==null">All Branch</span>{{SelectedBranch.Name}}</div>
+                                <div>Start Date: {{StartDate |date:'dd/M/yyyy'}}</div>
+                                <div>End Date: {{EndDate |date:'dd/M/yyyy'}} </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="hide-on-print">
+                    <tr>
+                        <td style="width: 95px;">
+                            Select Branch:
+                        </td>
+                        <td style="width: 160px;">
+                            <select ng-model="SelectedBranch" ng-change="onChangeFilter()"
+                                    ng-options="option as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                                <option value="" label="" class="">---Select All Branch---</option>
+                            </select>
+                        </td>
+                        <td style="width: 72px;">Start Date:</td>
+                        <td style="width: 105px">
+                            <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                        </td>
+                        <td style="width: 66px;">End Date:</td>
+                        <td style="width: 105px">
+                            <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker"/>
+                        </td>
+                        <td style="padding-left: 5px;">
+                            <button class="btn btn-info btn-xs" ng-click="getChartOfAccounts()">
+                                View Report
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-hide="ChartOfAccountsList.length==0"
+            style="margin-top: 10px;" class="border-black main-body">
+            <table class="report-table table-bordered table-border" style="width: 100%; text-align: center; margin-bottom: 15px;">
+                <thead class="bg-gray">
+                <tr style="font-weight: bold; font-size: 14px;">
+                    <th>Ledger Code</th>
+                    <th>Ledger Name</th>
+                    <th>Balance</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="chartOfAccounts in ChartOfAccountsList">
+                    <td>{{chartOfAccounts.LedgerCode}}</td>
+                    <td style="text-align: left; padding-left: 5px;">{{chartOfAccounts.LedgerName}}</td>
+                    <td>{{chartOfAccounts.Balance}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    table .no-border,
+    table .no-border tr,
+    table .no-border tr td {
+        border: none;
+    }
+
+    .report-table > tbody > tr > td,
+    .report-table > thead > tr > th {
+        border: 1px solid black !important;
+    }
+
+    .report-table > thead > tr > th {
+        padding: 0px !important;
+    }
+</style>

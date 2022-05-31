@@ -1,0 +1,42 @@
+﻿@model System.Collections.Generic.List<EMS.DataAccess.Data.Aca_ClassMaterialFileMap>
+@if (Model.Count == 0)
+{
+    <div class="alert alert-warning fade in radius-bordered alert-shadowed">
+        <i class="fa-fw fa fa-book"></i>
+        <strong>No Course Material !</strong> Please ask your Course Teacher to upload Course Material(s) for this Course.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th class="text-center">Ser</th>
+            <th class="">Title</th>
+            <th class="text-center">Date</th>
+
+            <th class="text-center">Uploaded By</th>
+            <th class="text-center">Size</th>
+
+        </tr>
+        @{
+            var count = Model.Count;
+        }
+        @foreach (var matrial in Model)
+        {
+            <tr>
+                <td class="text-center bold" style="font-weight: bold">@(count--).</td>
+                <td class="">
+                    <a href="@Url.Action("DownloadClassMaterial", "Course", new { area = "Student" })?id=@matrial.Id"
+                       title="click to download (Size: @matrial.General_File.FileSize)">
+                        <i class="fa fa-download"></i> @matrial.General_File.Name
+                    </a>
+                </td>
+                <td class="text-center">@matrial.General_File.CreateDate.ToString("dd/MM/yyyy HH:mm")</td>
+
+                <td class="text-center">@matrial.UploaderName</td>
+                <td class="text-center">@matrial.General_File.FileSize </td>
+
+            </tr>
+        }
+    </table>
+}

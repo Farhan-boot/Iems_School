@@ -1,0 +1,23 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Parade State";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+}
+
+
+<div class="lock-container animated fadeInDown">
+    <div class="lock-box text-align-center">
+        <div class="lock-username">@(EMS.Framework.Settings.SiteSettings.Instance.InstituteShortName)</div>
+        <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" alt="divyia avatar" />
+        <div class="lock-password text-center">
+            <div>
+                <a href="@Url.Action("Student", "ParadeState")" class="btn btn-primary">Student Parade State</a>
+            </div>
+        </div>
+
+    </div>
+    <div class="signinbox">
+        <a href="@Url.Action("Index", "Login")"><i class="fa fa-sign-in"></i> Login</a>
+    </div>
+</div>

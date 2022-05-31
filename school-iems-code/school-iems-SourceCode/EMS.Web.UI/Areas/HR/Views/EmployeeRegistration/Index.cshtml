@@ -1,0 +1,704 @@
+@using CaptchaMvc.HtmlHelpers
+@using CaptchaMvc.Interface
+@using EMS.CoreLibrary
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Web.Jsons.Models
+@model dynamic
+
+@{
+    ViewBag.Title = "Employee Registration";
+    //Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/EmployeeRegistration/Index.js"></script>
+}
+
+<div class="page-body" ng-controller="EmployeeRegistrationCtrl"
+     ng-init="Init(
+     '@Url.HttpRouteUrl("DefaultApi", new {controller = "EmployeeRegistrationApi", action = "GetEmployee", area = "Employee"})',
+     '@Url.HttpRouteUrl("DefaultApi", new {controller = "EmployeeRegistrationApi", action = "GetEmployeeDataExtra", area = "Employee"})',
+     '@Url.HttpRouteUrl("DefaultApi", new {controller = "EmployeeRegistrationApi", action = "GetEmployeeAppointmentHistory", area = "Employee"})',
+     '@Url.HttpRouteUrl("DefaultApi", new {controller = "EmployeeRegistrationApi", action = "SaveEmployee", area = "Employee"})');">
+    <div id="progress" ng-show="IsLoading>0" style="display: block; position: fixed; top: 0; background: rgba(255, 255, 255, 0.75); right: 0; width: 100%; height: 100%; z-index: 500; text-align: center; padding: 20% 10%; color: #3bad29;">
+        <i class="fa fa-refresh fa-spin fa-5x fa-fw margin-bottom" style="font-size: 100px;"></i>
+    </div>
+    <div id="registration-form">
+        <form role="form">
+            <div class="well bordered-top bordered-bottom bordered-blue text-center ">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <img src="@SiteSettings.Instance.InstituteLogoColorSolo" style="width: 135px;"/>
+                    </div>
+                    <div class="col-sm-8">
+                        <h1 style="color: #2e3192;">@SiteSettings.Instance.InstituteName (@SiteSettings.Instance.InstituteShortName)
+                        </h1>
+                        <h2 style="color: #3bad29;">Employee Registration Form</h2>
+                        <div class="alert alert-warning fade in no-margin">
+                            <strong>
+                                You must fill-up the mandatory fields marked as (<span  class="red glyphicon glyphicon-asterisk"></span>).<br />
+                                All field of this form are fillable in English language, except only where is instructed in Bengali language.
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-hide="messagesSuccess==null" class="alert alert-success fade in radius-bordered alert-shadowed">
+                <button class="close" data-dismiss="alert">×</button>
+                <i class="fa-fw fa fa-check"></i>
+                {{messagesSuccess}}
+            </div>
+            <div ng-hide="messages==null" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                <button class="close" data-dismiss="alert">×</button>
+                <i class="fa-fw fa fa-warning"></i>
+                {{messages}}
+            </div>
+            <div class="form-title">
+                Personal Information
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry bg-blueberry">
+                            <i class="widget-icon glyphicon glyphicon-user"></i>
+                            <span  class="widget-caption">Basic Information</span>
+                        </div>
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Full Name <span  class="red glyphicon glyphicon-asterisk"></span> (without rank/decorum)
+                                            <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                    title="FUll Name is your First Name, Middle Name and Last Name. Not including your rank/designation/decorum.">
+                                                <i class="fa fa-question-circle"></i>
+                                            </button>
+                                        </label>
+                                        <span  class="input-icon icon-right">
+                                            <input type="text" ng-change="changeFullName()" ng-model="Obj.Account.@User_Account.Property_FullName" class="form-control" placeholder="Enter Full Name" maxlength="128" required="" />
+                                            <i class="glyphicon glyphicon-user circular"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Full Name in Bengali (<a target="_blank" href="http://www.google.com/intl/bn/inputtools/try/">Try online</a>)
+                                            <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                    title="ইউনিকোড ভিত্তিক পুরো নাম বাংলায়">
+                                                <i class="fa fa-question-circle"></i>
+                                            </button>
+                                        </label>
+                                        <span  class="input-icon icon-right">
+                                            <input type="text" ng-model="Obj.Account.@User_Account.Property_BanglaName" class="form-control" placeholder="Enter Bangla Name" maxlength="200" required="" />
+                                            <i class="glyphicon glyphicon-user circular"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Gender<span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_GenderEnumId" ng-options="option.Id as option.Name for option in GenderEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Religion <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_ReligionEnumId" ng-options="option.Id as option.Name for option in ReligionEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Blood Group <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_BloodGroupEnumId" ng-options="option.Id as option.Name for option in BloodGroupEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Nationality <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <input type="text" ng-model="Obj.Account.@User_Account.Property_Nationality" class="form-control" placeholder="Enter Nationality" maxlength="128" required="" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        National ID No. (13 to 17 digit)
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="13 or 17 Digit Bangladeshi National ID Number">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_NationalIdNumber" class="form-control" placeholder="Enter National ID Number" maxlength="50" required="" />
+                                        <i class="fa fa-credit-card circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        TIN/e-TIN (If available)
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Taxpayer Identification Number (TIN)">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Employee.@User_Employee.Property_TinNumber" class="form-control" placeholder="Enter TIN Number" maxlength="50" required="" />
+                                        <i class="fa fa-credit-card circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        Password (at least 6 characters) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Type your desired  password for EMS account, at least 6 characters required.">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="password" ng-model="Obj.Account.@User_Account.Property_Password" class="form-control" placeholder="Enter Password" minlength="0" maxlength="128" required="" />
+                                        <i class="fa fa-lock circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        Confirm Password <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Please retype your password again">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="password" ng-model="Obj.ConfirmPassword" class="form-control" placeholder="Enter Password" minlength="0" maxlength="128" required="" />
+                                        <i class="fa fa-lock circular"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                            <i class="widget-icon fa fa-info-circle"></i>
+                            <span  class="widget-caption">Individual Information</span>
+                        </div>
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <label>Date of Birth (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        @*<input ng-model="Obj.Account.DateOfBirthString" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" placeholder="dd/mm/yyyy">*@
+                                        <input type="text" ng-model="Obj.Account.DateOfBirthString" data-mask="99/99/9999" class="form-control" placeholder="DD/MM/YYYY">
+                                        <i class="glyphicon glyphicon-calendar circular"></i>
+                                    </span>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Birth Place</label>
+                                    <input type="text" ng-model="Obj.Account.@User_Account.Property_PlaceOfBirth" class="form-control" placeholder="Enter Place Of Birth" maxlength="50" required="" />
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>City of Birth Place</label>
+                                    <input type="text" ng-model="Obj.Account.@User_Account.Property_PlaceOfBirthCity" class="form-control" placeholder="Enter Place Of Birth City" maxlength="50" required="" />
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>Country of Birth Place</label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_PlaceOfBirthCountryId" ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control"></select>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Birth Certificate No. (If available) </label>
+                                    <input type="text" ng-model="Obj.Account.@User_Account.Property_BirthCertificateNumber" class="form-control" placeholder="Enter Birth Certificate Number" maxlength="50" required="" />
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        Account of Bank
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Bank of your Account Number">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    
+                                    
+                                    <span class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_BankName" class="form-control" placeholder="Enter Bank Account Name" maxlength="256" />
+                                        <i class="fa fa-credit-card circular"></i>
+                                    </span>
+                                    
+                                    @*<select ng-model="Obj.Account.@User_Account.Property_BankId" ng-options="option.Id as option.Name for option in BankList " ng-init="" class="form-control"></select>*@
+                                </div>
+                               
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        Bank Account No.
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Bank Account number">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <div class="input-group">
+                                        <span  class="input-group-addon">A/C NO. </span>
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_BankAccountNo" class="form-control" placeholder="Enter Bank Account No" maxlength="50" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <p class="text-danger">
+                                        <i class="fa fa-exclamation-triangle"></i> If your Father / Mother / Spouse is dead, then add <strong>"Late"</strong> before of your <strong>Father's / Mother's / Spouse Name</strong>.
+                                    </p>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Father's Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_FatherName" class="form-control" placeholder="Enter Father Name" maxlength="128" />
+                                        <i class="glyphicon glyphicon-user circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Mother's Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_MotherName" class="form-control" placeholder="Enter Mother Name" maxlength="128" />
+                                        <i class="glyphicon glyphicon-user circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Marital Status <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_MaritalStatusEnumId" ng-options="option.Id as option.Name for option in MaritalStatusEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group" ng-hide="Obj.Account.@User_Account.Property_MaritalStatusEnumId==@((int)User_Account.MaritalStatusEnum.Single)">
+                                    <label>
+                                        Spouse Name
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Spouse Name is Husband or Wife Name">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_SpouseName" class="form-control" placeholder="Enter Spouse Name" maxlength="128" />
+                                        <i class="glyphicon glyphicon-user circular"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-title">
+                Official Information
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                            <i class="widget-icon fa fa-info-circle"></i>
+                            <span  class="widget-caption">Working Information</span>
+                        </div>
+                        <div class="widget-body">
+                            <div class="row">
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Military Category <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-change="changeMilitaryCategory()" ng-model="Obj.Account.@User_Account.Property_CategoryEnumId" ng-options="option.Id as option.Name for option in UserCategoryEnumList " ng-init="" class="form-control"></select>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Rank/Designation <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_RankId"
+                                            ng-options="option.Id as option.Name for option in RankList " ng-init="" class="form-control">
+                                    </select>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>
+                                        Personal No. ( BA / PN / BD00XXXXXX )
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Personal or Service No. ( BA / PN / BD00XXXXXX )">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Account.@User_Account.Property_PersonalNo" class="form-control" placeholder="Enter Personal No" maxlength="50" />
+                                        <i class="fa fa-credit-card circular"></i>
+                                    </span>
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>
+                                        Joining Date (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Your Official Joining Date in @SiteSettings.Instance.InstituteShortName (dd/mm/yyyy ex:19/04/1998)">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        @*<input ng-change="changeJoiningDate()" ng-model="Obj.Employee.JoiningDateString" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" placeholder="dd/mm/yyyy">*@
+                                        <input type="text" ng-model="Obj.Employee.JoiningDateString" data-mask="99/99/9999" class="form-control" placeholder="DD/MM/YYYY">
+                                        <i class="glyphicon glyphicon-calendar circular"></i>
+                                    </span>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>
+                                        Promotion/Increment Month <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="The Month when Authority will be promoted you or incremented your salary.">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_IncrementMonthEnumId" ng-options="option.Id as option.Name for option in IncrementMonthEnumList " ng-init="" class="form-control"></select>
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>Employee Category <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_EmployeeCategoryEnumId" ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Employee Type <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_EmployeeTypeEnumId" ng-options="option.Id as option.Name for option in EmployeeTypeEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label>Job Class <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_JobClassEnumId" ng-options="option.Id as option.Name for option in JobClassEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label>Job Type <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_JobTypeEnumId" ng-options="option.Id as option.Name for option in JobTypeEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label>Campus <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Account.@User_Account.Property_CampusId" ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>
+                                        First Joining Office/Faculty/Dept <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="First Joining Faculty or Dept or Office">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_JoiningDepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <label>
+                                        Currently Working Office/Faculty/Dept <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="Currently Working Faculty or Dept or Office">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <select ng-change="changeDept()" ng-model="Obj.Employee.@User_Account.Property_DepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Primary Position / Post <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_PositionId" ng-options="option.Id as option.Name group by option.JobClass for option in PositionList " ng-init="" class="form-control"></select>
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>Working Status <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <select ng-model="Obj.Employee.@User_Employee.Property_WorkingStatusEnumId" ng-options="option.Id as option.Name for option in WorkingStatusEnumList " ng-init="" class="form-control"></select>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Is Academician </label>
+                                    <input type="checkbox" ng-model="Obj.Employee.@User_Employee.Property_IsAcademician" class="form-control" placeholder="Enter Is Working"/>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>
+                                        @SiteSettings.Instance.InstituteShortName ID No. (ex: X-XXXX) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                        <button type="button" class="btn-none" data-toggle="tooltip" data-placement="top"
+                                                title="The unique number (ID No) provide to you in your @SiteSettings.Instance.InstituteShortName ID Card">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-model="Obj.Employee.@User_Employee.Property_OldIdNo" class="form-control" placeholder="Enter  @SiteSettings.Instance.InstituteShortName ID Number" maxlength="128" />
+                                        <i class="fa fa-credit-card circular"></i>
+                                    </span>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                            <i class="widget-icon fa fa-info-circle"></i>
+                            <span  class="widget-caption">Contact Information</span>
+                        </div>
+                        <div class="widget-body">
+                            <p class="text-danger">
+                                <i class="fa fa-exclamation-triangle"></i> <strong>Personal Mobile</strong> is mandatory for all categories employees.
+                                <strong>Office Mobile</strong> is mandatory if it was already issued to you.
+                                But others contact is partially mandatory for whom has this kind of contact property.
+                                And <strong>+88</strong> is not need for Bangladeshi Contact Numbers.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-6" ng-repeat="row in Obj.ContactNumberList">
+                                    <div class="form-group">
+                                        <label>
+                                            {{ContactNumberTypeEnumList[row.@User_ContactNumber.Property_ContactNumberTypeEnumId].Name}}
+                                            <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                   row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)">
+                                                (ex: 01XXXXXXXXX)
+                                            </span>
+                                            <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.HomePhone) ||
+                                                   row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficePhone)">
+                                                (ex: 02XXXXXXXXX)
+                                            </span>
+                                            @*<span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeIntercom) ||
+                                                   row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.ArmyTelephone)">
+                                                (4 digit)
+                                            </span>*@
+                                            <strong class="red" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile)"> * </strong>
+                                        </label>
+                                        <span  class="input-icon icon-right">
+                                            <input type="text" ng-model="row.@User_ContactNumber.Property_ContactNumber" class="form-control" placeholder="Enter Contact Number" maxlength="100" required="" />
+                                            <i class="glyphicon glyphicon-phone circular" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                   row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+
+                                            <i class="glyphicon glyphicon-earphone circular" ng-hide="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                   row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-danger">
+                                <i class="fa fa-exclamation-triangle"></i> <strong>Office Email</strong> must be <strong>@SiteSettings.Instance.InstituteDomain</strong> email address.
+                                If you need a new email address, kindly contact to ICT Office.
+                                <strong>Personal Email</strong> must be mandatory for 1st & 2nd Class employee and others may use.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12" ng-repeat="row in Obj.ContactEmailList">
+                                    <div class="form-group">
+                                        <label>
+                                            {{ContactEmailTypeEnumList[row.@User_ContactEmail.Property_ContactEmailTypeEnumId].Name}}
+                                            <strong class="red" ng-show="row.@User_ContactEmail.Property_ContactEmailTypeEnumId == 0">*</strong>
+                                        </label>
+                                        <span  class="input-icon icon-right">
+                                            <input type="email" ng-model="row.@User_ContactEmail.Property_ContactEmail" class="form-control" placeholder="Enter Contact Email" maxlength="100" required="" />
+                                            <i class="fa fa-envelope circular"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                            <i class="widget-icon fa fa-info-circle"></i>
+                            <span  class="widget-caption">Current Appointment Information</span>
+                        </div>
+                        <div class="widget-body">
+                            <p class="text-danger">
+                                <i class="fa fa-exclamation-triangle"></i> Only one Appointment would be Primary Appointment. Others are Additional Appointment, Not primary or main Appointment.
+                            </p>
+                            <div class="widget radius-bordered no-margin" ng-repeat="row in Obj.AppointmentHistoryList">
+                                <div class="widget-header bg-palegreen">
+                                    <span  class="widget-caption">
+                                        {{$index+1}} Appointment
+                                    </span>
+                                    <div class="widget-buttons buttons-bordered">
+                                        <button type="button" ng-click="deleteAppointment($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete Appointment</button>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="row">
+                                        <div class="col-sm-3 form-group">
+                                            <label>Appointed Post/Position <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                            <select ng-model="row.@HR_AppointmentHistory.Property_PositionId" ng-options="option.Id as option.Name group by option.JobClass for option in PositionList " ng-init="" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>
+                                                Appointed Office/Faculty/Dept <span  class="red glyphicon glyphicon-asterisk"></span>
+                                            </label>
+                                            <select ng-model="row.@HR_AppointmentHistory.Property_DepartmentId" ng-options="option.Id as option.Name group by option.Type for option in DepartmentList " ng-init="" class="form-control"></select>
+                                        </div>
+                                        <div class="col-sm-3 form-group">
+                                            <label>
+                                                Appointed Date (dd/mm/yyyy) <span  class="red glyphicon glyphicon-asterisk"></span>
+                                            </label>
+                                            <span  class="input-icon icon-right">
+                                                @*<input ng-model="row.StartDateString" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" placeholder="dd/mm/yyyy">*@
+                                                <input type="text" ng-model="row.StartDateString" data-mask="99/99/9999" class="form-control" placeholder="DD/MM/YYYY">
+                                                <i class="glyphicon glyphicon-calendar circular"></i>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-2 form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="row.@HR_AppointmentHistory.Property_IsActing"> <strong>Acting</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-change="changeIsPrimaryAppointment($index)" ng-model="row.@HR_AppointmentHistory.Property_IsPrimary"> <strong>Primary</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="hr"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget-footer">
+                            <button type="button" ng-click="addAppointment()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add Another Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-title">
+                Residential Address Information
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    @*<div class="red">
+                        <label>
+                            <input type="checkbox" ng-change="chnageAddressMIST()" ng-model="IsPresentAddressMIST"> Check if <strong>Present Address</strong> is in @SiteSettings.Instance.InstituteShortName Residential Address.
+                        </label>
+                    </div>*@
+                </div>
+                <div class="col-sm-6">
+                    <div class="red">
+                        <label>
+                            <input type="checkbox" ng-change="chnageAddress()" ng-model="IsSameAddress"> Check if <strong>Present and Permanent Address</strong> are same.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" ng-repeat="row in Obj.ContactAddressList">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                            <i class="widget-icon fa fa-info-circle"></i>
+                            <span  class="widget-caption">{{ContactAddressTypeEnumList[row.@User_ContactAddress.Property_ContactAddressTypeEnumId].Name}} Address</span>
+                        </div>
+                        <div class="widget-body ">
+                            <div class="row">
+                                @*<div class="col-sm-12 form-group">
+                                    <label>Care of (C/O) </label>
+                                    <div class="input-group">
+                                        <span  class="input-group-addon">C/O</span>
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_CareOfPersonName" class="form-control" placeholder="Enter Care Of Person Name" maxlength="128" required="" />
+                                        <span  class="input-group-addon"><i class="glyphicon glyphicon-user circular"></i></span>
+                                    </div>
+                                </div>*@
+                                @*<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Flat/Apartment No./Name</label>
+                                        <span  class="input-icon icon-right">
+                                            <input type="text" ng-change="chnageAddress()"
+                                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                                   ng-model="row.@User_ContactAddress.Property_AppartmentNo"
+                                                   class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />
+                                            <i class="fa fa-building circular"></i>
+                                        </span>
+                                    </div>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>House/Building No./Name</label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_HouseNo"
+                                               class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />
+                                        <i class="fa fa-building-o circular"></i>
+                                    </span>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Road No./Name</label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_RoadNo"
+                                               class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />
+                                        <i class="fa fa-road circular"></i>
+                                    </span>
+                                </div>*@
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Area Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_AreaInfo"
+                                               class="form-control" placeholder="Enter Area Name" maxlength="500" required="" />
+                                        <i class="fa fa-map-marker circular"></i>
+                                    </span>
+                                </div>*@
+                                <div class="col-sm-6 form-group">
+                                    <label>Post Office <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_PostOffice"
+                                               class="form-control" placeholder="Enter Post Office" maxlength="250" required="" />
+                                        <i class="fa fa-bank circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Police Station <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_PoliceStation"
+                                               class="form-control" placeholder="Enter Police Station" maxlength="250" required="" />
+                                        <i class="fa fa-bank circular"></i>
+                                    </span>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>District/State/City <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                                    <span  class="input-icon icon-right">
+                                        <input type="text" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_District"
+                                               class="form-control" placeholder="Enter District/State/City" maxlength="250" required="" />
+                                        <i class="fa fa-map-marker circular"></i>
+                                    </span>
+                                </div>
+                                @*<div class="col-sm-6 form-group">
+                                    <label>Post/Zip Code </label>
+                                    <span class="input-icon icon-right">
+                                        <input type="number" ng-change="chnageAddress()"
+                                               ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                               ng-model="row.@User_ContactAddress.Property_PostCode" class="form-control" placeholder="Enter Post Code"/>
+                                        <i class="fa fa-location-arrow circular"></i>
+                                    </span>
+                                </div>*@
+                                <div class="col-sm-12 form-group">
+                                    <label>Country </label>
+                                    <select ng-change="chnageAddress()"
+                                            ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                            ng-model="row.@User_ContactAddress.Property_CountryId" ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control"></select>
+                                </div>
+                            </div>
+                            <p>
+                                @*<span  ng-hide="row.@User_ContactAddress.Property_CareOfPersonName ==''||row.@User_ContactAddress.Property_CareOfPersonName ==null">C/O {{row.@User_ContactAddress.Property_CareOfPersonName}},&nbsp;</span>*@
+                                @*<span  ng-hide="row.@User_ContactAddress.Property_AppartmentNo ==''||row.@User_ContactAddress.Property_AppartmentNo ==null">{{row.@User_ContactAddress.Property_AppartmentNo}},&nbsp;</span>*@
+                                @*<span  ng-hide="row.@User_ContactAddress.Property_HouseNo ==''||row.@User_ContactAddress.Property_HouseNo ==null">{{row.@User_ContactAddress.Property_HouseNo}},&nbsp;</span>*@
+                                @*<span  ng-hide="row.@User_ContactAddress.Property_RoadNo ==''||row.@User_ContactAddress.Property_RoadNo ==null">Road: {{row.@User_ContactAddress.Property_RoadNo}},&nbsp;</span>*@
+                                @*<span  ng-hide="row.@User_ContactAddress.Property_AreaInfo==''||row.@User_ContactAddress.Property_AreaInfo==null">Area: {{row.@User_ContactAddress.Property_AreaInfo}},&nbsp;</span>*@
+                                <span  ng-hide="row.@User_ContactAddress.Property_PostOffice==''||row.@User_ContactAddress.Property_PostOffice==null">P.O: {{row.@User_ContactAddress.Property_PostOffice}},&nbsp;</span>
+                                <span  ng-hide="row.@User_ContactAddress.Property_PoliceStation==''||row.@User_ContactAddress.Property_PoliceStation==null">P.S: {{row.@User_ContactAddress.Property_PoliceStation}},&nbsp;</span>
+                                <span  ng-hide="row.@User_ContactAddress.Property_District==''||row.@User_ContactAddress.Property_District==null">Dist: {{row.@User_ContactAddress.Property_District}}</span>
+                                @*<span  ng-show="row.@User_ContactAddress.Property_PostCode>0"> - {{row.@User_ContactAddress.Property_PostCode}}</span>*@
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger fade in">
+                        <p class="text-justify">
+                            <i class="fa-fw fa fa-check"></i>
+                            I certify that to the best of my knowledge and belief all of the information provided on this application is accurate.
+                            I understand that withholding of information or giving false information will result in disciplinary action up to @SiteSettings.Instance.InstituteShortName rules & regulation, including termination of my employment in @SiteSettings.Instance.InstituteShortName.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group text-center">
+                        @Html.MathCaptcha("Refresh", "Enter the result you see above:", "Is required field.", true)
+                        @*@CaptchaMvc.HtmlHelpers.CaptchaHelper.MathCaptcha(Html)*@
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button ng-click="saveEmployee()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Confirm & Submit</button>
+            </div>
+            <div class="margin-top-50">
+                <p class="text-center">
+                    @SiteSettings.CopyrightAll rights reserved.
+                    Powered by <a target="_blank" href="@SiteSettings.CompanyWebsite">@SiteSettings.PoweredBy</a>.
+                    For help & support call: 1253, 1254 (Intercom).
+                </p>
+            </div>
+        </form>
+    </div>
+</div>

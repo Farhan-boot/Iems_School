@@ -1,0 +1,39 @@
+﻿@using EMS.DataAccess.Data
+
+@{
+    var UserName = Request.QueryString["un"];//ViewContext.RouteData.Values["id"];
+    var StdUserName = (string)UserName == null ? "0" : (string)UserName;
+}
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="tabProfile">
+        <li class="active">
+            <a data-toggle="tab" href="#AssignedClasses" aria-expanded="false">
+                Transaction
+            </a>
+        </li>
+        
+        <li class="tab-red">
+            <a data-toggle="tab" href="#Others" aria-expanded="false">
+                Other
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content radius-bordered  no-padding">
+        <div id="AssignedClasses" class="tab-pane in active">
+
+            <div class="text-center" style="min-height: 100px;">
+                <a class="btn btn-info btn-size" style="top: 32px;" target="_blank" href="@Url.Action("FastPaymentCollection", "Student", new {area = "Accounts"})?sid=@StdUserName"><i class="fa fa-print"></i>Go to Student's Payments</a>
+            </div>
+
+            @*@Html.Partial("~/Areas/Academic/Views/Student/AccountManager/_AccountTransaction.cshtml")*@
+        </div>
+
+        <div id="TPE" class="tab-pane">
+
+        </div>
+        <div id="Others" class="tab-pane">
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,547 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    // Angular Properties
+    var stdId = Request.QueryString["stdId"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)stdId == null ? "0" : (string)stdId;
+
+    //WebApi link for single row
+    //var testurl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetDate", area = "Employee" });
+    var getSemesterListByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetStudentSemesterListByStudentId", area = "Academic" });
+    var getClassListBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetStudentClassListBySemesterId", area = "Academic" });
+
+    var getOfferedClassListByStudentIdSemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetOfferedClassListByStudentIdSemesterId", area = "Academic" });
+    var getAddCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetAddCourse", area = "Academic" });
+    var getAddCourseListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "AddCourseList", area = "Academic" });
+    var getDeleteAllCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDeleteAllCourse", area = "Academic" });
+    var getDropAllCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDropAllCourse", area = "Academic" });
+    var getDeleteUnDeleteCourseByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDeleteUnDeleteCourseByClassId", area = "Academic" });
+    var getDropUnDropCourseByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDropUnDropCourseByClassId", area = "Academic" });
+    var getDropForRetakeCourseByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdRegistrationApi", action = "GetDropForRetakeCourseByClassId", area = "Academic" });
+
+    var getRecalculateDropForRetakeByStdIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TranscriptAndCertificateApi", action = "GetRecalculateDropForRetakeByStdId", area = "Academic" });
+
+    var printPaySlipUrl = Url.Action("PrintPaySlip", "Student", new { area = "Academic" });
+    var printCourseRegistrationUrl = Url.Action("PrintCourseRegistration", "Student", new { area = "Academic" });
+
+    var deleteClassStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "StdRegistrationApi", action = "GetDeleteClassStudent", area = "Academic"});
+
+    var viewPaymentDetailsByStudentIdSemesterIdUrl = Url.Action("ViewPaymentDetailsByStudentIdSemesterId", "Student", new { area = "Academic" });
+
+    var canAddCompletedCourse = PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.StudentCourseRegistration.CanAddCompletedCourse);
+
+        // Angular Functions
+
+    string getAddCourse = "getAddCourse";
+    string getAddCourseList = "getAddCourseList";
+    string getDeleteAllCourse = "getDeleteAllCourse";
+    string getDropAllCourse = "getDropAllCourse";
+    string getDeleteUnDeleteCourseByClassId = "getDeleteUnDeleteCourseByClassId";
+    string getDropUnDropCourseByClassId = "getDropUnDropCourseByClassId";
+    string getDropForRetakeCourseByClassId = "getDropForRetakeCourseByClassId";
+    string getOfferedClassListByStudentIdSemesterId = "getOfferedClassListByStudentIdSemesterId";
+    string getRecalculateDropForRetakeByStdId = "getRecalculateDropForRetakeByStdId";
+    string CheckIfAnyCourseSelectedForReg = "CheckIfAnyCourseSelectedForReg";
+
+    //Permissions 
+    var CanDeletePermanently = PermissionUtil.HasPermission(PermissionCollection.AcademicArea.OfferedClassManager.StudentCourseRegistration.CanPermanentDelete);
+
+}
+
+    <style>
+        .payment-per-semester {
+            padding-right: 30px;
+        }
+        .assessment tr td {
+            padding: 0px 5px !important;
+            font-size: 11px!important;
+        }
+    </style>
+
+
+<div class="row"
+     ng-controller="StudentRegistrationCtrl"
+     ng-init="Init(
+      '@StudentId' 
+     ,'@getSemesterListByStudentIdUrl'
+     ,'@getClassListBySemesterIdUrl'
+     ,'@viewPaymentDetailsByStudentIdSemesterIdUrl'
+    ,'@getOfferedClassListByStudentIdSemesterIdUrl'
+    ,'@getAddCourseUrl'
+    ,'@getAddCourseListUrl'
+    ,'@getDeleteAllCourseUrl'
+    ,'@getDropAllCourseUrl'
+    ,'@getDeleteUnDeleteCourseByClassIdUrl'
+    ,'@getDropUnDropCourseByClassIdUrl'
+    ,'@getDropForRetakeCourseByClassIdUrl'
+    ,'@getRecalculateDropForRetakeByStdIdUrl'
+    ,'@deleteClassStudentByIdUrl'
+     )">
+<div class="col-lg-12 col-sm-12 col-xs-12">
+<div class="widget">
+<div class="widget-body no-padding">
+<div class="widget-main admission-form">
+<div class="tabbable">
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a data-toggle="tab" href="#RegisteredCourses" aria-expanded="true">Registered Courses</a>
+    </li>
+    <li class="tab-red">
+        <a data-toggle="tab" href="#RegistrableCourses" aria-expanded="false">Registrable Courses</a>
+    </li>
+</ul>
+<div class="tab-content" style="padding: 6px 12px;">
+
+<div id="RegisteredCourses" class="tab-pane active ">
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget" ng-show1="SemesterList!=null && SemesterList.length>0">
+            <div class="widget-header bordered-bottom bordered-sky">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption "><b>Registered Courses: {{SelectedSemester.Name}}</b></span>
+                <a class="btn btn-info btn-xs" ng-click="@getRecalculateDropForRetakeByStdId ()"><i class="fa fa-cog"></i>Recalculate DropForRetake</a>
+                <a class="btn btn-info btn-xs" target="_blank" href="@Url.Action("GradeReportBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{@StudentId}}"><i class="fa fa-print"></i>Grade Report By Semester</a>
+                @*<button class="btn btn-success btn-xs"><i class="fa fa-save"></i>Save</button>*@
+
+                @*<button class="btn btn-info btn-xs"><i class="fa fa-save"></i>Validate All</button>*@
+                @*<button class="btn btn-info btn-xs"><i class="fa fa-save"></i>Valid</button>
+                                                    <button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>Delete</button>
+                                                    <button class="btn btn-info btn-xs"><i class="fa fa-eraser"></i>Drop</button>*@
+                <button ng-click="getDeleteAllCourse()" title="Cancel: Refund Full Payment!" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>Cancel All</button>
+                <button ng-click="getDropAllCourse()" title="Drop: No Payment Refund!" class="btn btn-warning btn-xs"><i class="fa fa-eraser"></i>Drop All</button>
+                @*<button class="btn btn-info btn-xs"><i class="fa fa-"></i>Valided All</button>*@
+                @*<button class="btn btn-info btn-xs"><i class="fa fa-print"></i>Refresh</button>*@
+                <div class="widget-buttons">
+                    <div class="btn-group">
+                        <a class="btn btn-blue btn-sm " href="#"><i class="fa fa-print"></i>Print Report</a>
+                        <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu dropdown-blue pull-left">
+                            <li>
+                                <a target="_blank" href="@Url.Action("CourseRegistrationBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{studentId}}">Semester Wise Registration</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@Url.Action("PrintCourseRegistration", "Student", new {area = "Academic"})?semesterId={{SelectedSemester.Id}}&studentId={{studentId}}">Registration Slip</a>
+                            </li>
+                            <li>
+                                <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("Print1stSemesterCourseRegistration", "Student", new {area = "Academic"})/?studentId={{Account.@User_Account.Property_Id}}" target="_blank"> 1st Sem. Reg. Slip</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@Url.Action("StudentSemesterBill", "Report", new {area = "Accounts"})?stdId={{studentId}}">Semester Bill</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@Url.Action("StudentCollectionReport", "Report", new {area = "Accounts"})?stdId={{studentId}}">Collection Report</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@Url.Action("PaymentLedger", "Report", new {area = "Accounts"})?stdId={{studentId}}">Payment Ledger</a>
+                            </li>
+                            @*<li class="divider">{{SelectedSemesterName}}</li>*@
+                        </ul>
+                    </div>
+                </div>
+                <div class="widget-buttons buttons-bordered no-padding-right">
+                    <select ng-model="SelectedSemester"
+                            ng-change="onChangeSemester()"
+                            ng-options="option.Name for option in SemesterList " class="form-control select-inline"></select>
+                </div>
+                <div class="widget-buttons ">
+                    <input ng-model="isCheckedAllSemester"
+                           ng-change="onChangeIsCheckedAllSemester ()"
+                           type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 13px;" />
+                    <span style="font-size: 9px;">Get All Semester</span>
+                </div>
+            </div><!--Widget Header-->
+            <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed" style="margin-top:10px">
+                <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention Please!</strong> {{ErrorMsg}}
+            </div>
+            <div ng-show="SemesterList==null || SemesterList.length<1" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Attention Please!</strong> This Student's don't have any Registered Course!
+            </div>
+            <div ng-show="SemesterList!=null && SemesterList.length>0" class="widget-body no-padding">
+                <div id="teacherCourseList">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <table class="table table-bordered">
+                                <thead class="bordered-blueberry">
+                                <caption style="text-align: left; padding-left: 12px; color: black">
+                                    <b>Registration Status: </b> <span class="label label-sky">{{RegStatus}}</span>
+                                    <span>
+                                        |Total Credit:<span class="badge badge-primary ng-binding">{{TotalCredits}}</span>|Total Course:<span class="badge badge-success ng-binding">{{TotalCourse}}</span>
+                                        |Total Theory:<span class="badge badge-purple ng-binding ">{{TotalTheory}}</span> |Total Lab:<span class="badge badge-magenta ng-binding ">{{TotalLab}}</span>
+                                    </span>
+                                    <div style="text-align: center"></div>
+                                    <a target="_blank" href="@Url.Action("PrintCourseRegistration", "Student", new {area = "Academic"})?semesterId={{SelectedSemester.Id}}&studentId=@StudentId" class="btn btn-info btn-xs"><i class="fa fa-print"> Print Registration</i></a>
+                                </caption>
+                                <tr>
+                                    <th class="text-center" style="width: 31px;">Ser</th>
+                                    <th>Title </th>
+                                    <th>Class Routine</th>
+                                    <th class="text-center">Reg. Status</th>
+                                    <th class="text-center">Action</th>
+                                    <th class="text-center">History</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @*SelectedSemester.Aca_ClassListJson*@
+                                <tr ng-repeat="row in ClassList">
+                                    <td class="text-center">{{$index+1}}</td>
+                                    <td>
+                                        <a href="@Url.Action("ClassAddEdit", "ClassManager", new {area = "Academic"})?id={{row.Id}}" target="_blank" title="click to view Attendance, Result, Course Material, Notice etc.">
+                                            <strong>{{row.@Aca_Class.Property_Code}}: {{row.@Aca_Class.Property_Name}}</strong>
+                                        </a>
+                                        <br />Faculty:
+                                        <span ng-repeat="name in row.TeacherNameList" style="font-style: italic">
+                                            <span>{{$index+1}}. {{name}}</span>
+                                        </span>
+                                        <span ng-hide="row.TeacherNameList.length>0">[Not Available]</span>
+                                        @*<br />
+                                                                                <a href="@Url.Action("ClassAddEdit","ClassManager", new { area = "Academic"})?id={{row.Id}}#ClassAttendance" target="_blank" title="click to view Attendances">[Attendances]</a>
+                                                                                <a href="@Url.Action("ClassAddEdit","ClassManager", new { area = "Academic"})?id={{row.Id}}#ClassMarks" target="_blank" title="click to view Results.">[Results]</a>
+                                                                                <a href="@Url.Action("Index","ClassManagement", new { area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassMaterials" target="_blank" title="click to view Course Materials.">[Course Materials]</a>
+                                                                                <a href="@Url.Action("Index","ClassManagement", new { area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassNotices" target="_blank" title="click to view Notices.">[Course Notices]</a>*@
+                                        @*<br />
+                                                                                <em>{{row.DepartmentShortName}} ({{row.SemesterLevelTerm}})</em>*@
+                                    </td>
+                                    <td style="font-size: 11px; vertical-align: middle;">
+                                        <ul class="no-margin list-unstyled" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                            <li ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                <strong>{{cr.RoutineDetails}}</strong>
+                                                <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.General_RoomJson.RoomDetails}}</em>
+                                                <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                            </li>
+                                        </ul>
+                                        <span ng-hide="row.Aca_ClassRoutineJsonList.length>0">[Not Available]</span>
+                                        @*<em>{{row.DepartmentShortName}} ({{row.SemesterLevelTerm}})</em>*@
+                                        @*<em>Cr.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditHour.ToString("F"), @course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>*@
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;">
+                                        <span ng-class="row.IsSelected?'badge-success':'badge-danger'" class="badge">
+                                            <span>{{row.StudentRegistrationStatus}}</span>
+                                        </span>
+                                        @*<br /><em style="font-size: 11px"></em>*@
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;min-width: 220px">
+                                        <div class="widget-buttons">
+                                            <button title="Cancel: Refund Full Payment!" ng-click="getDeleteUnDeleteCourseByClassId(row.Id,true)" ng-hide="row.@Aca_Class.Property_StudentRegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)" class="btn btn-xs btn-danger">
+                                                <i class="fa fa-times"></i> Cancel
+                                            </button>
+                                            <button ng-click="getDeleteUnDeleteCourseByClassId(row.Id,false)" ng-hide="row.@Aca_Class.Property_StudentRegistrationStatusEnumId!=@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)" class="btn btn-xs btn-warning">
+                                                <i class="fa fa-refresh"> Un Cancel</i>
+                                            </button>
+                                            <button title="Drop: No Payment Refund!" ng-click="getDropUnDropCourseByClassId(row.Id,true)" ng-hide="row.@Aca_Class.Property_StudentRegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)
+                                                                                || row.@Aca_Class.Property_StudentRegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop)
+                                                                                " class="btn btn-xs btn-warning">
+                                                Drop
+                                            </button>
+                                            <button ng-click="getDropUnDropCourseByClassId(row.Id,false)" ng-show="row.@Aca_Class.Property_StudentRegistrationStatusEnumId==@((byte) Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop)" class="btn btn-xs btn-warning">
+                                                Un Drop
+                                            </button>
+                                            @if (CanDeletePermanently)
+                                            {
+                                                <button ng-click="deleteClassStudent(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                                            }
+                                            <!--
+                                            <div class="btn-group">
+                                                <a class="btn btn-blue btn-sm " href="#"><i class="fa fa-cog"></i>Reg. Action</a>
+                                                <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                                    @*<li>
+                                                                                                            href="@Url.Action("FullCertificate", "Student", new { area = "Admission" })?stdId={{StudentId}}"
+                                                                                                            <a  href="#">Course Valid</a>
+                                                                                                        </li>*@
+                                                    <li>
+                                                        <a ng-click="getDropUnDropCourseByClassId(row.Id,true)"
+                                                           @*ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId != @((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop) "*@>Course Drop</a>
+                                                        <a ng-click="getDropUnDropCourseByClassId(row.Id,false)"
+                                                           @*ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId == @((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Drop)"*@>Course UnDrop</a>
+                                                    </li>
+                                                    <li>
+                                                        <a ng-click="getDeleteUnDeleteCourseByClassId(row.Id,true)"
+                                                           @*ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId != @((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)"*@>Course Delete</a>
+                                                        <a ng-click="getDeleteUnDeleteCourseByClassId(row.Id,false)"
+                                                           @*ng-show="row.@Aca_ClassTakenByStudent.Property_RegistrationStatusEnumId == @((byte)Aca_ClassTakenByStudent.RegistrationStatusEnum.Cancelled)"*@>Course UnDelete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            -->
+                                        </div>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;">
+                                        <button ng-click="viewClassTakenHistory(row)" class="btn btn-xs btn-primary">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    
+                                    @*<td></td>*@
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="widget hidden">
+                                <div class="widget-header  bordered-blueberry bordered-left">
+                                    <span class="widget-caption">Payment Details</span>
+                                </div>
+                                <div class="widget-body  bordered-blue bordered-left">
+                                    <div class="payment-per-semester"></div>
+                                    <div style="text-align: center; padding-top: 10px;">
+                                        <a class="btn btn-success btn-xs" style="margin-bottom: 5px;"
+                                           href="@(printCourseRegistrationUrl)/?semesterId={{SemesterId}}&studentId=@StudentId"
+                                           target="_blank"><i class="fa fa-print"></i>Print Registration</a>
+                                        <a class="btn btn-success btn-xs"
+                                           href="@(printPaySlipUrl)/?semesterId={{SemesterId}}&studentId=@StudentId"
+                                           target="_blank"><i class="fa fa-print"></i>Print PaySlip</a>
+                                        @*<button type="button" class="btn btn-success" data-dismiss="modal" style="margin: 0px 5px 0px 5px;">
+                                                                                <i class="fa fa-paypal"></i> Online Payment
+                                                                            </button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Widget Body-->
+        </div><!--Widget-->
+        @*<div class="text-center">
+                                                <a class="btn btn-info btn-size" target="_blank" href="@Url.Action("GradeReportBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{@StudentId}}"><i class="fa fa-print"></i>Grade Report By Semester</a>
+
+                                            </div>*@
+    </div>
+</div>
+</div>
+<div id="RegistrableCourses" class="tab-pane">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget" ng-show1="SemesterList!=null && SemesterList.length>0">
+                <div class="widget-header bordered-bottom bordered-sky">
+                    <i class="widget-icon fa fa-files-o"></i>
+                    <span class="widget-caption "><b>Registrable Courses: {{SelectedSemester.Name}}</b></span>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <select ng-model="SelectedLevelTermId"
+                                ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Any Level Term---</option>
+                        </select>
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <select ng-model="SelectedContinuingBatchId"
+                                ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Any Batch---</option>
+                        </select>
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <select ng-model="SelectedClassSectionId"
+                                ng-options="option.Id as option.Name for option in ClassSectionList " ng-init="" class="form-control select-inline">
+                            <option value="" label="" class="">---Any Section---</option>
+                        </select>
+                    </div>
+                    <div class="widget-buttons buttons-bordered no-padding-right">
+                        <select ng-model="SelectedSemester"
+                                ng-change="onChangeSemester ()"
+                                ng-options="option.Name for option in SemesterList " class="form-control select-inline"></select>
+                    </div>
+
+                    <div class="widget-buttons ">
+                        <input ng-model="isCheckedAllSemester"
+                               ng-change="onChangeIsCheckedAllSemester ()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 13px;" />
+                        <span style="font-size: 9px;">Get All Semester</span>
+                    </div>
+                </div><!--Widget Header-->
+                <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed" style="margin-top:10px">
+                    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                    <i class="fa-fw fa fa-warning"></i>
+                    <strong>Attention Please!</strong> {{ErrorMsg}}
+                </div>
+                <div ng-show="SemesterList==null || SemesterList.length<1" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                    <i class="fa-fw fa fa-warning"></i>
+                    <strong>Attention Please!</strong> This Student's don't have any Registered Course!
+                </div>
+                <div @*ng-show="OfferedClassList==null || OfferedClassList.length==0"*@ class="text-center" style="min-height: 100px;">
+                    <button ng-click="@getOfferedClassListByStudentIdSemesterId ()" class="btn btn-info btn-size" style="top: 32px;" target="_blank">
+                        <span ng-show="OfferedClassList!=null && OfferedClassList.length>0"><i class="fa fa-refresh"> </i> Re-</span>Load Registrable Courses
+                    </button>
+                </div>
+
+                <div ng-show="OfferedClassList!=null && OfferedClassList.length>0" class="widget-body no-padding">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-9"><br/>
+                                <div class="form-group no-margin  no-print" ng-show="OfferedClassList.length>0">
+                                    <div class="input-icon icon-right input-group-xs">
+                                        <input ng-model="searchCourse" class="form-control input-xs" id="searchStudent" type="text" placeholder="type to search from below Class list" autocomplete="on">
+                                        <i class="white fa fa-times bg-purple" ng-click="searchCourse='';"></i>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead class="bordered-blueberry">
+                                    <tr>
+                                        <th class="text-center" style="width: 31px;">Ser</th>
+                                        <th>Class Info </th>
+                                        <th class="text-center">Status</th>
+                                        <th ng-show="SelectedLevelTermId==0 || SelectedLevelTermId==null" class="text-center">Level Term</th>
+                                        @*<th class="text-center">Status</th>*@
+                                        <th class="text-center">Action</th>
+                                        <th class="text-center">
+                                            <input ng-model="IsSelectAll" type="checkbox" ng-click="selectAll()">
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @*SelectedSemester.Aca_ClassListJson*@
+                                    <tr ng-repeat="row in OfferedClassList|filter:searchCourse">
+                                        <td class="text-center">{{$index+1}}</td>
+                                        <td>
+                                            <a href="@Url.Action("ClassAddEdit", "ClassManager", new {area = "Academic"})?id={{row.Id}}" target="_blank" title="click to view Attendance, Result, Course Material, Notice etc."><strong>{{row.@Aca_Class.Property_Code}}: {{row.@Aca_Class.Property_Name}}</strong></a>
+                                            <br />Class Routine:
+                                            <ul class="no-margin list-unstyled" ng-show="row.ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                                <li ng-repeat="cr in row.ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                    <strong>{{cr.RoutineDetails}}</strong>
+                                                    <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.GeneralRoomDetails}}</em>
+                                                    <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                                </li>
+                                            </ul>
+                                            <span ng-hide="row.ClassRoutineJsonList.length>0">[Not Available]</span>
+                                            <br />
+                                            Batch:
+                                            <span ng-show="row.Batch == null">Undefined</span>
+                                            <span ng-hide="row.Batch == null">{{row.Batch}}</span>
+                                            , {{row.SyllabusName}}
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle;">
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.FreshRegistration)" class="text-success">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInOtherSemesterRetakeAble)" class="text-warning">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInOtherSemesterImprovementAble)" class="text-warning">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInThisSemester)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.AnotherSectionTakenInThisSemester)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.DropInThisSemester)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.CancelledInThisSemester)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.PrerequisiteNotComplete)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.NotInCurriculum)" class="text-danger">{{row.RegistrableCourseStatus}}</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.CourseCompleted)" class="text-success text-bold">{{row.RegistrableCourseStatus}}</span>
+                                        </td>
+                                        <td ng-show="SelectedLevelTermId==0 || SelectedLevelTermId==null" class="text-center">
+                                            {{row.LevelTermName}}
+                                        </td>
+                                        @*<td style="font-size: 11px; vertical-align: middle;">
+                                            <ul class="no-margin list-unstyled" ng-show="row.ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                                <li ng-repeat="cr in row.ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                                    <strong>{{cr.RoutineDetails}}</strong>
+                                                    <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.General_RoomJson.RoomDetails}}</em>
+                                                    <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                                </li>
+                                            </ul>
+                                            <span ng-hide="row.ClassRoutineJsonList.length>0">[Not Available]</span>
+                                            <em>{{row.DepartmentShortName}} ({{row.SemesterLevelTerm}})</em>
+                                            <em>Cr.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditLoad.ToString("F"), Co.Hr:@course.Aca_Class.Aca_CurriculumCourse.CreditHour.ToString("F"), @course.Aca_Class.Aca_CurriculumCourse.CourseCategory.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.CourseType.ToString().AddSpacesToSentence(), @course.Aca_Class.Aca_CurriculumCourse.Aca_Curriculum.ShortName</em>
+                                        </td>*@
+                                        @*<td class="text-center" style="vertical-align: middle;">
+                                                                                <span ng-class="row.IsSelected?'badge-success':'badge-danger'" class="badge">
+                                                                                    <span style="font-size: 11px">{{row.StudentRegistrationStatus}}</span>
+                                                                                </span>
+                                                                                <br/>
+                                                                                <span>{{row.StudentStatus}}</span>
+                                                                            </td>*@
+                                        <td class="text-center" style="vertical-align: middle;">
+                                            <button ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.FreshRegistration)"  ng-click="@getAddCourse (row.Id)" class="btn btn-sm btn-success">Add</button>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInThisSemester)" ng-disabled="true" class="badge badge-danger">Taken</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.DropInThisSemester)" ng-disabled="true" class="badge badge-danger">Dropped</span>
+                                            <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.CancelledInThisSemester)" ng-disabled="true" class="badge badge-danger">Cancelled</span>
+                                            
+                                            @if (canAddCompletedCourse)
+                                            {
+                                                <button ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.CourseCompleted)"  ng-click="@getAddCourse (row.Id)" class="btn btn-sm btn-danger">Add (Completed Course)</button>
+                                            }
+                                            else
+                                            {
+                                                <span ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.CourseCompleted)" ng-disabled="true" class="badge badge-success">Completed</span>
+                                            }
+                                            <button ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInOtherSemesterRetakeAble)"  ng-click="@getAddCourse (row.Id)" class="btn btn-sm btn-warning">Add (Retake)</button>
+                                            <button ng-show="row.RegistrableCourseStatusEnumId==@((byte)Aca_Class.RegistrableCourseStatusEnum.TakenInOtherSemesterImprovementAble)"  ng-click="@getAddCourse (row.Id)" class="btn btn-sm btn-warning">Add (Improvement)</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <input ng-hide="row.RegistrableCourseStatusEnumId!=@((byte)Aca_Class.RegistrableCourseStatusEnum.FreshRegistration)" type="checkbox" ng-change="@(CheckIfAnyCourseSelectedForReg)()" ng-model="row.IsSelected"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="widget hidden">
+                                    <div class="widget-header  bordered-blueberry bordered-left">
+                                        <span class="widget-caption">Payment Details</span>
+                                    </div>
+                                    <div class="widget-body  bordered-blue bordered-left">
+                                        <div class="payment-per-semester"></div>
+                                        <div style="text-align: center; padding-top: 10px;">
+                                            <a class="btn btn-success btn-xs" style="margin-bottom: 5px;"
+                                               href="@(printCourseRegistrationUrl)/?semesterId={{SemesterId}}&studentId=@StudentId"
+                                               target="_blank"><i class="fa fa-print"></i>Print Registration</a>
+                                            <a class="btn btn-success btn-xs"
+                                               href="@(printPaySlipUrl)/?semesterId={{SemesterId}}&studentId=@StudentId"
+                                               target="_blank"><i class="fa fa-print"></i>Print PaySlip</a>
+                                            @*<button type="button" class="btn btn-success" data-dismiss="modal" style="margin: 0px 5px 0px 5px;">
+                                                                                <i class="fa fa-paypal"></i> Online Payment
+                                                                            </button>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--Widget Body-->
+            
+                <div ng-show="OfferedClassList!=null && OfferedClassList.length>0" class="widget-footer text-center">
+                    <button ng-disabled="!IsAnyCourseSelectedForReg" ng-click="@(getAddCourseList)()" class="btn btn-success btn-size">
+                        <i class="fa fa-save"></i>Register Selected Courses
+                    </button>
+                </div>
+            </div><!--Widget-->
+            @*<div class="text-center">
+                                                <a class="btn btn-info btn-size" target="_blank" href="@Url.Action("GradeReportBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{@StudentId}}"><i class="fa fa-print"></i>Grade Report By Semester</a>
+
+                                            </div>*@
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div><!--Widget Body end-->
+</div>
+</div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="class-taken-history-modal" tabindex="-1" role="dialog" aria-labelledby="selectCurriculumCourseModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="class-taken-history-modal-Label">{{ClassForHistory.Code}} {{ClassForHistory.Name}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel" style="width: 65px;">History </td>
+                                <td class="fieldarea">
+                                    <div ng-bind-html="renderHtml(ClassForHistory.ClassTakenByStudentHistory)" class="ng-binding"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal End -->
+
+
+
+</div>

@@ -1,0 +1,392 @@
+﻿
+<!--File:BAcnt_Ledger List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "BasicAccounting: Ledger List";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var LedgerId = (string) id == null?"0":(string)id;
+
+    //WebApi link for single row 
+    var getLedgerByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "GetLedgerById", area = "BasicAccounting" });
+    var getLedgerDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "GetLedgerDataExtra", area = "BasicAccounting" });
+    var saveLedgerUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "SaveLedger", area = "BasicAccounting" });
+    var deleteLedgerByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "GetDeleteLedgerById", area = "BasicAccounting" });
+
+    //WebApi link for List
+    var getPagedLedgerUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "LedgerApi", action = "GetPagedLedger", area = "BasicAccounting"});
+    var getAllLedgerUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "GetAllLedger", area = "BasicAccounting" });
+    var saveLedgerListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "SaveLedgerList", area = "BasicAccounting" });
+    var getLedgerListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "LedgerApi", action = "GetLedgerListDataExtra", area = "BasicAccounting" });
+
+    var editLedgerByIdPageUrl = Url.Action("LedgerAddEdit", "Ledger", new { area = "BasicAccounting" });
+    var ledgerTransactionUrl = Url.Action("LedgerTransaction", "Ledger", new { area = "BasicAccounting" });
+    var downloadLedgerListUrl = Url.Action("LedgerListDownloadManager", "Ledger", new { area = "BasicAccounting" });
+
+    //Angular Function Name
+    var getNewLedger = "getNewLedger";
+    var saveLedger = "saveLedger";
+    var deleteLedgerById = "deleteLedgerById";
+    var deleteLedgerByObj = "deleteLedgerByObj";
+    //for list
+    var searchLedgerList = "searchLedgerList";
+    var getPagedLedgerList = "getPagedLedgerList";
+    var getAllLedgerList = "getAllLedgerList";
+    var saveLedgerList = "saveLedgerList";
+    var getLedgerListExtraData = "getLedgerListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    @* First 3 js necessary for treeable table *@
+     <script src="~/assets/custom/lib/TreeTable/jquery.treetable-ajax-persist.js"></script> 
+     <script src="~/assets/custom/lib/TreeTable/jquery.treetable-3.0.0.js"></script> 
+     <script src="~/assets/custom/lib/TreeTable/persist-min.js"></script> 
+
+    <script src="~/Areas/BasicAccounting/Views/Ledger/LedgerList.js?v=4"></script>
+
+}
+@section StyleSection
+{
+    
+    <link href="~/assets/custom/lib/TreeTable/jquery.treetable.css" rel="stylesheet" />
+    
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet" />
+
+
+
+}
+
+
+<div ng-controller="LedgerListCtrl"
+     ng-init="Init(
+      '@getAllLedgerUrl'
+     ,'@deleteLedgerByIdUrl'
+     ,'@getLedgerListDataExtraUrl'
+     ,'@saveLedgerListUrl'
+     ,'@getLedgerByIdUrl'
+     ,'@getLedgerDataExtraUrl'
+     ,'@saveLedgerUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" @*ng-show="HasViewPermission"*@>
+
+        <div class="widget-header bordered-bottom bordered-sky">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Ledger </span>
+            
+            <label style="margin-left: 30px;">
+                <input ng-model="IsTreeEnable" ng-change="getVoucherList ()" type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;">
+                <span style="color: #e74b37;">Is Tree Enable</span>
+            </label>
+
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <span>Select Branch</span>
+                    <select ng-model="SelectedBranchId" ng-change="@(searchLedgerList)()"
+                            ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Branch---</option>
+                    </select>
+                </span>
+            </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Company</span>*@
+                    <select ng-model="SelectedCompanyId" ng-change="@(searchLedgerList)()" 
+                            ng-options="option.Id as option.Name for option in CompanyAccountList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Company---</option>
+                    </select>
+                </span>
+            </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <ui-select ng-model="SelectedLedgerForSearch"
+                           ng-change="searchLedger($select.selected)"
+                           @*class="ledgerSelect{{$index+1}}"*@
+                           theme="select2" style="width: 380px; line-height: normal;">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="ledger as ledger in LedgerList| orFilter: {Name: $select.search, Code: $select.search}">
+                        <div ng-bind-html="ledger.Name | highlight: $select.search"></div>
+                        <small>
+                            Code: <span ng-bind-html="''+ledger.Code | highlight: $select.search"></span>
+                            | Code Name: {{ledger.CodeName}}
+                            | Type: {{ledger.Type}}
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+
+                @*<span class="input-icon">
+                    <input type="text"  on class="form-control input-xs " id="ledger-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>*@
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <button ng-click="@(searchLedgerList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i>Load Ledger</button>
+                @*<a href="@editLedgerByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i>Add Ledger</a>*@
+                <a target="_blank" href="@downloadLedgerListUrl?branchId={{SelectedBranchId}}" class="btn btn-xs btn-success"><i class="fa fa-download"></i>Download Ledger</a>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <div class="table-footer no-print">
+                
+            </div>
+            <table class="table table-striped table-bordered table-hover"
+            id="ledgerTable"
+                   >
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    @*<th class="text-center">SN</th>*@
+                    <th class="text-center">Code</th>
+                    <th class="text-center">Code Name</th>
+                    <th class="text-center">Head of Accounts Name</th>
+                    <!--th class="text-center">Type Enum Id</th-->
+                    <th class="text-center">Type</th>
+                    @*<th class="text-center">Parent Id</th>*@
+                    <th class="text-center">Group/Ledger</th>
+                    @*<th class="text-center">Opening Balance</th>*@
+                    @*<th class="text-center">Opening Date</th>*@
+                    @*<th class="text-center">Remark</th>*@
+                    <th class="text-center">Debit Balance</th>
+                    <th class="text-center">Credit Balance</th>
+                    <!--th class="text-center">Branch Id</th-->
+                    <!--th class="text-center">Company Id</th-->
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    
+                <tr ng-repeat="row in LedgerList|filter:SearchText" data-tt-id="{{row.@BAcnt_Ledger.Property_Id}}" data-tt-parent-id ={{row.@BAcnt_Ledger.Property_ParentId}}
+                    id="{{row.@BAcnt_Ledger.Property_Id}}"
+                    is-group="{{row.@BAcnt_Ledger.Property_IsGroup}}"
+                    >
+
+                    <td id="code">{{row.@BAcnt_Ledger.Property_Code}}</td>
+                    <td>{{row.@BAcnt_Ledger.Property_CodeName}}</td>
+                    <td id="Name">{{row.@BAcnt_Ledger.Property_Name}}</td>
+                    <td class="text-center">{{row.@BAcnt_Ledger.Property_Type}}</td>
+                    <td class="text-center">
+                        <span ng-if="row.@BAcnt_Ledger.Property_IsGroup">Group</span>
+                        <span ng-if="!row.@BAcnt_Ledger.Property_IsGroup">Ledger</span>
+                    </td>
+                    <td>{{row.@BAcnt_Ledger.Property_ChildTotalDebit}}</td>
+                    <td>{{row.@BAcnt_Ledger.Property_ChildTotalCredit}}</td>
+
+                    <td ng-init="treeTable($index+1)">
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-blue btn-sm dropdown-toggle"  data-toggle="dropdown" href="#" aria-expanded="false">Action</a>
+                                <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a  ng-if="row.@BAcnt_Ledger.Property_IsGroup"
+                                            ng-click="addNewChildLedger(row)"  href=""><i class="fa fa-plus"></i> New Ledger</a>
+                                    </li>
+                                    <li>
+                                        <a ng-click="getLedgerById(row.@BAcnt_Ledger.Property_Id)"><i class="fa fa-eye"></i> Edit</a>
+                                    </li>
+                                    <li ng-if="!row.@BAcnt_Ledger.Property_IsGroup">
+                                        <a href="@ledgerTransactionUrl?id={{row.@BAcnt_Ledger.Property_Id}}" target="_blank"><i class="fa fa-eye"></i> Open</a>
+                                    </li>
+                                    <li>
+                                        <a ng-click="@deleteLedgerById (row)"  href="#" style="color: red;"><i class="fa fa-trash"></i> Permanent Delete</a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+
+                    </td>
+                    
+
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+               
+            </div>
+        </div>
+    </div>
+    
+   @* Start Modal *@ 
+    <div class="modal fade" id="addLedgerModal" tabindex="-1" role="dialog" aria-labelledby="addLedgerModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        <span ng-if="Ledger.@BAcnt_Ledger.Property_Id==0">New Ledger:</span>
+                        <span ng-if="Ledger.@BAcnt_Ledger.Property_Id!=0">Update Ledger</span>
+                        {{Ledger.ParentName}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-12 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Ledger.@BAcnt_Ledger.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <!--dropdown option for EnumList-->
+                                    <tr>
+                                        <td class="fieldlabel">Type </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Ledger.@BAcnt_Ledger.Property_TypeEnumId" 
+                                                    ng-change="onChangeTypeEnum(Ledger)"
+                                                    ng-options="option.Id as option.Name for option in TypeEnumList" title="Select Type" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Type." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Group </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="Ledger.@BAcnt_Ledger.Property_IsGroup" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Group if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr ng-show="!Ledger.@BAcnt_Ledger.Property_IsGroup">
+                                        <td class="fieldlabel">Is Bank </td>
+                                            <td class="fieldarea">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" ng-model="Ledger.@BAcnt_Ledger.Property_IsBank" />
+                                                </label>
+                                            </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Group if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr ng-show="Ledger.@BAcnt_Ledger.Property_IsGroup">
+                                            <td class="fieldlabel">Code </td>
+                                            <td class="fieldarea">
+                                                <input type="text"
+                                                       ng-model="Ledger.@BAcnt_Ledger.Property_Code" class="form-control" placeholder="Enter Code" maxlength="50" />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Code." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                        <tr ng-hide="Ledger.@BAcnt_Ledger.Property_IsGroup">
+                                            <td class="fieldlabel">Code Name </td>
+                                            <td class="fieldarea">
+                                                <input type="text"
+                                                       ng-model="Ledger.@BAcnt_Ledger.Property_CodeName" class="form-control" placeholder="Enter Code Name" maxlength="50" />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Code Name." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                        
+                                        @*<tr>
+                                            <td class="fieldlabel">Parent Id </td>
+                                            <td class="fieldarea">
+                                                <input type="number" ng-model="Ledger.@BAcnt_Ledger.Property_ParentId" class="form-control" placeholder="Enter Parent Id" />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Parent Id." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+                                        
+
+                                        <tr>
+                                            <td class="fieldlabel">Opening Balance </td>
+                                            <td class="fieldarea">
+                                                <input type="number" ng-model="Ledger.@BAcnt_Ledger.Property_OpeningBalance" class="form-control" placeholder="Enter Opening Balance" />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Opening Balance." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Opening Date </td>
+                                        <td class="fieldarea">
+                                            <input type="datetime" ng-model="Ledger.@BAcnt_Ledger.Property_OpeningDate" class="form-control" placeholder="Enter Opening Date" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Opening Date." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                        <tr>
+                                            <td class="fieldlabel">Remark </td>
+                                            <td class="fieldarea">
+                                                <textarea type="text" ng-model="Ledger.@BAcnt_Ledger.Property_Remark" class="form-control" placeholder="Enter Remark"></textarea>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                                        </tr>
+
+                                        @*<tr>
+                                            <td class="fieldlabel">History </td>
+                                            <td class="fieldarea">
+                                                <input type="text" ng-model="Ledger.@BAcnt_Ledger.Property_History" class="form-control" placeholder="Enter History" />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+                                        @*<tr>
+                                            <td class="fieldlabel">Is Deleted </td>
+                                            <td class="fieldarea">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" ng-model="Ledger.@BAcnt_Ledger.Property_IsDeleted" />
+                                                </label>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+
+
+                                        @*
+                                        <tr>
+                                            <td class="fieldlabel">Branch </td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Ledger.@BAcnt_Ledger.Property_BranchId"
+                                                        ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Branch." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+
+                                        @*<tr>
+                                            <td class="fieldlabel">Company Account </td>
+                                            <td class="fieldarea">
+                                                <select ng-model="Ledger.@BAcnt_Ledger.Property_CompanyId"
+                                                        ng-options="option.Id as option.Name for option in CompanyAccountList " ng-init="" class="form-control select-inline">
+                                                    <option value="" label="" class="">---Select One---</option>
+                                                </select>
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Company Account." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button ng-click="@saveLedger ()" type="button" class="btn btn-success">
+                        <span class="fa fa-save"></span> Save
+                    </button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   @* End Modal *@ 
+    
+    
+    
+    
+
+</div>
+
+
+
+

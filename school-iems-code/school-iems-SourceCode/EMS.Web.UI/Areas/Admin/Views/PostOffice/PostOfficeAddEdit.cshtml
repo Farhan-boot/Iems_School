@@ -1,0 +1,157 @@
+﻿<!--File:General_PostOffice Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Post Office";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var PostOfficeId = (string)id == null ? "0" : (string)id;
+
+    //General_PostOffice WebApi Single Row link
+    var getPostOfficeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetPostOfficeById", area = "Admin" });
+    var getPostOfficeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetPostOfficeDataExtra", area = "Admin" });
+    var savePostOfficeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "SavePostOffice", area = "Admin" });
+    var deletePostOfficeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetDeletePostOfficeById", area = "Admin" });
+
+    //General_PostOffice WebApi List link
+    var getPagedPostOfficeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetPagedPostOffice", area = "Admin" });
+    var getAllPostOfficeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetAllPostOffice", area = "Admin" });
+    var savePostOfficeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "SavePostOfficeList", area = "Admin" });
+    var getPostOfficeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PostOfficeApi", action = "GetPostOfficeListDataExtra", area = "Admin" });
+
+    var editPostOfficeByIdPageUrl = Url.Action("PostOfficeAddEdit", "PostOffice", new { area = "Admin" });
+    var listPostOfficePageUrl = Url.Action("PostOfficeList", "PostOffice", new { area = "Admin" });
+
+    //General_PostOffice Angular Functions
+    string getPostOfficeById = "getPostOfficeById";
+    var savePostOffice = "savePostOffice";
+    var getNewPostOffice = "getNewPostOffice";
+    var refreshPage = "loadPage()";
+    string deletePostOfficeById = "deletePostOfficeById";
+    string loadPostOfficeExtraData = "loadPostOfficeExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/PostOffice/PostOfficeAddEdit.js"></script>
+}
+
+<div id="PostOfficeAddEdit" class="row" ng-controller="PostOfficeAddEditCtrl" ng-init="Init(
+      '@PostOfficeId'
+      ,'@getPostOfficeByIdUrl'
+      ,'@getPostOfficeDataExtraUrl'
+      ,'@savePostOfficeUrl'
+      ,'@deletePostOfficeByIdUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="PostOffice.@General_PostOffice.Property_Name!=''">{{(PostOffice.@General_PostOffice.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="PostOfficeId" ng-Enter="@(getPostOfficeById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewPostOffice)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listPostOfficePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="PostOffice.@General_PostOffice.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Post Code <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="PostOffice.@General_PostOffice.Property_PostCode" class="form-control" placeholder="Enter Post Code" maxlength="10" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Post Code." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Order No </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="PostOffice.@General_PostOffice.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Is Deleted </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="PostOffice.@General_PostOffice.Property_IsDeleted" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Is Active </td>
+                                        <td class="fieldarea">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" ng-model="PostOffice.@General_PostOffice.Property_IsActive" />
+                                            </label>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Active if required." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="fieldlabel">District </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="PostOffice.@General_PostOffice.Property_DistrictId"
+                                                    ng-options="option.Id as option.Name for option in DistrictList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select District." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="fieldlabel">Police Station </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="PostOffice.@General_PostOffice.Property_PoliceStationId"
+                                                    ng-options="option.Id as option.Name for option in PoliceStationList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Police Station." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button ng-click="@(savePostOffice)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->

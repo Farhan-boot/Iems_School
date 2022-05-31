@@ -1,0 +1,233 @@
+﻿<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getMonthlySalarySummaryReportExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalarySummaryReportDataExtra", area = "HR" });
+    //WebApi link for List
+    var getMonthlySalarySummaryReportUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "MonthlySalaryReportApi", action = "GetMonthlySalarySummaryReport", area = "HR" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="MonthlySalarySummaryReportCtrl"
+     ng-init="Init(
+     '@getMonthlySalarySummaryReportExtraUrl'
+     ,'@getMonthlySalarySummaryReportUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                        <tr>
+                            <th style="text-align: center;" colspan="12"><strong>Total Salary to be paid for the month of {{SelectedPayroll.Name}}</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody class="hide-on-print">
+                        <tr>
+                            <td style="width: 50px;">Payroll:</td>
+                            <td style="">
+                                <select ng-model="SelectedPayroll"
+                                        ng-options="option as option.Name for option in PayrollList"
+                                        title="Select Program" class="form-control">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="hide-on-print">
+                            <td style="text-align: center;" colspan="12">
+                                <button class="btn btn-info" ng-click="getMonthlySalarySummaryReport()">
+                                    View Report
+                                </button>
+
+                                <button ng-show="Report!=null" class="btn btn-warning" onclick="window.print();return false;">
+                                    <i class="fa fa-print"></i>Print
+                                </button>
+                                <button ng-show="Report!=null" class="btn btn-danger" onclick="$('#MonthlySalarySummary').tableExport({ fileName: 'MonthlySalarySummary', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });">
+                                    <i class="fa fa-file-excel-o"></i> Download As Excel(.xls)
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="MonthlySalarySummary" ng-show="Report!=null" style="margin-top: 10px;" class="border-black main-body">
+
+            <table class="report-table table-bordered table-border" style="width: 100%; text-align: center; margin-bottom: 15px;">
+                <thead class="bg-gray">
+                    <tr style="font-weight: bold; font-size: 14px;">
+                        <th style="width: 50px">Sl No.</th>
+                        <th>Description</th>
+                        <th>Gross Salary & Allowances</th>
+                        <th>Tax Deduction at Source</th>
+                        <th ng-show="Report.TotalArrearSalary>0">Arrear Salary</th>
+                        <th ng-show="Report.TotalDeduction>0">Deduction</th>
+                        <th>Revenue Stamp</th>
+                        <th>Net Salary & Allowances</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="salaryGroup in Report.SalaryList">
+                    <tr>
+                        <td>{{$index+1}}</td>
+                        <td>
+                            {{salaryGroup.SalaryGroupName}}
+                        </td>
+                        <td>
+                            <span ng-show="salaryGroup.GrossTotalSalary > 0">{{salaryGroup.GrossTotalSalary |number:2}}</span>
+
+                        </td>
+                        <td>
+                            <span ng-show="salaryGroup.TaxDeductionAtSource > 0">{{salaryGroup.TaxDeductionAtSource |number:2}}</span>
+
+                        </td>
+
+                        <td ng-show="Report.TotalArrearSalary>0">
+                            <span ng-show="salaryGroup.ArrearSalary > 0">{{salaryGroup.ArrearSalary |number:2}}</span>
+
+                        </td>
+                        <td ng-show="Report.TotalDeduction>0">
+                            <span ng-show="salaryGroup.Deduction > 0">{{salaryGroup.Deduction |number:2}}</span>
+
+                        </td>
+                        <td>
+                            <span ng-show="salaryGroup.RevenueStamp > 0">{{salaryGroup.RevenueStamp |number:2}}</span>
+
+                        </td>
+                        <td>
+                            {{salaryGroup.NetSalary |number:2}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td style="text-align: right;" colspan="2">Total :</td>
+                        <td>
+                            {{Report.TotalGrossSalary |number:2}}
+                        </td>
+                        <td>
+                            {{Report.TotalTaxDeduction |number:2}}
+                        </td>
+
+                        <td ng-show="Report.TotalArrearSalary>0">
+                            {{Report.TotalArrearSalary |number:2}}
+                        </td>
+                        <td ng-show="Report.TotalDeduction>0">
+                            {{Report.TotalDeduction |number:2}}
+                        </td>
+                        <td>
+                            {{Report.TotalRevenueStamp |number:2}}
+                        </td>
+                        <td>
+                            {{Report.TotalNetSalary |number:2}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <em>In Words : Tk. <span style="text-transform: capitalize">{{Report.TotalNetSalaryInWords}}</span> Only</em>
+
+            <table class="report-table">
+                <tfoot class="no-bordered show-on-print">
+                    <tr style="height: 120px;">
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: left; padding-bottom: 15px; border: none !important;">
+                            __________________________
+                            <br /> 
+                            Sr. Assistant Director<br />(Finance & Accounts)
+                        </td>
+                        <td colspan="2" style="vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important; ">
+                            _______________
+                            <br /> 
+                            Treasurer<br />
+
+                        </td>
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important;">
+                            ____________________
+                            <br /> 
+                            Vice-Chancellor<br />
+                        </td>
+                        <td colspan="2" style="width: 33%; vertical-align: bottom; text-align: center; padding-bottom: 37px; border: none !important;">
+                            _______________
+                            <br /> 
+                            Approved<br />
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    table .no-border,
+    table .no-border tr,
+    table .no-border tr td {
+        border: none;
+    }
+
+    .report-table > tbody > tr > td,
+    .report-table > thead > tr > th {
+        border: 1px solid black !important;
+    }
+
+    .report-table > thead > tr > th {
+        padding: 0px !important;
+    }
+</style>

@@ -1,0 +1,151 @@
+<!--File:SiteSettings Add/Edit View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Settings
+@using MvcSiteMapProvider.Web.Mvc
+@{
+    ViewBag.Title = "Admin: Add/Edit Site Settings";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+
+    //SiteSettings WebApi Single Row link
+    var getSiteSettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SiteSettingsManagerApi", action = "GetSiteSettingsById", area = "Admin" });
+    var saveSiteSettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SiteSettingsManagerApi", action = "SaveSiteSettings", area = "Admin" });
+    var getSiteSettingsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "SiteSettingsManagerApi", action = "GetSiteSettingsDataExtra", area = "Admin"});
+    //SiteSettings Angular Functions
+    string getSiteSettingsById = "getSiteSettingsById";
+    var saveSiteSettings = "saveSiteSettings";
+    var resetSiteSettingsFromFile = "resetSiteSettingsFromFile";
+    var refreshPage = "loadPage()";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/SiteSettingsManager/SiteSettingsAddEdit.js"></script>
+}
+
+<div id="SiteSettingsAddEdit" class="row" ng-controller="SiteSettingsAddEditCtrl" ng-init="Init(
+      '@getSiteSettingsByIdUrl'
+      ,'@saveSiteSettingsUrl'
+     ,'@getSiteSettingsDataExtraUrl')">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        @*<strong ng-show="SiteSettings.Instance.@SiteSettings.Instance.Property_Name!=''">{{(SiteSettings.Instance.@SiteSettings.Instance.Property_Name)}}</strong>*@
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="SiteSettingsId" ng-Enter="@(getSiteSettingsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(resetSiteSettingsFromFile)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Reload Site Settings From File</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body no-padding">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="">
+                                <div class="widget-main">
+                                    <div class="tabbable">
+                                        <ul class="nav nav-tabs" id="myTab9">
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#companySettings" aria-expanded="true">
+                                                    Company Settings.
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#generalSettings">
+                                                    General Settings.
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#universitySettings" aria-expanded="true">
+                                                    University Settings
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#addNewApplicantFormSettings" aria-expanded="true">
+                                                    Add New Applicant Form Settings
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#studentSettings" aria-expanded="true">
+                                                    Students Settings.
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#defaultSettings" aria-expanded="true">
+                                                    Default Settings.
+                                                </a>
+                                            </li>
+                                            <li class="tab-red">
+                                                <a data-toggle="tab" href="#emailNotificationSettings" aria-expanded="true">
+                                                    Email Notification Settings.
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content no-padding">
+                                            <div id="generalSettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_GeneralSettings.cshtml")
+                                            </div>
+                                            <div id="universitySettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_UniversitySettings.cshtml")
+                                            </div>
+                                            <div id="addNewApplicantFormSettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_AddNewApplicantFormSettings.cshtml")
+                                            </div>
+                                            <div id="defaultSettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_DefaultSettings.cshtml")
+                                            </div>
+                                            <div id="companySettings" class="tab-pane active">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_CompanySettings.cshtml")
+                                            </div>
+                                            <div id="studentSettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_StudentSettings.cshtml")
+                                            </div>
+                                            <div id="emailNotificationSettings" class="tab-pane">
+                                                @Html.Partial("~/Areas/Admin/Views/SiteSettingsManager/PartialSiteSettings/_EmailNotificationSettings.cshtml")
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div><!--Widget Body end-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button ng-click="@(saveSiteSettings)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                            <button ng-click="@refreshPage" class="btn btn-md btn-default"><span class="fa fa-tick"></span> Discard Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+<style>
+    .table-form td.fieldlabel {
+        font-weight: normal
+    }
+    .table-form td.fieldarea {
+        text-align: center;
+        height: 48.5px
+    }
+</style>

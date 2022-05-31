@@ -1,0 +1,249 @@
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Employee List";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var EmployeeId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getEmployeeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeById", area = "HR" });
+    var getEmployeeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeDataExtra", area = "HR" });
+    var saveEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "SaveEmployee", area = "HR" });
+    var deleteEmployeeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetDeleteEmployeeById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetPagedEmployee", area = "HR" });
+    var getAllEmployeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetAllEmployee", area = "HR" });
+    var saveEmployeeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "SaveEmployeeList", area = "HR" });
+    var getEmployeeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeApi", action = "GetEmployeeListDataExtra", area = "HR" });
+
+    var editEmployeeByIdPageUrl = Url.Action("UpdateEmployee", "ManageEmployee", new { area = "HR" });
+
+    //Angular Function Name
+    var getNewEmployee = "getNewEmployee";
+    var saveEmployee = "saveEmployee";
+    var deleteEmployeeById = "deleteEmployeeById";
+    var deleteEmployeeByObj = "deleteEmployeeByObj";
+    //for list
+    var searchEmployeeList = "searchEmployeeList";
+    var getPagedEmployeeList = "getPagedEmployeeList";
+    var getAllEmployeeList = "getAllEmployeeList";
+    var saveEmployeeList = "saveEmployeeList";
+    var loadEmployeeListExtraData = "loadEmployeeListExtraData";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/ManageEmployee/EmployeeList.js?v=3"></script>
+}
+
+<div ng-controller="EmployeeListCtrl"
+     ng-init="Init(
+      '@getPagedEmployeeUrl'
+     ,'@deleteEmployeeByIdUrl'
+     ,'@getEmployeeListDataExtraUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption form-inline">
+                <input ng-change="@(searchEmployeeList)()" ng-model="SearchByApproval" type="radio" value="2"> All
+                <input ng-change="@(searchEmployeeList)()" ng-model="SearchByApproval" type="radio" value="1"> Approved
+                <input ng-change="@(searchEmployeeList)()" ng-model="SearchByApproval" type="radio" value="0"> Disapproved
+            </span>
+            <div class="widget-buttons no-padding-left">
+                @*<a target="_blank" href="@editEmployeeByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>*@
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByWorkingStatusEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in WorkingStatusEnumList" class="form-control input-xs">
+                    <option value="">---Select All Working Status---</option>
+                </select>
+            </div>
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByDepartmentId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name group by option.Type  for option in DepartmentList" class="form-control input-xs">
+                    <option value="">---Select All Department---</option>
+                </select>
+            </div>
+            @*<div class="widget-buttons no-padding-left form-inline">
+            <select ng-model="SearchByCategoryEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in CategoryEnumList" class="form-control input-xs">
+                <option value="">---Select All Military Category---</option>
+            </select>
+        </div>*@
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByEmployeeCategoryEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList" class="form-control input-xs">
+                    <option value="">---Select All Category---</option>
+                </select>
+            </div>
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByJobClassEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in JobClassEnumList" class="form-control input-xs">
+                    <option value="">---Select All Salary Grade---</option>
+                </select>
+            </div>
+
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SelectedSalaryTemplateGroupId" ng-change="@(searchEmployeeList)()" class="form-control input-xs">
+                    <option value="-1">---Any Salary Group---</option>
+                    <option style="color: red" value="0">No Salary Group Assigned</option>
+                    <option ng-repeat="option in SalaryTemplateGroupList" ng-value="option.Id">{{option.Name}}</option>
+                </select>
+            </div>
+            
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SalarySettingsStatusEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in SalarySettingsStatusEnumList" class="form-control input-xs">
+                    <option value="">---Select Salary Settings Status---</option>
+                </select>
+            </div>
+
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByEmployeeTypeEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in EmployeeTypeEnumList" class="form-control input-xs">
+                    <option value="">---Select All Employee Type---</option>
+                </select>
+            </div>
+
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByJobTypeEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in JobTypeEnumList" class="form-control input-xs">
+                    <option value="">---Select All Job Type---</option>
+                </select>
+            </div>
+            @*<div class="widget-buttons no-padding-left form-inline">
+            <select ng-model="SearchByAcademicLevelEnumId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in AcademicLevelEnumList" class="form-control input-xs">
+                <option value="">---Select All Level---</option>
+            </select>
+        </div>*@
+            <div class="widget-buttons no-padding-left form-inline">
+                <select ng-model="SearchByCampusId" ng-change="@(searchEmployeeList)()" ng-options="option.Id as option.Name for option in CampusList" class="form-control input-xs">
+                    <option value="">---Select Campus---</option>
+                </select>
+            </div>
+            <div class="widget-buttons no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchUserName" ng-Enter="@(searchEmployeeList)()" class="form-control input-xs " placeholder="search by User ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchEmployeeList)()" class="form-control input-xs " placeholder="search by Full name" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+
+        </div>
+        <div class="widget-body no-padding">
+            <div style="" class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center">SN</th>
+                        <th class="text-center">User ID</th>
+                        <th class="text-center">Full Name</th>
+                       @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanResetPassword))
+                       {
+                           <th class="text-center" ng-if="IsShowPassword" style="width: 200px;">Password</th>
+                       }
+                        <th class="text-center">Position</th>
+                        <th class="text-center" style="width: 74px;">Category</th>
+                        <th class="text-center">Approved</th>
+                        <th class="text-center">Dept</th>
+                       
+                        @*
+                                                <th class="text-center">Joining Date</th><th class="text-center">@SiteSettings.Instance.InstituteShortName ID No</th>
+                            <th class="text-center">Job Type</th>*@
+                        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanEdit) || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanDelete))
+                        {
+                            <th class="text-center no-print">Action</th>
+                        }
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in EmployeeList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{row.UserName}}</td>
+                        <td class="">{{row.FullName}}</td>
+                        @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanResetPassword))
+                        {
+                            <td class="text-center" ng-if="IsShowPassword" >{{row.@User_Account.Property_Password}}</td>
+                        }
+                        <td class="text-center">{{row.PositionShortName}}</td>
+                        <td class="text-center">{{row.@User_Employee.Property_EmployeeCategory}}</td>
+                        <td class="text-center">
+                            <span  ng-show="row.@User_Account.Property_IsApproved" class="badge badge-success"> Yes </span>
+                            <span  ng-hide="row.@User_Account.Property_IsApproved" class="badge badge-danger"> No </span>
+                        </td>
+                        @*<td class="">{{row.@User_Employee.Property_JoiningDate | date:'dd/MM/yyyy'}}</td><td class="">{{row.@User_Employee.Property_OldIdNo}}</td>
+                          <td class="">{{row.@User_Employee.Property_JobType}}</td>*@
+                        <td class="text-center">{{row.DeptShortName}}</td>
+                        
+                        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanView) || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanDelete))
+                        {
+                            <td class="text-center no-print">
+                                @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanView))
+                                {
+                                    <a target="_blank" href="@(editEmployeeByIdPageUrl)/?id={{row.UserId}}&empId={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Profile</a>
+                                }
+                                @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+                                {
+                                    <a target="_blank" href="@Url.Action("Update", "User", new { area = "Admin" })/?id={{row.UserId}}#role" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Role</a>
+                                }
+                                @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanDelete))
+                                {
+                                    <button ng-click="@(deleteEmployeeByObj)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> </button>
+                                }
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+            <div style="" class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                    @if (HttpUtil.IsSupperAdmin() || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanResetPassword))
+                    {
+                        <label style="margin-left: 30px;">
+                            <input ng-model="IsShowPassword" type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;">
+                            <span style="color: #e74b37;">Show Password</span>
+                        </label>
+                    }
+                    
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

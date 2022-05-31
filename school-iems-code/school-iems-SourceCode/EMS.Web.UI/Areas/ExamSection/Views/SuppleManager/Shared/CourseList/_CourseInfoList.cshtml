@@ -1,0 +1,139 @@
+﻿@{
+    var getEmployeeAddEditUrl = Url.Action("UpdateEmployee", "ManageEmployee", new {area = "HR"});
+
+    var getSuppleManagerMarkEntryUrl = Url.Action("Index", "FacultySuppleManager", new {area = "Employee"});
+}
+
+<div class="show-on-print text-center">
+    <b>Exam: </b>{{SelectedExam.Name}}
+    <br/>
+    <b>Program: </b>{{SelectedProgram.ShortTitle}}
+</div>
+
+
+<div class="widget">
+    <div class="widget-header bordered-bottom bordered-green">
+        <i class="widget-icon fa fa-list"></i>
+        <span class="widget-caption">
+            Supple Course List
+        </span>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="getSuppleCourseListByExamIdByProgramId()"
+                    class="btn btn-xs btn-info">
+                <i class="fa fa-refresh"></i> Refresh
+            </button>
+        </div>
+    </div>
+    <div class="widget-body">
+
+        <table class="table table-striped table-bordered">
+            <thead class="bordered-blue">
+            <tr>
+                <th class="text-center" style="width: 31px;">Ser</th>
+                <th class="text-center">Courses</th>
+                <th class="text-center">Applied From</th>
+                <th class="text-center">Applicant</th>
+                <th class="text-center">Examiner</th>
+                <th class="text-center" style="width: 150px;">Enter Mark</th>
+                <th class="text-center no-print" style="width: 150px;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in CourseList">
+
+                <td class="text-center" style="vertical-align: middle;">{{$index+1}}</td>
+                <td class="">
+                    <strong>{{row.Code}} {{row.Name}}</strong><br/>
+                    <em>
+                        Cr.Hr: {{row.CreditHour|number:2}},
+                        {{row.CourseCategory}}
+                    </em>
+                </td>
+                <td>
+                    Total Batch: {{row.TotalBatch}}
+                    <br />
+                    Total Semester: {{row.TotalSemester}}
+                    <br/>
+                    Total Class: {{row.TotalClass}}
+                    <br/>
+                    Total Referred: {{row.TotalReferred}}
+                    <br/>
+                    Total Backlog: {{row.TotalBacklog}}
+                </td>
+                <td>
+                    <div>
+                        <span class="badge badge-success">
+                            Approved: {{row.TotalApproved}}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="badge badge-warning">
+                            Pending: {{row.TotalPending}}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="badge badge-danger">
+                            Disapproved: {{row.TotalDisapproved}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <ol class="no-margin" ng-show="row.TotalExaminer>0" style="-webkit-padding-start: 20px;">
+                        <li ng-repeat="examiner in row.ExaminerList">
+                            <a href="@(getEmployeeAddEditUrl)?id={{examiner.EmployeeId}}" target="_blank" title="click to view profile.">
+                                {{examiner.FullName}}
+                            </a>
+                        </li>
+                    </ol>
+                    <span class="badge badge-danger" ng-hide="row.TotalExaminer>0">Examiner is not allotted</span>
+                </td>
+                <td class="text-align-center">
+                    @*<a target="_blank" href="/Employee/ClassResultComponent/SubmitResultComponent/?classId=202009151042285971&amp;componentSettingsId=202009202109059865" ng-class="row.IsLockedExaminer? 'shiny btn-warning':'btn-success'" ng-hide="row.TestTypeEnumId == 2" 
+                       type="button" class="btn btn-xs btn-success margin-top-5">
+                        <span $1$ng-show="row.IsLockedExaminer"#1#><i class="fa fa-lock"></i> View Marks $1$(Locked)#1#</span>
+                        $1$<span ng-show="!row.IsLockedExaminer" class=""><i class="fa fa-edit"></i> Enter Marks (Allowed)</span>#1#
+                    </a>*@
+                    <a target="_blank" ng-show="row.SuppleExamLockUnlockJson.IsLockedByFaculty"
+                            class="btn btn-xs btn-warning margin-top-5" href="@(getSuppleManagerMarkEntryUrl)?examId={{SelectedExam.Id}}&courseId={{row.BaseCourseId}}#mark">
+                        <span title="View Marks"><i class="fa fa-lock"></i> View Marks (Locked)</span>
+                    </a>
+                    <a target="_blank" ng-hide="row.SuppleExamLockUnlockJson.IsLockedByFaculty"
+                            class="btn btn-xs btn-success margin-top-5" href="@(getSuppleManagerMarkEntryUrl)?examId={{SelectedExam.Id}}&courseId={{row.BaseCourseId}}#mark">
+                        <span title="Marks Entry."><i class="fa fa-edit"></i> Marks Entry (Allowed)</span>
+                    </a>
+                    <br/>
+                    <button ng-click="getLockUnlockSuppleExamById(row,false)" 
+                            ng-show="row.SuppleExamLockUnlockJson.IsLockedByFaculty" 
+                            class="btn btn-xs btn-danger margin-top-5">
+                        <span title="Unlock this Mark Sheet!"><i class="fa fa-unlock"></i> Unlock Marks</span>
+                    </button>
+                    <button ng-click="getLockUnlockSuppleExamById(row,true)" 
+                            ng-show="!row.SuppleExamLockUnlockJson.IsLockedByFaculty" 
+                            class="btn btn-xs btn-success margin-top-5">
+                        <span title="Lock this Mark Sheet!"><i class="fa fa-lock"></i> Lock Marks</span>
+                    </button>
+                </td>
+                <td class="text-center no-print" style="vertical-align: middle;">
+                    <button ng-click="applicantTabShow(row)"
+                            class="btn btn-default btn-xs btn-success">
+                        <i class="fa fa-users"></i>
+                        View Applicant
+                    </button>
+                    <br/>
+                    <button ng-click="examinerTabShow(row)"
+                            class="btn btn-default btn-xs btn-success margin-top-5">
+                        <i class="fa fa-users"></i>
+                        View Examiner
+                    </button>
+                    <br/>
+                    <button ng-click="detailsTabShow(row)"
+                            class="btn btn-default btn-xs btn-success margin-top-5">
+                        <i class="fa fa-files-o"></i>
+                        Details
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,121 @@
+﻿
+<!--File:HR_Position Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Position";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var PositionId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getPositionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "GetPositionById", area = "HR" });
+    var getPositionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "GetPositionDataExtra", area = "HR" });
+    var savePositionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "SavePosition", area = "HR" });
+    var deletePositionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "GetDeletePositionById", area = "HR" });
+
+    //WebApi link for List
+    var getPagedPositionUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "PositionApi", action = "GetPagedPosition", area = "HR"});
+    var getAllPositionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "GetAllPosition", area = "HR" });
+    var savePositionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "SavePositionList", area = "HR" });
+    var getPositionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PositionApi", action = "GetPositionListDataExtra", area = "HR" });
+
+    var editPositionByIdPageUrl = Url.Action("PositionAddEdit", "Position", new { area = "HR" });
+    var managePositionBreakdownListUrl = Url.Action("PositionList", "Position", new { area = "HR" });
+    
+    // Angular Functions
+    string getPositionById="getPositionById";
+    var savePosition = "savePosition";
+    var getNewPosition = "getNewPosition";
+    var refreshPage = "loadPage()";
+    string deletePositionById="deletePositionById";
+    string loadPositionExtraData="loadPositionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Position/PositionAddEdit.js"></script>
+}
+
+<div id="PositionAddEdit" class="row" ng-controller="PositionAddEditCtrl" ng-init="Init(
+      '@PositionId'
+      ,'@getPositionByIdUrl'
+      ,'@getPositionDataExtraUrl'
+      ,'@savePositionUrl'
+      ,'@deletePositionByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span  class="widget-caption ">Add/Edit</span>
+                <div class="widget-buttons buttons-bordered no-padding-right">
+                    <span  class="input-icon">
+                        <input type="text" ng-model="PositionId" ng-Enter="@(getPositionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewPosition)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                    <!--text type-->
+                        <div class="col-sm-3 form-group">
+                            <label>Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                            <input type="text" ng-model="Position.@HR_Position.Property_Name" class="form-control" placeholder="Enter Name" maxlength="256" required="" />
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Short Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                            <input type="text" ng-model="Position.@HR_Position.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                        </div>
+                    <div class="col-sm-3 form-group">
+                        <label>Local Name </label>
+                        <input type="text" ng-model="Position.@HR_Position.Property_LocalName" class="form-control" placeholder="Enter Local Name" maxlength="256"  />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label>Alternative Name </label>
+                        <input type="text" ng-model="Position.@HR_Position.Property_AlternativeName" class="form-control" placeholder="Enter Alternative Name" maxlength="256"  />
+                    </div>
+                        <div class="col-sm-8 form-group">
+                            <label>Description </label>
+                            <input type="text" ng-model="Position.@HR_Position.Property_Description" class="form-control" placeholder="Enter Description" />
+                        </div>
+                    <div class="col-sm-4 form-group">
+                        <label> Salary Template  </label>
+                        <select ng-model="Position.@HR_Position.Property_SalaryTemplateId" ng-options="option.Id as option.Name for option in SalaryTemplateList " ng-init="" class="form-control">
+                            
+                            <option value="">---Select Salary Template---</option>
+                        </select>
+                    </div>
+                        <div class="col-sm-4 form-group">
+                            <label>Alternative Short Name </label>
+                            <input type="text" ng-model="Position.@HR_Position.Property_AlternativeShortName" class="form-control" placeholder="Enter Alternative Short Name" maxlength="128"  />
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Priority </label>
+                            <input type="number" ng-model="Position.@HR_Position.Property_Priority" class="form-control" placeholder="Enter Priority"   />
+                        </div>
+                        <!--dropdown option for EnumList-->
+                        <div class="col-sm-3 form-group">
+                            <label> Job Class  </label>
+                            <select ng-model="Position.@HR_Position.Property_JobClassEnumId" ng-options="option.Id as option.Name for option in JobClassEnumList " ng-init="" class="form-control"  ></select>
+                        </div>
+                        <!--dropdown option for EnumList-->
+                        <div class="col-sm-3 form-group">
+                            <label> Status  </label>
+                            <select ng-model="Position.@HR_Position.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control"  ></select>
+                        </div>
+
+                </div>
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <button ng-click="@(savePosition)()" class="btn btn-md btn-success"><span  class="fa fa-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

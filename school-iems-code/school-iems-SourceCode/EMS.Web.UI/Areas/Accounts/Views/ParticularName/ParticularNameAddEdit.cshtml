@@ -1,0 +1,383 @@
+﻿
+<!--File:Acnt_ParticularName Add/Edit View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@{
+    ViewBag.Title = "Accounts: Add/Edit Particular Name";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ParticularNameId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getParticularNameByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "GetParticularNameById", area = "Accounts" });
+    var getParticularNameDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "GetParticularNameDataExtra", area = "Accounts" });
+    var saveParticularNameUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "SaveParticularName", area = "Accounts" });
+    var deleteParticularNameByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "GetDeleteParticularNameById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedParticularNameUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ParticularNameApi", action = "GetPagedParticularName", area = "Accounts"});
+    var getAllParticularNameUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "GetAllParticularName", area = "Accounts" });
+    var saveParticularNameListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "SaveParticularNameList", area = "Accounts" });
+    var getParticularNameListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ParticularNameApi", action = "GetParticularNameListDataExtra", area = "Accounts" });
+
+    var editParticularNameByIdPageUrl = Url.Action("ParticularNameAddEdit", "ParticularName", new { area = "Accounts" });
+    var listParticularNamePageUrl = Url.Action("ParticularNameList", "ParticularName", new { area = "Accounts" });
+    
+    // Angular Functions
+    string getParticularNameById="getParticularNameById";
+    var saveParticularName = "saveParticularName";
+    var getNewParticularName = "getNewParticularName";
+    var refreshPage = "loadPage()";
+    string deleteParticularNameById="deleteParticularNameById";
+    string loadParticularNameExtraData="loadParticularNameExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/ParticularName/ParticularNameAddEdit.js?v=2"></script>
+}
+
+<div id="ParticularNameAddEdit" class="row" ng-controller="ParticularNameAddEditCtrl" ng-init="Init(
+      '@ParticularNameId'
+      ,'@getParticularNameByIdUrl'
+      ,'@getParticularNameDataExtraUrl'
+      ,'@saveParticularNameUrl'
+      ,'@deleteParticularNameByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="ParticularName.@Acnt_ParticularName.Property_Name!=''">{{(ParticularName.@Acnt_ParticularName.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ParticularNameId" ng-Enter="@(getParticularNameById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewParticularName)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listParticularNamePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             @*<tr>
+                                <td class="fieldlabel">Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ParticularName.@Acnt_ParticularName.Property_Id" class="form-control" placeholder="Enter Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Id." data-toggle="tooltip"></i></span></td>
+                            </tr>*@
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.@Acnt_ParticularName.Property_Name" class="form-control" placeholder="Enter Name" maxlength="255" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.@Acnt_ParticularName.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="128" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ParticularName.@Acnt_ParticularName.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                        <tr>
+                            <td class="fieldlabel">Status </td>
+                            <td class="fieldarea">
+                                <select ng-model="ParticularName.@Acnt_ParticularName.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control" >
+                                    <option value="" label="" class="">---Select One---</option>   
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td> 
+                        </tr>
+                            
+                        @if (HttpUtil.IsSupperAdmin())
+                        {
+                            <tr>
+                                <td class="fieldlabel">Is Locked </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" ng-model="ParticularName.@Acnt_ParticularName.Property_IsLocked"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Locked if required." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr ng-hide="ParticularName.@Acnt_ParticularName.Property_IsLocked || ParticularName.@Acnt_ParticularName.Property_Id==0">
+                                <td class="fieldlabel">Is Locked </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" ng-model="ParticularName.@Acnt_ParticularName.Property_IsLocked" />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Locked if required." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        }
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Particular Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="ParticularName.@Acnt_ParticularName.Property_ParticularTypeEnumId" ng-options="option.Id as option.Name for option in ParticularTypeEnumList" title="Select Particular Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Default Value </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ParticularName.@Acnt_ParticularName.Property_DefaultValue" class="form-control" placeholder="Enter Default Value"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Default Value." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Manual Entry Allow Type </td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParticularName.@Acnt_ParticularName.Property_ManualEntryAllowTypeEnumId" ng-options="option.Id as option.Name for option in ManualEntryAllowTypeEnumList" title="Select Manual Entry Allow Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Manual Entry Allow Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                  </div><!--Col end-->
+                    
+                    <div ng-show="ParticularName.@Acnt_ParticularName.Property_ParticularTypeEnumId == @((byte)Acnt_ParticularName.ParticularTypeEnum.Discount)" class="col-md-6 table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+                            <tr>
+                                <td class="fieldlabel">Is Allow To Add From New Applicant Panel</td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowToAddFromNewApplicantPanel" class="radio-inline" ng-value="true" /> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowToAddFromNewApplicantPanel" class="radio-inline" ng-value="false" /> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Allow To Add From New Applicant Panel." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Scholarship Condition Type <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId"
+                                            ng-options="option.Id as option.Name for option in ScholarshipConditionTypeEnumList" title="Select Scholarship Condition Type" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Scholarship Category." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="fieldlabel">Scholarship Category <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParticularName.ScholarshipWiseSettingsObj.DiscountCategoryEnumId" ng-options="option.Id as option.Name for option in ScholarshipCategoryEnumList" title="Select Scholarship Category" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Scholarship Category." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-show="ParticularName.ScholarshipWiseSettingsObj.DiscountCategoryEnumId == @((byte) Acnt_SemWiseScholarship.DiscountCategoryEnum.DiscountOnSpecificParticular)">
+                                <td class="fieldlabel">Specific Particular Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParticularName.ScholarshipWiseSettingsObj.DependOnParticularId" ng-options="option.Id as option.Name for option in ParticularNameList" title="Select Specific Particular Name" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Specific Particular Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Is Percent Waiver Amount </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsPercentAmount" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsPercentAmount" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <!--dropdown option for EnumList-->
+                            <tr>
+                                <td class="fieldlabel">Waiver Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ParticularName.ScholarshipWiseSettingsObj.Amount" class="form-control" placeholder="Enter Waiver Amount."/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Waiver Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Is Allow Max Only </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowMaxOnly" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowMaxOnly" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Allow Max Only." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Is Auto Renew Next Semester On Result </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAutoRenewNextSemesterOnResult" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAutoRenewNextSemesterOnResult" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Auto Renew Next Semester On Result." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="fieldlabel">Scholarship Type</td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParticularName.ScholarshipWiseSettingsObj.ScholarshipTypeEnumId"
+                                            ng-options="option.Id as option.Name for option in ScholarshipTypeEnumList" title="Select Scholarship Type Enum List" ng-init="" class="form-control">
+                                        <option value="" label="" class="">---Select One---</option>
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                                
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Minimum Board Average Gpa</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.MinimumBoardAverageGpa" class="form-control" placeholder="Enter Minimum Board Average Gpa." />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Minimum Board Average Gpa." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Maximum Board Average Gpa</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.MaximumBoardAverageGpa" class="form-control" placeholder="Enter Maximum Board Average Gpa." />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Maximum Board Average Gpa." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+                                <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                    <td class="fieldlabel">Is Check Golden Board Result</td>
+                                    <td class="fieldarea">
+                                        <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckGoldenBoardResult" class="radio-inline" ng-value="true" /> Yes
+                                        <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckGoldenBoardResult" class="radio-inline" ng-value="false" /> No
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Golden Board Result." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Previous Semester Minimum Fresh Credit Reg For 4M</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.PreviousSemesterMinimumFreshCreditRegFor4M" class="form-control" placeholder="Enter Minimum Fresh CreditReg For 4M." />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Previous Semester Minimum Fresh Credit Registration For 4M." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Previous Semester Minimum Fresh Credit Reg For 6M</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.PreviousSemesterMinimumFreshCreditRegFor6M" class="form-control" placeholder="Enter Minimum Fresh CreditReg For 6M." />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Previous Semester Minimum Fresh Credit Registration For 6M.." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            
+
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Minimum GPA Last Semester</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.MinimumGPALastSemester" class="form-control" placeholder="Enter Minimum GPA Last Semester."/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Minimum GPA Last Semester." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Minimum CGPA</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ParticularName.ScholarshipWiseSettingsObj.MinimumCGPA" class="form-control" placeholder="Enter Minimum CGPA."/>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Minimum CGPA." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Is Check Any Drop</td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyDrop" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyDrop" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Drop." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Is Check Any Fail </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyFail" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyFail" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Fail." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                           || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Is Check Any Retake </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyRetake" class="radio-inline" ng-value="true" /> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsCheckAnyRetake" class="radio-inline" ng-value="false" /> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Fail." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte) Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)">
+                                <td class="fieldlabel">Is Allowed Program Wise </td>
+                                <td class="fieldarea">
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowedProgramWise" class="radio-inline" ng-value="true"/> Yes
+                                    <input type="radio" ng-model="ParticularName.ScholarshipWiseSettingsObj.IsAllowedProgramWise" class="radio-inline" ng-value="false"/> No
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Is Check Any Fail." data-toggle="tooltip"></i></span></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <table ng-show="ParticularName.ScholarshipWiseSettingsObj.IsAllowedProgramWise"
+                               ng-hide="ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToSpecificSemesterNoCondition)
+                               || ParticularName.ScholarshipWiseSettingsObj.ScholarshipConditionTypeEnumId==@((byte)Acnt_SemWiseScholarship.ScholarshipConditionTypeEnum.ContinueToFullSemesterNoCondition)"
+                               >
+                            <tbody>
+                                <tr ng-repeat="program in ParticularName.SelectionProgramJsonList">
+                                    <td>{{program.ProgramName}}</td>
+                                    <td>
+                                        <input ng-model="program.IsSelected"
+                                               style="width: 15px; vertical-align: middle;" type="checkbox">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveParticularName)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

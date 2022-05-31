@@ -1,0 +1,194 @@
+﻿
+<!--File:Aca_HomeWorkSubmission Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Academic: Add/Edit Home Work Submission";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var HomeWorkSubmissionId = (string) id == null?"0":(string)id;
+    
+    //Aca_HomeWorkSubmission WebApi Single Row link   
+    var getHomeWorkSubmissionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionById", area = "Academic" });
+    var getHomeWorkSubmissionDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionDataExtra", area = "Academic" });
+    var saveHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "SaveHomeWorkSubmission", area = "Academic" });
+    var deleteHomeWorkSubmissionByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetDeleteHomeWorkSubmissionById", area = "Academic" });
+
+    //Aca_HomeWorkSubmission WebApi List link 
+    var getPagedHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "HomeWorkSubmissionApi", action = "GetPagedHomeWorkSubmission", area = "Academic"});
+    var getAllHomeWorkSubmissionUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetAllHomeWorkSubmission", area = "Academic" });
+    var saveHomeWorkSubmissionListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "SaveHomeWorkSubmissionList", area = "Academic" });
+    var getHomeWorkSubmissionListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "HomeWorkSubmissionApi", action = "GetHomeWorkSubmissionListDataExtra", area = "Academic" });
+
+    var editHomeWorkSubmissionByIdPageUrl = Url.Action("HomeWorkSubmissionAddEdit", "HomeWorkSubmission", new { area = "Academic" });
+    var listHomeWorkSubmissionPageUrl = Url.Action("HomeWorkSubmissionList", "HomeWorkSubmission", new { area = "Academic" });
+    
+    //Aca_HomeWorkSubmission Angular Functions
+    string getHomeWorkSubmissionById="getHomeWorkSubmissionById";
+    var saveHomeWorkSubmission = "saveHomeWorkSubmission";
+    var getNewHomeWorkSubmission = "getNewHomeWorkSubmission";
+    var refreshPage = "loadPage()";
+    string deleteHomeWorkSubmissionById="deleteHomeWorkSubmissionById";
+    string loadHomeWorkSubmissionExtraData="loadHomeWorkSubmissionExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/HomeWorkSubmission/HomeWorkSubmissionAddEdit.js"></script>
+}
+
+<div id="HomeWorkSubmissionAddEdit" class="row" ng-controller="HomeWorkSubmissionAddEditCtrl" ng-init="Init(
+      '@HomeWorkSubmissionId'
+      ,'@getHomeWorkSubmissionByIdUrl'
+      ,'@getHomeWorkSubmissionDataExtraUrl'
+      ,'@saveHomeWorkSubmissionUrl'
+      ,'@deleteHomeWorkSubmissionByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_Name!=''">{{(HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="HomeWorkSubmissionId" ng-Enter="@(getHomeWorkSubmissionById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewHomeWorkSubmission)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listHomeWorkSubmissionPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Homework Key <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_HomeworkKey" class="form-control" placeholder="Enter Homework Key" maxlength="100" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Homework Key." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Submission Date </td>
+                                <td class="fieldarea">
+                                    @*<input type="datetime" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_SubmissionDate" class="form-control" placeholder="Enter Submission Date"   />*@
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Submission Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Submission Status </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_SubmissionStatusEnumId" ng-options="option.Id as option.Name for option in SubmissionStatusEnumList" title="Select Submission Status" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Submission Status." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Checked </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_Checked"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Checked if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Teacher Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_TeacherId" class="form-control" placeholder="Enter Teacher Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Teacher Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Feedback </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_Feedback" class="form-control" placeholder="Enter Feedback"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Feedback." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Remark </td>
+                                <td class="fieldarea">
+                                    <textarea type="text" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_Remark" class="form-control" placeholder="Enter Remark"   />
+                                    </textarea> 
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Home Work </td>
+                            <td class="fieldarea">
+                                <select ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_HomeworkId"
+                                        ng-options="option.Id as option.Name for option in HomeWorkList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Home Work." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+                         <tr>
+                            <td class="fieldlabel">Student </td>
+                            <td class="fieldarea">
+                                <select ng-model="HomeWorkSubmission.@Aca_HomeWorkSubmission.Property_StudentId"
+                                        ng-options="option.Id as option.Name for option in StudentList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Student." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveHomeWorkSubmission)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

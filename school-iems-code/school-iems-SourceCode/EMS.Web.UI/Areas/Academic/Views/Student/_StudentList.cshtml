@@ -1,0 +1,611 @@
+﻿<!--File:User_Student List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetStudentById", area = "Academic" });
+    var getStudentDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetStudentDataExtra", area = "Academic" });
+    var saveStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "SaveStudent", area = "Admin" });
+    var deleteStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetDeleteStudentById", area = "Academic" });
+
+    var getTrashStudentByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetTrashStudentById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetPagedStudent", area = "Academic" });
+    var getAllStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetAllStudent", area = "Academic" });
+    var saveStudentListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "SaveStudentList", area = "Academic" });
+    var getStudentListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentApi", action = "GetStudentListDataExtra", area = "Academic" });
+
+    var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+    var editStudentByIdAdmissionPageUrl = Url.Action("StudentProfile", "Student", new { area = "Admission" });
+    var currentArea = HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"];
+
+    //Angular Function Name
+    var getNewStudent = "getNewStudent";
+    var saveStudent = "saveStudent";
+    var deleteStudentById = "deleteStudentById";
+    var deleteStudentByObj = "deleteStudentByObj";
+    var getTrashStudentById = "getTrashStudentById";
+    //for list
+    var searchStudentList = "searchStudentList";
+    var getPagedStudentList = "getPagedStudentList";
+    var getAllStudentList = "getAllStudentList";
+    var saveStudentList = "saveStudentList";
+    var loadStudentListExtraData = "loadStudentListExtraData";
+    var toggleAdvancedSearch = "toggleAdvancedSearch";
+    var refreshPage = "searchStudentList()";
+
+}
+<div ng-controller="StudentListCtrl"
+     ng-init="Init(
+      '@getPagedStudentUrl'
+     ,'@deleteStudentByIdUrl'
+     ,'@getStudentListDataExtraUrl'
+     ,'@getTrashStudentByIdUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption form-inline">
+            </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchUgcUniqueId" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by UGC Unique ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchUserName" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by User ID" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            @*<div class="widget-buttons no-padding-right">
+            <span class="input-icon">
+                <input type="text" ng-model="SearchClassRoll" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by Class Roll" style="">
+                <i class="glyphicon glyphicon-search blue"></i>
+            </span>
+        </div>*@
+            <div class="widget-buttons no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchStudentList)()" class="form-control input-xs " placeholder="search by full name" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                @*<a target="_blank" href="@editStudentByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>*@
+                <button ng-click="toggleAdvSearch = !toggleAdvSearch" class="btn btn-primary btn-xs"><i ng-hide="toggleAdvSearch" class="fa fa-plus"></i> <i ng-show="toggleAdvSearch" class="fa fa-minus"></i> Advance Search</button>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+
+            </div>
+        </div>
+    
+    
+
+    <div class="widget-body no-padding">
+    
+        <div class="row text-center">
+            <div class="col-md-12 table-form">
+                <div class="widget-buttons buttons-bordered no-padding-right">
+                    <select ng-model="SearchByAdmissionSemesterId" ng-options="option.Id as option.Name for option in SemesterList" class="form-control input-xs" required>
+                        <option value="">---Any Admission Semester---</option>
+                    </select>
+                </div>
+                <div class="widget-buttons buttons-bordered no-padding-right form-inline">
+                    @*<select ng-model="SearchByDepartmentId" ng-change="@(searchStudentList)()" ng-options="option.Id as option.ShortName group by option.Type for option in DepartmentList" class="form-control input-xs" required>
+                <option value="">---Select All Dept---</option>
+            </select>*@
+                    <select ng-model="SearchByProgramId" ng-options="option.Id as option.ShortTitle group by option.Type for option in ProgramList" class="form-control input-xs" required>
+                        <option value="">---Any Program---</option>
+                    </select>
+                    <select ng-model="SearchByBatchId" ng-options="option.Id as option.Name for option in DeptBatchList" class="form-control input-xs" required>
+                        <option value="">---Any Batch---</option>
+                    </select>
+                    @*<select ng-model="SearchByLevelId" ng-change="@(searchStudentList)()" ng-options="option.Id as option.Name for option in LevelList" class="form-control input-xs" required>
+                <option value="">---Select All Level---</option>
+            </select>*@
+
+                    @*<select ng-model="SearchByTermId" ng-change="@(searchStudentList)()" ng-options="option.Id as option.Name for option in TermList" class="form-control input-xs" required>
+                <option value="">---Select All Term---</option>
+            </select>*@
+
+                    <select ng-model="SearchByLevelTermId" ng-options="option.Id as option.Name for option in LevelTermList" class="form-control input-xs" required>
+                        <option value="">---Any Level Term---</option>
+                    </select>
+                    <select ng-model="SearchByStatusId" ng-options="option.Id as option.Name for option in EnrolmentStatusEnumList" class="form-control input-xs" required>
+                        <option value="">---Any Student Status---</option>
+                    </select>
+                    <select ng-model="SearchByAdmissionStatusEnumId" ng-options="option.Id as option.Name for option in AdmissionStatusEnumList" class="form-control input-xs" required>
+                        <option value="">---Any Admission Status---</option>
+                    </select>
+                    <select ng-model="StudentQuotaId" ng-options="option.Id as option.Name for option in QuotaList" title="Select Student Quota" class="form-control input-xs">
+                        <option value="" label="" class="">---Select Student Quota---</option>
+                    </select>
+                    
+                </div>
+
+            </div>
+            <div ng-show="toggleAdvSearch">
+                <div class="col-md-4 table-form">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+
+                            <!--dropdown option for EnumList-->
+
+                            <tr>
+                                <td class="fieldlabel"> Blood Group </td>
+                                <td class="fieldarea">
+                                    <select ng-model="SearchByBloodId" ng-options="option.Id as option.Name for option in BloodGroupEnumList" class="form-control input-xs" required>
+                                        <option value="">---Any Blood Group---</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!--dropdown option for EnumList-->
+                            <tr>
+                                <td class="fieldlabel">Student Mobile No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="StudentMobileNo" class="form-control input-xs" placeholder="Enter Student Mobile No" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="fieldlabel">Student Email </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentEmail" class="form-control input-xs" placeholder="Enter Student Email" />
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="fieldlabel">Present district </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="PresentDistrict" class="form-control input-xs" placeholder="Enter PresentDistrict" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Student's Religion </td>
+                            <td class="fieldarea">
+                                <select ng-model="SearchByReligionId" ng-options="option.Id as option.Name for option in ReligionEnumList" class="form-control input-xs" required>
+                                    <option value="">---Any Religion---</option>
+                                </select>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="fieldlabel">Student's Gender </td>
+                                <td class="fieldarea">
+                                    <select ng-model="SearchByGenderEnumId" ng-options="option.Id as option.Name for option in GenderEnumList" class="form-control input-xs" required>
+                                        <option value="">---Any Gender---</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 table-form">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+
+                            <tr>
+                                <td class="fieldlabel">Birth Certificate No </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="BirthCertificateNo" class="form-control input-xs" placeholder="Enter Birth Certificate No" />
+                                </td>
+                            </tr>
+                            <!--dropdown option for EnumList-->
+
+                            <tr>
+                                <td class="fieldlabel">National Id No </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="NationalIdNo" class="form-control input-xs" placeholder="Enter National Id No" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Passport No</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="PassportNo" class="form-control input-xs" placeholder="Enter Passport No" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Permanent district </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="PermanentDistrict" class="form-control input-xs" placeholder="Enter Permanent District" />
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="fieldlabel">Admission Start Date </td>
+                            <td class="fieldarea">
+                                <input type="text" ng-model="AdmissionStartDate" class="form-control input-xs date-picker" placeholder="Enter Admission Start Date" />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="fieldlabel">Enrollment Type </td>
+                            <td class="fieldarea">
+                                <select ng-model="SearchByEnrolmentEnumId" ng-options="option.Id as option.Name for option in EnrolmentTypeEnumList" class="form-control input-xs" required>
+                                    <option value="">---Select One---</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-4 table-form">
+                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                            <tr>
+                                <td class="fieldlabel">Father Name</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="FatherName" class="form-control input-xs" placeholder="Enter Father Name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Parents Job Type  </td>
+                                <td class="fieldarea">
+                                    <select ng-model="ParentsJobTypeId" ng-options="option.Id as option.Name for option in ParentsPrimaryJobTypeEnumList" title="Select Job Type" ng-init="" class="form-control input-xs">
+                                        <option value="" label="" class="">---Select Job---</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">Mother Name</td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="MotherName" class="form-control input-xs" placeholder="Enter Mother Name" required="" />
+                                </td>
+                            </tr>
+
+                        <tr>
+                            <td class="fieldlabel">Never Logged in Students </td>
+                            <td class="fieldarea">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="IsNeverLoggedIn" class="form-control input-xs" />
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fieldlabel">Admission End Date </td>
+                            <td class="fieldarea">
+                                <input ng-disabled="AdmissionStartDate==''" type="text" ng-model="AdmissionEndDate" class="form-control input-xs date-picker" placeholder="Enter Admission Start Date" />
+                            </td>
+                        </tr>
+                            <tr>
+                                <td class="fieldlabel">Birthday Date </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="StudentsBirthDate" class="form-control input-xs date-picker" placeholder="Enter Student's Birthdate'" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-12 text-center" style="margin-bottom: 10px">
+                <button ng-click="@(searchStudentList)()" class="btn btn-md btn-primary"><i class="fa fa-search"></i>Search</button>
+            </div><!--Col end-->
+
+        </div>
+
+    <div class="table-footer no-print">
+        @OptionControl()
+    </div>
+    <div class="tabbable">
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a data-toggle="tab" href="#ViewI">General Info</a></li>
+        <li class="tab-blueberry"><a data-toggle="tab" href="#ViewII">Contact Info</a></li>
+    </ul>
+    <div class="tab-content">
+    <div id="ViewI" class="tab-pane in active">
+        <div class="dropdown form-group margin-right-10">
+            <button class="btn btn-xs btn-danger dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-download"></i> Download List
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <li><a href="#" onclick="$('#StudentList').tableExport({ fileName: 'StudentList', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel(.xls)</a></li>
+                <li><a href="#" onclick="$('#StudentList').tableExport({ fileName: 'StudentList', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word(.doc)</a></li>
+                <li><a href="#" onclick="$('#StudentList').tableExport({ fileName: 'StudentList', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV(.csv)</a></li>
+            </ul>
+        </div>
+        <table id="StudentList" class="table table-striped table-bordered table-hover">
+            <thead class="bordered-blue">
+            <tr>
+                <th class="text-center" style="display: none">
+                    <input type="checkbox" ng-click="selectAll($event)">
+                </th>
+                <th class="text-center" style="width: 35px;">SN</th>
+                <th class="text-center" style="width: 85px;">Student ID</th>
+                <th class="text-center">Full Name</th>
+                <th class="text-center" style="width: 85px;">Batch</th>
+                @*<th class="text-center">Registration No</th>
+                                        <th class="text-center" style="width: 35px;">Admission Test Roll</th>*@
+                @*<th class="text-center">Dept</th>*@
+
+                <th class="text-center" style="width: 62px;">Class Section</th>
+                @*<th class="text-center" style="width: 62px;">Level Term</th>*@
+                <th class="text-center">CGPA</th>
+                <th class="text-center">Program</th>
+                <th class="text-center" style="width: 59px;">Profile Reg.</th>
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanView)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit)
+                     || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanDelete))
+                {
+                    <th class="text-center no-print">Action</th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in StudentList">
+                <td class="text-center" style="display: none">
+                    <input type="checkbox" ng-model="row.@User_Student.Property_IsSelected"/>
+                </td>
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">{{row.@User_Account.Property_UserName}}</td>
+                <td class="">{{row.@User_Account.Property_FullName}}</td>
+                <td class="text-center">{{row.BatchName}}</td>
+                @*<td class="text-center">{{row.@User_Student.Property_RegistrationNo}}</td>
+                                        <td class="text-center">{{row.@User_Student.Property_AdmissionTestRollNo}}</td>*@
+                @*<td class="text-center">{{row.DeptShortName}}</td>  <td class="text-center">{{row.LevelName}}</td>*@
+
+
+                <td class="text-center">{{row.ClassSectionName}}</td>
+                @*<td class="text-center">{{row.LevelTermName}}</td>*@
+                <td class="text-center">{{row.@User_Student.Property_CGPA|number:2}}</td>
+                <td class="text-center">{{row.ProgramShortTitle}}</td>
+                <td class="text-center">
+                    <span class="success" ng-show="row.IsProfileConfirmed"><i class="fa fa-check-square"></i> Yes</span>
+                    <span class="danger" ng-hide="row.IsProfileConfirmed"><i class="fa fa-times-circle"></i> No</span>
+                </td>
+                <td class="text-center no-print">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanView)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit)
+                         || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanDelete))
+                    {
+
+
+                        if (currentArea.Equals("Academic"))
+                        {
+                            if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanView) || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit))
+                            {
+                                <a target="_blank" href="@(editStudentByIdAcademicPageUrl)/?id={{row.@User_Student.Property_UserId}}&stdId={{row.@User_Student.Property_Id}}&un={{row.@User_Student.Property_ClassRollNo}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Profile</a>
+                            }
+                        }
+                        if (currentArea.Equals("Admission"))
+                        {
+                            //Todo Give Permission
+
+                            <a target="_blank" href="@(editStudentByIdAdmissionPageUrl)/?id={{row.@User_Student.Property_UserId}}&stdId={{row.@User_Student.Property_Id}}&un={{row.@User_Student.Property_ClassRollNo}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Profile</a>
+                        }
+
+                                            @*if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+                                            {
+                                                <a target="_blank" href="@Url.Action("Update", "User", new {area = "Admin"})/?id={{row.UserId}}#role" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Password</a>
+                                            }*@
+                        if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanTrash))
+                        {
+                            <button ng-click="@(getTrashStudentById)(row,true)" ng-show="!isShowTrashedStudent" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> </button>
+                            <button ng-click="@(getTrashStudentById)(row,false)" ng-show="isShowTrashedStudent" class="btn btn-xs btn-danger"><i class="fa fa-undo"></i></button>
+                        }
+
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-blue btn-sm " href="#">Action</a>
+                                <a class="btn btn-blue btn-sm dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("CourseRegistrationBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{row.@User_Student.Property_Id}}"><i class="fa fa-eye"></i> Semester Wise Registration</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeReportBySemesterWithSupple", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{row.@User_Student.Property_Id}}"><i class="fa fa-eye"></i> Grade Report</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeDetailReportBySemesterWithSupple", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{row.@User_Student.Property_Id}}"><i class="fa fa-eye"></i> Grade Detail Report</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("UnOfficialTranscript", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{row.@User_Student.Property_Id}}"><i class="fa fa-eye"></i> UnOfficial Transcript</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("FastPaymentCollection", "Student", new {area = "Accounts"})?sid={{row.@User_Student.Property_ClassRollNo}}"><i class="fa fa-eye"></i> Payments Management</a>
+                                    </li>
+                                    @if (PermissionUtil.HasPermission(PermissionCollection.AdminArea.UserCredential.UserRole.CanEdit))
+                                    {
+                                        <li>
+                                            <a target="_blank" href="@Url.Action("Update", "User", new {area = "Admin"})/?id={{row.UserId}}#role"><i class="fa fa-edit"></i> Password</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="ViewII" class="tab-pane" style="overflow: auto;">
+        <div class="dropdown form-group margin-left-10">
+            <button class="btn btn-xs btn-danger dropdown-toggle pull-right" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-download"></i> Download List
+                <span class="caret"></span>
+            </button>
+            @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanViewPassword) || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanResetPassword))
+            {
+                <label style="margin-left: 20px;">
+                    <input ng-model="IsShowPassword"
+                           ng-change="searchStudentList()"
+                           type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                    <span class="text-danger">Show Password</span>
+                </label>
+            }
+            <label style="margin-left: 20px;">
+                <input ng-model="IsShowUGCUniqueId"
+                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                <span class="text-danger">Show UGC Unique Id</span>
+            </label>
+            <label style="margin-left: 20px;">
+                <input ng-model="IsIncludeContactAddress"
+                       ng-change="searchStudentList()"
+                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                <span class="text-danger">Show Addresses</span>
+            </label>
+            <label style="margin-left: 20px;">
+                <input ng-model="IsShowBirthCertificateNo"
+                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                <span class="text-danger">Show Birth Certificate No</span>
+            </label>
+            <label style="margin-left: 20px;">
+                <input ng-model="IsShowNationalIDNo"
+                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                <span class="text-danger">Show National ID No</span>
+            </label>
+            <label style="margin-left: 20px;">
+                <input ng-model="IsShowDateOfBirth"
+                       type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                <span class="text-danger">Show Date of Birth</span>
+            </label>
+            <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu">
+                <li><a href="#" onclick="$('#students').tableExport({ type: 'excel', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i>Excel(.xls)</a></li>
+                <li><a href="#" onclick="$('#students').tableExport({ type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i>Word(.doc)</a></li>
+                @*<li><a href="#" onclick="$('#students').tableExport({ type: 'powerpoint', escape: 'false' });"><i class="fa fa-file-powerpoint-o"></i> PowerPoint</a></li>
+            <li class="divider"></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'json', escape: 'false' });"><i class="fa fa-file-o"></i> JSON</a></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'json', escape: 'false', ignoreColumn: '[2,3]' });"><i class="fa fa-file-o"></i> JSON (ignoreColumn)</a></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'json', escape: 'true' });"><i class="fa fa-file-o"></i> JSON (with Escape)</a></li>
+            <li class="divider"></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'xml', escape: 'false' });"><i class="fa fa-file-o"></i> XML</a></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'sql', tableName: 'TableName' });"><i class="fa fa-file-o"></i> SQL</a></li>
+            <li class="divider"></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'csv', escape: 'false', fileName: 'Student List' });"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'txt', escape: 'false' });"><i class="fa fa-file-text-o"></i> TXT</a></li>
+            <li class="divider"></li>*@
+                @*<li><a href="#" onclick="$('#students').tableExport({ type: 'png', escape: 'false' });"><i class="fa fa-file-image-o"></i> PNG</a></li>
+            <li><a href="#" onclick="$('#students').tableExport({ type: 'pdf', pdfFontSize: 7, pdfLeftMargin: 5, escape: 'false' });"><i class="fa fa-file-pdf-o"></i> PDF</a></li>*@
+            </ul>
+        </div>
+        <table id="students" class="table table-striped table-bordered table-hover">
+            <thead class="bordered-blue">
+            <tr>
+                <th class="text-center" style="display: none">
+                    <input type="checkbox" ng-click="selectAll($event)">
+                </th>
+                <th class="text-center" style="width: 35px;">SN</th>
+                <th class="text-center">Student ID</th>
+                @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanViewPassword) || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanResetPassword))
+                {
+                    <th ng-show="IsShowPassword" class="text-center">Password</th>
+                }
+                <th class="text-center" style="width: 120px;">Full Name</th>
+                <th ng-show="IsShowUGCUniqueId" class="text-center">UGC Id</th>
+                <th class="text-center">Father Name</th>
+                <th class="text-center" style="width: 83px;">Mother Name</th>
+
+                <th class="text-center" style="width: 50px;">Email</th>
+
+                <th ng-show="IsIncludeContactAddress" class="text-center" style="width: 50px;">Present Address</th>
+                <th ng-show="IsIncludeContactAddress" class="text-center" style="width: 50px;">Permanent Address</th>
+                <th ng-show="IsShowBirthCertificateNo" class="text-center" style="width: 50px;">Birth Cer.No.</th>
+                <th ng-show="IsShowNationalIDNo" class="text-center" style="width: 50px;">National ID</th>
+                <th ng-show="IsShowDateOfBirth" class="text-center" style="width: 50px;">DOB</th>
+
+                <th class="text-center">Mobile</th>
+                <th class="text-center">Father Tel.</th>
+                <th class="text-center">Mother Tel.</th>
+                <th class="text-center">Emergency Tel.</th>
+                <th class="text-center">Blood</th>
+                <th class="text-center">Gender</th>
+                <th class="text-center">Batch</th>
+                <th class="text-center">Program</th>
+                <th class="text-center">Last Logged in At</th>
+                @*<th class="text-center">Military</th>*@
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in StudentList">
+            <td class="text-center" style="display: none">
+                <input type="checkbox" ng-model="row.@User_Student.Property_IsSelected"/>
+            </td>
+            <td class="text-center">{{$index+1}}</td>
+            <td class="text-center">{{row.UserName}}</td>
+            @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanViewPassword) || PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanResetPassword))
+            {
+                <td ng-show="IsShowPassword" class="text-center">{{row.Password}}</td>
+            }
+
+            <td class="">{{row.FullName}}</td>
+            <td ng-show="IsShowUGCUniqueId" class="text-center">{{row.UgcUniqueId}}</td>
+            <td class="text-center">{{row.@User_Account.Property_FatherName}}</td>
+            <td class="text-center">{{row.@User_Account.Property_MotherName}}</td>
+            <td class="text-center">{{row.@User_Account.Property_UserEmail}}</td>
+
+            <td ng-show="IsIncludeContactAddress" class="text-center">{{row.FullPresentAddress}}</td>
+            <td ng-show="IsIncludeContactAddress" class="text-center">{{row.FullPermanentAddress}}</td>
+            <td ng-show="IsShowBirthCertificateNo" class="text-center">{{row.BirthCertificateNumber}}</td>
+            <td ng-show="IsShowNationalIDNo" class="text-center">{{row.NationalIdNumber}}</td>
+            <td ng-show="IsShowDateOfBirth" class="text-center">{{row.DateOfBirth | date:'dd/MM/yyyy'}}</td>
+
+            <td class="text-center">{{row.@User_Account.Property_UserMobile}}</td>
+            <td class="text-center">{{row.@User_Student.Property_FatherMobile}}</td>
+            <td class="text-center">{{row.@User_Student.Property_MotherMobile}}</td>
+            <td class="text-center">{{row.@User_Account.Property_EmergencyMobile}}</td>
+            <td class="text-center">{{row.@User_Account.Property_BloodGroup}}</td>
+            <td class="text-center">{{row.@User_Account.Property_Gender}}</td>
+            <td class="text-center">{{row.BatchName}}</td>
+            <td class="text-center">{{row.ProgramShortTitle}}</td>
+            <td ng-show="row.@User_Account.Property_LastLoginDate != null" class="text-center">{{row.@User_Account.Property_LastLoginDate | date:'dd/MM/yyyy'}}</td>
+            <td ng-hide="row.@User_Account.Property_LastLoginDate != null" class="text-center text-danger">Never logged in.</td>
+            @*<td class="text-center">
+                                            <span  class="success" ng-show="row.IsMilitary"><i class="fa fa-check-square"></i> Yes</span>
+                                            <span  class="danger" ng-hide="row.IsMilitary"><i class="fa fa-times-circle"></i> No</span>
+                                        </td>*@
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+    <div class="table-footer no-print">
+        @OptionControl()
+    </div>
+    </div>
+    </div>
+</div>
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                    <label style="margin-left: 30px;">
+                        <input ng-model="isShowTrashedStudent"
+                               ng-change="searchStudentList()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;"/>
+                        <span style="color: #e74b37;">Show Deleted Student Only</span>
+                    </label>
+                    
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

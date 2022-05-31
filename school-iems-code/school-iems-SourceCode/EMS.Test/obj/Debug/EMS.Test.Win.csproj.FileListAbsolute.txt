@@ -1,0 +1,11 @@
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\bin\Debug\EMS.Test.exe.config
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\bin\Debug\EMS.Test.exe
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\bin\Debug\EMS.Test.pdb
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Win.csproj.AssemblyReference.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Win.csproj.SuggestedBindingRedirects.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Form1.resources
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Properties.Resources.resources
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Win.csproj.GenerateResource.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.Win.csproj.CoreCompileInputs.cache
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.exe
+D:\PipilikaSoft\School\school-iems-code\school-iems-SourceCode\EMS.Test\obj\Debug\EMS.Test.pdb

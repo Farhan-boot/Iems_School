@@ -1,0 +1,117 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "New ID Card Demand Form";
+    var emp = HttpUtil.DbContext.User_Employee
+        .Include("User_Account")
+        .Single(x=>x.UserId==HttpUtil.Profile.UserId);
+    var dept = HttpUtil.DbContext.HR_Department
+        .Single(x=>x.Id== emp.User_Account.DepartmentId);
+    var position = HttpUtil.DbContext.HR_Position
+        .SingleOrDefault(x => x.Id == emp.PositionId) ?? new HR_Position();
+}
+<style>
+    .page-body {
+        font-size: 17px;
+    }
+    h4 {
+        font-size: 20px;
+        font-weight: 900 !important; 
+    }
+</style>
+<div class="text-center">
+    <table class="table table-no-bordered">
+        <tr>
+            <td style="width: 90px;">
+                <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" style="width: 90px;">
+            </td>
+            <td>
+                <h3 class="text-center no-margin-top">@SiteSettings.Instance.InstituteName (@SiteSettings.Instance.InstituteShortName)</h3>
+                <h5 class="text-center">@SiteSettings.Instance.InstituteAddress </h5>
+                <h3 class="text-center no-margin-top"><u>ID Card Application Form</u></h3>
+            </td>
+        </tr>
+    </table>
+</div>
+<table class="table table-bordered">
+    <tr>
+        <td style="width: 216px;"></td>
+        <td></td>
+        <td style="width: 120px;">Roll No</td>
+        <td class="text-center" style="width: 200px;">N/A</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+        <td>Rank</td>
+        <td colspan="3">@HttpUtil.Profile.RankName</td>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td colspan="3">@HttpUtil.Profile.Name</td>
+    </tr>
+    <tr>
+        <td>Appointment</td>
+        <td colspan="3">@position.Name</td>
+    </tr>
+    <tr>
+        <td>Office/Dept</td>
+        <td colspan="3">@dept.ShortName</td>
+    </tr>
+    <tr>
+        <td>Program</td>
+        <td>N/A</td>
+        <td>Batch</td>
+        <td class="text-center">N/A</td>
+    </tr>
+    <tr>
+        <td>
+            Reason of Demand<br/>
+            <small>(attach papers if necessary)</small>
+        </td>
+        <td colspan="3">&nbsp;</td>
+    </tr>
+    <tr>
+        <td>National ID Card No</td>
+        <td>@emp.User_Account.NationalIdNumber</td>
+        <td>User ID</td>
+        <td class="text-center">@emp.User_Account.UserName</td>
+    </tr>
+    <tr>
+        <td>Date of Birth</td>
+        <td>@HttpUtil.Profile.DateOfBirth.ToString("dd/MM/yyyy")</td>
+        <td>Blood Group</td>
+        <td class="text-center">@emp.User_Account.BloodGroup.ToString().AddBloodGroupSignToSentence()</td>
+    </tr>
+</table>
+<div class="margin-top-30">
+    <p>Admin Wing Register Ser No:________ <span  class="pull-right">Individual Sign:__________________</span></p>
+</div>
+<div class="margin-top-20">
+    <div>
+        <h4 class="text-center"><u>Recommend of Office/Dept</u></h4>
+        <p class="text-center"><small>(In-case of Contractual Professor/Teacher)</small></p>
+        <p class="text-center margin-top-20 margin-bottom-40">Recommend&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;Not Recommend</p>
+    </div>
+    <p>Date:_____/_____/@DateTime.Today.Year <span  class="pull-right">______________________</span></p>
+    
+</div>
+<div class="margin-top-20">
+    <div>
+        <h4 class="text-center"><u>Recommend of DAA&QMG</u></h4>
+        <p class="text-center margin-top-20 margin-bottom-50">Recommend&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;Not Recommend</p>
+    </div>
+    <p>Date:_____/_____/@DateTime.Today.Year <span  class="pull-right">______________________</span></p>
+</div>
+<div class="margin-top-20">
+    <div>
+        <h4 class="text-center"><u>Approval by Dir Admin</u></h4>
+        <p class="text-center margin-top-20 margin-bottom-50">Approved&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;Not Approved</p>
+    </div>
+    <p>Date:_____/_____/@DateTime.Today.Year <span  class="pull-right">______________________</span></p>
+</div>
+<hr/>

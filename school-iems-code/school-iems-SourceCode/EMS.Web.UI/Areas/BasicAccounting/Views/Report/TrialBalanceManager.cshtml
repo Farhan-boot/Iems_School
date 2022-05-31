@@ -1,0 +1,102 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+@using EMS.Facade.BasicAccountingArea;
+@using EMS.DataAccess;
+@using EMS.Web.UI.Areas.BasicAccounting.Controllers
+
+@{
+    ViewBag.Title = "Trial Balance Manager";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+
+    //WebApi link
+    var getTrialBalanceDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TrialBalanceApi", action = "GetTrialBalanceDataExtra", area = "BasicAccounting" });
+
+    var trialBalancePrintUrl = Url.Action("TrialBalancePrint", "Report", new { area = "BasicAccounting" });
+
+    var ugc = Request.QueryString["ugc"];//ViewContext.RouteData.Values["id"];
+    var isUgcReport = (string)ugc == null ? "false": (string)ugc=="1"? "true" : "false";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/Report/TrialBalanceManager.js"></script>
+}
+
+<div ng-controller="TrialBalanceCtrl" ng-init="Init(
+     '@getTrialBalanceDataExtraUrl'
+     ,'@isUgcReport'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b>Trial Balance Manager </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <table class="table table-bordered" style="width: 500px">
+                        <tbody>
+                            <tr>
+                                <td style="width: 95px;">
+                                    Select Branch:
+                                </td>
+                                <td colspan="3" style="width: 160px;">
+                                    <select ng-model="BranchId" ng-change="onChangeFilter()"
+                                            ng-options="option.Id as option.Name for option in BranchList " ng-init="" class="form-control input-xs ">
+                                        <option value="" label="" class="">---Select All Branch---</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 72px;">Start Date:</td>
+                                <td style="width: 105px">
+                                    <input ng-model="StartDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                                </td>
+                                <td style="width: 66px;">End Date:</td>
+                                <td style="width: 105px">
+                                    <input ng-model="EndDate" style="padding-left: 5px; width: 95px;" type="text" class="date-picker" />
+                                </td>
+                            </tr>
+                        <tr>
+                            <td style="vertical-align: middle;">Type:</td>
+                            <td colspan="3">
+                                <form>
+                                    <input ng-model="IsUgcReport" value="false"
+                                           ng-change="onChangeReportType(false)"
+                                           type="radio" id="general" name="reportType">
+                                    <label for="general">General Trial Balance</label>
+                                    <br>
+                                    <input ng-model="IsUgcReport" value="true"
+                                           ng-change="onChangeReportType(true)"
+                                           type="radio" id="ugc" name="reportType">
+                                    <label for="ugc">UGC Trial Balance</label>
+                                </form>
+                            </td>
+                        </tr>
+                            
+                            <tr>
+                                <td colspan="4" style="padding-left: 5px; text-align: center;">
+                                    <a class="btn btn-info btn-xs" target="_blank" href="@trialBalancePrintUrl?isUgcReport={{IsUgcReport}}&branchId={{BranchId}}&startDate={{StartDate|date:'dd-MM-yyyy'}}&endDate={{EndDate|date:'dd-MM-yyyy'}}"> Print Report </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .IncludeParameter input {
+        vertical-align: middle;
+    }
+</style>
+
+
+
+
+
+
+

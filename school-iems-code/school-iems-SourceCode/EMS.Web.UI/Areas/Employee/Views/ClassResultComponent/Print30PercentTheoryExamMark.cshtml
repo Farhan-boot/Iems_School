@@ -1,0 +1,316 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@model dynamic
+
+@{
+    CourseItemJson ClassResult30 = ViewBag.ClassResult30;
+    string Error = ViewBag.Error;
+    string TotalMarkText = "";
+    ViewBag.Title = "Class Performance Mark Sheet";
+    //Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    var TotalMark = 0.00;
+
+    var id = Request.QueryString["classId"];
+    var classId = (string)id == null ? "0" : (string)id;
+    long output;
+    long ClassId = long.TryParse(classId.ToString(), out output) ? output : 0;
+    List<User_Account> facultylist = HttpUtil.DbContext.Aca_ClassTakenByEmployee
+    .Include("User_Employee")
+    .Include("User_Employee.User_Account")
+    .Where(x => x.ClassId == ClassId && x.RoleEnumId == (byte)Aca_ClassTakenByEmployee.RoleEnum.Faculty)
+    .Select(x => x.User_Employee.User_Account)
+    .ToList();
+}
+
+@section ScriptSection
+{
+    <script>
+        window.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, false);
+
+    </script>
+    @*<script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>*@
+
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+@if (Error.IsValid())
+{
+    <div class="alert alert-danger">
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention: </strong> <span >@Error.</span>
+    </div>
+}
+
+@if (ClassResult30 != null)
+{
+
+    <div>
+        <div class="widget">
+
+            <div class="widget-header bordered-bottom bordered-sky no-print">
+                <i class="widget-icon fa fa-list bold  "></i>
+                <span  class="widget-caption "><b>Course: @(ClassResult30.Code); @(ClassResult30.SemesterName) </b></span>
+
+                <div class="widget-buttons">
+                    <div class="btn-group">
+                        <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-download"></i> Download Marks
+                            <span  class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                            <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                            <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                            <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-body">
+
+                <div class="" style="margin: 0 auto">
+                    <!-- Component start -->
+                    <style>
+                                 .print-footer {
+                                     display: none !important;
+                                 }
+                                 .print-mark-sheet td, .print-mark-sheet th{
+                                     border: 1px solid black !important;
+                                     font-size: 12px;
+                                 }
+                                @*("@page") :first {margin-top: 0.5cm/* Top margin on first page 10cm */}
+                                @("@page") { size: portrait }
+                                @("@page") { size: landscape }
+                                @("@page") rotated { size: landscape }*@
+                                @("@page") { size: landscape }
+                                @("@page") rotated { size: landscape }
+                    </style>
+
+                    <div class="padding-bottom-10" style="text-align: center">
+                        <div class="widget-footer no-print" style="color:black">
+                            <b style="color: red; text-decoration: underline">Attention Before Print: </b>
+                            <div>
+                                1.<span  style="color: red;"> Only Before Final Submission, "<b style="color: red; font-weight: bold">Confirm & Lock</b>" All 30% Marks To Remove Draft Water Mark.</span><br />
+                                2. Please set Paper Size as "<b style="color: red; font-weight: bold">A4</b>" and Orientation as "<b style="color: red; font-weight: bold">Landscape</b>" when print.<br />
+                                3. Use latest "<b style="color: red; font-weight: bold"><a href="https://www.google.com/chrome/browser/" title="click to dwonload" target="_blank">Chrome Browser</a></b>" for best performance.
+                            </div>
+                            <button onclick="window.print()" class="btn btn-darkorange btn-xs"><i class="fa fa-print"></i> Print Result Sheet</button>
+                            <br />
+                        </div>
+
+                    </div>
+                    <div id="marks">
+                        @{
+                            var stdPerPage = 15;
+                            var firstPage = 9;
+
+                            var taken = 0;
+                            //Aca_ResultComponent component in Model
+                            //CourseItemJson ClassResult30 = ViewBag.ClassResult30;
+                            List<StudentJson> studentList = ClassResult30.DataBag.StudentList;
+                            if (studentList != null && studentList.Count > 0)
+                            {
+
+                                var totalStudent = studentList.Count;
+                                var totalPage = (int)Math.Ceiling((double)totalStudent / stdPerPage);//(totalStudent + stdPerPage - 1) / stdPerPage;//
+
+                                for (int i = 1; i <= totalPage; i++)
+                                {
+                                    List<StudentJson> studentListPaged
+                                                     = studentList.Skip(taken).Take(stdPerPage).ToList();
+
+                                    @GenerateMarkSheetPage(studentListPaged, facultylist, totalPage, i);
+                                    if (i != totalPage)
+                                    {<div class="pb-after" style=""></div>}
+                                    taken += stdPerPage;
+                                }
+
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+                            }
+
+@helper  GenerateMarkSheetPage(List<StudentJson> studentList, List<User_Account> facultylist, int totalPage, int pageNo)
+{
+CourseItemJson ClassResult30 = ViewBag.ClassResult30;
+var pageInfo = (pageNo + "/" + totalPage).ToString();
+var cssClass = pageNo > 1 ? "visible-print" : "";
+
+    <table class="@cssClass" style="width: 100%">
+        <tr>
+            <td align="left" valign="top" style="width: 110px">
+
+                <img style="width: 100px" src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" />
+            </td>
+            <td style="">
+                <div class="margin-bottom-5" style="text-align: center">
+                    @{
+                        if (!ClassResult30.IsLocked)
+                        {
+                            <div class="visible-print"> <b style="color: red; font-weight: bold">*** Before Final Submission, Lock All 30% Marks To Remove Draft Water Mark ***</b></div>
+                            @*<div style="font-size: 75px; position: absolute; opacity: .2; text-align: center; /* margin-bottom: -107px; */">
+                                Draft Preview
+                            </div>*@
+                        }
+                    }
+
+                    <div style="font-size: 16px; font-weight: bold">@EMS.Framework.Settings.SiteSettings.Instance.InstituteName</div>
+                    <div style="font-size: 14px">@ClassResult30.DeptName</div>
+                    <div style="font-size: 14px">
+                        Result Sheet: 
+                        @{
+                            List<CourseItemJson> componetList = ClassResult30.DataBag.ComponetList;
+                            if (componetList != null)
+                            {
+                                var total = 0;
+                                foreach (var component in componetList)
+                                {
+                                   
+                       
+                                   @(total == 0 ?"": " ; ") @component.Name
+
+                                    total ++; //component.TotallMark;//(30% of Total)
+
+                                }
+                            }
+                        } </div>
+                        <div>
+                            <span class="widget-caption margin-bottom-5"><b>Course Name: @ClassResult30.Code (@ClassResult30.Name, @ClassResult30.Category)</b></span>
+                        </div>
+                        <div>
+                            <span class="widget-caption ">Credit Hour: @ClassResult30.CreditLoad; @ClassResult30.SemesterName; @ClassResult30.ExamName. </span>
+                        </div>
+                        <div style="font-size: 13px; font-weight: bold">
+                            Subject Teacher(s):
+                            @foreach (var faculty in facultylist)
+                            {
+                                //excluding sysadmin name
+                                if (faculty.UserName != "psdeveloper")
+                                {
+                                    <span style="">@faculty.FullName.ToLower().ToTitleCase();</span>
+                                }
+
+                            }
+                        </div>
+                        </div>
+                        </td>
+                        <td valign="top" align="right" style="width: 110px; text-align: right;font-size: 10px">
+                            Page: @pageInfo<br />
+                            Total Student: @ClassResult30.StudentCount<br />
+                            Printed: @DateTime.Now.ToString("dd/MM/yyyy")
+
+                        </td>
+                    </tr>
+    </table>
+         if (!ClassResult30.IsLocked)
+         {
+            <div style="font-size: 100px; position: absolute; opacity: .25; text-align: center; left: 20%;">
+                    Draft Preview
+                          </div>
+         }
+        <table class="table table-striped table-bordered table-hover print-mark-sheet " style="">
+
+            <tbody>
+                <tr class="header-row" style="font-size: 12px">
+                    <td class="text-center">Class Roll</td>
+                    <td class="text-center" style="min-width: 180px; max-width: 250px;">
+                        Student Name
+                    </td>
+                    @{
+                         componetList = ClassResult30.DataBag.ComponetList;
+                        if (componetList != null)
+                        {
+                            foreach (var component in componetList)
+                            {
+                                <td class="text-center ">
+                                    @component.Name @component.TotallMark
+                                </td>
+                            }
+                        }
+                    }
+                    <td style="" class="text-center">Total (Marks: @ClassResult30.TotallMark)</td>
+
+                </tr>
+
+                @{
+                    //List<StudentJson> studentList = ClassResult30.DataBag.StudentList;
+                    if (studentList != null)
+                    {
+                        foreach (var row in studentList)
+                        {
+                            var fontSize = "12px";
+                            if (row.Name.Length > 25)
+                            {
+                                fontSize = "10px";
+                            }
+
+                            <tr>
+                                <td class="text-center">
+                                    @row.ClassRoll
+                                </td>
+                                <td class="fittext1">
+                                    <span  style="white-space: nowrap; font-size: @fontSize">@row.Name.ToLower().ToTitleCase().TruncateAtWord(30)</span>
+                                </td>
+                                @{
+                                    List<MarkDetailJson> ComponentMarkList = row.DataBag.ComponentMarkList;
+                                    if (ComponentMarkList != null)
+                                    {
+                                        foreach (var componentMark in ComponentMarkList)
+                                        {
+                                            <td class="text-center">
+                                                @componentMark.Mark
+                                            </td>
+                                        }
+                                    }
+
+                                }
+                                <td class="text-center">@row.CGPA</td>
+
+                            </tr>
+                                        }
+                                    }
+
+                }
+            </tbody>
+
+        </table>
+        <br />
+        <br />
+        <table class="visible-print1" style="width: 100%; font-size: 11px">
+            <tr>
+                <td rowspan="2" style="width: 33%;vertical-align: bottom;text-align: center;">
+                    ____________________________________<br />
+                    Date & Signature (Course Teacher)
+                </td>
+                <td style="vertical-align: bottom;text-align: center;">
+                    ____________________________________<br />
+                    Date & Signature (Chairman)
+                </td>
+                <td style="width: 33%;vertical-align: bottom;text-align: center;">
+                    ____________________________________<br />
+                    Date & Signature (Exam Controller)
+                </td>
+                @*<td rowspan="2" style="width: 29%;text-align: right;vertical-align: bottom;">
+                    ________________________________<br />
+                    Full Name & Signature (Dept Head)
+                </td>*@
+            </tr>
+        </table>
+}
+
+<script>
+
+    $(document).ready(function () {
+        //alertInfo($(".header-row").height() +":"+ $(".header-row").innerHeight())
+    });
+
+</script>

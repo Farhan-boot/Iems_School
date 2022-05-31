@@ -1,0 +1,224 @@
+﻿@{
+    string getAllEducationByUserId = "getAllEducationByUserId";
+}
+
+
+<!--File:User_Education Add/Edit View-->
+@using EMS.DataAccess.Data;
+<div id="EducationAddEdit" class="row">
+    <div class="col-md-12">
+        <div class="widget1">
+            <div class="widget-body1">
+                <div class="row">
+                    <div class="col-md-12 table-form ">
+                        <div class="form-title">
+                            @*previous Education Information*@
+                            Previous Education Information
+                           
+                        </div>
+                        <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="5"><strong>Previous Education List</strong>
+                                        <button ng-click="@(getAllEducationByUserId)()" class="btn btn-info btn-xs" style="float: right; margin-right: 5px;"><i class="fa fa-refresh"></i> Refresh</button>
+                                        </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in Account.EducationJsonList">
+                                    <td style="width: 14%;">
+                                        <label class="text-bold">Level 
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                            </label>
+                                        <select ng-disabled="row.@User_Education.Property_IsDisable" ng-model="row.@User_Education.Property_DegreeEquivalentEnumId"
+                                                ng-options="option.Id as option.Name for option in DegreeEquivalentEnumList" title="Select Degree Equivalent" class="form-control">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                        <div style="text-align: center; margin-top: 15px"
+                                             @*ng-if="row.@User_Education.Property_IsRemove"*@>
+                                            <button ng-click="getDeleteEducationById(row.Id,$index)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i>Remove </button>
+                                        </div>
+                                    </td>
+                                    <td style="width: 26%;">
+                                        <label class="text-bold">Exam/Degree Category
+                                            <span class="red glyphicon glyphicon-asterisk"></span>
+                                            </label>
+                                        <select ng-model="row.@User_Education.Property_DegreeCategoryId"
+                                                ng-options="option.Id as option.Name for option in DegreeCategoryList | filter:{DegreeEquivalentEnumId:row.@User_Education.Property_DegreeEquivalentEnumId}"
+                                                ng-change="filterSelectedDegree(row,true)"
+                                                title="Select Degree Equivalent" class="form-control">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                        <div ng-if="row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.BachelorEquivalent) ||
+                                         row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.MasterEquivalent)">
+                                            <label>Full Degree Name</label>
+                                            <input ng-model="row.@User_Education.Property_DegreeTitle"
+                                                   type="text" placeholder="Title">
+                                        </div>
+
+                                        <div >
+                                            <label ng-hide="row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.BachelorEquivalent) ||
+                                                   row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.MasterEquivalent) ||
+                                                   row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.PhDDoctoralEquivalent) ||
+                                                   row.@User_Education.Property_DegreeGroupMajorEnumId ==@((byte) User_Education.DegreeGroupMajorEnum.Other)">Board</label>
+
+                                            <label ng-show="row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.BachelorEquivalent) ||
+                                                row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.MasterEquivalent) ||
+                                                row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.PhDDoctoralEquivalent) ||
+                                                row.@User_Education.Property_DegreeGroupMajorEnumId ==@((byte) User_Education.DegreeGroupMajorEnum.Other)">Institute Type</label>
+
+                                            <select ng-model="row.@User_Education.Property_BoardId"
+                                                    ng-options="option.Id as option.Name for option in EducationBoardList | filter:{BoardTypeEnumId:row.@User_Education.Property_BoardTypeEnumId}"
+                                                    class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label>Group/Major Name</label>
+                                            <select ng-model="row.@User_Education.Property_DegreeGroupMajorEnumId"
+                                                    ng-options="option.Id as option.Name for option in DegreeGroupMajorEnumList"
+                                                    ng-if="row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.Ssc10YearEquivalent) ||
+                                                 row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.Hsc12YearEquivalent)"
+                                                    title="Select Degree Equivalent" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                            <div ng-if="row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.BachelorEquivalent) ||
+                                                row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.MasterEquivalent) ||
+                                                row.@User_Education.Property_DegreeEquivalentEnumId ==@((byte) User_Education.DegreeEquivalentEnum.PhDDoctoralEquivalent) ||
+                                                row.@User_Education.Property_DegreeGroupMajorEnumId ==@((byte) User_Education.DegreeGroupMajorEnum.Other)">
+                                              
+                                                <input ng-model="row.@User_Education.Property_DegreeGroupMajorOther" type="text" placeholder="e.g. Marketing/Finance (Optional)">
+                                            </div>
+                                        </div>
+                                        <label>Institute Name</label>
+                                        <input ng-model="row.@User_Education.Property_InstitutionName" type="text" tabindex="44" placeholder="Institute Name">
+
+                                        @*This Button show noly for O Level=605 A Level=606 DegreeCategory*@
+                                        @*<button ng-click="showALevelOLevelModal(row.@User_Education.Property_DegreeCategoryId)"
+                                                    ng-if="row.@User_Education.Property_DegreeCategoryId ==605||
+                                                           row.@User_Education.Property_DegreeCategoryId ==606"
+                                                    >
+                                                Details
+                                            </button>*@
+
+                                    </td>
+                                    @*<td style="width: 20%;"></td>*@
+                                    <td style="width: 20%;">
+                                        <label>Div/Class/Grade </label>
+                                        <select ng-model="row.@User_Education.Property_ResultSystemEnumId"
+                                                ng-options="option.Id as option.Name for option in ResultSystemEnumList" title="Select Degree Equivalent" class="form-control"
+                                                @*ng-change="filterSelectedResultSystem(row.@User_Education.Property_Id)"*@>
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                        <div>
+                                            <div ng-if="row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.FirstDivision) ||
+                                                row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.SecondDivision) ||
+                                                row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.ThirdDivision)||
+                                                row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.MarkSystem)">
+                                                <label>Marks Obtained</label>
+                                                <input ng-model="row.@User_Education.Property_ObtainedGpaOrMarks" type="text" placeholder="Marks Obtained">
+                                            </div>
+                                            <div ng-if="row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.GPA)">
+                                                <label>GPA (With 4th Sub.) Obtained</label>
+                                                <input ng-model="row.@User_Education.Property_ObtainedGpaOrMarks" type="text" placeholder="GPA (With 4th Sub.)">
+                                            </div>
+                                            <div ng-if="row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.GPA)">
+                                                <label>GPA (Without 4th Sub.) Obtained</label>
+                                                <input ng-model="row.@User_Education.Property_GpaNo4Sub" type="text" placeholder="GPA (Without 4th Sub.)">
+                                            </div>
+                                            <div ng-if="row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.GPA)">
+                                                <label>Grade Obtained</label>
+                                                <input ng-model="row.@User_Education.Property_ObtainedGradeOrClass" type="text" placeholder="Eg. A+/B+/C..">
+                                            </div>
+                                            <div>
+                                                <label>Exam Full Marks Or Scale</label>
+                                                <input ng-model="row.@User_Education.Property_FullMarksOrScale" type="text" placeholder="Full Marks">
+                                            </div>
+                                            <label ng-if="row.@User_Education.Property_ResultSystemEnumId ==@((byte) User_Education.ResultSystemEnum.GPA)" class="checkbox-inline">
+                                                <input type="checkbox" ng-model="row.@User_Education.Property_IsGolden"> Is Golden
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20%">
+
+                                        <div>
+                                            <label>Passing Year</label>
+                                            <select ng-model="row.@User_Education.Property_YearOfPassing" tabindex="46" title="Select Passing Year" class="form-control">
+                                                <option value="0">---Select Year---</option>
+                                                @{
+                                            int currentYear = DateTime.Now.Year;
+                                                }
+                                                @for (int year = currentYear + 1; year >= 1960 + 1; year--)
+                                                {
+                                                <option value="@year">@year</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div style="width: 100%">
+                                            <label>Registration No</label>
+                                            <input ng-model="row.@User_Education.Property_RegistrationNo" type="text" placeholder="Registration No">
+                                        </div>
+                                        <div style="width: 100%">
+                                            <label>Student Roll or ID No</label>
+                                            <input ng-model="row.@User_Education.Property_StudentRollOrIdNo" type="text" placeholder="Student Roll Or Id No">
+                                        </div>
+                                        <div style="width: 100%">
+                                            <label>Course Duration (Total Year)</label>
+                                            <input ng-model="row.@User_Education.Property_CourseDuration" type="text" placeholder="Eg. 2Year/2.5Year ">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="widget-footer" style="margin-bottom: 5px; text-align: left;">
+                            @*<button class="btn btn-md btn-success"><span class="fa fa-save"></span>Save Education</button>*@
+                            <button ng-click="getNewEducationByUserId()" class="btn btn-md btn-primary">Add Another</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="modal fade in" id="aLevelOLevelModal" tabindex="-1" role="dialog" aria-labelledby="aLevelOLevelModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title ng-binding">{{NameOfModal}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered modalTable">
+                            <tbody>
+                                <tr>
+                                    <td> <strong class="text-center"> Subject Name </strong></td>
+                                    <td> <strong class="text-center"> Grade </strong></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                    <td>
+                                        <input type="text">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer" style="text-align: center">
+                        @*<button ng-click="" type="button" class="btn btn-success">
+                                <span class="fa fa-save"></span> Save
+                            </button>@
+                        <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@ @*modal end*@
+    </div> @*main row end*@

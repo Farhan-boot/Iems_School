@@ -1,0 +1,145 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Student Profile Registration Statistics";
+    var campusList = HttpUtil.DbContext.General_Campus.ToList();
+    var i = 0;
+}
+
+<div class="tabbable">
+    <ul class="nav nav-tabs nav-justified" id="StudentProfileRegistrationStatus">
+        @foreach (var campus in campusList)
+        {
+            i++;
+            if (i == 1)
+            {
+                <li class="active">
+                    <a data-toggle="tab" href="#@campus.Id">@campus.ShortName Campus</a>
+                </li>
+            }
+            else
+            {
+                <li class="tab-maroon">
+                    <a data-toggle="tab" href="#@campus.Id">@campus.ShortName Campus</a>
+                </li>
+            }
+        }
+    </ul>
+    <div class="tab-content no-padding">
+        @{ i = 0;}
+        @foreach (var campus in campusList)
+        {
+            i++;
+            if (i == 1)
+            {
+                <div id="@campus.Id" class="tab-pane in active">
+                    @GetStudentProfileRegistrationByCampusId(campus.Id)
+                </div>
+            }
+            else
+            {
+                <div id="@campus.Id" class="tab-pane">
+                    @GetStudentProfileRegistrationByCampusId(campus.Id)
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="horizontal-space"></div>
+@helper GetStudentProfileRegistrationByCampusId(long campusId)
+{
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>&nbsp;</th>
+            <th colspan="3" class="text-center bg-yellow-o">Level-1</th>
+            <th colspan="3" class="text-center bg-green-o">Level-2</th>
+            <th colspan="3" class="text-center bg-purple-o">Level-3</th>
+            <th colspan="3" class="text-center bg-red-o">Level-4</th>
+            <th colspan="3" class="text-center">All</th>
+        </tr>
+        <tr class="text-center">
+            <td>Dept</td>
+            <td class="bg-yellow-o">Total</td>
+            <td class="bg-yellow-o">Complete</td>
+            <td class="bg-yellow-o">Incomplete</td>
+            <td class="bg-green-o">Total</td>
+            <td class="bg-green-o">Complete</td>
+            <td class="bg-green-o">Incomplete</td>
+            <td class="bg-purple-o">Total</td>
+            <td class="bg-purple-o">Complete</td>
+            <td class="bg-purple-o">Incomplete</td>
+            <td class="bg-red-o">Total</td>
+            <td class="bg-red-o">Complete</td>
+            <td class="bg-red-o">Incomplete</td>
+            <td>Total</td>
+            <td class="text-success">Complete</td>
+            <td class="text-danger">Incomplete</td>
+        </tr>
+        @{
+            var depts = HttpUtil.DbContext.HR_Department
+                        .Where(x => x.TypeEnumId == (byte)HR_Department.TypeEnum.AcademicDepartment)
+                        .ToList();
+        }
+        @foreach (var dept in depts)
+        {
+            <tr class="text-center">
+                <td><strong>@dept.ShortName</strong></td>
+                <td class="bg-yellow-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.LevelTermId == 1)</td>
+                <td class="bg-yellow-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 1 && x.User_Account.IsMigrate == false)</td>
+                <td class="bg-yellow-o">
+                    <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 1 && x.User_Account.IsMigrate == true)</strong>
+                </td>
+                <td class="bg-green-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2)</td>
+                <td class="bg-green-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2 && x.User_Account.IsMigrate == false)</td>
+                <td class="bg-green-o">
+                    <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2 && x.User_Account.IsMigrate == true)</strong>
+                </td>
+                <td class="bg-purple-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3)</td>
+                <td class="bg-purple-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3 && x.User_Account.IsMigrate == false)</td>
+                <td class="bg-purple-o">
+                    <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3 && x.User_Account.IsMigrate == true)</strong>
+                </td>
+                <td class="bg-red-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4)</td>
+                <td class="bg-red-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4 && x.User_Account.IsMigrate == false)</td>
+                <td class="bg-red-o">
+                    <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4 && x.User_Account.IsMigrate == true)</strong>
+                </td>
+                <td>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing)</td>
+                <td class="text-success">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == false)</td>
+                <td class="text-danger">
+                    <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.DepartmentId == dept.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == true)</strong>
+                </td>
+            </tr>
+        }
+        <tr>
+            <th class="text-center">TOTAL</th>
+            <th class="text-center bg-yellow-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 1)</th>
+            <th class="text-center bg-yellow-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 1 && x.User_Account.IsMigrate == false)</th>
+            <th class="text-center bg-yellow-o">
+                <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 1 && x.User_Account.IsMigrate == true)</strong>
+            </th>
+            <th class="text-center bg-green-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2)</th>
+            <th class="text-center bg-green-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2 && x.User_Account.IsMigrate == false)</th>
+            <th class="text-center bg-green-o">
+                <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 2 && x.User_Account.IsMigrate == true)</strong>
+            </th>
+            <th class="text-center bg-purple-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3)</th>
+            <th class="text-center bg-purple-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3 && x.User_Account.IsMigrate == false)</th>
+            <th class="text-center bg-purple-o">
+                <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 3 && x.User_Account.IsMigrate == true)</strong>
+            </th>
+            <th class="text-center bg-red-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4)</th>
+            <th class="text-center bg-red-o">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4 && x.User_Account.IsMigrate == false)</th>
+            <th class="text-center bg-red-o">
+                <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing &&x.LevelTermId == 4 && x.User_Account.IsMigrate == true)</strong>
+            </th>
+            <th class="text-center">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing)</th>
+            <th class="text-center text-success">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == false)</th>
+            <th class="text-center text-danger">
+                <strong>@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campusId && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == true)</strong>
+            </th>
+        </tr>
+    </table>
+}

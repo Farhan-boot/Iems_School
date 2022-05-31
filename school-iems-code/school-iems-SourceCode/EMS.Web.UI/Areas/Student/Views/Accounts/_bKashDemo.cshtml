@@ -1,0 +1,927 @@
+@using EMS.Framework.Settings
+@{
+    var getSemesterBillUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlinePaymentManagerApi", action = "GetSemesterBill", area = "Student" });
+}
+
+<div class="row" ng-controller="BillAndPaymentCtrl"
+     ng-init="Init(
+'@getSemesterBillUrl'
+     )">
+    <!--
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bg-info">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span class="widget-caption">Fees & Payment for {{SemesterBill.SemesterName}}</span>
+            </div>
+            <div class="widget-body" style="min-height: 302px;">
+                <table class="table table-no-bordered" style="font-size: 13px; margin-top: 15px;">
+                    <tbody>
+                    
+                        @*Previous Due:
+                        Midterm Due (+Previous):
+                        Final Due (+Previous+Midterm):
+                        Overall Due*@
+                        
+                    <tr>
+                        <td>
+                            <input class="select-payment-radio" type="radio" name="selectPayment"/>
+                        </td>
+                        <td class="text-bold" style="width: 230px;">Previous Due:</td>
+                        <td class="text-center">{{SemesterBill.PreviousBalance |number: 2}}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="select-payment-radio" type="radio" name="selectPayment" />
+                        </td>
+                        <td class="text-bold" style="width: 230px;">Midterm Due <span style="font-size: 10px;">(+Previous)</span>:</td>
+                        <td class="text-center">000.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="select-payment-radio" type="radio" name="selectPayment" />
+                        </td>
+                        <td class="text-bold" style="width: 230px;">Final Due <span style="font-size: 10px;">(+Previous+Midterm)</span>:</td>
+                        <td class="text-center">000.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="select-payment-radio" type="radio" name="selectPayment" />
+                        </td>
+                        <td class="text-bold" style="width: 230px;">Overall Due:</td>
+                        <td class="text-center">000.00</td>
+                    </tr>
+
+                    @*<tr>
+                        <td class="text-bold">This Semester Bill:</td>
+                        <td class="text-center">{{SemesterBill.SemesterBill |number: 2}}</td>
+                    </tr>
+                    <tr style="border-top: 1px dotted black;">
+                        <td class="text-bold">Total Bill:</td>
+                        <td class="text-center">{{(SemesterBill.PreviousBalance+SemesterBill.SemesterBill) |number: 2}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 20px;"></td>
+                    </tr>
+                    <tr class="text-bold" style="border: 2px solid #d73d32; color: #d73d32;">
+                        <td>Due:</td>
+                        <td class="text-center">{{SemesterBill.TotalDue |number: 2}}</td>
+                    </tr>*@
+
+                    </tbody>
+                </table>
+                <div class="text-center" style="border: 1px solid #e33771;">
+                    <img style="width: 160px;" src="~/assets/img/paymentGateway/bkash-sm.gif" alt="bKash_payment_Process.png">
+                </div>
+                <div style="border: 1px solid #e33771; border-top: 0px; padding: 10px;">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Amount:</td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">৳</span>
+                                    <input ng-model="SemesterBill.TotalAmountToPay"
+                                           class="form-control" type="text"
+                                           style="width: 75px !important; height: 25px !important; text-align: left; padding: 5px;">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="margin-top: 5px;">
+                            <td>Additional Fees:</td>
+                            <td>
+                                <div class="input-group" style="margin-top: 5px;">
+                                    <span class="input-group-addon" style="border: 1px solid #ccc;">৳</span>
+                                    <input ng-disabled="true"
+                                           class="form-control" type="text"
+                                           style="width: 75px !important; height: 25px !important; text-align: left; padding: 5px;" value="00.00">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                    </div>
+
+                    @*<input ng-model="SemesterBill.TotalAmountToPay" type="text"
+                           class="AmountToPay-input"
+                           style="height: 25px !important; width: 75px !important;"
+                    />*@
+
+                </div>
+                <br/>
+                <div class="text-center">
+                    <button ng-click="bKashPaymentModalShow(SemesterBill.TotalAmountToPay)"
+                            style="background-color: #e33771; color: white;" class="btn btn-default">
+                        Pay Online (bKash) {{SemesterBill.TotalAmountToPay}} BDT
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bg-info" style="background-color: #e33771 !important; color: white;">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span class="widget-caption">Fees & Payment @*for {{SemesterBill.SemesterName}}*@</span>
+                @*<div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>*@
+            </div>
+            <div class="widget-body" style="padding-top: 0px; min-height: 320px;">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <img style="width: 250px;" src="~/assets/img/paymentGateway/bkash.gif" alt="bKash_payment_Process.png">
+                        
+                        <div>
+                            <h1 style="color: #c94161">
+                                Online Payment is Inactive.
+                                <br/>
+                                @*Coming Soon.*@
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="bill-header">Midterm Payable</div>
+                        <div style="border: 1px solid #e33771; padding: 10px;">
+
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    @*<div class="bill">Bill (BDT): {{SemesterBill.MidtermBill |number: 2}}</div>*@
+                                    <div class="due">Due (BDT): {{SemesterBill.MidtermDue |number: 2}}</div>
+                                    <label>Amount to Pay (BDT):</label>
+                                    <input ng-model="SemesterBill.MidtermAmountToPay" type="text"
+                                           class="AmountToPay-input"/>
+                                </div>
+                                <div class="icon">
+                                    @*<i class="fa fa-usd"></i>*@
+                                    ৳
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button ng-click="bKashPaymentModalShow(SemesterBill.MidtermAmountToPay)"
+                                        style="background-color: #e33771; color: white;" class="btn btn-default">
+                                    Pay Online (bKash)
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="bill-header final-bill-box">Final Term Payable</div>
+                        <div style="border: 1px solid #e33771; padding: 10px;">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <div class="bill">Bill (BDT): {{SemesterBill.TotalBill |number: 2}}</div>
+                                    <div class="due">Due (BDT): {{SemesterBill.TotalDue |number: 2}}</div>
+                                    <label>Amount to Pay (BDT):</label>
+                                    <input ng-model="SemesterBill.TotalAmountToPay" type="text"
+                                           class="AmountToPay-input" style="height: 25px !important;" />
+                                </div>
+                                <div class="icon">
+                                    ৳
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button ng-click="bKashPaymentModalShow(SemesterBill.TotalAmountToPay)"
+                                        style="background-color: #e33771; color: white;" class="btn btn-default">
+                                    Pay Online (bKash)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+    <div class="widget">
+        <div class="widget-header bg-info">
+            <i class="widget-icon fa fa-info-circle"></i>
+            <span class="widget-caption">Bill & Payment Summary for {{SemesterBill.SemesterName}}</span>
+        </div>
+        <div class="widget-body" style="min-height: 320px;">
+            <table class="table table-no-bordered" style="font-size: 13px; margin-top: 15px;">
+                <tbody>
+               
+                        @*Previous Due
+                        This Semester Bill
+                        This Semester Total Payable
+                        This Semester Total Paid
+                        This Semester Due
+                        Over All Due
+                        Total Paid*@
+                                          
+
+                <tr>
+                    <td class="text-bold" style="width: 230px;">Previous Due:</td>
+                    <td class="text-center">{{SemesterBill.PreviousBalance |number: 2}}</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">This Semester Bill:</td>
+                    <td class="text-center">{{SemesterBill.SemesterBill |number: 2}}</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">This Semester Total Payable:</td>
+                    <td class="text-center">000.00</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">This Semester Total Paid:</td>
+                    <td class="text-center">000.00</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">This Semester Due:</td>
+                    <td class="text-center">000.00</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">Over All Due:</td>
+                    <td class="text-center">000.00</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">Total Paid:</td>
+                    <td class="text-center">000.00</td>
+                </tr>
+
+
+               @*<tr style="border-top: 1px dotted black;">
+                        <td class="text-bold">Total Bill:</td>
+                        <td class="text-center">{{(SemesterBill.PreviousBalance+SemesterBill.SemesterBill) |number: 2}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 20px;"></td>
+                    </tr>
+                    <tr class="text-bold" style="border: 2px solid #d73d32; color: #d73d32;">
+                        <td>Due:</td>
+                        <td class="text-center">{{SemesterBill.TotalDue |number: 2}}</td>
+                    </tr>*@
+
+                </tbody>
+            </table>
+       
+            <div style="margin-top: 20px; text-align: center;">
+                <a class="btn btn-info btn-xs"
+                   href="@Url.Action("Financial", "Reports", new {area = "Student"})">
+                    <i class="fa fa-money"></i>
+                    View Payment History
+                </a>
+                <a class="btn btn-info btn-xs"
+                   href="@Url.Action("Index", "Registration", new { area = "Student" })">
+                    <i class="fa fa-paper-plane-o"></i>
+                    View Registration
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    -->
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-header bg-info" style="background-color: #e33771 !important; color: white;">
+                    <i class="widget-icon fa fa-info-circle"></i>
+                    <span class="widget-caption">Fees & Payment for {{SemesterBill.SemesterName}}</span>
+                   @*<div class="widget-buttons">
+                        <a href="#" data-toggle="maximize">
+                            <i class="fa fa-expand"></i>
+                        </a>
+                        <a href="#" data-toggle="collapse">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </div>*@
+                </div>
+                <div class="widget-body" style="padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <img style="width: 250px;" src="~/assets/img/paymentGateway/bkash.gif" alt="bKash_payment_Process.png">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bill-header">Midterm Payable</div>
+                            <div style="border: 1px solid #e33771; padding: 10px;">
+
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        @*<div class="bill">Bill (BDT): {{SemesterBill.MidtermBill |number: 2}}</div>*@
+                                        <div class="due">Due (BDT): 5000 @*{{SemesterBill.MidtermDue |number: 2}}*@</div>
+                                        <label>Amount to Pay (BDT):</label>
+                                        <input ng-model="SemesterBill.MidtermAmountToPay" type="text"
+                                               class="AmountToPay-input" />
+                                    </div>
+                                    <div class="icon">
+                                       @*<i class="fa fa-usd"></i>*@
+                                        ৳
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button ng-click="bKashPaymentModalShow(SemesterBill.MidtermAmountToPay)"
+                                            style="background-color: #e33771; color: white;" class="btn btn-default">
+                                        Pay Online (bKash)
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bill-header final-bill-box">Final Term Payable</div>
+                            <div style="border: 1px solid #e33771; padding: 10px;">
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        @*<div class="bill">Bill (BDT): {{SemesterBill.TotalBill |number: 2}}</div>*@
+                                        <div class="due">Due (BDT):12000 @*{{SemesterBill.TotalDue |number: 2}}*@</div>
+                                        <label>Amount to Pay (BDT):</label>
+                                        <input ng-model="SemesterBill.TotalAmountToPay" type="text"
+                                               class="AmountToPay-input" />
+                                    </div>
+                                    <div class="icon">
+                                        ৳
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button ng-click="bKashPaymentModalShow(SemesterBill.TotalAmountToPay)"
+                                            style="background-color: #e33771; color: white;" class="btn btn-default">
+                                        Pay Online (bKash)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+
+
+
+
+
+<div class="modal fade" id="bKashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="bKashPaymentModal">
+    <div class="modal-dialog" role="document" style="width: 415px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center fade-in">
+                    <div class="form-signin">
+                        <span id="header">
+                            <div>
+                                <div id="logoHolder">
+                                    <img id="logo" class="mb-4" src="~/assets/img/paymentGateway/bkash.gif" alt="bKash logo" height="72">
+                                </div>
+
+                                <hr class="itemDivider">
+                                <div id="trxLoader" style="display: none;">
+                                    <span class="loadingText">Getting payment info.</span>
+                                    <span class="loadingText">Please wait...</span>
+                                </div>
+                                <div id="trxInfo">
+                                    <div id="merchantLogo" style="background-image: url('@SiteSettings.Instance.InstituteLogoColorShort');"></div>
+                                    <div class="infoNameInvoice">
+                                        <span id="merchantName">@SiteSettings.Instance.InstituteShortName</span>
+                                        <div class="infoInvoice">
+                                            <span class="invoiceText">Invoice:</span>
+                                            <span id="merchantInvoice1">tGwVSwdr5ru</span>
+                                        </div>
+                                        <span id="merchantInvoice2"></span>
+
+                                    </div>
+                                    <div class="trxMerchantAmount">
+                                        <span class="merchantAmount">৳
+                                        </span><span id="merchantAmountVal">{{Amount}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="container">
+                            <form class="formBody" id="login_form">
+
+                                <div id="inputHolder">
+                                    <span for="wallet" class="infoText">Your bKash Account number</span>
+                                    <input type="text" id="wallet" name="wallet" class="form-control" font-size="18px" ;="" placeholder="e.g 01XXXXXXXXX" maxlength="11" autocomplete="off" required="">
+
+                                    <span class="infoText">By clicking on <b> Confirm,</b> you are agreeing to the
+                                        <b>
+                                            <a style="color: white;" href="https://www.bkash.com/terms-of-use-checkout" target="_blank">terms &amp; conditions</a>
+                                        </b> </span>
+
+                                    <div id="error"></div>
+                                </div>
+
+                                <div class="buttonAction">
+                                    <button type="button" data-dismiss="modal" id="close_button">Close</button>
+                                    <button ng-click="verificationCodeModalShow()" id="submit_button">Confirm</button>
+
+                                </div>
+                            </form>
+                        </span>
+                        <span id="footer">
+                            <div id="footerItem">
+                                <div id="credit">
+                                    <div class="dialerItem">
+                                        <img src="https://client.pay.bka.sh/resource/img/phone.png" height="10px" width="10px">
+                                    </div>
+
+                                    <b id="dialText">16247</b>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="verificationCodeModal" tabindex="-1" role="dialog" aria-labelledby="verificationCodeModal">
+    <div class="modal-dialog" role="document" style="width: 415px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center fade-in">
+                    <div class="form-signin">
+                        <span id="header">
+                            <div>
+                                <div id="logoHolder"><img id="logo" class="mb-4" src="~/assets/img/paymentGateway/bkash.gif" alt="bKash logo" height="72"></div>
+
+                                <hr class="itemDivider">
+                                <div id="trxLoader" style="display: none;">
+                                    <span class="loadingText">Getting payment info.</span>
+                                    <span class="loadingText">Please wait...</span>
+                                </div>
+                                <div id="trxInfo">
+                                    <div id="merchantLogo" style="background-image: url('https://s3-ap-southeast-1.amazonaws.com/merchantlogo.sandbox.bka.sh/pgw-default.png';);"></div>
+                                    <div class="infoNameInvoice">
+                                        <span id="merchantName">@SiteSettings.Instance.InstituteShortName</span>
+                                        <div class="infoInvoice">
+                                            <span class="invoiceText">Invoice:</span>
+                                            <span id="merchantInvoice1">tGwVSwdr5ru</span>
+                                        </div>
+                                        <span id="merchantInvoice2"></span>
+
+                                    </div>
+                                    <div class="trxMerchantAmount">
+                                        <span class="merchantAmount">৳ </span><span id="merchantAmountVal">{{Amount}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="container">
+                            <form class="formBody" id="otp_form">
+
+                                <div id="inputHolder">
+
+                                    <span for="otp" class="infoText">Enter verification code sent your mobile@*<b id="phone_num">017 ** *** 575</b>*@</span>
+                                    <input type="text" id="otp" name="otp" class="form-control" placeholder="bKash Verification Code" autocomplete="off" maxlength="6" required="">
+
+                                    <span class="infoText" id="resend_info_text">Didn't receive code? <b class="textButton" id="resend_otp_text"><u>Resend code</u></b> </span>
+
+                                    <div id="error"></div>
+                                </div>
+
+
+                                <div class="buttonAction">
+                                    <button type="button" data-dismiss="modal" id="close_button">Close</button>
+                                    <button ng-click="pinModalShow()" id="submit_button">Confirm</button>
+
+                                </div>
+
+                            </form>
+                        </span>
+                        <span id="footer">
+                            <div id="footerItem">
+                                <div id="credit">
+                                    <div class="dialerItem">
+                                        <img src="https://client.pay.bka.sh/resource/img/phone.png" height="10px" width="10px">
+                                    </div>
+
+                                    <b id="dialText">16247</b>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="pinModal" tabindex="-1" role="dialog" aria-labelledby="pinModal">
+    <div class="modal-dialog" role="document" style="width: 415px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-signin">
+                    <span id="header">
+                        <div>
+                            <div id="logoHolder"><img id="logo" class="mb-4" src="~/assets/img/paymentGateway/bkash.gif" alt="bKash logo" height="72"></div>
+
+                            <hr class="itemDivider">
+                            <div id="trxLoader" style="display: none;">
+                                <span class="loadingText">Getting payment info.</span>
+                                <span class="loadingText">Please wait...</span>
+                            </div>
+                            <div id="trxInfo">
+                                <div id="merchantLogo" style="background-image: url(&quot;https://s3-ap-southeast-1.amazonaws.com/merchantlogo.sandbox.bka.sh/pgw-default.png&quot;);"></div>
+                                <div class="infoNameInvoice">
+                                    <span id="merchantName">@SiteSettings.Instance.InstituteShortName</span>
+                                    <div class="infoInvoice">
+                                        <span class="invoiceText">Invoice:</span>
+                                        <span id="merchantInvoice1">tGwVSwdr5ru</span>
+                                    </div>
+                                    <span id="merchantInvoice2"></span>
+
+                                </div>
+                                <div class="trxMerchantAmount">
+                                    <span class="merchantAmount">৳ </span><span id="merchantAmountVal">{{Amount}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <span id="container">
+                        <form class="formBody" id="pin_form">
+
+                            <div id="inputHolder">
+                                <span for="pin" class="infoText">Enter PIN of your bKash Account number @*(<b id="phone_num">017 ** *** 575</b>)*@</span>
+                                <input type="password" ;="" font-size="18px" id="pin" name="pin" class="form-control" placeholder="Enter PIN" autocomplete="off" required="">
+
+                                <div id="error"></div>
+
+                            </div>
+                            <div class="buttonAction">
+                                <button type="button" data-dismiss="modal" id="close_button">Close</button>
+                                <button ng-click="paymentSuccess()" id="submit_button">Confirm</button>
+
+                            </div>
+
+                        </form>
+                    </span>
+                    <span id="footer">
+                        <div id="footerItem">
+                            <div id="credit">
+                                <div class="dialerItem">
+                                    <img src="https://client.pay.bka.sh/resource/img/phone.png" height="10px" width="10px">
+                                </div>
+
+                                <b id="dialText">16247</b>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+<style>
+    .select-payment-radio {
+        height: 13px !important;
+        width: 13px !important;
+    }
+    .input-group-addon {
+        font-size: 12px !important;
+        text-align: center !important;
+        font-weight: 900 !important;
+        padding: 5px 15px 0px 5px !important;
+    }
+    .input-group {
+        display: inline-flex;
+    }
+
+    .bill-header {
+        text-align: center;
+        border: 1px solid #e33771;
+        border-bottom: none;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .bill {
+        font-size: 20px;
+        /*font-weight: bold;*/
+       
+    }
+    .due {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 5px 0px;
+    }
+
+    .AmountToPay-input {
+        width: 100px !important; 
+        padding-left: 5px; 
+        font-weight: bold; 
+        height: 30px !important; 
+        text-align: left !important;
+    }
+    @@media (max-width: 992px){
+        .final-bill-box {
+            margin-top: 15px;
+        }
+    }
+
+
+
+
+    .fade-in {
+        opacity: 0;
+        -webkit-animation: fadeIn ease-in 1;
+        -moz-animation: fadeIn ease-in 1;
+        animation: fadeIn ease-in 1;
+        -webkit-animation-fill-mode: forwards;
+        -moz-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+        -webkit-animation-duration: 0.3s;
+        -moz-animation-duration: 0.3s;
+        animation-duration: 0.3s;
+        -webkit-animation-delay: 0.0s;
+        -moz-animation-delay: 0.0s;
+        animation-delay: 0.0s;
+    
+    }
+    #container-bg {
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        opacity: 0.60;
+        filter: alpha(opacity=60);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+    }
+    .form-signin {
+        width: 100%;
+        min-width: 320px;
+        padding: 5px 0px;
+        margin: 0 auto;
+        background-color: #FFFFFF;
+        z-index: 10000;
+        position: relative;
+        text-align: center;
+        color: #fff;
+        font-family: 'Muli', sans-serif;
+    }
+
+    #logoHolder {
+        height: 100px;
+        background-color: #fff;
+        width: 100%;
+        padding: 0px;
+    }
+
+    hr.itemDivider {
+        border: 3px solid #e44b6f;
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+    #trxLoader {
+        display: flex;
+        flex-direction: column;
+        padding-top: 24px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 24px;
+        opacity: 1;
+        animation-name: fadeInRight;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in;
+        animation-duration: 1.5s;
+    }
+    .loadingText {
+        color: #464646;
+        font-size: 14px;
+        font-style: italic;
+        flex-wrap: wrap;
+        font-family: Roboto;
+    }
+    #trxInfo {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        padding-top: 17px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 17px;
+    }
+    .formBody {
+        margin-bottom: 0px;
+    }
+    #inputHolder {
+        display: flex;
+        flex-direction: column;
+        background-image: url(https://client.sandbox.bka.sh/resource/img/input_bg.png);
+        width: 100%;
+        height: 170px;
+        align-items: center;
+        justify-content: center;
+        background-color: #c94161;
+    }
+
+    span.infoText {
+        color: #FFFFFF;
+        font-size: 11.5px;
+        font-family: sans-serif;
+    }
+
+    #error {
+        color: #fff;
+        font-weight: bold;
+        font-size: 11.5px;
+        font-family: sans-serif;
+    }
+
+    div.buttonAction {
+        display: flex;
+        flex-direction: row;
+    }
+    #resend_otp, #close_button, #no_button {
+        width: 50%;
+        color: #FFFFFF;
+        background-color: #d1d3d4;
+        cursor: pointer;
+        font-family: sans-serif;
+        font-size: 12px;
+        border-radius: 0px;
+    }
+
+    #submit_button, #yes_button {
+        width: 50%;
+        color: #000000;
+        background-color: #d1d3d4;
+        cursor: pointer;
+        font-family: sans-serif;
+        font-size: 12px;
+        border-radius: 0px;
+    }
+
+    button, .button {
+        margin-bottom: 1rem;
+    }
+    .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+        display: inline-block;
+        height: 38px;
+        padding: 0 30px;
+        color: #555;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 38px;
+        letter-spacing: .1rem;
+        /*text-transform: uppercase;*/
+        text-decoration: none;
+        white-space: nowrap;
+        background-color: transparent;
+        border-radius: 4px;
+        border: 1px solid #bbb;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    button, html input[type="button"], input[type="reset"], input[type="submit"] {
+        -webkit-appearance: button;
+        cursor: pointer;
+    }
+
+    #footerItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 5px;
+    }
+
+    #credit {
+        display: flex;
+        flex-direction: row;
+        margin-left: 10px;
+        margin-right: 10px;
+        align-items: center;
+    }
+
+    div.dialerItem {
+        display: flex;
+        width: 23px;
+        height: 23px;
+        align-items: center;
+        justify-content: center;
+        background-color: #e2136e;
+        border-radius: 50px;
+    }
+
+    #dialText {
+        color: #c94161;
+        margin-left: 10px;
+    }
+
+    div.infoNameInvoice {
+        display: flex;
+        flex-direction: column;
+        padding-left: 1px;
+    }
+    #merchantName {
+        color: #464646;
+        font-size: 12px;
+        flex-wrap: wrap;
+        font-family: Roboto;
+        text-align: left;
+    }
+    div.infoInvoice {
+        display: flex;
+        flex-direction: row;
+    }
+    span.invoiceText {
+        font-size: 13px;
+        color: #9a9a9a;
+        font-family: Roboto;
+    }
+
+    #merchantInvoice1 {
+        color: #9a9a9a;
+        font-size: 13px;
+        margin-left: 3px;
+        width: 50px;
+        font-family: Roboto;
+        white-space: nowrap;
+        text-align: start;
+    }
+    #merchantInvoice2 {
+        color: #9a9a9a;
+        font-size: 13px;
+        overflow: hidden;
+        width: 185px;
+        margin-left: 45px;
+        text-overflow: ellipsis;
+        font-family: Roboto;
+        white-space: nowrap;
+        text-align: start;
+    }
+    div.trxMerchantAmount {
+        display: flex;
+        flex-direction: row;
+        margin-left: 1px;
+    }
+
+    span.merchantAmount {
+        color: #464646;
+        font-family: Roboto;
+    }
+
+    #merchantAmountVal {
+        color: #464646;
+        font-family: Roboto;
+        margin-left: 2px;
+    }
+
+    .form-signin .form-control {
+        position: relative;
+        box-sizing: border-box;
+        height: auto;
+        margin-top: 15px;
+    }
+
+    button, input, optgroup, select, textarea {
+        color: inherit;
+        font: inherit;
+        margin: 0;
+    }
+
+    input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"], textarea, select {
+        height: 38px;
+        padding: 6px 10px;
+        background-color: #fff;
+        border: 1px solid #D1D1D1;
+        border-radius: 4px;
+        box-shadow: none;
+        box-sizing: border-box;
+    }
+
+    .form-signin input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"] {
+        text-align: center;
+        border-radius: 0px;
+        width: 80%;
+    }
+    .form-signin input[type="password"], input[type="text"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        color: #3c3c3c;
+    }
+
+
+
+    @@media only screen and (min-width: 600px) {
+
+    }
+</style>

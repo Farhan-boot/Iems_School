@@ -1,0 +1,149 @@
+﻿
+<!--File:General_Campus List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Campus List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CampusId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getCampusByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusById", area = "Admin" });
+    var getCampusDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusDataExtra", area = "Admin" });
+    var saveCampusUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "SaveCampus", area = "Admin" });
+    var deleteCampusByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetDeleteCampusById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedCampusUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "CampusApi", action = "GetPagedCampus", area = "Admin"});
+    var getAllCampusUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetAllCampus", area = "Admin" });
+    var saveCampusListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "SaveCampusList", area = "Admin" });
+    var getCampusListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CampusApi", action = "GetCampusListDataExtra", area = "Admin" });
+
+    var editCampusByIdPageUrl = Url.Action("CampusAddEdit", "Campus", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewCampus = "getNewCampus";
+    var saveCampus = "saveCampus";
+    var deleteCampusById = "deleteCampusById";
+    var deleteCampusByObj = "deleteCampusByObj";
+    //for list
+    var searchCampusList = "searchCampusList";
+    var getPagedCampusList = "getPagedCampusList";
+    var getAllCampusList = "getAllCampusList";
+    var saveCampusList = "saveCampusList";
+    var getCampusListExtraData = "getCampusListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Campus/CampusList.js"></script>
+}
+
+
+<div ng-controller="CampusListCtrl"
+     ng-init="Init(
+      '@getPagedCampusUrl'
+     ,'@deleteCampusByIdUrl'
+     ,'@getCampusListDataExtraUrl'
+     ,'@saveCampusListUrl'
+     ,'@getCampusByIdUrl'
+     ,'@getCampusDataExtraUrl'
+     ,'@saveCampusUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Campus </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchCampusList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editCampusByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchCampusList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Short Name</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in CampusList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Campus.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">{{row.@General_Campus.Property_OrderNo}}</td>
+                    <td class="">{{row.@General_Campus.Property_Name}}</td>
+                    <td class="text-center">{{row.@General_Campus.Property_ShortName}}</td>
+                    <td class="text-center">{{row.@General_Campus.Property_Type}}</td>
+                    <td class="text-center">{{row.@General_Campus.Property_Status}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editCampusByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteCampusById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

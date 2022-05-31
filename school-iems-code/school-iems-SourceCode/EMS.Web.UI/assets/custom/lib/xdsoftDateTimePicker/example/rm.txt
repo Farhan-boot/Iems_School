@@ -1,0 +1,13 @@
+﻿https://github.com/alongubkin/angular-datepicker
+https://github.com/eight04/angular-datetime
+datetime.js//working
+
+https://github.com/tyaslab/angular-xdan-datetimepicker
+angular-xdan-datetimepicker.js//working
+
+for format date
+http://blog.stevenlevithan.com/archives/date-time-format
+ date.format.js
+
+//'xdan.datetimepicker',//working
+//'datetime',//working

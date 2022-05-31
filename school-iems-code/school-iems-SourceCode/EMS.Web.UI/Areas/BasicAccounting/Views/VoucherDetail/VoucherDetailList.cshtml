@@ -1,0 +1,180 @@
+﻿
+<!--File:BAcnt_VoucherDetail List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "BasicAccounting: Voucher Detail List";
+    Layout = "~/Areas/BasicAccounting/Views/Shared/_LayoutBasicAccounting.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var VoucherDetailId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getVoucherDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailById", area = "BasicAccounting" });
+    var getVoucherDetailDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailDataExtra", area = "BasicAccounting" });
+    var saveVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "SaveVoucherDetail", area = "BasicAccounting" });
+    var deleteVoucherDetailByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetDeleteVoucherDetailById", area = "BasicAccounting" });
+
+    //WebApi link for List
+    var getPagedVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "VoucherDetailApi", action = "GetPagedVoucherDetail", area = "BasicAccounting"});
+    var getAllVoucherDetailUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetAllVoucherDetail", area = "BasicAccounting" });
+    var saveVoucherDetailListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "SaveVoucherDetailList", area = "BasicAccounting" });
+    var getVoucherDetailListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "VoucherDetailApi", action = "GetVoucherDetailListDataExtra", area = "BasicAccounting" });
+
+    var editVoucherDetailByIdPageUrl = Url.Action("VoucherDetailAddEdit", "VoucherDetail", new { area = "BasicAccounting" });
+
+    //Angular Function Name
+    var getNewVoucherDetail = "getNewVoucherDetail";
+    var saveVoucherDetail = "saveVoucherDetail";
+    var deleteVoucherDetailById = "deleteVoucherDetailById";
+    var deleteVoucherDetailByObj = "deleteVoucherDetailByObj";
+    //for list
+    var searchVoucherDetailList = "searchVoucherDetailList";
+    var getPagedVoucherDetailList = "getPagedVoucherDetailList";
+    var getAllVoucherDetailList = "getAllVoucherDetailList";
+    var saveVoucherDetailList = "saveVoucherDetailList";
+    var getVoucherDetailListExtraData = "getVoucherDetailListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/BasicAccounting/Views/VoucherDetail/VoucherDetailList.js"></script>
+}
+
+
+<div ng-controller="VoucherDetailListCtrl"
+     ng-init="Init(
+      '@getPagedVoucherDetailUrl'
+     ,'@deleteVoucherDetailByIdUrl'
+     ,'@getVoucherDetailListDataExtraUrl'
+     ,'@saveVoucherDetailListUrl'
+     ,'@getVoucherDetailByIdUrl'
+     ,'@getVoucherDetailDataExtraUrl'
+     ,'@saveVoucherDetailUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Voucher Detail </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Ledger</span>*@
+                     <select ng-model="SelectedLedgerId" ng-change="@(searchVoucherDetailList)()" 
+                        ng-options="option.Id as option.Name for option in LedgerList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Ledger---</option>
+                     </select>
+                </span>
+              </div>       
+              <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span class="widget-caption form-inline">
+                    @*<span>Select Voucher</span>*@
+                     <select ng-model="SelectedVoucherId" ng-change="@(searchVoucherDetailList)()" 
+                        ng-options="option.Id as option.Name for option in VoucherList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Voucher---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchVoucherDetailList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editVoucherDetailByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchVoucherDetailList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <!--th class="text-center">Ledger Id</th-->
+                    <th class="text-center">Debit Account</th>
+                    <th class="text-center">Credit Account</th>
+                    <th class="text-center">Is Debited</th>
+                    <!--th class="text-center">Voucher Id</th-->
+                    <th class="text-center">Remark</th>
+                    <th class="text-center">History</th>
+                    <th class="text-center">Is Deleted</th>
+                    <th class="text-center">Narration</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in VoucherDetailList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@BAcnt_VoucherDetail.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <!--td class="">{{row.@BAcnt_VoucherDetail.Property_LedgerId}}</td-->
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_DebitAccount}}</td>
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_CreditAccount}}</td>
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_IsDebited}}</td>
+                    <!--td class="">{{row.@BAcnt_VoucherDetail.Property_VoucherId}}</td-->
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_Remark}}</td>
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_History}}</td>
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_IsDeleted}}</td>
+                    <td class="">{{row.@BAcnt_VoucherDetail.Property_Narration}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editVoucherDetailByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteVoucherDetailById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

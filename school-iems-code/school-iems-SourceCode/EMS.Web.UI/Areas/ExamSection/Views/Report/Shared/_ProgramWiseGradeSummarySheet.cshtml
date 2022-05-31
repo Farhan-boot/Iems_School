@@ -1,0 +1,199 @@
+﻿
+@using EMS.DataAccess.Data;
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+
+    var getProgramWiseGradeSummarySheetDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramWiseGradeSummarySheetApi", action = "GetProgramWiseGradeSummarySheetDataExtra", area = "ExamSection" });
+
+    //WebApi link for List
+    var getProgramWiseGradeSummarySheetUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ProgramWiseGradeSummarySheetApi", action = "GetProgramWiseGradeSummarySheet", area = "ExamSection" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="ProgramWiseGradeSummaryCtrl"
+     ng-init="Init(
+     '@getProgramWiseGradeSummarySheetDataExtraUrl'
+     ,'@getProgramWiseGradeSummarySheetUrl'
+     )">
+    <div ng-show="HasError" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@ >
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <tbody class="hide-on-print">
+                        <tr>
+                            <td style="width: 70px;">Program:</td>
+                            <td style="width: 250px;">
+                                <select ng-model="SelectedProgram"
+                                        ng-change="onChangeFilter()"
+                                        ng-options="option as option.Name for option in ProgramList"
+                                        title="Select Program" class="form-control">
+                                    <option value="" label="" class="">All Program</option>
+                                </select>
+                            </td>
+                            <td style="width: 100px;">Semester List:</td>
+                            <td style="width: 250px;">
+                                <select ng-model="SelectedSemester"
+                                        ng-change="onChangeFilter()"
+                                        ng-options="option as option.Name for option in SemesterList" 
+                                        title="Select Semester" class="form-control">
+                                </select>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <button class="btn btn-info btn-xs"
+                                        ng-click="getProgramWiseGradeSummarySheet()">
+                                    View Report
+                                </button>
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-hide="ProgramWiseGradeSummaryList.length==0"
+             style="margin-top: 5px;" class="border-black main-body">
+            <div>
+                <div class="btn-group" style="float: right; margin-bottom: 5px;">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Soft Copy
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                        <li><a onclick="$('#programWiseGradeSummary').tableExport({ fileName: 'ProgramWiseGradeSummary', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                        <li><a onclick="$('#programWiseGradeSummary').tableExport({ fileName: 'ProgramWiseGradeSummary', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                        <li><a onclick="$('#programWiseGradeSummary').tableExport({ fileName: 'ProgramWiseGradeSummary', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="programWiseGradeSummary" style="margin-bottom: 10px;">
+                <table class="report-table table-bordered table-border" style="width: 100%; text-align: center; margin-bottom: 15px;">
+                    <thead class="bg-gray">
+                    <tr>
+                        <th style="text-align: center; border: none !important; background-color: white;" 
+                            colspan="{{GradingPolicyOptionList.length+2}}">
+                            <strong>Report of Program Wise Grade Summary</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; border: none !important; background-color: white;" 
+                            colspan="{{GradingPolicyOptionList.length+2}}">
+                            Program: <span ng-if="SelectedProgram==null">All Program</span>{{SelectedProgram.Name}}
+                        </th>
+                    </tr>
+                        <tr>
+                            <th style="text-align: center;border: none !important; 
+                                  background-color: white; padding-bottom: 5px !important;" 
+                                colspan="{{GradingPolicyOptionList.length+2}}">
+                                Semester: {{SelectedSemester.Name}}
+                            </th>
+                        </tr>
+
+                    <tr style="font-weight: bold; font-size: 14px;">
+                        <th>Name of Program</th>
+                        <th>Total Reg.Std</th>
+                        <th ng-repeat="gradingPolicyOption in GradingPolicyOptionList">{{gradingPolicyOption.Name}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="programWiseGradeSummary in ProgramWiseGradeSummaryList">
+                        <td style="text-align: left; padding-left: 5px;">{{programWiseGradeSummary.ProgramName}}</td>
+
+                        <td>{{programWiseGradeSummary.TotalRegStudent}}</td>
+
+                        <td ng-repeat="gradeWiseSummary in programWiseGradeSummary.GradeWiseSummaryListJson">
+                            <span title="{{gradeWiseSummary.Grade}}">{{gradeWiseSummary.TotalStudent}}</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td style="text-align: right;">Total:</td>
+                        <td style="text-align: center;">{{GrandTotalGradeSummary.TotalRegStudent}}</td>
+                        <td ng-repeat="gradeWiseSummary in GrandTotalGradeSummary.GradeWiseSummaryListJson"
+                            style="text-align: center;">
+                            <span title="{{gradeWiseSummary.Grade}}">{{gradeWiseSummary.TotalStudent}}</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top;
+    }
+
+        .trans-name div {
+            margin-left: 15px;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    table .no-border,
+    table .no-border tr,
+    table .no-border tr td {
+        border: none;
+    }
+
+    .report-table > tbody > tr > td,
+    .report-table > thead > tr > th {
+        border: 1px solid black !important;
+    }
+
+    .report-table > thead > tr > th {
+        padding: 0px !important;
+    }
+</style>

@@ -1,0 +1,39 @@
+﻿
+
+@{
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var empId = (string)id == null ? "0" : (string)id;
+}
+
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="tabProfile">
+        <li class="active">
+            <a data-toggle="tab" href="#AssignedClasses" aria-expanded="false">
+                Assigned Classes
+            </a>
+        </li>
+        <li class="tab-red">
+            <a data-toggle="tab" href="#TPE" aria-expanded="false">
+                Teacher Performance Evaluation
+            </a>
+        </li>
+        <li class="tab-red">
+            <a data-toggle="tab" href="#Others" aria-expanded="false">
+                Other
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content radius-bordered  no-padding">
+        <div id="AssignedClasses" class="tab-pane in active">
+            @Html.Partial("~/Areas/HR/Views/ManageEmployee/ClassManager/_ClassAssign.cshtml")
+        </div>
+
+        <div id="TPE" class="tab-pane">
+
+        </div>
+        <div id="Others" class="tab-pane">
+
+        </div>
+    </div>
+</div>

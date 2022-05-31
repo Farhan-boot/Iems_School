@@ -1,0 +1,111 @@
+﻿@using EMS.DataAccess.Data
+@model dynamic
+
+@{
+    ViewBag.Title = "Tabulation Manager";
+
+    //WebApi link for single row
+
+    var getTabulationFilterUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TabulationBatchWiseManagerApi", action = "GetTabulationBatchWiseFilterDataExtra", area = "ExamSection" });
+    var getCurriculumAndBatchListForTabulationBatchWiseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TabulationBatchWiseManagerApi", action = "GetCurriculumAndBatchListForTabulationBatchWise", area = "ExamSection" });
+
+
+    var viewTabulationUrl = Url.Action("PrintTabulationSheetBatchWise", "TabulationManager", new { area = "ExamSection" });
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/TabulationManager/ManageBatchWiseTabulationSheet.js?v=2"></script>
+}
+<div ng-controller="ManageTabulationSheetCtrl"
+     ng-init="Init(
+      '@getTabulationFilterUrl'
+     ,'@(getCurriculumAndBatchListForTabulationBatchWiseUrl)'
+     )">
+    <div class="widget" show="ResultComponentSettingSectionAB.length>0">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption "><b> </b></span>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-md-6">   
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <td style="width: 130px">Select Semester</td>
+                                    <td>
+                                        <select ng-model="SelectedSemester" ng-change="getCurriculumAndBatchListForTabulationBatchWise()"
+                                                ng-options="option.Name for option in SemesterList " ng-init="" class="form-control">
+                                            @*<option value="" label="" class="">---Select Semester---</option>*@
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Select Program
+                                    </td>
+                                    <td>
+                                        <select ng-model="SelectedProgram" ng-change="getCurriculumAndBatchListForTabulationBatchWise()"
+                                                ng-options="option.ShortName for option in ProgramList | filter:{SemesterDurationEnumId : SelectedSemester.SemesterDurationEnumId}" ng-init="" class="form-control">
+                                            @*<option value="" label="" class="">---Select Dept---</option>*@
+                                        </select>
+                                    </td>
+
+                                </tr>
+                                @*<tr>
+                                    <td>
+                                        Select Level Term
+                                    </td>
+                                    <td>
+                                        <select ng-model="SelectedLevelTermId"
+                                                ng-change="ngChangeLevelterm(SelectedLevelTermId)"
+                                                ng-options="option.Id as option.Name for option in LevelTermList " ng-init="" class="form-control">
+                                        </select>
+                                    </td>
+                                </tr>*@
+
+                                <tr>
+                                    <td>
+                                        Select Batch
+                                    </td>
+                                    <td>
+                                        <select ng-model="SelectedBatchId"
+                                                ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control">
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Select Curriculum </td>
+                                    <td>
+                                        <select ng-model="SelectedCurriculumId" 
+                                                ng-options="option.Id as 'Students of '+option.ShortName for option in CurriculumList " ng-init="" class="form-control">
+                                            <option value="" label="" class="">---Select All Student---</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a target="_blank" href="@(viewTabulationUrl)?SemesterId={{SelectedSemesterId}}&programId={{SelectedProgramId}}&curriculumId={{SelectedCurriculumId}}&continuingBatchId={{SelectedBatchId}}&remark={{Remark}}&stdPerPage=33"
+                                           class="btn btn-xs btn-success" style="width: 180px;"><i class="fa fa-eye"></i>View Tabulation</a>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

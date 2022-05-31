@@ -1,0 +1,43 @@
+﻿@using EMS.DataAccess.Data
+@{
+    ViewBag.Title = "Student Profile";
+} 
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/Student/ProfileManager/_ProfileManager.js?v=19"></script>
+    
+    <script src="~/Areas/Admission/Views/Student/ProfileManager/_StdSemWiseScholarshipSettings.js?v=2"></script>
+    <script src="~/Areas/Admission/Views/Student/ProfileManager/_UserLog.js?v=1"></script>
+}
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-body no-padding">
+                <div class="widget-main admission-form">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs" id="myTab9">
+                            <li class="tab-red"><a data-toggle="tab" href="#Summary" aria-expanded="false">Summary</a></li>
+                            <li class="active"><a data-toggle="tab" href="#ProfileManager" aria-expanded="true">Profile</a></li>
+                            <li class="tab-red" style="float: right; border: none !important;">
+                                <div class="widget-buttons">
+                                    <a href="#" data-toggle="maximize">
+                                        <i class="fa fa-expand"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="tab-content no-padding" ng-controller="ProfileManager">
+                            <div id="Summary" class="tab-pane">
+                                @Html.Partial("~/Areas/Admission/Views/Student/_Summary.cshtml")
+                            </div>
+                            <div id="ProfileManager" class="tab-pane active">
+                                @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_ProfileManager.cshtml")
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!--Widget Body end-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li>
+            <a title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "HR"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">@currentArea Home</span>
+            </a>
+        </li>
+        @*<li>
+            <a href="@Url.Action("Index", "EmployeeRegistration", new {area = "HR"})">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text"> Employee Registration </span>
+            </a>
+        </li>*@
+        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanAdd))
+        {
+            <li>
+                <a href="@Url.Action("AddEmployee", "ManageEmployee", new {area = "HR"})">
+                    <i class="menu-icon fa fa-plus-circle"></i>
+                    <span class="menu-text"> Add Employee </span>
+                </a>
+            </li>
+        }
+        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.Employee.CanEdit))
+        {
+            <li>
+                <a href="@Url.Action("EmployeeList", "ManageEmployee", new {area = "HR"})">
+                    <i class="menu-icon fa fa-search-plus"></i>
+                    <span class="menu-text"> Search Employee </span>
+                </a>
+            </li>
+        }
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-users"></i>
+                <span class="menu-text">Employee Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+
+                <li>
+                    <a href="@Url.Action("AddEmployee", "ManageEmployee", new {area = "HR"})">
+                        <i class="menu-icon fa fa-users"></i>
+                        <span  class="menu-text">Add Employee </span>
+                    </a>
+                </li>
+                @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.CanView)
+                     || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.CanAdd)
+                     || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.EmployeeManager.CanEdit))
+                {
+                    <li>
+                        <a href="@Url.Action("EmployeeList", "ManageEmployee", new {area = "HR"})">
+                            <i class="menu-icon fa fa-users"></i>
+                            <span class="menu-text"> Employee List </span>
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="@Url.Action("Contacts", "Dashboard", new {area = "HR"})">
+                        <i class="menu-icon fa fa-address-book-o"></i>
+                        <span class="menu-text"> Employee Contacts </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+
+
+        @*@if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanView)
+                    || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanAdd)
+                    || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.RankManager.CanEdit))
+        {
+            <li>
+                <a href="@Url.Action("RankList", "Rank", new {area = "HR"})">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span  class="menu-text"> Rank Management </span>
+                </a>
+            </li>
+        }*@
+        @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.PositionManager.CanView)
+             || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.PositionManager.CanAdd)
+             || PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.PositionManager.CanEdit))
+        {
+            <li>
+                <a href="@Url.Action("PositionList", "Position", new {area = "HR"})">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text"> Position Management </span>
+                </a>
+            </li>
+        }
+
+        @if (SiteSettings.Instance.IsPayrollSystemEnabled)
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-cog"></i>
+                    <span class="menu-text"> Payroll Management </span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="@Url.Action("PayrollList", "Payroll", new {area = "HR"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text"> Payroll List </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("SalaryTemplateList", "SalaryTemplate", new {area = "HR"})">
+                            <i class="menu-icon fa fa-location-arrow"></i>
+                            <span class="menu-text"> Salary Template </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("MonthlyPayslipManager", "MonthlyPayslip", new {area = "HR"})">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text" style="font-size: 10px"> Monthly Payslip Manager</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-files-o"></i>
+                    <span class="menu-text"> Payroll Reports </span>
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.Reports.CanViewMonthlySalarySummaryReport))
+                    {
+                        <li>
+                            <a href="@Url.Action("MonthlySalarySummary", "Report", new {area = "HR"})">
+                                <i class="menu-icon fa fa-files-o"></i>
+                                <span class="menu-text" style="font-size: 10px">Monthly Salary Summary</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.Reports.CanViewMonthlySalaryDetailsReport))
+                    {
+                        <li>
+                            <a href="@Url.Action("MonthlySalaryDetails", "Report", new { area = "HR" })">
+                                <i class="menu-icon fa fa-files-o"></i>
+                                <span class="menu-text" style="font-size: 10px">Monthly Salary Details</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.Reports.CanViewMonthlySalaryWithBankDetails))
+                    {
+                        <li>
+                            <a href="@Url.Action("MonthlySalaryReportWithBankDetails", "Report", new { area = "HR" })">
+                                <i class="menu-icon fa fa-files-o"></i>
+                                <span class="menu-text" style="font-size: 10px">Salary With Bank Details</span>
+                            </a>
+                        </li>
+                    }
+                    @if (PermissionUtil.HasPermission(PermissionCollection.HumanResourceArea.Reports.CanViewYearlySalarySummaryReport))
+                    {
+                        <li>
+                            <a href="@Url.Action("YearlySalarySummary", "Report", new {area = "HR"})">
+                                <i class="menu-icon fa fa-files-o"></i>
+                                <span class="menu-text" style="font-size: 10px">Yearly Salary Summary</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

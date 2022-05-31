@@ -1,0 +1,237 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Web.Jsons.Custom.Academic.ResultModel
+@model String 
+
+@{
+    var remark = Request.QueryString["remark"];//ViewContext.RouteData.Values["id"];
+    
+}
+ 
+
+<table width="100%">
+
+    <tbody>
+        <tr>
+            <td width="25%">
+                <table width="80%" border="1" style="border-collapse: collapse; width: 240px;">
+                    <tbody>
+                        <tr>
+                            <td align="center" style="padding: 5px">
+                                <font face="Arial, Arial, Helvetica" size="1">GRADING SYSTEM</font>
+                                <table border="1" width="90%" style="border-collapse: collapse; margin: 5px">
+                                    <tbody>
+                                    <tr align="center">
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Grade</font></td>
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Grade Point</font></td>
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Marks</font></td>
+
+                                    </tr>
+                                        @{
+                                            float maxScoreStartLimit = 0;
+
+                                            List<Aca_GradingPolicyOption> gradingPolicyOptionList = ViewBag.GradingPolicyOptionList;
+
+                                            if (gradingPolicyOptionList.Count > 0)
+                                        {
+                                            maxScoreStartLimit = gradingPolicyOptionList.Max(x => x.ScoreStartLimit);
+                                        }
+
+                                        }
+                                        @foreach (var gradingPolicyOption in gradingPolicyOptionList)
+                                        {
+                                            <tr align="center">
+                                                
+                                                <td>
+                                                    <font face="Arial, Arial, Helvetica" size="1">
+                                                        @gradingPolicyOption.Grade
+                                                    </font>
+                                                </td>
+                                                <td>
+                                                    <font face="Arial, Arial, Helvetica" size="1">
+                                                        @if (gradingPolicyOption.GradePoint == 0)
+                                                        {
+                                                            <span>@gradingPolicyOption.GradePoint</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@gradingPolicyOption.GradePoint.ToString("##.00")</span>
+                                                        }
+                                                    </font>
+                                                </td>
+                                                <td>
+                                                    <font face="Arial, Arial, Helvetica" size="1">
+                                                        @if (gradingPolicyOption.ScoreStartLimit <= 0)
+                                                        {
+                                                            <span>0</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@Math.Round((double) gradingPolicyOption.ScoreStartLimit, 0) </span>
+                                                        }
+                                                        @if (gradingPolicyOption.ScoreStartLimit == maxScoreStartLimit)
+                                                        {
+                                                            <span>- 100</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (gradingPolicyOption.ScoreEndLimit != null)
+                                                            {
+                                                                <span>- @(decimal.Truncate((decimal) gradingPolicyOption.ScoreEndLimit)) </span>
+                                                            }
+                                                        }
+                                                    </font>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td valign="bottom" align="center" style="padding: 15px; padding-bottom: 0px;">
+                <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoColorSolo)" border="0" height="100" /><br>
+                <font face="times" size="6" style="white-space: nowrap;">@SiteSettings.Instance.InstituteName</font>
+               <br>
+               @* <font face="times" size="4">Name of Institution: </font><br>*@
+                <font face="times" size="4">
+                    <b>
+                        Tabulation Sheet for the
+                    </b>
+                    @ViewBag.ProgramName,&nbsp;&nbsp;
+                </font><br>
+                <font face="times" size="4">
+                    @ViewBag.CurriculumName,&nbsp;&nbsp;
+                </font><br>
+                <font face="times" size="4">
+                    @ViewBag.TabulationFilterName
+                    @*@ViewBag.StudyLevelTerm*@ @*LEVEL-1 TERM-II*@,
+                    @ViewBag.ExamName,
+                    held in @ViewBag.ExamDate @*Nov-Dec,&nbsp;2015*@
+                </font>
+
+                @if (remark != null || remark != "")
+                {
+                    <br/>
+                    <font face="times" size="4">
+                        @remark
+                    </font>
+                }
+
+            </td>
+            <td  width="25%" align="right">
+                @{
+                    ResultStatistics statistics = ViewBag.ResultStatistics ;
+                    if (statistics == null)
+                    {
+                        statistics=new ResultStatistics();
+                    }
+                }
+                <table width="80%" border="1" style="border-collapse: collapse; height: 144px; width: 240px; display: none;">
+                    <tbody>
+                    <tr>
+                        <td align="center" style="padding: 5px">
+                            <font face="Arial, Arial, Helvetica" size="1">STATISTICS OF RESULT (Total Students: @ViewBag.TotalStudent)</font>
+
+                            @*<table border="1" width="90%" style="border-collapse: collapse; margin: 5px" cellpadding="5">
+                                <tbody>
+                                <tr align="center">
+                                    <td colspan="2"><font face="Arial, Arial, Helvetica" size="1">Number<br>Admitted</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Discontinued</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Dismissed</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Number<br>Appeared</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Total No<br>Passed</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">% of<br>Passes</font></td>
+                                </tr>
+
+                                <tr align="center">
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Male</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">@statistics.TotalMale</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td class="appeared_male"><font face="Arial, Arial, Helvetica" size="1" id="appeared_male">@statistics.TotalMale</font></td>
+                                    <td class="passed_male"><font face="Arial, Arial, Helvetica" size="1" id="passed_male">@statistics.TotalMalePassed</font></td>
+                                    <td class="percentage_male"><font face="Arial, Arial, Helvetica" size="1" id="percentage_male">@(((float)statistics.TotalMalePassed / (float)statistics.TotalMale*100).ToString("f2"))</font></td>
+                                </tr>
+                                <tr align="center">
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Female</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">@statistics.TotalFemale</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td class="appeared_female"><font face="Arial, Arial, Helvetica" size="1" id="appeared_female">@statistics.TotalFemale</font></td>
+                                    <td class="passed_female"><font face="Arial, Arial, Helvetica" size="1" id="passed_female">@statistics.TotalFemalePassed</font></td>
+                                    <td class="percentage_female"><font face="Arial, Arial, Helvetica" size="1" id="percentage_female">@(((float)statistics.TotalFemalePassed / (float)statistics.TotalFemale * 100).ToString("f2"))</font></td>
+                                </tr>
+                                <tr align="center">
+                                    <td><font face="Arial, Arial, Helvetica" size="1">Total</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">@(statistics.TotalMale+ statistics.TotalFemale)</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td><font face="Arial, Arial, Helvetica" size="1">0</font></td>
+                                    <td class="appeared_total"><font face="Arial, Arial, Helvetica" size="1" id="appeared_total">@(statistics.TotalMale + statistics.TotalFemale)</font></td>
+                                    <td class="passed_total"><font face="Arial, Arial, Helvetica" size="1" id="passed_total">@(statistics.TotalMalePassed + statistics.TotalFemalePassed)</font></td>
+                                    <td class="percentage_total"><font face="Arial, Arial, Helvetica" size="1" id="percentage_total">@(((float)(statistics.TotalMalePassed + statistics.TotalFemalePassed) / (float)(statistics.TotalMale + statistics.TotalFemale) * 100).ToString("f2"))</font></td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>*@
+                            
+                            <table border="1" width="90%" style="border-collapse: collapse; margin: 5px">
+                                <tbody>
+                                    <tr align="center">
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Grade</font></td>
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Count</font></td>
+                                        <td><font face="Arial, Arial, Helvetica" size="1">Percentage (%)</font></td>
+                                    </tr>
+                                    @{
+                                        //float maxScoreStartLimit = 0;
+
+                                        List<ResultStatisticsByGrade> resultStatisticsByGradeList = ViewBag.ResultStatisticsByGradeList;
+
+                                        /*if (gradingPolicyOptionList.Count > 0)
+                                        {
+                                            maxScoreStartLimit = gradingPolicyOptionList.Max(x => x.ScoreStartLimit);
+                                        }*/
+
+                                    }
+                                    @foreach (var statisticsByGrade in resultStatisticsByGradeList)
+                                    {
+                                        <tr align="center">
+
+                                            <td>
+                                                <font face="Arial, Arial, Helvetica" size="1">
+                                                    @statisticsByGrade.Grade
+                                                </font>
+                                            </td>
+                                            <td>
+                                                <font face="Arial, Arial, Helvetica" size="1">
+                                                    @statisticsByGrade.TotalStudentGet
+                                                </font>
+                                            </td>
+                                            <td>
+                                                <font face="Arial, Arial, Helvetica" size="1">
+                                                    @statisticsByGrade.Percentage.ToString("0.##") %
+                                                </font>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+
+                            
+
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </td>
+        </tr>
+
+    </tbody>
+</table>

@@ -1,0 +1,449 @@
+﻿@using System.Xml.Linq
+@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Employee Dashboard";
+
+    //WebApi link for single row
+    //var testurl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetDate", area = "Employee" });
+    var getSemesterListByFacultyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetFacultySemesterClassList", area = "Employee" });
+    var getClassListBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetClassListBySemesterId", area = "Employee" });
+
+}
+
+<div class="row">
+    @if (HttpUtil.Profile.DateOfBirth.Month == DateTime.Now.Month
+             && HttpUtil.Profile.DateOfBirth.Day == DateTime.Now.Day)
+    {
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="well margin-bottom-10 bg-magenta bordered-left bordered-yellow">
+                <h4><i class="fa fa-birthday-cake"></i> Happy Birthday to @HttpUtil.Profile.Name!</h4>
+                <p>
+                    Wishing you great achievements in this career, And I hope that you have a great day today!
+                </p>
+            </div>
+        </div>
+    }
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="well margin-bottom-10 bg-purple">
+            <h4 class="no-margin">@HttpUtil.GetWelcomeMessageToUser()<i class="fa fa-exclamation"></i> @HttpUtil.Profile.RankName <strong>@HttpUtil.Profile.Name</strong></h4>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bg-lightred">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span  class="widget-caption">Important Links</span>
+                <div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12 col-xs-12">
+                        <div class="small-box bg-blue-o">
+                            <div class="inner">
+                                <h2>
+                                    Profile<br/>Information
+                                </h2>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <a href="@Url.Action("Index", "Profile", new {area = "Employee"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-xs-12">
+                        <div class="small-box bg-darkorange">
+                            <div class="inner">
+                                <h2>
+                                    Change<br/>Password
+                                </h2>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-cog"></i>
+                            </div>
+                            <a href="@Url.Action("ChangePassword", "CommonManager", new {area = ""})" class="small-box-footer">Update <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="small-box bg-green">
+                                <div class="inner">
+                                    <h2>
+                                        Library <br />Books
+                                    </h2>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <a href="@Url.Action("Index", "Library", new {area = "Employee"})" class="small-box-footer">Search <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="small-box bg-maroon-o">
+                                <div class="inner">
+                                    <h2>
+                                        Offered <br />Courses
+                                    </h2>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-files-o"></i>
+                                </div>
+                                <a href="@Url.Action("Index", "OfferedCourses", new {area = "Employee"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+        @*<div class="widget">
+                <div class="widget-header bordered-bottom bordered-danger">
+                    <i class="widget-icon fa fa-calendar  "></i> <span  class="widget-caption">Current Events</span>
+                </div><!--Widget Header-->
+                <div class="widget-body" style="max-height: 300px;overflow: auto;">
+                    <style type="text/css">
+                        .scheduleTable {
+                            width: 100%;
+                        }
+
+                            .scheduleTable td {
+                                padding: 2px;
+                                border-top: 1px solid #f5f1f1;
+                                font-size: 12px;
+                            }
+
+                            .scheduleTable tr:first-child > td {
+                                border-top: none;
+                            }
+                    </style>
+                    <p>
+                        <table class="table table-bordered ">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        <label for="">Day</label>
+                                    </td>
+                                    <td>
+                                        <div>Event</div>
+                                    </td>
+                                    <td>
+                                        <div>Time</div>
+                                    </td>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label for="Today">Today</label>
+                                    </td>
+                                    <td>
+                                        <div>No Class On This Day</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="Tomorrow">Tomorrow</label>
+                                    </td>
+                                    <td>
+                                        <div>Comdt Parade</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="">02-Jun-2016</label>
+                                    </td>
+                                    <td>
+                                        <div>Football Cmpt – CSE Dept</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="">03-Jun-2016</label>
+                                    </td>
+                                    <td>
+                                        <div>Seminar/Workshop – NSE Dept</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="">04-Jun-2016</label>
+                                    </td>
+                                    <td>
+                                        <div> Thesis/ Proj wk of Lvl-4 of all Depts – 04 wks</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="">05-Jun-2016</label>
+                                    </td>
+                                    <td>
+                                        <div>Seminar on Cyber Security/Cloud Computing/Big Data</div>
+                                    </td>
+                                    <td>
+                                        <div></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
+                </div><!--Widget Body-->
+            </div><!--Widget-->*@
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-12">
+
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-danger red">
+                <i class="widget-icon fa fa-tasks  "></i>
+                <span  class="widget-caption  red">Notice & News</span>
+            </div><!--Widget Header-->
+            <div class="widget-body" style="max-height: 300px; overflow: auto;">
+                <div class="orders-container">
+                    @*<div class="orders-header">
+                            <h6>Latest Orders</h6>
+                        </div>*@
+                    @{
+                        //First get the feed. Make a Uri instance out of it.
+                        var rssFeed = new Uri("https://www.eub.edu.bd/category/notice/feed/");
+                        HttpWebResponse response = null;
+                        //Then perform a GET request.
+                        try
+                        {
+                            //var request = (HttpWebRequest)WebRequest.Create(rssFeed);
+                            //request.Method = "GET";
+                            //response = (HttpWebResponse)request.GetResponse();
+                        }
+                        catch (Exception ex)
+                        {
+                            response = null;
+                        }
+                    }
+                    <ul class="orders-list">
+                        @*//Get the response stream and read it to download the contents of the feed.*@
+                        @if (response != null)
+                        {
+                            using (var reader = new StreamReader(response.GetResponseStream()))
+                            {
+                                string feedContents = null;
+                                XDocument document = null;
+                                try
+                                {
+                                    if (reader != null)
+                                    {
+                                        feedContents = reader.ReadToEnd();
+                                    }
+                                    //Still within the above using statement use LINQ to XML to parse the downloaded content
+                                    //and extract the information you need.
+                                    if (feedContents != null)
+                                    {
+                                        document = XDocument.Parse(feedContents);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    document = null;
+                                }
+                                if (document != null)
+                                {
+                                    var posts = (from p in document.Descendants("item")
+                                                 select new
+                                                 {
+                                                     Title = p.Element("title").Value,
+                                                     Link = p.Element("link").Value,
+                                                     PubDate = DateTime.Parse(p.Element("pubDate").Value)
+                                                 }).ToList();
+                                    foreach (var post in posts)
+                                    {
+                                        <li class="order-item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 item-left">
+                                                    <div class="item-booker">
+                                                        <a target="_blank" href="@post.Link">
+                                                            @post.Title
+                                                        </a>
+                                                    </div>
+                                                    <div class="item-time">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <span >@post.PubDate</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <a class="item-more" target="_blank" href="@post.Link">
+                                                <i></i>
+                                            </a>
+                                        </li>
+                                }
+                            }
+                        }
+                    }
+
+                        @*<li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 item-left">
+                                    <div class="item-booker">
+                                        <a target="_blank" href="Uploads/tmp/notice/18-07-2020.pdf">
+                                            অনলাইনে অনুষ্ঠিত শিক্ষা কার্যক্রমের ক্লাসসমূহে ছাত্র-ছাত্রীদের উপস্থিতি বৃদ্ধির বিষয়ে ১৮ ই জুলাই ২০২০ তারিখে অনুষ্ঠিত মত বিনিময় সভার কার্যবিবরণী।
+                                        </a>
+                                    </div>
+                                    <div class="item-time">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>18-07-2020</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="item-more" target="_blank" href="Uploads/tmp/notice/18-07-2020.pdf">
+                                <i></i>
+                            </a>
+                        </li>*@
+                    </ul>
+                    <div class="orders-footer">
+                        <a class="show-all" target="_blank" href="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteWebsite)/"><i class="fa fa-angle-down"></i> Show All</a>
+                        <div class="help">
+                            <a target="_blank" title="ask for help!" href="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteWebsite)"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Widget Body-->
+        </div>
+    </div>
+
+</div>
+
+
+@section ScriptSection
+{
+    <script src="~/Areas/Employee/Views/Dashboard/index.js?v=3"></script>
+    @*<script src="~/assets/custom/lib/xdsoftDateTimePicker/datetime.js"></script>*@
+
+
+    @*<script>
+            $(document).keydown(function (e) {
+                //if (e.which === 89 && e.ctrlKey) {
+                //    alert('control + y');
+                //}
+                //else if (e.which === 90 && e.ctrlKey) {
+                //    alert('control + z');
+                //}
+
+
+                if (e.which === 89 && e.ctrlKey) {
+                    log('control + y');
+                }
+                if (e.which === 89 && e.altKey) {
+                    log('alt + y');
+                }
+
+                log(e.which);
+            });
+        </script>*@
+}
+@Html.Partial("~/Areas/Employee/Views/Dashboard/_CourseList.cshtml")
+@*
+    <div class="widget">
+        <div class="widget-header bg-lightred">
+            <i class="widget-icon fa fa-info-circle"></i>
+            <span  class="widget-caption">Important Links</span>
+            <div class="widget-buttons">
+                <a href="#" data-toggle="maximize">
+                    <i class="fa fa-expand"></i>
+                </a>
+                <a href="#" data-toggle="collapse">
+                    <i class="fa fa-minus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-blue-o">
+                        <div class="inner">
+                            <h2>Profile<br />Information</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "Profile", new {area="Employee"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-darkorange">
+                        <div class="inner">
+                            <h2>Secure<br />Password</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-cog"></i>
+                        </div>
+                        <a href="@Url.Action("ChangePassword", "CommonManager", new {area=""})" class="small-box-footer">Update <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h2>Library <br />Books</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "Library", new {area="Employee"})" class="small-box-footer">Search <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-maroon-o">
+                        <div class="inner">
+                            <h2>Offered <br />Courses</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-files-o"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "OfferedCourses", new {area="Employee"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-green-o">
+                        <div class="inner">
+                            <h2>Employee <br />Contacts</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-address-book"></i>
+                        </div>
+                        <a href="@Url.Action("Contacts", "Dashboard", new {area="Employee"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-azure">
+                        <div class="inner">
+                            <h2>Students’ <br />Parade State</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-braille"></i>
+                        </div>
+                        <a target="_blank" href="@Url.Action("Student", "ParadeState", new {area = ""})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+*@

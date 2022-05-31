@@ -1,0 +1,448 @@
+﻿
+
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model bool?
+@{
+
+    var model = Model ?? true;
+    var ListName = "SemesterDebitList";
+    var AmountName = "DebitAmount";
+    var printLink = Url.Action("StudentSemesterBill", "Report", new { area = "Accounts" });
+    var SemesterAmountName = "TotalDebitAmount";
+    var Colspan = 2;
+    if (!model)
+    {
+        Colspan = 3;
+        ListName = "SemesterCreditList";
+        AmountName = "CreditAmount";
+        SemesterAmountName = "TotalCreditAmount";
+        printLink = Url.Action("StudentCollectionReport", "Report", new { area = "Accounts" });
+    }
+
+    var SemesterName = "SemesterName";
+
+}
+
+<div ng-show="@(ListName)==null || @(ListName).SemesterList==null" class="alert alert-danger fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> This Student Don't Have Any Payment Hostory!
+</div>
+<div ng-hide="@(ListName)==null || @(ListName).SemesterList==null">
+    @*<br />
+    <div class="main-body" style="padding: 10px">
+        <table class="table-bordered table-border" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Package Amount: {{PackageDetails.TotalPayableAfterDiscount|number:2}}</th>
+                    <th>
+                        Net Payable: {{SemesterDebitList.TotalDebitAmount|number:2}}
+                        $1${{PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.DebitExcludedPackageAmount|number:2}}#1#
+                    </th>
+                    <th>Net Paid: {{@(ListName).TotalCreditAmount|number:2}}</th>
+
+                    @if (HttpUtil.Profile.UserTypeId != (byte)User_Account.UserTypeEnum.Student)
+                    {
+                        <th class="hide-on-print" rowspan="2">
+                            <a class="btn btn-blue" target="_blank" href="@printLink?stdId={{StudentId}}"><i class="fa-fw fa fa-print"></i> Print</a>
+                        </th>
+                    }
+                </tr>
+                <tr>
+
+                    <th>Extra Bill: {{SemesterDebitList.DebitExcludedPackageAmount|number:2}}</th>
+                    <th>Current Due/Balance: {{@(ListName).TotalBalance|number:2}}</th>
+                    <th>Net Due/Balance: {{@(ListName).TotalBalance|number:2}} $1${{PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.DebitExcludedPackageAmount-@(ListName).TotalCreditAmount|number:2}}#1#</th>
+                </tr>
+            </thead>
+        </table>
+    </div>*@
+
+
+    <div class="main-body" style="padding: 10px">
+        <table style="width: 100%" class="table-bordered table-border">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    @if (!model)
+                    {
+                        <th>Payslip ID</th>
+                    }
+                    <th>Transaction</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="stdCollection in @(ListName).SemesterList">
+                <tr class="bg-gray text-bold text-center" style="background: lightgray !important;">
+                    <td class="text-center " colspan="@(Colspan+1)">{{stdCollection.SemesterName}} ({{stdCollection.@(SemesterAmountName)|number:2}})</td>
+                </tr>
+                <tr ng-repeat="trans in stdCollection.TransactionList">
+                    <td class="text-top ">{{trans.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}}</td>
+                    @if (!model)
+                    {
+                        <td class="text-top ">
+                            @if (HttpUtil.Profile.UserTypeId == (byte)User_Account.UserTypeEnum.Student)
+                            {
+                                <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                    {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                </span>
+                                <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                    {{trans.@Acnt_StdTransaction.Property_Id}}
+                                </span>
+                            }
+                            else
+                            {
+                                <a class=""
+                                   target="_blank"
+                                   ng-href="@Url.Action("StudentMoneyReceipt", "Report", new {area = "Accounts"})?transId={{trans.@Acnt_StdTransaction.Property_Id}}&stdId={{StudentId}}"
+                                   style="">
+                                    <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                        {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                    </span>
+                                    <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                        {{trans.@Acnt_StdTransaction.Property_Id}}
+                                    </span>
+                                </a>
+                            }
+                            <span ng-show="trans.@(Acnt_StdTransaction.Property_ManualPaySlipNo).length>0">
+                                [{{trans.@Acnt_StdTransaction.Property_ManualPaySlipNo}}]
+                            </span>
+                        </td>
+                    }
+                    <td class="trans-name text-bold">
+                        {{trans.Name}}
+                        <div ng-class="{'text-danger': !transDtl.IsPackagePayment}" ng-repeat="transDtl in trans.StdTransactionDetailListJson">
+                            {{transDtl.Name}} ({{transDtl.Amount|number:2}})
+
+                            @if (model)
+                            {
+                                <span ng-show="!transDtl.IsPackagePayment" title="This Bill is Exluded From Package Payment.">(Excluded)</span>
+                            }
+                            <span ng-show="transDtl.Remark!='' && transDtl.Remark!=null" class="remark" style="font-size: 10px">({{transDtl.Remark}}) </span>
+
+                        </div>
+                    </td>
+                    <td class="text-top">{{trans.@(AmountName)|number:2}}</td>
+                </tr>
+            </tbody>
+            <tbody>
+            @if (SiteSettings.Instance.Student.DebitTransactionCanView)
+            {
+                <tr class="text-bold">
+                    <td class="text-right" colspan="@Colspan">Current Bill</td>
+                    <td>{{@(ListName).TotalDebitAmount|number:2}}</td>
+                </tr>
+            }
+            @if (SiteSettings.Instance.Student.CreditTransactionCanView)
+            {
+                <tr class="text-bold">
+                    <td class="text-right" colspan="@Colspan">Total Paid</td>
+                    <td>{{@(ListName).TotalCreditAmount|number:2}}</td>
+                </tr>
+            }
+            @if (SiteSettings.Instance.Student.DebitTransactionCanView && SiteSettings.Instance.Student.CreditTransactionCanView)
+            {
+                <tr class="text-bold">
+                    <td class="text-right" colspan="@Colspan">Current Due/Balance</td>
+                    <td>{{@(ListName).TotalBalance|number:2}}</td>
+                </tr>
+            }
+            
+            @*<tr class="text-bold">
+                        <td class="text-right" colspan="@Colspan">Net Due/Balance</td>
+                        <td>{{PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.DebitExcludedPackageAmount-@(ListName).TotalCreditAmount|number:2}}</td>
+                    </tr>*@
+            </tbody>
+        </table>
+    </div>
+    @*<div class="main-body page-break" style="padding: 10px">
+        <table style="border: none !important; width: 100%;">
+            <tr>
+                <td style="border: none;">
+                    <table style="width: 100%; border: none !important;" class="table-bordered table-border">
+                        <thead>
+                            <tr class="thead-bg-gray">
+                                <th colspan="4" style="text-align: center;">Extra Payable Bill (Excluded Package)</th>
+                            </tr>
+                            <tr class="thead-bg-gray">
+                                <th>Date</th>
+                                @if (!model)
+                                {
+                                    <th>Payslip ID</th>
+                                }
+                                <th>Transaction</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="trans in @(ListName).ExcludedPackageTransactionJsonList">
+                                <td class="text-top ">
+                                    {{trans.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}} ({{trans.@SemesterName}})
+                                </td>
+                                @if (!model)
+                                {
+                                    <td class="text-top ">
+                                        @if (HttpUtil.Profile.UserTypeId == (byte)User_Account.UserTypeEnum.Student)
+                                        {
+                                            <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                            </span>
+                                            <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                {{trans.@Acnt_StdTransaction.Property_Id}}
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <a class=""
+                                               target="_blank"
+                                               ng-href="@Url.Action("StudentMoneyReceipt", "Report", new {area = "Accounts"})?transId={{trans.@Acnt_StdTransaction.Property_Id}}&stdId={{StudentId}}"
+                                               style="">
+                                                <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                    {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                                </span>
+                                                <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                    {{trans.@Acnt_StdTransaction.Property_Id}}
+                                                </span>
+                                            </a>
+                                        }
+                                        <span ng-show="trans.@(Acnt_StdTransaction.Property_ManualPaySlipNo).length>0">
+                                            [{{trans.@Acnt_StdTransaction.Property_ManualPaySlipNo}}]
+                                        </span>
+                                    </td>
+                                }
+                                <td colspan="2">
+                                    <table class="table-bordered table-no-bordered excludedPackage-table" style="border: none !important; width: 100%;">
+                                        <tr ng-repeat="transDtl in trans.StdTransactionDetailListJson">
+                                            <td>
+                                                <div ng-class="{'text-danger': !transDtl.IsPackagePayment}">
+                                                    {{transDtl.Name}}
+                                                </div>
+                                            </td>
+                                            <td ng-class="{'text-danger': !transDtl.IsPackagePayment}" class="text-top">{{transDtl.Amount|number:2}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="text-bold">
+                                <td class="text-right" colspan="@Colspan">Total</td>
+                                <td>{{@(ListName).DebitExcludedPackageAmount|number:2}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 100%; border: none !important; margin-top: 10px;" class="table-bordered table-border">
+                        <thead>
+                            <tr class="thead-bg-gray">
+                                <th colspan="4" style="text-align: center;">Waiver (as Debit)</th>
+                            </tr>
+                            <tr class="thead-bg-gray">
+                                <th>Date</th>
+                                @if (!model)
+                                {
+                                    <th>Payslip ID</th>
+                                }
+                                <th>Transaction</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="trans in @(ListName).WaiverTransactionJsonList">
+                                <td class="text-top ">
+                                    {{trans.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}} ({{trans.@SemesterName}})
+                                </td>
+                                @if (!model)
+                                {
+                                    <td class="text-top ">
+                                        @if (HttpUtil.Profile.UserTypeId == (byte)User_Account.UserTypeEnum.Student)
+                                        {
+                                            <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                            </span>
+                                            <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                {{trans.@Acnt_StdTransaction.Property_Id}}
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <a class=""
+                                               target="_blank"
+                                               ng-href="@Url.Action("StudentMoneyReceipt", "Report", new {area = "Accounts"})?transId={{trans.@Acnt_StdTransaction.Property_Id}}&stdId={{StudentId}}"
+                                               style="">
+                                                <span ng-show="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                    {{trans.@Acnt_StdTransaction.Property_PaySlipId}}
+                                                </span>
+                                                <span ng-hide="trans.@Acnt_StdTransaction.Property_PaySlipId!=null">
+                                                    {{trans.@Acnt_StdTransaction.Property_Id}}
+                                                </span>
+                                            </a>
+                                        }
+                                        <span ng-show="trans.@(Acnt_StdTransaction.Property_ManualPaySlipNo).length>0">
+                                            [{{trans.@Acnt_StdTransaction.Property_ManualPaySlipNo}}]
+                                        </span>
+                                    </td>
+                                }
+                                <td colspan="2">
+                                    <table class="table-bordered table-no-bordered excludedPackage-table" style="border: none !important; width: 100%;">
+                                        <tr ng-repeat="transDtl in trans.StdTransactionDetailListJson">
+                                            <td>
+                                                <div ng-class="{'text-danger': !transDtl.IsPackagePayment}">
+                                                    {{transDtl.Name}}
+                                                </div>
+                                            </td>
+                                            <td ng-class="{'text-danger': !transDtl.IsPackagePayment}" class="text-top">{{transDtl.Amount|number:2}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="text-bold">
+                                <td class="text-right" colspan="@Colspan">Total Waiver</td>
+                                <td>{{@(ListName).WaiverAmount|number:2}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td class="balance-calculation-td" style="padding-left: 15px;">
+                    <table style="width: 100%; border: none !important;" class="table-bordered table-border">
+                        <thead>
+                            <tr class="thead-bg-gray">
+                                <th colspan="4" style="text-align: center;">Balance Calculation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <table class="table-bordered table-no-bordered excludedPackage-table" style="border: none !important; width: 100%;">
+                                        <tr>
+                                            <td>Package Amount</td>
+                                            <td>{{PackageDetails.TotalPayableAfterDiscount|number:2}}</td>
+                                        </tr>
+                                        <tr>
+                                            $1$<td>Extra Bill</td>
+                                                <td>{{SemesterDebitList.DebitExcludedPackageAmount|number:2}}</td>#1#
+                                            <td>Net Payable</td>
+                                            <td>{{SemesterDebitList.TotalDebitAmount|number:2}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <table class="table-bordered table-no-bordered excludedPackage-table" style="border: none !important; width: 100%;">
+                                        $1$<tr>
+                                                <td>Net Payable</td>
+                                                <td>{{PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.DebitExcludedPackageAmount|number:2}}</td>
+                                            </tr>#1#
+                                        <tr>
+                                            <td>Total Paid</td>
+                                            <td>{{SemesterCreditList.TotalCreditAmount|number:2}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="text-bold">
+                                <td class="text-right">Net Due/Balance</td>
+                                <td>
+                                    {{SemesterDebitList.TotalBalance|number:2}}
+                                    $1${{PackageDetails.TotalPayableAfterDiscount+SemesterDebitList.DebitExcludedPackageAmount-@(ListName).TotalCreditAmount|number:2}}#1#
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </div>*@
+</div>
+
+<style>
+    .logo-size {
+        max-width: 55px;
+    }
+
+    .table-border td, .table-border th {
+        border: 1px solid black;
+        padding: 0px 5px;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .main-body {
+        /*width: 7.27in;*/
+        margin: 0 auto;
+    }
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .divider {
+        border-bottom: 1.5px dotted black;
+        margin: 20px 0px !important;
+        padding: 0px !important;
+    }
+
+    .excludedPackage-table, .excludedPackage-table tr, .excludedPackage-table td {
+        border: none !important;
+    }
+
+    .balance-calculation-td {
+        width: 125px !important;
+        border: none !important;
+        vertical-align: top;
+    }
+
+    .thead-bg-gray {
+        background: lightgray !important;
+    }
+
+    @@media print {
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td,
+        .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 1px solid #615c5c !important;
+        }
+
+
+        .excludedPackage-table > thead > tr > th, .table-bordered > tbody > tr > th,
+        .excludedPackage-table > tfoot > tr > th, .table-bordered > thead > tr > td,
+        .excludedPackage-table > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: none !important;
+        }
+    }
+</style>

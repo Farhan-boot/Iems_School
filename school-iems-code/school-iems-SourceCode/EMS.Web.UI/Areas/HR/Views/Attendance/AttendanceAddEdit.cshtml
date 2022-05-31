@@ -1,0 +1,167 @@
+﻿
+<!--File:HR_Attendance Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Attendance";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var AttendanceId = (string) id == null?"0":(string)id;
+    
+    //HR_Attendance WebApi Single Row link   
+    var getAttendanceByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "GetAttendanceById", area = "HR" });
+    var getAttendanceDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "GetAttendanceDataExtra", area = "HR" });
+    var saveAttendanceUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "SaveAttendance", area = "HR" });
+    var deleteAttendanceByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "GetDeleteAttendanceById", area = "HR" });
+
+    //HR_Attendance WebApi List link 
+    var getPagedAttendanceUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "AttendanceApi", action = "GetPagedAttendance", area = "HR"});
+    var getAllAttendanceUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "GetAllAttendance", area = "HR" });
+    var saveAttendanceListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "SaveAttendanceList", area = "HR" });
+    var getAttendanceListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AttendanceApi", action = "GetAttendanceListDataExtra", area = "HR" });
+
+    var editAttendanceByIdPageUrl = Url.Action("AttendanceAddEdit", "Attendance", new { area = "HR" });
+    var listAttendancePageUrl = Url.Action("AttendanceList", "Attendance", new { area = "HR" });
+    
+    //HR_Attendance Angular Functions
+    string getAttendanceById="getAttendanceById";
+    var saveAttendance = "saveAttendance";
+    var getNewAttendance = "getNewAttendance";
+    var refreshPage = "loadPage()";
+    string deleteAttendanceById="deleteAttendanceById";
+    string loadAttendanceExtraData="loadAttendanceExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/Attendance/AttendanceAddEdit.js"></script>
+}
+
+<div id="AttendanceAddEdit" class="row" ng-controller="AttendanceAddEditCtrl" ng-init="Init(
+      '@AttendanceId'
+      ,'@getAttendanceByIdUrl'
+      ,'@getAttendanceDataExtraUrl'
+      ,'@saveAttendanceUrl'
+      ,'@deleteAttendanceByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Attendance.@HR_Attendance.Property_Name!=''">{{(Attendance.@HR_Attendance.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="AttendanceId" ng-Enter="@(getAttendanceById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewAttendance)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listAttendancePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Punch Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="Attendance.@HR_Attendance.Property_PunchTypeEnumId" ng-options="option.Id as option.Name for option in PunchTypeEnumList" title="Select Punch Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Punch Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Punch Time </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="Attendance.@HR_Attendance.Property_PunchTime" class="form-control" placeholder="Enter Punch Time"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Punch Time." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Punch Mode </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="Attendance.@HR_Attendance.Property_PunchModeEnumId" ng-options="option.Id as option.Name for option in PunchModeEnumList" title="Select Punch Mode" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Punch Mode." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Device Id </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Attendance.@HR_Attendance.Property_DeviceId" class="form-control" placeholder="Enter Device Id"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Device Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Attendance.@HR_Attendance.Property_Remarks" class="form-control" placeholder="Enter Remarks"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Attendance.@HR_Attendance.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Attendance.@HR_Attendance.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Employee </td>
+                            <td class="fieldarea">
+                                <select ng-model="Attendance.@HR_Attendance.Property_EmployeeId"
+                                        ng-options="option.Id as option.Name for option in EmployeeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveAttendance)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

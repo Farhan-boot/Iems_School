@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Upcoming Fees Statistics";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/Report/Shared/_IncomeForecastReport.js?v=3"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+
+@Html.Partial("~/Areas/Accounts/Views/Report/Shared/_IncomeForecastReport.cshtml")

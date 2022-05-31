@@ -1,0 +1,153 @@
+﻿
+<!--File:General_Country List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Country List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CountryId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getCountryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryById", area = "Admin" });
+    var getCountryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryDataExtra", area = "Admin" });
+    var saveCountryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "SaveCountry", area = "Admin" });
+    var deleteCountryByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetDeleteCountryById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedCountryUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "CountryApi", action = "GetPagedCountry", area = "Admin"});
+    var getAllCountryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetAllCountry", area = "Admin" });
+    var saveCountryListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "SaveCountryList", area = "Admin" });
+    var getCountryListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CountryApi", action = "GetCountryListDataExtra", area = "Admin" });
+
+    var editCountryByIdPageUrl = Url.Action("CountryAddEdit", "Country", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewCountry = "getNewCountry";
+    var saveCountry = "saveCountry";
+    var deleteCountryById = "deleteCountryById";
+    var deleteCountryByObj = "deleteCountryByObj";
+    //for list
+    var searchCountryList = "searchCountryList";
+    var getPagedCountryList = "getPagedCountryList";
+    var getAllCountryList = "getAllCountryList";
+    var saveCountryList = "saveCountryList";
+    var getCountryListExtraData = "getCountryListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Country/CountryList.js"></script>
+}
+
+
+<div ng-controller="CountryListCtrl"
+     ng-init="Init(
+      '@getPagedCountryUrl'
+     ,'@deleteCountryByIdUrl'
+     ,'@getCountryListDataExtraUrl'
+     ,'@saveCountryListUrl'
+     ,'@getCountryByIdUrl'
+     ,'@getCountryDataExtraUrl'
+     ,'@saveCountryUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Country </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchCountryList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editCountryByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchCountryList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Nationality</th>
+                    <th class="text-center">Calling Code</th>
+                    <th class="text-center">Time Zone</th>
+                    <th class="text-center">Is Enabled</th>
+                    <th class="text-center">Created By Id</th>
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in CountryList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Country.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="">{{row.@General_Country.Property_Name}}</td>
+                    <td class="">{{row.@General_Country.Property_OrderNo}}</td>
+                    <td class="">{{row.@General_Country.Property_Nationality}}</td>
+                    <td class="">{{row.@General_Country.Property_CallingCode}}</td>
+                    <td class="">{{row.@General_Country.Property_TimeZone}}</td>
+                    <td class="">{{row.@General_Country.Property_IsActive}}</td>
+                    <td class="">{{row.@General_Country.Property_CreateById}}</td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editCountryByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteCountryById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

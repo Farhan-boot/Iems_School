@@ -1,0 +1,48 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    var loginHistoryList = HttpUtil.DbContext.UAC_LoginAudit.Where(x => x.UserName == HttpUtil.Profile.UserName)
+        .OrderByDescending(x => x.AuditDate)
+        .ToList();
+    ViewBag.Title = "Login History ("+ loginHistoryList.Count+ " attempts)";
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th class="text-center">SN</th>
+        <th class="text-center">Date</th>
+        <th class="text-center">From Ip</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Mobile</th>
+    </tr>
+    @foreach (var loginHistory in loginHistoryList)
+    {
+        <tr>
+            <td class="text-center">@(loginHistoryList.IndexOf(loginHistory)+1)</td>
+            <td class="">@loginHistory.AuditDate.ToString("MMM dd, yyyy hh:mm:ss tt")</td>
+            <td class="">@loginHistory.FromIp</td>
+            <td class="text-center">
+                @if (loginHistory.StatusEnumId == 1)
+                {
+                    <span  class="badge badge-success">Successful</span>
+                }
+                else
+                {
+                    <span  class="badge badge-danger">Failed</span>
+                }
+            </td>
+            <td class="text-center">
+                @if (loginHistory.IsMobileBrowser)
+                {
+                    <span  class="badge badge-primary">Yes</span>
+                }
+                else
+                {
+                    <span  class="badge badge-info">No</span>
+                }
+            </td>
+        </tr>
+    }
+</table>

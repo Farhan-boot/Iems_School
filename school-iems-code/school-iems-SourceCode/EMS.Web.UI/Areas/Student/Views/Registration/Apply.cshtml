@@ -1,0 +1,68 @@
+﻿@using EMS.Framework.Utils
+@model EMS.DataAccess.Data.User_Student
+@{
+    ViewBag.Title = "Apply Online Course Registration";
+}
+@section StyleSection{
+    <style>
+        .table > tbody > tr > td {
+            padding: 8px;
+        }
+    </style>
+}
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger text-center">@Html.Raw(ViewBag.ErrorMessage)</div>
+}
+<br />
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <table class="table table-bordered">
+            <tr>
+                <td rowspan="7">
+                    <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" alt="@HttpUtil.Profile.Name" class="img-thumbnail" style="width:300px;">
+                </td>
+                <td>User ID</td>
+                <td>@HttpUtil.Profile.UserName</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>@HttpUtil.Profile.Name</td>
+            </tr>
+            <tr>
+                <td>Class Roll No.</td>
+                <td>@Model.ClassRollNo</td>
+            </tr>
+            <tr>
+                <td>Registration No.</td>
+                <td>@Model.RegistrationNo</td>
+            </tr>
+            <tr>
+                <td>Registration Session</td>
+                <td>@Model.RegistrationSession</td>
+            </tr>
+            <tr>
+                <td>CGPA</td>
+                <td>@Model.CGPA.ToString("F")</td>
+            </tr>
+            <tr>
+                <td>Credit Completed</td>
+                <td>@Model.CreditCompleted.ToString("F")</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+
+<br />
+<div class="text-center">
+    @if (string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <a href="@Url.Action("SelectCourses", "Registration", new {area = "Student"})" class="btn btn-success btn-lg"><i class="fa fa-hand-o-right"></i> Next</a>
+    }
+    <a href="@Url.Action("Index", "Registration", new {area = "Student"})" class="btn btn-danger btn-lg"><i class="fa fa-ban"></i> Cancel</a>
+</div>
+
+
+

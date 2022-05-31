@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutThemeCore.cshtml";
+}
+@section HeadSection
+{
+    @RenderSection("HeadSection", required: false)
+}
+@section StyleSection
+{
+    <!--css/angular-->
+    @Styles.Render("~/css/angular")
+    <!--css/lib-->
+    @Styles.Render("~/css/lib")
+    <!--css/custom-->
+    @Styles.Render("~/css/custom")
+
+    @RenderSection("StyleSection", required: false)
+}
+@*<div id="loading-bar-container"></div>*@
+@*<div id="loader" class="loading-spinner" style="display: none;">
+        <i class="fa fa-refresh fa-spin fa-5x fa-fw margin-bottom" style="font-size: 100px;"></i>
+    </div>*@
+
+@RenderBody()
+@*@RenderPage("~/Views/Shared/_PartialModalTemplates.cshtml")*@
+@section ScriptSection
+{
+    <!--js/lib-->
+    @Scripts.Render("~/js/lib")
+    <!--js/angular-->
+    @Scripts.Render("~/js/angular")
+    <!--css/custom-->
+    @Scripts.Render("~/js/custom")
+
+    @RenderSection("ScriptSection", required: false)
+}
+

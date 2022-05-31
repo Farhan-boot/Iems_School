@@ -1,0 +1,312 @@
+@using System.Linq
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model dynamic
+@{
+    ViewBag.Title = "Dashboard";
+    User_Account user = HttpUtil.DbContext.User_Account.Find(HttpUtil.Profile.UserId);
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Student/Views/Dashboard/_CourseList.js?v=1"></script>
+    @*<script src="~/Areas/Student/Views/Dashboard/_BillAndPayment.js"></script>*@
+        @*<script src="~/Areas/Student/Views/Accounts/_bKashDemo.js"></script>*@
+
+}
+
+<div class="row">
+    @if (HttpUtil.Profile.DateOfBirth.Month == DateTime.Now.Month && HttpUtil.Profile.DateOfBirth.Day == DateTime.Now.Day)
+    {
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="well margin-bottom-10 bg-magenta bordered-left bordered-yellow">
+                <h4><i class="fa fa-birthday-cake"></i> Happy Birthday to @HttpUtil.Profile.Name!</h4>
+                <p>
+                    Wishing you great achievements in this career, And I hope that you have a great day today!
+                </p>
+            </div>
+        </div>
+    }
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="well margin-bottom-10 bg-purple">
+            <h4 class="no-margin">@HttpUtil.GetWelcomeMessageToUser()<i class="fa fa-exclamation"></i> @HttpUtil.Profile.RankName <strong>@HttpUtil.Profile.Name</strong></h4>
+        </div>
+    </div>
+</div>
+@if (false)
+{
+    <h6 class="row-title before-success" style="color: red">
+        <b>
+            Attention! Your Online <a href="@Url.Action("Edit", "Profile", new {area = "Student"})" class="small-box-footer">Profile Registration</a> is pending! Please confirm your Profile Information to get Term Result/Registration/Admid Card/Certificate/Transcript.
+        </b>
+    </h6>
+}
+@*<div class="alert alert-danger" style="font-size: 15px">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <strong>Warning!</strong> <span> This system is still under construction. Therefore, you may find some features not alive at this moment.</span>
+
+</div>*@
+@*<h4 class="row-title bordered-top before-darkorange"><i class="fa fa-warning darkorange"></i><span > This system is still under construction. Therefore, you may find some features not alive at this moment.</span></h4>*@
+@*@Html.Partial("~/Areas/Student/Views/Dashboard/_BillAndPayment.cshtml")*@
+
+@*@Html.Partial("~/Areas/Student/Views/Accounts/_bKashDemo.cshtml")*@
+
+
+
+<div class="widget">
+    <div class="widget-header bg-blue">
+        <i class="widget-icon fa fa-info-circle"></i>
+        <span class="widget-caption">Important Links</span>
+        <div class="widget-buttons">
+            <a href="#" data-toggle="maximize">
+                <i class="fa fa-expand"></i>
+            </a>
+            <a href="#" data-toggle="collapse">
+                <i class="fa fa-minus"></i>
+            </a>
+        </div>
+    </div>
+    <div class="widget-body">
+        <div class="row">
+            @if (SiteSettings.Instance.Student.OverallPaymentSummaryCanView ||
+                 SiteSettings.Instance.Student.SemesterPaymentSummaryCanView ||
+                 SiteSettings.Instance.Student.DebitTransactionCanView ||
+                 SiteSettings.Instance.Student.CreditTransactionCanView)
+            {
+
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <a href="@Url.Action("Financial", "Reports", new {area = "Student"})" style="color: white;text-decoration: none">
+                                <h2>
+                                    Check Due & <br />Payments
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-dollar"></i>
+                        </div>
+                        <a href="@Url.Action("Financial", "Reports", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+            }
+
+            @if (SiteSettings.Instance.Student.AdmitCardCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-darkpink">
+                        <div class="inner">
+                            <a href="@Url.Action("AdmitCard", "Reports", new {area = "Student"})"  style="color: white;text-decoration: none">
+                                <h2>
+                                    Admit<br />Card
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-download"></i>
+                        </div>
+                        <a href="@Url.Action("AdmitCard", "Reports", new {area = "Student"})" class="small-box-footer">Download <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            @if (SiteSettings.Instance.Student.SuppleExamCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-aqua-o">
+                        <div class="inner">
+                            <a href="@Url.Action("Index", "SuppleExam", new {area = "Student"})" style="color: white;text-decoration: none">
+                                <h2>
+                                    @SiteSettings.Instance.SuppleExamViewName<br /> Exam
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "SuppleExam", new {area = "Student"})" class="small-box-footer">Apply/Admit Card <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+
+            @if (SiteSettings.Instance.Student.ResultBySingleSemesterCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-maroon-o">
+                        <div class="inner">
+                            <a href="@Url.Action("SemesterWiseResult", "Reports", new {area = "Student"})"  style="color: white;text-decoration: none">
+                                <h2>
+                                    Semester <br />Result
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-files-o"></i>
+                        </div>
+                        <a href="@Url.Action("SemesterWiseResult", "Reports", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+        @if (SiteSettings.Instance.Student.SuppleResultCanView)
+        {
+            <div class="col-lg-3 col-sm-4 col-xs-12">
+                <div class="small-box bg-themesecondary">
+                    <div class="inner">
+                        <a href="@Url.Action("SuppleResult", "Reports", new {area = "Student"})"  style="color: white;text-decoration: none">
+                            <h2>
+                                @SiteSettings.Instance.SuppleExamViewName <br />Result
+                            </h2>
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-files-o"></i>
+                    </div>
+                    <a href="@Url.Action("SuppleResult", "Reports", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        }
+            @if (SiteSettings.Instance.Student.SemesterWiseRegistrationCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-azure">
+                        <div class="inner">
+                            <a href="@Url.Action("RegisteredCourses", "Reports", new {area = "Student"})"  style="color: white;text-decoration: none">
+                                <h2>
+                                    Registered <br />Courses
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <a href="@Url.Action("RegisteredCourses", "Reports", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+
+            @if (SiteSettings.Instance.Student.OfferedCoursesCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-maroon-o">
+                        <div class="inner">
+                            <a href="@Url.Action("Index", "OfferedCourses", new {area = "Student"})"  style="color: white;text-decoration: none">
+                                <h2>
+                                    Offered <br />Courses
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-files-o"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "OfferedCourses", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+       
+        
+        <div class="col-lg-3 col-sm-4 col-xs-12">
+            <div class="small-box bg-green-o">
+                <div class="inner">
+                    <a href="@Url.Action("OnlineCourseRegistration", "Registration", new {area = "Student"})"  style="color: white;text-decoration: none">
+                        <h2>
+                            Online<br />Registration
+                        </h2>
+                    </a>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-paper-plane-o"></i>
+                </div>
+                <a href="@Url.Action("OnlineCourseRegistration", "Registration", new {area = "Student"})" class="small-box-footer">Apply Online <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        @*<div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-darkorange">
+                        <div class="inner">
+                            <h2>Secure<br />Password</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-cog"></i>
+                        </div>
+                        <a href="@Url.Action("ChangePassword", "CommonManager", new {area = ""})" class="small-box-footer">Update <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>*@
+            @if (SiteSettings.Instance.Student.CurriculumOrSyllabusCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-navy-o">
+                        <div class="inner">
+                            <a href="@Url.Action("Index", "Curriculum", new {area = "Student"})" class="small-box-footer">
+                                <h2>
+                                    My Syllabus <br />/ Curriculum
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-compass"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "Curriculum", new {area = "Student"})" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            @if (SiteSettings.Instance.Student.CurriculumOrSyllabusCanView)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h2>Library <br />Books</h2>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        @*@Url.Action("Index", "Library", new { area = "Student" })*@
+                        <a href="#" class="small-box-footer">Search <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            
+            @if (SiteSettings.Instance.Student.IsOpenOnlinePayment)
+            {
+                <div class="col-lg-3 col-sm-4 col-xs-12">
+                    <div class="small-box bg-blue-o">
+                        <div class="inner">
+                            <a href="@Url.Action("Index", "OnlinePayment", new {area = "Student"})"  style="color: white;text-decoration: none">
+                                <h2>
+                                    Online<br />Payment
+                                </h2>
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-dollar"></i>
+                        </div>
+                        <a href="@Url.Action("Index", "OnlinePayment", new {area = "Student"})" class="small-box-footer">Payment <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+        
+
+        @*<div class="col-lg-3 col-sm-4 col-xs-12">
+                <div class="small-box bg-blue-o">
+                    <div class="inner">
+                        <a href="@Url.Action("Index", "Profile", new {area = "Student"})"  style="color: white;text-decoration: none">
+                            <h2>
+                                Profile<br />Information
+                            </h2>
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <a href="@Url.Action("Index", "Profile", new {area = "Student"})" class="small-box-footer">View/Update <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        @Html.Partial("~/Areas/Student/Views/Dashboard/_CourseList.cshtml")
+    </div>
+</div>
+

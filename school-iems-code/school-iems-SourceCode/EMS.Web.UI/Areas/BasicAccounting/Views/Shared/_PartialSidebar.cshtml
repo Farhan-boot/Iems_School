@@ -1,0 +1,218 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea().AddSpacesToSentence();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li class="active">
+            <a title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "BasicAccounting"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">Basic Accounting Home</span>
+            </a>
+        </li>
+        
+        <li>
+            <a href="@Url.Action("VoucherAddEdit", "Voucher", new {area = "BasicAccounting"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text"> Voucher Entry</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("VoucherList", "Voucher", new {area = "BasicAccounting"})">
+                <i class="menu-icon fa  fa-search-plus"></i>
+                <span class="menu-text"> Search Voucher</span>
+            </a>
+        </li>
+       
+        <li >
+            <a href="@Url.Action("LedgerList", "Ledger", new {area = "BasicAccounting"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text"> Ledger List </span>
+            </a>
+        </li>
+        <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-print"></i>
+                <span class="menu-text">Reports</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="display: none;">
+                <li class="">
+                    <a href="@Url.Action("LedgerList", "Ledger", new {area = "BasicAccounting"})" class="menu-dropdown">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text">Ledger Acnt Report</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ChartOfAccounts", "Report", new {area = "BasicAccounting"})">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> Chart Of Acnt Report </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("DayBookManager", "Report", new {area = "BasicAccounting"})">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> Day Book </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ReceiptPaymentManager", "Report", new {area = "BasicAccounting"})">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> Receipt Payment </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("TrialBalanceManager", "Report", new {area = "BasicAccounting"})/?ugc=0">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> Trial Balance </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("TrialBalanceManager", "Report", new {area = "BasicAccounting"})/?ugc=1">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> UGC Trial Balance </span>
+                    </a>
+                </li>
+                <li style="display: none;">
+                    <a href="@Url.Action("BalanceSheet", "Report", new {area = "BasicAccounting"})">
+                        <i class="menu-icon fa  fa-search-plus"></i>
+                        <span class="menu-text"> Balance Sheet </span>
+                    </a>
+                </li>
+                @if (SiteSettings.InstituteKey == "eub" && PermissionUtil.HasPermission(PermissionCollection.AccountingArea.BasicAccounting.Reports.CanViewUgcStaticReports))
+                {
+
+                    <li class="">
+                        <a href="#" class="menu-dropdown">
+                            <i class="menu-icon fa fa-print"></i>
+                            <span class="menu-text">Financial Statements</span>
+                            <i class="menu-expand"></i>
+                        </a>
+                        <ul class="submenu" style="display: none;">
+                            <li style="font-size: 10px">
+                                <a href="@Url.Action("StatementOf16_17", "Report", new {area = "BasicAccounting"})">
+                                    <i class="menu-icon fa  fa-search-plus"></i>
+                                    <span class="menu-text"> Statement of 16-17 </span>
+                                </a>
+                            </li>
+                            <li style="font-size: 10px">
+                                <a href="@Url.Action("StatementOf17_18", "Report", new {area = "BasicAccounting"})">
+                                    <i class="menu-icon fa  fa-search-plus"></i>
+                                    <span class="menu-text"> Statement of 17-18 </span>
+                                </a>
+                            </li>
+                            <li style="font-size: 10px">
+                                <a href="@Url.Action("StatementOf18_19", "Report", new {area = "BasicAccounting"})">
+                                    <i class="menu-icon fa  fa-search-plus"></i>
+                                    <span class="menu-text"> Statement of 18-19 </span>
+                                </a>
+                            </li>
+                            <li style="font-size: 9px">
+                                <a href="@Url.Action("StatementOf19_20", "Report", new {area = "BasicAccounting"})">
+                                    <i class="menu-icon fa  fa-search-plus"></i>
+                                    <span class="menu-text"> Statement of 19-20 </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("DebitVoucher", "Report", new {area = "BasicAccounting"})">
+                            <i class="menu-icon fa  fa-search-plus"></i>
+                            <span class="menu-text"> Voucher </span>
+                        </a>
+                    </li>
+                }
+                
+            </ul>
+        </li>
+
+        <li class="">
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text">General Options</span>
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu" style="display: none;">
+                <li class="">
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Company Acnt Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+
+                        <li>
+                            <a href="@Url.Action("CompanyAccountList", "CompanyAccount", new {area = "BasicAccounting"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("CompanyAccountAddEdit", "CompanyAccount", new {area = "BasicAccounting",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li> 
+
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Branch Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+                        <li>
+                            <a href="@Url.Action("BranchList", "Branch", new {area = "BasicAccounting"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("BranchAddEdit", "Branch", new {area = "BasicAccounting",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#" class="menu-dropdown">
+                        <i class="menu-icon fa fa-location-arrow"></i>
+                        <span class="menu-text">Voucher Type Mgt.</span>
+                        <i class="menu-expand"></i>
+                    </a>
+                    <ul class="submenu" style="display: none;">
+                        <li>
+                            <a href="@Url.Action("VoucherTypeList", "VoucherType", new {area = "BasicAccounting"})">
+                                <i class="menu-icon fa fa-list"></i>
+                                <span class="menu-text">List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("VoucherTypeAddEdit", "VoucherType", new {area = "BasicAccounting",id=0})">
+                                <i class="menu-icon fa fa-plus"></i>
+                                <span class="menu-text">Add New</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

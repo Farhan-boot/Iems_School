@@ -1,0 +1,82 @@
+﻿@using EMS.DataAccess.Data
+@{
+
+    //WebApi link for single row
+    //var testurl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetDate", area = "Employee" });
+    var getSemesterListByFacultyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetFacultySemesterClassList", area = "Employee" });
+    var getClassListBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "DashboardApi", action = "GetClassListBySemesterId", area = "Employee" });
+
+}
+<div class="row"
+     ng-controller="EmployeeDashboardCtrl"
+     ng-init="Init(
+      '@getSemesterListByFacultyUrl'
+     ,'@getClassListBySemesterIdUrl'
+     )">
+    <div class="col-lg-12 col-sm-12 col-xs-12" ng-show="SemesterList!=null && SemesterList.length>0">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky">
+                <i class="widget-icon fa fa-files-o"></i>
+                <span class="widget-caption "><b>Assigned Course List ({{SelectedSemester.Name}})</b></span>
+                <div class="widget-buttons">
+                    <select ng-model="SelectedSemester" ng-change="onChangeSemester()" ng-options="option.Name for option in SemesterList" ng-init="" class="form-control input-sm" style="margin-top: 3px;"></select>
+                </div>
+            </div><!--Widget Header-->
+            <div class="widget-body no-padding">
+
+                <div id="teacherCourseList">
+                    <table class="table table-bordered">
+                        <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center" style="width:31px;">Ser</th>
+                                <th class="text-center hidden-xs hidden-sm" style="width:100px;">Dept.</th>
+                                <th>Title</th>
+                                <th class="text-center">Class Routine</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*SelectedSemester.Aca_ClassListJson*@
+                            <tr ng-repeat="row in ClassList">
+                                <td class="text-center"><a href="#">{{$index+1}}</a></td>
+                                <td class="text-center hidden-xs hidden-sm">
+                                    <strong>{{row.ProgramShortTitle}}</strong>
+                                    @*<strong>{{row.DepartmentShortName}}</strong>*@
+                                    @*<br />({{row.LevelTerm}})*@
+                                    @*<br />({{row.BatchName}})*@
+                                    @*{{row.@Aca_Class.Property_ClassNo}}*@
+                                </td>
+                                <td>
+                                    <strong>{{row.@Aca_Class.Property_Code}} {{row.@Aca_Class.Property_Name}}</strong>
+                                    <br>
+                                    <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassStudentList" target="_blank">[Student List]</a>
+                                    <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#MarkEntry" target="_blank">[Mark Entry]</a>
+                                   
+                                    <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassMaterials" target="_blank">[Class Materials]</a>
+                                    <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassNotices" target="_blank">[Notices]</a>
+                                    <br />
+                                    @*<span style="font-style: italic">(Your Role(s) in Class: <span ng-repeat="role in row.EmployeeInRoleList">{{role}}; </span>)</span>*@
+                                    <a href="@Url.Action("Index", "ClassManagement", new {area = "Employee"})?classId={{row.Id}}&semesterId={{SelectedSemester.Id}}#ClassAttendance" target="_blank">[Manage Attendance]</a>
+                                    <a href="@Url.Action("AddEditAttendance", "ClassAttendanceManager", new {area = "Employee"})?classId={{row.Id}}&settingId=0" target="_blank" style="color: crimson">[Take New Attendance]</a>
+                                    <a href="@Url.Action("PrintManualAttendanceSheet", "ClassAttendanceManager", new {area = "Employee"})?classId={{row.Id}}" target="_blank" style="color: crimson">[Print Attendance Sheet]</a>
+                                    
+                                </td>
+                                <td class="text-center">
+                                    <ul class="no-margin list-unstyled" ng-show="row.Aca_ClassRoutineJsonList.length>0" style="-webkit-padding-start: 2px;">
+                                        <li ng-repeat="cr in row.Aca_ClassRoutineJsonList | orderBy:'DayEnumId'">
+                                            <strong>{{cr.RoutineDetails}}</strong>
+                                            <em ng-hide="cr.@Aca_ClassRoutine.Property_RoomId==null"> {{cr.General_RoomJson.RoomDetails}}</em>
+                                            <em ng-show="cr.@Aca_ClassRoutine.Property_RoomId==null"> N/A</em>
+                                        </li>
+                                    </ul>
+                                    <span class="badge badge-danger graded" ng-hide="row.Aca_ClassRoutineJsonList.length>0">Not Available</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div><!--Widget Body-->
+        </div><!--Widget-->
+    </div>
+</div>

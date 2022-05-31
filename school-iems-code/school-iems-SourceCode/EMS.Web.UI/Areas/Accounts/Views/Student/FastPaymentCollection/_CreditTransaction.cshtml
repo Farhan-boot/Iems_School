@@ -1,0 +1,97 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+
+@{
+    
+
+    //Angular Function
+    string getDeleteUndeleteCreditTransactionByIdStdId = "getDeleteUndeleteCreditTransactionByIdStdId";
+
+    //Angular Property
+    string ThisSemesterCreditTransactionList = "ThisSemesterCreditTransactionList";
+
+
+}
+
+
+<table class="table table-hover table-striped table-bordered fast-payment-collection">
+    <tbody>
+        <tr>
+            <td class="text-bold" colspan="6" style="text-align: center;">
+                Credit (Paid Items) of {{SelectedSemesterName}}
+            </td>
+        </tr>
+        <tr class="text-bold" role="row" style="color: #555555;">
+            <td class="text-center" style="width: 40px;">SN</td>
+            <td>
+                Prticulars
+            </td>
+            <td style="width: 80px;">
+                Amount
+            </td>
+            <td  style="text-align: center">
+                Collector
+            </td>
+            <td>
+                Date
+            </td>
+          
+          
+            <td>Action</td>
+        </tr>
+    </tbody>
+    <tbody>
+        <tr class="bg-white" ng-repeat="row in @ThisSemesterCreditTransactionList"
+            ng-click="editPaymentCollection($index)" ng-class="{ 'active': $index == selectedCollectionTransactionIndex }">
+            <td class="text-center ">
+                {{$index+1}}
+            </td>
+           
+            <td>
+                <b ng-hide="row.@Acnt_StdTransaction.Property_IsSemesterFee">
+                    {{row.@Acnt_StdTransaction.Property_Name}}
+                </b>
+                <a ng-show="row.@Acnt_StdTransaction.Property_IsSemesterFee"
+                   ng-click="LoadPaymentDetails(row.@Acnt_StdTransaction.Property_SemesterId)">
+                    <b>{{row.@Acnt_StdTransaction.Property_Name}}</b>
+                </a>
+            </td>
+            <td  style="text-align: right">
+                {{row.@Acnt_StdTransaction.Property_CreditAmount| number: 2}}
+            </td>
+            <td class="" style="text-align: center">{{row.@Acnt_StdTransaction.Property_CreateByName}}</td>
+            <td class="">{{row.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}}</td>
+            <td>
+                <a class="btn btn-xs btn-success"
+                   title="Print this Collection's Money Receipt."
+                   ng-href="@Url.Action("StudentMoneyReceipt", "Report", new {area = "Accounts"})?transId={{CollectionTransaction.Id}}&stdId={{StudentId}}"
+                   target="_blank"
+                   style="margin: 5px;">
+                    <i class="fa fa-print"></i>
+                </a>
+                @*@if (HttpUtil.IsSupperAdmin())
+                {
+                    <button ng-click="testEditCreditTransactionModalShow(row)" class="btn btn-xs btn-primary">
+                        <i class="fa fa-pencil-square-o"></i> Test
+                    </button>
+                }*@
+                <button ng-click="editCreditTransactionModalShow(row)" class="btn btn-xs btn-primary">
+                    <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button ng-click="@getDeleteUndeleteCreditTransactionByIdStdId (row)" class="btn btn-xs btn-danger">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+           
+            <td class="text-bold" colspan="2">
+                This Semester Paid
+            </td>
+            <td class="text-bold"  style="text-align: right">{{ThisSemesterTotalPaid | number: 2}}</td>
+            <td class="text-center "></td>
+            <td class="text-center "></td>
+            <td class="text-center "></td>
+        </tr>
+    </tbody>
+</table>

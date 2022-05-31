@@ -1,0 +1,313 @@
+﻿
+<!--File:Adm_AdmissionExam Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admission: Add/Edit Admission Circular";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmission.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var AdmissionExamId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getAdmissionExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAdmissionExamById", area = "Admission" });
+    var getAdmissionExamDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetAdmissionExamDataExtra", area = "Admission" });
+    var saveAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "SaveAdmissionExam", area = "Admission" });
+    var deleteAdmissionExamByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "AdmissionExamApi", action = "GetDeleteAdmissionExamById", area = "Admission" });
+
+    //WebApi link for Lis
+    var listAdmissionExamPageUrl = Url.Action("AdmissionExamList", "AdmissionExam", new { area = "Admission" });
+    
+    // Angular Functions
+    string getAdmissionExamById="getAdmissionExamById";
+    var saveAdmissionExam = "saveAdmissionExam";
+    var getNewAdmissionExam = "getNewAdmissionExam";
+    var refreshPage = "loadPage()";
+    string deleteAdmissionExamById="deleteAdmissionExamById";
+    string loadAdmissionExamExtraData="loadAdmissionExamExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admission/Views/AdmissionExam/AdmissionExamAddEdit.js?v=2"></script>
+}
+
+<div id="AdmissionExamAddEdit" class="row" ng-controller="AdmissionExamAddEditCtrl" ng-init="Init(
+      '@AdmissionExamId'
+      ,'@getAdmissionExamByIdUrl'
+      ,'@getAdmissionExamDataExtraUrl'
+      ,'@saveAdmissionExamUrl'
+      ,'@deleteAdmissionExamByIdUrl')">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="AdmissionExam.@Adm_AdmissionExam.Property_Name!=''">{{(AdmissionExam.@Adm_AdmissionExam.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="AdmissionExamId" ng-Enter="@(getAdmissionExamById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewAdmissionExam)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listAdmissionExamPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body no-padding">
+                <div class="row">
+                    
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div class="widget">
+                        <div class="widget-body no-padding">
+                            <div class="widget-main admission-form">
+                                <div class="tabbable">
+                                    <ul class="nav nav-tabs" id="myTab9">
+                                        <li class="active"><a data-toggle="tab" href="#generalSettings" aria-expanded="false">General Settings</a></li>
+                                        <li ng-show="AdmissionExam.DefaultSettingsJsonObj.IsEnableProgramWiseBatchMap" class="tab-red"><a data-toggle="tab" href="#additionalSettings" aria-expanded="true">Batch Settings</a></li>
+                                    </ul>
+                                    <div class="tab-content no-padding">
+                                        <div id="generalSettings" class="tab-pane active">
+                                            <div class="widget-body no-padding">
+                                                <div class="row">
+                                                    <!--Col start-->
+                                                    <div class="col-sm-6 table-form">
+                                                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Semester </td>
+                                                                    <td class="fieldarea">
+                                                                        <select ng-model="AdmissionExam.@Adm_AdmissionExam.Property_SemesterId"
+                                                                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                                                            <option value="" label="" class="">---Select One---</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td class="fieldlabel">Session Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_Name" class="form-control" placeholder="Enter Name" maxlength="250" required="" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Session Short Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_ShortName" class="form-control" placeholder="Enter Short Name" maxlength="100" required="" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Short Name." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Student ID Prefix <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_StudentIdPrefix" class="form-control" placeholder="Enter Student ID Prefix" maxlength="10" required="" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="New Student Auto ID Prefix According to Year & Semester or there." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">UGC Id Prefix </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_UgcIdPrefix" class="form-control" placeholder="Enter UGC ID Prefix" maxlength="10" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter UGC Id Prefix." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Student ID Suffix </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_StudentIdSuffix" class="form-control" placeholder="Enter Student ID Suffix" maxlength="10" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Student Id Suffix." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Session Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_SessionName" class="form-control" placeholder="Enter Session Name" maxlength="100" required="" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Session Name." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <!--dropdown option for EnumList-->
+                                                                <tr>
+                                                                    <td class="fieldlabel">Program Type </td>
+                                                                    <td class="fieldarea">
+                                                                        <select ng-model="AdmissionExam.@Adm_AdmissionExam.Property_ProgramTypeEnumId" ng-options="option.Id as option.Name for option in ProgramTypeEnumList" title="Select Program Type" ng-init="" class="form-control">
+                                                                            <option value="" label="" class="">---Select One---</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program Type." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <!--dropdown option for EnumList-->
+                                                                <tr>
+                                                                    <td class="fieldlabel">Circular Status </td>
+                                                                    <td class="fieldarea">
+                                                                        <select ng-model="AdmissionExam.@Adm_AdmissionExam.Property_CircularStatusEnumId" ng-options="option.Id as option.Name for option in CircularStatusEnumList" title="Select Circular Status" ng-init="" class="form-control">
+                                                                            <option value="" label="" class="">---Select One---</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Circular Status." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Is Enable </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="checkbox" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_IsEnable" class="form-control" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Is Enable Program Wise Batch Map </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="checkbox" ng-model="AdmissionExam.DefaultSettingsJsonObj.IsEnableProgramWiseBatchMap" class="form-control" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Enable Program Wise Batch Map." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Remark </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_Remark" class="form-control" placeholder="Enter Remark" required="" />
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div><!--Col end-->
+                                                    <!--Col start-->
+
+                                                    <div class="col-sm-6 table-form">
+                                                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td class="fieldlabel">Online Form Fillup Start Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_OnlineFormFillupStartDate" class="form-control date-picker" placeholder="Enter Online Form Fillup Start Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Form Fillup Start Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Online Form Fillup End Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_OnlineFormFillupEndDate" class="form-control date-picker" placeholder="Enter Online Form Fillup End Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Form Fillup End Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Online Admit Card Publish Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_OnlineAdmitCardPublishDate" class="form-control date-picker" placeholder="Enter Online Admit Card Publish Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Admit Card Publish Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Online Admit Card Lock Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_OnlineAdmitCardLockDate" class="form-control date-picker" placeholder="Enter Online Admit Card Lock Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Online Admit Card Lock Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Exam Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_ExamDate" class="form-control date-picker" placeholder="Enter Exam Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Exam Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Exam Result Publish Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_ExamResultPublishDate" class="form-control date-picker" placeholder="Enter Exam Result Publish Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Exam Result Publish Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Admission Start Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_AdmissionStartDate" class="form-control date-picker" placeholder="Enter Admission Start Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Admission Start Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Admission Forms Download Start Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_AmissionFormsDownloadStartDate" class="form-control date-picker" placeholder="Enter Amission Forms Download Start Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amission Forms Download Start Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="fieldlabel">Admission Forms Download End Date </td>
+                                                                    <td class="fieldarea">
+                                                                        <input type="text" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_AmissionFormsDownloadEndDate" class="form-control date-picker" placeholder="Enter Amission Forms Download End Date" />
+                                                                    </td>
+                                                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amission Forms Download End Date." data-toggle="tooltip"></i></span></td>
+                                                                </tr>
+
+                                                           
+
+                                                            <tr>
+                                                                <td class="fieldlabel">Circular Notice Html </td>
+                                                                <td class="fieldarea">
+                                                                    <textarea type="text" rows="4" ng-model="AdmissionExam.@Adm_AdmissionExam.Property_CircularNoticeHtml" class="form-control" placeholder="Enter Circular Notice Html" required=""> </textarea>
+                                                                </td>
+                                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Circular Notice Html." data-toggle="tooltip"></i></span></td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div><!--Col end-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="additionalSettings" class="tab-pane">
+                                            <div class="widget-body">
+                                                <div class="row">
+                                                    <div class="col-sm-6 table-form">
+                                                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                                            <tbody>
+                                                            <tr ng-repeat="row in AdmissionExam.DefaultSettingsJsonObj.ProgramWiseBatchMapJsonList">
+                                                                <td class="text-center">
+                                                                    {{$index+1}}
+                                                                </td>
+                                                                <td class="fieldlabel">
+                                                                    <select ng-disabled="true" ng-model="row.ProgramId"
+                                                                            ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                                                    </select>
+                                                                </td>
+                                                                <td class="fieldarea">
+                                                                    <select ng-model="row.BatchId"
+                                                                            ng-options="option.Id as option.Name for option in BatchList " ng-init="" class="form-control select-inline">
+                                                                        <option value="" label="" class="">---Select One---</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Appropriate Batch For Program." data-toggle="tooltip"></i></span></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!--Widget Body end-->
+                        </div>
+                    </div>
+                </div>
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button ng-click="@(saveAdmissionExam)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

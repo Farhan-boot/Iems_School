@@ -1,0 +1,148 @@
+﻿<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    //WebApi link for List
+    var getStudentDueReportSummaryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentDueReportSummaryApi", action = "GetStudentDueReportSummary", area = "Accounts" });
+    var getStudentDueReportSummaryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentDueReportSummaryApi", action = "GetStudentDueReportSummaryDataExtra", area = "Accounts" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="StudentDueReportSummaryCtrl"
+     ng-init="Init(
+     '@getStudentDueReportSummaryDataExtraUrl',
+     '@getStudentDueReportSummaryUrl'
+     )">
+    <div ng-show="HasError || ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false;ErrorMsg=''" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@ class="main-body">
+        <div class="widget" style="border:1px solid #bfbebe; padding: 0px 5px;">
+            <div class="widget-body no-padding">
+                <table class="table  educationHistory" style="font-size: 11px;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;" colspan="6">
+                            <strong>Report of Student Due Report Summary</strong>
+                            <button class="btn btn-default btn-xs pull-right" onclick="location.reload();return false;"><i class="glyphicon glyphicon-refresh"></i>Refresh</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-bold" style="width: 70px; font-size: 13px;">Semester:</td>
+                        <td style="width: auto;">
+                            <select ng-model="SelectedSemesterId"
+                                    ng-options="option.Id as option.Name for option in SemesterList"
+                                    title="Select Admission Exam" class="form-control" style="font-weight: normal;"></select>
+                        </td>
+
+                        <td class="text-bold" style="width: 120px; font-size: 13px; text-align: right;">Program:</td>
+                        <td style="width: auto;">
+                            <select ng-model="SelectedProgramId"
+                                    ng-options="option.Id as option.ShortTitle for option in ProgramList"
+                                    title="Select Admission Exam" class="form-control" style="font-weight: normal; width: 220px;">
+                                <option value="" label="" class="">All Program</option>
+                            </select>
+                        </td>
+                    </tr>
+                    
+
+                    <tr>
+                            <td class="text-bold" style="width: 75px; font-size: 13px;">Start Date:</td>
+                            <td style="width: auto;">
+                                <input ng-model="StartDate" style="font-weight: normal;" type="text" class="form-control date-picker" />
+                            </td>
+
+                            <td class="text-bold" style="width: 120px; font-size: 13px; text-align: right;">End Date:</td>
+                            <td style="width: auto;">
+                                <input ng-model="EndDate" style="font-weight: normal; width: 220px;" type="text" class="form-control date-picker" />
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+        
+        <div class="widget no-print" style="border:1px solid #bfbebe; padding: 0px 5px;">
+            <div class="widget-body no-padding">
+                <table class="table  educationHistory" style="font-size: 11px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" colspan="6">
+                                <button class="btn btn-default" ng-click="@refreshPage">Load Student Due Report Summary</button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                
+            </div>
+        </div>
+
+        <div style="margin-top: 10px;" class="border-black">
+            <table  style="width: 100%; text-align: center;">
+                <thead>
+                    <tr style="font-weight: bold">
+                        <th class="text-center">
+                            <span style="">Program's Name</span>
+                        </th>
+                        <th style="width: 100px;" class="text-center">Bill</th>
+                        <th style="width: 100px;" class="text-center">Waiver</th>
+                        <th style="width: 100px;" class="text-center">Paid</th>
+                        <th style="width: 100px;" class="text-center">Due</th>
+                        <th style="width: 100px;" class="text-center">Due In Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="reportSummary in ReportSummaryList">
+                        <td style="text-align: left;">
+                            <span> {{reportSummary.ProgramName}} </span>
+                        </td>
+                        <td> <span>{{reportSummary.DebitAmount}}</span> </td>
+                        <td> <span>{{reportSummary.ScholarshipAmount}}</span> </td>
+                        <td> <span>{{reportSummary.CreditAmount}}</span> </td>
+                        <td>{{reportSummary.Balance}}</td>
+                        <td>
+                            <span ng-show="reportSummary.DebitAmount>reportSummary.CreditAmount">{{(reportSummary.Balance / reportSummary.DebitAmount)*100 | number:2}}%</span>
+                            <span ng-hide="reportSummary.DebitAmount>reportSummary.CreditAmount">0.00%</span>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+                <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td style="text-align: right;">Grand Total: </td>
+                        <td>{{GrantTotal.DebitAmount}}</td>
+                        <td>{{GrantTotal.ScholarshipAmount}}</td>
+                        <td>{{GrantTotal.CreditAmount}}</td>
+                        <td>{{GrantTotal.Balance}}</td>
+                        <td>{{(GrantTotal.Balance / GrantTotal.DebitAmount)*100 | number:2}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    .border-black td,.border-black th {
+        border: 1px solid #717070 !important;
+        border-collapse: collapse;
+    }
+
+    .table > tbody > tr > td {
+        border: none;
+    }
+</style>

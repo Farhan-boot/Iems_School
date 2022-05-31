@@ -1,0 +1,420 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Framework.Utils
+
+@{
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var accountId = (string)id == null ? "0" : (string)id;
+
+    id = Request.QueryString["empId"];//ViewContext.RouteData.Values["id"];
+    var empId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetEmployeeById", area = "HR" });
+    var getEmployeeAccountDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetEmployeeAccountDataExtra", area = "HR" });
+    var saveAccountUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "SaveEmployee", area = "HR" });
+    var deleteAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetDeleteAccountById", area = "Admin" });
+
+    var getEducationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetEducationDataExtra", area = "HR" });
+    var getNewEducationByUserIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetNewEducationByUserId", area = "HR" });
+    var getDeleteEducationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetDeleteEducationById", area = "HR" });
+    var getAllEducationByUserIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetAllEducationByUserId", area = "HR" });
+
+    var resetAndSendPasswordUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "SaveResetAndSendPassword", area = "HR" });
+    var saveApprovalUrl= Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "SaveApproval", area = "HR" });
+
+    var removePhotoOrSignatureByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "GetRemoveProfilePictureById", area = "HR" });
+    var uploadProfilePictureUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EmployeeProfileApi", action = "UploadProfilePicture", area = "HR" });
+
+   
+
+
+    // Angular Functions
+    string getAccountById = "getAccountById";
+    var saveAccount = "saveAccount";
+    var getNewAccount = "getNewAccount";
+    var refreshPage = "loadPage()";
+    string deleteAccountById = "deleteAccountById";
+    string getEducationDataExtra = "getEducationDataExtra";
+    string openHistoryModal = "openHistoryModal";
+
+}
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12"
+         ng-init="Init(
+        '@accountId'
+        ,'@empId'
+        ,'@getAccountByIdUrl'
+        ,'@getEmployeeAccountDataExtraUrl'
+        ,'@saveAccountUrl'
+        ,'@deleteAccountByIdUrl'
+        ,'@getEducationDataExtraUrl'
+        ,'@getNewEducationByUserIdUrl'
+        ,'@getDeleteEducationByIdUrl'
+        ,'@getAllEducationByUserIdUrl'
+        ,'@resetAndSendPasswordUrl'
+        ,'@saveApprovalUrl'
+        ,'@uploadProfilePictureUrl'
+        ,'@removePhotoOrSignatureByIdUrl'
+     )">
+
+    <div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+        <div @*ng-show="HasViewPermission"*@>
+            <div class="widget">
+                <div class="widget-body no-padding">
+                    <div class="widget-main admission-form">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTab9">
+                                <li class=""><a data-toggle="tab" href="#ProfileSummary" aria-expanded="true">Summary</a></li>
+                                <li class="active"><a data-toggle="tab" href="#Personal-Information" aria-expanded="true">Personal</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#Education-Information" aria-expanded="true">Previous Education</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#Official-Information" aria-expanded="true">Official Information</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#User-Credential" aria-expanded="true">User Credential</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#userLog" aria-expanded="true">Log</a></li>
+                            </ul>
+                        <div class="tab-content" style="padding: 6px 12px;">
+                            
+                        <div class="row admission-form-common-section">
+                            <div class="col-md-12 table-form" style="margin-bottom: 6px;">
+                                <table class="table table-bordered admission-discount-table text-center" style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 103px;">Active Status:</th>
+                                        <th>
+                                            <span ng-class="Account.@User_Account.Property_UserStatusEnumId==@((byte) User_Account.UserStatusEnum.Active) ? 'badge-success': 'badge-danger'" class="badge"> {{Account.@User_Account.Property_UserStatus}} </span>
+                                        </th>
+                                        <th style="width: 125px;">Admin Access:</th>
+                                        <th>
+                                            <span ng-show="Account.@User_Employee.Property_HasAdminAccess" class="badge badge-success"> Yes </span>
+                                            <span ng-hide="Account.@User_Employee.Property_HasAdminAccess" class="badge badge-danger"> No </span>
+                                        </th>
+                                        <th style="width: 70px;">Profile :</th>
+                                        <th>
+                                            <span ng-show="Account.@User_Account.Property_IsApproved" class="badge badge-success"> Approved </span>
+                                            <span ng-hide="Account.@User_Account.Property_IsApproved" class="badge badge-danger"> Disapproved </span>
+
+                                            <span ng-show="Account.@User_Account.Property_IsProfileCompleted" class="badge badge-success"> Completed </span>
+                                            <span ng-hide="Account.@User_Account.Property_IsProfileCompleted" class="badge badge-danger"> Incomplete </span>
+                                        </th>
+                                    </tr>
+
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            User ID
+                                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                                        </td>
+                                        <td class="fieldarea">
+                                            <input type="text" value="{{Account.@User_Account.Property_UserName}}"
+                                                   ng-disabled="true"
+                                                   class="form-control  " placeholder="Enter User Id/Roll No/Reg. No" maxlength="256" required="">
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Id/Roll No/Reg. No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Full Name
+                                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                                        </td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-model="Account.@User_Account.Property_FullName"
+                                                   ng-disabled="true"
+                                                   class="form-control " placeholder="Enter Full Name" maxlength="256" required="">
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel" width="100px" style="min-width: 120px;">
+                                            Post/Position
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_PositionId"
+                                                    ng-disabled="true"
+                                                    ng-options="option.Id as option.Name for option in PositionList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Currently Working Office/Faculty/Dept " data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Department
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Account.Property_DepartmentId"
+                                                    ng-disabled="true"
+                                                    ng-options="option.Id as option.Name group by option.Type for option in DepartmentList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Department" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel ">
+                                            Employee Category
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_EmployeeCategoryEnumId"
+                                                    ng-disabled="true"
+                                                    ng-options="option.Id as option.Name for option in EmployeeCategoryEnumList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee Category " data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel" width="100px" style="min-width: 120px;">
+                                            Job Type
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_JobTypeEnumId"
+                                                    ng-disabled="true"
+                                                    ng-options="option.Id as option.Name for option in JobTypeEnumList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Job Type " data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">
+                                            Employee Type
+                                        </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="Account.@User_Employee.Property_EmployeeTypeEnumId"
+                                                    ng-disabled="true"
+                                                    ng-options="option.Id as option.Name for option in EmployeeTypeEnumList" ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                            <div id="ProfileSummary" class="tab-pane  ">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/_Summary.cshtml")
+                            </div>
+                            <div id="Personal-Information" class="tab-pane  active">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/ProfileManager/_Personal.cshtml")
+                            </div>
+                            <div id="Education-Information" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/ProfileManager/_PreviousEducation.cshtml")
+                            </div>
+                            <div id="Official-Information" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/ProfileManager/_OfficialInformation.cshtml")
+                            </div>
+                            <div id="User-Credential" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/ProfileManager/_UserCredential.cshtml")
+                            </div>
+                            <div id="userLog" class="tab-pane">
+                                @Html.Partial("~/Areas/HR/Views/ManageEmployee/ProfileManager/_UserLog.cshtml")
+                            </div>
+
+                        <div class="widget-footer text-center">
+                            <button ng-click="saveAccount()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                            <button ng-hide="Account.@User_Account.Property_IsApproved" ng-click="saveApproval(true)" class="btn btn-md btn-warning">
+                                <span class="fa fa-check"></span>Approve And Active This Employee
+                            </button>
+                            <input ng-model="IsSendEmailOnApproval"
+                                     ng-hide="Account.@User_Account.Property_IsApproved"
+                                   type="checkbox" style="margin-top: 0px !important; 
+           vertical-align: middle; width: 13px;"/>
+
+                            <span  ng-hide="Account.@User_Account.Property_IsApproved" style="font-size: 10px;">Send Email and Password On Approval</span>
+
+                            <button ng-show="Account.@User_Account.Property_IsApproved" ng-click="saveApproval(false)" class="btn btn-md btn-danger">
+                                <span class="fa fa-ban"></span> Disapprove This Employee
+                            </button>
+                            <button ng-click="@(openHistoryModal)()" class="btn btn-info"><span class="fa fa-history"></span> Show History</button>
+                        </div>
+                        </div>
+                        </div>
+                    </div><!--Widget Body end-->
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade bd-example-modal-lg" id="HistoryModal" tabindex="-1" role="dialog" aria-labelledby="HistoryModal" area-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> History Of all the action Performed in this profile.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-12 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td style="text-align: left;padding: 5px !important;" ng-bind-html="renderHtml(Account.@User_Account.Property_History)"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<style>
+    .admission-form .form-title {
+        padding: 3px 0;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .educationHistory select {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .educationHistory thead > tr > th {
+        font-size: 11px;
+    }
+
+    .educationHistory input[type="text"],
+    .admission-discount-table input[type="text"] {
+        width: 100%;
+        font-size: 12px;
+        padding-left: 3px;
+        margin-bottom: 3px;
+    }
+
+    .educationHistory .glyphicon.glyphicon-asterisk {
+        font-size: 7px;
+    }
+
+    .educationHistory input[type="text"]:focus {
+        box-shadow: 0 0 1px 0.5px #3391c9;
+    }
+
+    .educationHistory label {
+        font-size: 9px;
+        margin-bottom: 0px;
+    }
+
+    .admission-form input,
+    .admission-form optgroup,
+    .admission-form select,
+    .admission-form textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .admission-form td.fieldlabel {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .admission-form .glyphicon {
+        font-size: 7px !important;
+    }
+
+    .admission-form-common-section td {
+        padding-bottom: 5px;
+    }
+
+        .admission-form-common-section td.fieldlabel {
+            width: 105px;
+        }
+
+    .admission-form .checkbox-inline {
+        font-size: 10px;
+    }
+
+        .admission-form .checkbox-inline input {
+            height: 15px !important;
+        }
+
+    .admission-form .table-form td {
+        padding: 3px 3px;
+    }
+
+    .admission-discount-table tr td:first-child,
+    .bold-text {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    .text-dropdown-toggle .dropdown-menu li a:hover {
+        background: #1884e6;
+        color: #fff;
+    }
+
+    .text-dropdown {
+        max-height: 115px;
+        overflow-y: auto;
+        font-size: 13px;
+        padding: 6px 12px;
+        width: 100%;
+        line-height: 1.42857143;
+        background-image: none;
+    }
+
+    .text-dropdown-toggle ul {
+        max-height: 115px !important;
+        padding: 0px !important;
+        overflow-x: hidden !important;
+    }
+
+        .text-dropdown-toggle ul li a {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            padding: 2px 10px !important;
+        }
+
+    .admission-form-common-section tr td {
+        text-align: right;
+        padding-right: 5px;
+    }
+
+    .admission-form .form-title {
+        font-weight: 600 !important;
+        font-size: 15px;
+    }
+
+    .fieldarea .checkbox {
+        margin-top: 3px !important;
+        margin-bottom: -4px !important;
+    }
+
+    .padding-l-10 {
+        padding-left: 10px;
+    }
+</style>

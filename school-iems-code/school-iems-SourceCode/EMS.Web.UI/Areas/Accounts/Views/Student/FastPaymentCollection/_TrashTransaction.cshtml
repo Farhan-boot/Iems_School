@@ -1,0 +1,81 @@
+﻿@using EMS.DataAccess.Data
+@{
+    //Angular Function
+    string getDeleteUndeleteDebitTransactionByIdStdId = "getDeleteUndeleteDebitTransactionByIdStdId";
+    string getDeleteUndeleteCreditTransactionByIdStdId = "getDeleteUndeleteCreditTransactionByIdStdId";
+
+
+    //Angular Property
+    string StudentTransactionList = "StudentTransactionList";
+
+}
+
+
+<table class="table table-hover table-striped table-bordered fast-payment-collection">
+    <tbody>
+        <tr>
+            <td class="text-bold" colspan="5" style="text-align: center;">
+                Debit And Credit (Deleted Items)
+            </td>
+        </tr>
+        <tr class="text-bold" role="row" style="color: #555555;">
+            <td class="text-center" style="width: 40px;">SN</td>
+            <td>
+                Date
+            </td>
+            <td>
+                Prticulars
+            </td>
+            <td style="width: 130px;">
+                Amount
+            </td>
+            <td>Action</td>
+        </tr>
+    </tbody>
+    <tbody>
+        <tr class="bg-white" ng-repeat="row in @StudentTransactionList| filter:{@Acnt_StdTransaction.Property_IsDeleted: true}">
+            <td class="text-center ">
+                {{$index+1}}
+            </td>
+            <td class="">{{row.@Acnt_StdTransaction.Property_Date|date:'d/M/yy h:mm a'}}</td>
+            <td>
+                <p ng-hide="row.@Acnt_StdTransaction.Property_IsSemesterFee">
+                    {{row.@Acnt_StdTransaction.Property_Name}}
+                </p>
+                <a ng-show="row.@Acnt_StdTransaction.Property_IsSemesterFee"
+                   ng-click="LoadPaymentDetails(row.@Acnt_StdTransaction.Property_SemesterId)">
+                    {{row.@Acnt_StdTransaction.Property_Name}}
+                </a>
+            </td>
+            <td ng-if="row.@Acnt_StdTransaction.Property_IsDebited">
+                {{row.@Acnt_StdTransaction.Property_DebitAmount| number: 2}} (Debit)
+            </td>
+            <td ng-if="!row.@Acnt_StdTransaction.Property_IsDebited">
+                {{row.@Acnt_StdTransaction.Property_CreditAmount| number: 2}} (Credit)
+            </td>
+            <td>
+                <button ng-click="editDebitTransaction(row)" class="btn btn-xs btn-primary">
+                    <i class="fa fa-eye"></i>
+                </button>
+                <button ng-click="@getDeleteUndeleteDebitTransactionByIdStdId (row)"
+                        ng-if="row.@Acnt_StdTransaction.Property_IsDebited"
+                        class="btn btn-xs btn-danger">
+                    <i class="fa fa-undo"></i>
+                </button>
+                <button ng-click="@getDeleteUndeleteCreditTransactionByIdStdId (row)"
+                        ng-if="!row.@Acnt_StdTransaction.Property_IsDebited"
+                        class="btn btn-xs btn-danger">
+                    <i class="fa fa-undo"></i>
+                </button>
+            </td>
+        </tr>
+        @*<tr>
+                <td class="text-center "></td>
+                <td class="text-bold" colspan="2">
+                    This Semester Paid
+                </td>
+                <td class="text-bold">{{ThisSemesterTotalPaid | number: 2}}</td>
+                <td class="text-center "></td>
+            </tr>*@
+    </tbody>
+</table>

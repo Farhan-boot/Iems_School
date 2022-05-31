@@ -1,0 +1,170 @@
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    var currentArea = HttpUtil.GetCurrentArea();
+}
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li>
+            <a  title="Goto @currentArea Area Dashboard" href="@Url.Action("Index", "Dashboard", new {area = "Admission"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">@currentArea Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("AddNewApplicant", "Applicant", new {area = "Admission", id = 0})">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text">Add New Applicant</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("StudentList", "Student", new {area = "Admission"})">
+                <i class="menu-icon fa fa-search-plus"></i>
+                <span class="menu-text">Search Student</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Scholarship Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="">
+                <li>
+                    <a href="@Url.Action("IndividualStudentSettingsList", "SemWiseScholarship", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-cog"></i>
+                        <span class="menu-text" style="font-size: 10px;">1<sup>st</sup> Sem Scholarships Mgt.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ScholarshipEligibilityManager", "SemWiseScholarship", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-cog"></i>
+                        <span class="menu-text" style="font-size: 10px;">Scholarship Eligibility Mgt.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("IndividualStudentSettingsList2", "SemWiseScholarship", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-cog"></i>
+                        <span class="menu-text" style="font-size: 10px;">Individual Student Manager</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+
+        
+
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-users"></i>
+                <span class="menu-text">Student Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("StudentList", "Student", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">Student List</span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+        <li >
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Admission Circular</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="">
+                <li>
+                    <a href="@Url.Action("AdmissionExamList", "AdmissionExam", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">Circular List </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("AdmissionExamAddEdit", "AdmissionExam", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li >
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Previous Degree Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="">
+                <li>
+                    <a href="@Url.Action("DegreeCategoryList", "DegreeCategory", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">List </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("DegreeCategoryAddEdit", "DegreeCategory", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add New </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li >
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-cog"></i>
+                <span class="menu-text"> Education Board Mgt.</span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu" style="">
+                <li>
+                    <a href="@Url.Action("EducationBoardList", "EducationBoard", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">Education Board </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("EducationBoardAddEdit", "EducationBoard", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-plus"></i>
+                        <span class="menu-text"> Add/Edit Board </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+        <li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span class="menu-text"> Reports </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("PreviousEducationReport", "Report", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-files-o"></i>
+                        <span class="menu-text">Prev. Edu. Report</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="@Url.Action("ProfileChangeAuditReport", "Report", new {area = "Admission"})">
+                        <i class="menu-icon fa fa-files-o"></i>
+                        <span class="menu-text" style="font-size: 10px">Profile Change Audit</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

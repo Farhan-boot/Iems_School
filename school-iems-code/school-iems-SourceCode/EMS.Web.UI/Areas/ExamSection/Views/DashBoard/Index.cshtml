@@ -1,0 +1,222 @@
+@using System.Linq
+@using EMS.CoreLibrary
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model dynamic
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="databox databox-xxlg databox-vertical databox-shadowed bg-white radius-bordered no-padding" style="height: auto;">
+    <div class="databox-top bordered-bottom-2 bordered-blueberry" style="height: auto;">
+        <div class="databox-row row-12">
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x => x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted==false)</div>
+                <div class="databox-text storm-cloud no-margin">Current Student</div>
+            </div>
+
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x => x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing&&x.ClassTimingGroupEnumId == (byte)Aca_Program.ClassTimingGroupEnum.Day && x.IsDeleted == false)</div>
+                <div class="databox-text storm-cloud no-margin">Regular</div>
+            </div>
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x => x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.ClassTimingGroupEnumId == (byte)Aca_Program.ClassTimingGroupEnum.Evening && x.IsDeleted == false)</div>
+                <div class="databox-text storm-cloud no-margin">Evening</div>
+            </div>
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x => x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Graduating && x.IsDeleted == false)</div>
+                <div class="databox-text storm-cloud no-margin">Graduating</div>
+            </div>
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x => x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Graduated && x.IsDeleted == false)</div>
+                <div class="databox-text storm-cloud no-margin">Graduated</div>
+            </div>
+            <div class="databox-cell cell-2 text-center">
+                <div class="databox-header title-xxlg sky">
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("StudentList", "Student", new {area = "Academic"})">
+                        <i class="fa fa-users"></i> Student List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="databox-bottom" style="height: auto;">
+        <div class="databox-row">
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number green">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.IsApproved && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted == false)</span>
+                <span  class="databox-text green no-margin">Approved</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number red">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.IsApproved == false && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted == false)</span>
+                <span  class="databox-text red no-margin">Disapproved</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number green">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.UserStatusEnumId == 0 && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted == false)</span>
+                <span  class="databox-text green no-margin">Unlocked</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number red">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.UserStatusEnumId != 0 && x.IsDeleted == false)</span>
+                <span  class="databox-text red no-margin">Locked</span>
+            </div>
+            <div class="databox-cell cell-2 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number green">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == 1 && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted == false)</span>
+                <span  class="databox-text sonic-silver no-margin">In @SiteSettings.Instance.InstituteShortName Campus</span>
+            </div>
+            @*<div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number pink">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == 2 && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing)</span>
+                <span  class="databox-text sonic-silver no-margin">In BMA Campus</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number blue">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == 3 && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing)</span>
+                <span  class="databox-text sonic-silver no-margin">In BAF Campus</span>
+            </div>*@
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number carbon">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.GenderEnumId == (byte)User_Account.GenderEnum.Male && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.CampusId == 1 && x.IsDeleted == false)</span>
+                <span  class="databox-text sonic-silver no-margin">Male</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number carbon">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.GenderEnumId == (byte)User_Account.GenderEnum.Female && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.CampusId == 1 && x.IsDeleted == false)</span>
+                <span  class="databox-text sonic-silver no-margin">Female</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number green">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.UserStatusEnumId == (byte)User_Account.UserStatusEnum.Active && x.IsDeleted == false)</span>
+                <span  class="databox-text green no-margin">Active</span>
+            </div>
+            <div class="databox-cell cell-1 no-padding text-align-center bordered-right bordered-platinum">
+                <span  class="databox-number red">@HttpUtil.DbContext.User_Student.Count(x => x.User_Account.UserStatusEnumId != (byte)User_Account.UserStatusEnum.Active && x.IsDeleted == false)</span>
+                <span  class="databox-text red no-margin">Not Active</span>
+            </div>
+            <div class="databox-cell cell-2 no-padding text-align-center">
+                <div class="databox-number number-xlg sky no-margin">@HttpUtil.DbContext.User_Student.Count(x=> x.IsDeleted == false)</div>
+                <div class="databox-text storm-cloud no-margin">Total in  DataBase</div>
+            </div>
+        </div>
+        @*<hr class="margin-5">
+            <div class="databox-row">
+                <div class="databox-cell cell-1 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number orange">8406</span>
+                    <span  class="databox-text sonic-silver no-margin">UNIT A</span>
+                </div>
+                <div class="databox-cell cell-1 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number orange">33</span>
+                    <span  class="databox-text sonic-silver no-margin">UNIT B</span>
+                </div>
+                <div class="databox-cell cell-1 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number orange">843</span>
+                    <span  class="databox-text sonic-silver no-margin">UNIT A+B</span>
+                </div>
+                <div class="databox-cell cell-2 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number lightcarbon">6740</span>
+                    <span  class="databox-text carbon no-margin">Exam Accommodation</span>
+                </div>
+                <div class="databox-cell cell-2 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number red">550</span>
+                    <span  class="databox-text carbon no-margin">Total Vacant</span>
+                </div>
+                <div class="databox-cell cell-2 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number lightcarbon">200</span>
+                    <span  class="databox-text carbon no-margin">Written Exam Mark</span>
+                </div>
+                <div class="databox-cell cell-1 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number lightcarbon">80</span>
+                    <span  class="databox-text carbon no-margin">PassMark</span>
+                </div>
+                <div class="databox-cell cell-1 text-align-center bordered-right bordered-platinum">
+                    <span  class="databox-number lightcarbon">15</span>
+                    <span  class="databox-text carbon no-margin">HSC GPA %</span>
+                </div>
+                <div class="databox-cell cell-1 text-align-center">
+                    <span  class="databox-number lightcarbon">10</span>
+                    <span  class="databox-text carbon no-margin">SSC GPA %</span>
+                </div>
+            </div>
+
+            <hr class="margin-5">
+            <div class="databox-row no-padding">
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5">
+                    <span  class="databox-header no-margin">Application Submission<br><strong>21/09/2015 00:00:00</strong></span>
+                </div>
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5">
+                    <span  class="databox-header no-margin">Application Deadline<br><strong>25/10/2015 00:00:00</strong></span>
+                </div>
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5">
+                    <span  class="databox-header no-margin">Admit Card Publish<br><strong>07/11/2015 10:00:00</strong></span>
+                </div>
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5 bordered-top-2 bordered-sky">
+                    <span  class="databox-header no-margin">Admission Test<br><strong>13/11/2015 09:00:00</strong></span>
+                </div>
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5 bordered-top-2 bordered-yellow">
+                    <span  class="databox-header no-margin">Admission Test Result<br><strong>23/11/2015 10:00:00</strong></span>
+                </div>
+                <div class="databox-cell cell-4 text-align-center no-padding padding-top-5 bordered-top-2 bordered-pink">
+                    <span  class="databox-header no-margin">Admission Start<br><strong>06/12/2015 09:00:00</strong></span>
+                </div>
+
+            </div>*@
+    </div>
+</div>
+@{
+    var campusList = HttpUtil.DbContext.General_Campus.ToList();
+    var i = 0;
+}
+<h5 class="row-title before-maroon">
+    <i class="fa fa-bar-chart maroon"></i>Student Profile Registration Status&nbsp;|&nbsp;
+    <a class="btn btn-sm btn-primary" href="@Url.Action("StudentProfileRegistrationStatistics", "Dashboard", new {area = "Academic"})">
+        <i class="fa fa-eye"></i> View
+    </a>
+    <a class="btn btn-sm btn-danger" href="@Url.Action("IncompleteRegistrationStudentList", "Student", new {area = "Academic"})">
+        <i class="fa fa-print"></i> Print Incomplete Registration Student List
+    </a>
+</h5>
+
+<div class="horizontal-space"></div>
+<div class="row">
+    @foreach (var campus in campusList)
+    {
+        int total = HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campus.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.IsDeleted == false);
+        int complete = HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campus.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == false && x.IsDeleted == false);
+        int incomplete = HttpUtil.DbContext.User_Student.Count(x => x.User_Account.CampusId == campus.Id && x.EnrollmentStatusEnumId == (byte)User_Student.EnrollmentStatusEnum.Continuing && x.User_Account.IsMigrate == true && x.IsDeleted == false);
+        <div class="col-xs-12 col-md-3 col-lg-3">
+            <div class="databox databox-xlg radius-bordered databox-shadowed databox-vertical">
+                <div class="databox-top bg-blue">
+                    <span  class="databox-header">@campus.ShortName Campus</span>
+                </div>
+                <div class="databox-bottom bg-white no-padding">
+                    <div id="donut-chart-@campus.Id" style="height: 150px;"></div>
+                    <script>
+                        var InitiateDonutChart@(campus.Id) = function() {
+                            return {
+                                init: function() {
+                                    Morris.Donut({
+                                        element: 'donut-chart-@campus.Id',
+                                        data: [
+                                            { label: 'Total', value: @total },
+                                            { label: 'Incomplete', value: @incomplete },
+                                            { label: 'Complete', value: @complete }
+                                        ],
+                                        colors: [themeprimary, themesecondary, themefourthcolor],
+                                        formatter: function(y) { return y }
+                                    });
+                                }
+                            };
+                        }();
+                        $(window).bind("load", function() {
+                            InitiateDonutChart@(campus.Id).init();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="horizontal-space"></div>
+@*<h5 class="row-title before-maroon">
+    <i class="fa fa-bar-chart maroon"></i>Offered Courses Statistics&nbsp;|&nbsp;
+    <a class="btn btn-sm btn-primary" href="@Url.Action("OfferedCourseStatistics", "Dashboard", new {area = "Academic"})">
+        <i class="fa fa-eye"></i> View
+    </a>
+</h5>*@
+<div class="horizontal-space"></div>

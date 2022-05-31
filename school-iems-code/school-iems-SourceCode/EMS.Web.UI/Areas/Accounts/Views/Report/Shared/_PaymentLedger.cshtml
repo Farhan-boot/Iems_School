@@ -1,0 +1,231 @@
+﻿
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using Microsoft.Ajax.Utilities
+@model EMS.Framework.Objects.MvcModelListResult<Acnt_StdTransaction>
+@{
+    //Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    float totalDebitAmount = Model.DataBag.TotalDebitAmount;
+    float totalCreditAmount = Model.DataBag.TotalCreditAmount;
+    float totalBalance = Model.DataBag.TotalBalance;
+    float totalFee = Model.DataBag.TotalFee;
+    float otherCharges = Model.DataBag.OtherCharges;
+}
+
+
+
+
+<div class="main-body" style="max-width:8in; margin: 0 auto">
+    <div style="margin:10px">
+        @*<div style="font-weight: bold;"> Summary</div>*@
+        <table class="summery" style="border: 1.5px solid black; font-weight:bold; ">
+            <tbody>
+                <tr style="font-size:12px">
+                    <td style="width: 33%;">Total Debit (Bill) : @totalDebitAmount</td>
+                    @*<td>@totalDebitAmount</td>*@
+                    <td style="width: 33%; text-align:center">Total Credit (Collection) : @totalCreditAmount</td>
+                    
+                    <td style="width: 33%; text-align:right">Total Balance : @totalBalance</td>
+                   
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+    <div>
+        <table class="transaction table table-hover table-striped table-bordered " style="border: 1.5px solid black;">
+            <thead>
+                <tr  >
+                    <th>Date</th>
+                    <th>Semester</th>
+                    <th>Description</th>
+                   
+                    <th>Debit (+)</th>
+                    <th>Credit (-)</th>
+                    <th>Balance</th>
+                    <th>Voucher No</th>
+                    <th>Slip ID</th>
+                    @*<th>Last Updated</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model.Data)
+                {
+                    var bgColor = "";
+                    if (transaction.IsSemesterFee && transaction.IsAutoEntry)
+                    {
+                         bgColor = "background-color:gray;font-weight:bold;";
+                    }
+                    <tr style="@bgColor">
+
+                        <td>@transaction.Date.ToString("d")</td>
+                        <td>@transaction.Aca_Semester.Name</td>
+                        <td>
+                            @if (transaction.Name != null)
+                            {
+                                <span>@transaction.Name</span>
+                            }
+
+                        </td>
+                 
+                        <td>
+                            @*transaction.IsDebited && transaction.DebitAmount > 0 &&*@
+                            @if ( transaction.IsDebited)
+                            {
+                                <span>@transaction.DebitAmount</span>
+                            } 
+                        </td>
+                        <td> @*!transaction.IsDebited && transaction.CreditAmount > 0 &&*@
+                            @if ( !transaction.IsDebited)
+                            {
+                                <span>@transaction.CreditAmount</span>
+                            }    
+                        </td>
+
+                        <td>@transaction.Balance</td>
+                   
+                        <td>
+                            @if (transaction.VoucherNo != null)
+                            {
+                                <span>@transaction.VoucherNo</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!transaction.IsDebited)
+                            {
+                                if (transaction.PaySlipId != null)
+                                {
+                                    <span>@transaction.PaySlipId</span>
+                                }
+                                else
+                                {
+                                    @transaction.Id.ToString()
+                                }
+                                if (transaction.IsDebited && transaction.ManualPaySlipNo.IsValid())
+                                {
+                                    <span> [@transaction.ManualPaySlipNo]</span>
+                                }
+                            }
+                        </td>
+
+                        @*<td>@transaction.LastChanged.ToString("d")</td>*@
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div style="border-top: 2px solid black; margin-top: 10px;"></div>
+
+    <table style="margin-top: 20px;">
+        <tbody>
+            <tr>
+                <td style="width: 200px;">
+                    <div style="font-weight: bold;"> Summary</div>
+                    <table style="border: 1.5px solid black; ">
+                        <tbody>
+                        <tr>
+                            @*<td>
+                                <table style="margin: 10px;">
+                                    <tr>
+                                        <td style="width: 120px;">Total Fees</td>
+                                        <td>@totalFee</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Other Charges</td>
+                                        <td>@otherCharges</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Grand Total</td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>*@
+                            <td>
+                                <table style="margin: 10px;">
+                                    <tr>
+                                        <td style="width: 120px;">Total Debit</td>
+                                        <td>@totalDebitAmount</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Credit</td>
+                                        <td>@totalCreditAmount</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Balance</td>
+                                        <td>@totalBalance</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style=""></td>
+                <td style="width: 200px;">
+                    <div style="padding-bottom: 50px; font-weight: bold;">
+                        Checked And Verified By
+                    </div>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td style="border-bottom: 1px solid black; width: 150px; "></td>
+                        </tr>
+                            <tr style="text-align: center">
+                                <td>Authorized Signature</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+@section StyleSection
+{
+    <style>
+        .main-body {
+            width: 7.27in;
+            margin: 0 auto;
+        }
+
+        .logo-size {
+            width: 40px;
+        }
+        /*.table-bordered > thead > tr > th
+        ,.table-bordered > thead > tr > td {
+            border: 1px solid black;
+        }*/
+        .transaction tbody tr td, .transaction thead tr th, .transaction {
+            border: 1.3px solid black !important;
+            font-size: 11px;
+        }
+
+            .transaction thead tr th {
+                text-align: center;
+            }
+
+        .transaction {
+            margin-top: 10px;
+        }
+        .transaction thead tr th {
+            vertical-align: top;
+        }
+    </style>
+}
+@section ScriptSection
+{
+    @*<script>
+        window.onload = function () {
+            window.print();
+        }
+    </script>*@
+}

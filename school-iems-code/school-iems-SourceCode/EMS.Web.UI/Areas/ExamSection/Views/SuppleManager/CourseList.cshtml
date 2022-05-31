@@ -1,0 +1,69 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.Framework.Utils
+@using EMS.Framework.Settings
+@using EMS.DataAccess.Data
+@using EMS.Framework.Objects
+@{
+    ViewBag.Title = "Supple Course List";
+    Layout = "~/Areas/ExamSection/Views/Shared/_LayoutExamSectionReport.cshtml";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/SuppleManager/Shared/_CourseList.js"></script>
+}
+@section StyleSection
+{
+    @* Todo Need to add BundleConfig *@
+    <link href="~/assets/js/angular/angular-ui-select/select2.css" rel="stylesheet" />
+}
+
+
+
+@helper Header()
+{
+    var reportModel = new ReportHeaderFooterModel
+    {
+        ReportNo = "",
+        HtmlRightArea = "",
+        Title = "Supple Report",
+        Subtitle = ""
+    };
+
+    ViewBag.ReportModel = reportModel;
+
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+
+
+@section ReportHeaderSection
+{
+    @Header()
+}
+
+@Html.Partial("~/Areas/ExamSection/Views/SuppleManager/Shared/_CourseList.cshtml")
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}
+
+<style>
+    .font-style, .report-container tbody tr {
+        font-size: 13px;
+    }
+
+
+    .show-on-print {
+        display: none;
+    }
+
+    @@media print {
+        .show-on-print {
+            display: block !important;
+        }
+        /*.font-style, .report-container tbody tr {
+            font-size: 10px;
+        }*/
+    }
+</style>

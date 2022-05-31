@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Previous Education Report";
+    Layout = "~/Areas/Admission/Views/Shared/_LayoutAdmissionReport.cshtml";
+}
+
+@section ScriptSection
+{
+
+    <script src="~/Areas/Admission/Views/Report/Shared/_PreviousEducationReport.js"></script>
+}
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/Admission/Views/Report/Shared/_PreviousEducationReport.cshtml")
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}

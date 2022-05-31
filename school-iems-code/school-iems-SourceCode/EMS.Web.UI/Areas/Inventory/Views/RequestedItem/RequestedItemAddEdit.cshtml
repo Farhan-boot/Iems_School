@@ -1,0 +1,169 @@
+﻿
+<!--File:Inv_Store Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit RequestedItem";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RequestedItemId = (string) id == null?"0":(string)id;
+
+    //Inv_Store WebApi Single Row link   
+    var getRequestedItemByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "GetRequestedItemById", area = "Inventory" });
+    var getRequestedItemDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "GetRequestedItemDataExtra", area = "Inventory" });
+    var saveRequestedItemUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "SaveRequestedItem", area = "Inventory" });
+    var deleteRequestedItemByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "GetDeleteRequestedItemById", area = "Inventory" });
+
+    //Inv_Store WebApi List link 
+    var getPagedRequestedItemUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RequestedItemApi", action = "GetPagedRequestedItem", area = "Inventory"});
+    var getAllRequestedItemUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "GetAllRequestedItem", area = "Inventory" });
+    var saveRequestedItemListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "SaveRequestedItemList", area = "Inventory" });
+    var getRequestedItemListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RequestedItemApi", action = "GetRequestedItemListDataExtra", area = "Inventory" });
+
+    var editRequestedItemByIdPageUrl = Url.Action("RequestedItemAddEdit", "RequestedItem", new { area = "Inventory" });
+    var listRequestedItemPageUrl = Url.Action("RequestedItemList", "RequestedItem", new { area = "Inventory" });
+
+    //Inv_Store Angular Functions
+    string getRequestedItemById = "getRequestedItemById";
+    var saveRequestedItem = "saveRequestedItem";
+    var getNewRequestedItem = "getNewRequestedItem";
+    var refreshPage = "loadPage()";
+    string deleteRequestedItemById = "deleteRequestedItemById";
+    string loadRequestedItemExtraData = "loadRequestedItemExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/RequestedItem/RequestedItemAddEdit.js"></script>
+}
+
+<div id="RequestedItemAddEdit" class="row" ng-controller="RequestedItemAddEditCtrl" ng-init="Init(
+      '@RequestedItemId'
+      ,'@getRequestedItemByIdUrl'
+      ,'@getRequestedItemDataExtraUrl'
+      ,'@saveRequestedItemUrl'
+      ,'@deleteRequestedItemByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="Store.@Inv_Store.Property_Name!=''">{{(Store.@Inv_Store.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="StoreId" ng-Enter="@(getRequestedItemById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewRequestedItem)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listRequestedItemPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                         <tbody>
+
+                         <tr>
+                             <td class="fieldlabel">Requisition Id <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 @*<input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_RequisitionId" class="form-control" placeholder="Enter Requisition Id" maxlength="50" required=""/>*@
+                                 
+                                 <select ng-model="RequestedItem.@Inv_RequestedItem.Property_RequisitionId" ng-options="option.Id as option.Name for option in RequisitionList" title="Select Requisition" ng-init="" class="form-control">
+                                     <option value="" label="" class="">---Select One---</option>
+                                 </select>
+
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Requisition Id." data-toggle="tooltip"></i></span></td>
+                         </tr>
+
+                         <tr>
+                             <td class="fieldlabel">Catagory Id <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 @*<input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_CatagoryId" class="form-control" placeholder="Enter Catagory Id" maxlength="50" required=""/>*@
+                                 
+                                 <select ng-model="RequestedItem.@Inv_RequestedItem.Property_CatagoryId" ng-options="option.Id as option.Name for option in CategoryList" title="Select Catagory" ng-init="" class="form-control">
+                                     <option value="" label="" class="">---Select One---</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Catagory Id." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                             
+                         <tr>
+                             <td class="fieldlabel">Quantity <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 <input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_Quantity" class="form-control" placeholder="Enter Quantity" maxlength="50" required=""/>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Quantity." data-toggle="tooltip"></i></span></td>
+                         </tr> 
+                             
+                         <tr>
+                             <td class="fieldlabel">Item Status <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 <input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_ItemStatus" class="form-control" placeholder="Enter Item Status" maxlength="50" required=""/>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Status ." data-toggle="tooltip"></i></span></td>
+                         </tr> 
+                         
+                         <tr>
+                             <td class="fieldlabel">Remark <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 <input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_Remark" class="form-control" placeholder="Enter Remark" maxlength="50" required=""/>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark." data-toggle="tooltip"></i></span></td>
+                         </tr> 
+
+                         <tr>
+                             <td class="fieldlabel">Item Category <span class="red glyphicon glyphicon-asterisk"></span></td>
+                             <td class="fieldarea">
+                                 <input type="text" ng-model="RequestedItem.@Inv_RequestedItem.Property_ItemCategory" class="form-control" placeholder="Enter Item Category" maxlength="50" required=""/>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Category." data-toggle="tooltip"></i></span></td>
+                         </tr>   
+
+
+
+
+                         @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Store.@Inv_Store.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+
+
+
+                         </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveRequestedItem)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

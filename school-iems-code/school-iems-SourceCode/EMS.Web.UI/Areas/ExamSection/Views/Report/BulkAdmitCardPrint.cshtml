@@ -1,0 +1,50 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model  EMS.Framework.Objects.MvcModelListResult<User_Student>
+
+@{
+    ViewBag.Title = "Print Admit Card";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+
+    //var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+    //var classId = (string)id == null ? "0" : (string)id;
+    //id = Request.QueryString["componentSettingsId"];
+    //var componentSettingsId = (string)id == null ? "0" : (string)id;
+
+    //Aca_ResultComponentSetting ComponentSetting = ViewBag.ComponentSetting;
+    //Aca_Class Class = ViewBag.Class;
+    //Aca_Semester Semester = ViewBag.Semester;
+    //Aca_Exam Exam = ViewBag.Exam;
+
+
+
+    //string Error = ViewBag.Error;
+    var exportPdf = HttpUtil.GetQueryString("exportPdf");//Html.Raw(ViewBag.IncludePdfExportCSS)
+
+}
+@{
+    if (exportPdf.IsValid())
+    {
+        <style>
+            * {
+                box-shadow: none !important;
+            }
+        </style>
+    }
+}
+
+@section ScriptSection
+{
+    <script>
+        $(document).ready(function () {
+            //window.print();
+        });
+    </script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+
+@Html.Partial("~/Areas/ExamSection/Views/Report/Shared/_BulkAdmitCardPrint.cshtml", Model);
+
+

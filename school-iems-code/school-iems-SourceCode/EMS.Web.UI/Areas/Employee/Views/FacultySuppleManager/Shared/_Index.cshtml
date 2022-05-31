@@ -1,0 +1,124 @@
+﻿@using EMS.DataAccess.Data
+@{
+    var examId = Request.QueryString["examId"];
+    examId = examId == null ? "0" : examId;
+
+    var courseId = Request.QueryString["courseId"];
+    courseId = courseId == null ? "0" : courseId;
+
+    //WebApi link for single row
+    var getFacultySuppleManagerDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "GetFacultySuppleManagerDataExtra", area = "Employee" });
+    var getEnrolledSuppleCourseListByExamIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "GetEnrolledSuppleCourseListByExamId", area = "Employee" });
+    var getSuppleApplicantListByCourseIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "GetSuppleApplicantListByCourseId", area = "Employee" });
+    var saveSuppleResultComponentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "SaveSuppleResultComponent", area = "Employee" });
+    var saveAndLockSuppleResultComponentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "SaveAndLockSuppleResultComponent", area = "Employee" });
+    var getGenerateSuppleResultByCourseIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FacultySuppleManagerApi", action = "GetGenerateSuppleResultByCourseId", area = "Employee" });
+
+
+
+    //var saveSuppleExaminerListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "SaveSuppleExaminerList", area = "ExamSection" });
+    //var getTrashOrUnTrashExaminerByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "GetTrashOrUnTrashExaminerById", area = "ExamSection" });
+    //var getSuppleExamSummaryByExamIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "GetSuppleExamSummaryByExamId", area = "ExamSection" });
+
+    //var getApplicantProgramListByExamIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "GetApplicantProgramListByExamId", area = "ExamSection" });
+    //var getApplicantCourseListByExamIdByProgramIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "GetApplicantCourseListByExamIdByProgramId", area = "ExamSection" });
+    //var getApplicantBatchListByExamIdByProgramIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SuppleCourseListApi", action = "GetApplicantBatchListByExamIdByProgramId", area = "ExamSection" });
+
+    //var getSuppleApplyUrl = Url.Action("Apply", "SuppleManager", new { area = "ExamSection" });
+
+}
+<div ng-controller="FacultySuppleManagerCtrl"
+     ng-init="Init(
+     '@examId'
+    ,'@courseId'
+      ,'@getFacultySuppleManagerDataExtraUrl'
+     ,'@getEnrolledSuppleCourseListByExamIdUrl'
+     ,'@getSuppleApplicantListByCourseIdUrl'
+     ,'@saveSuppleResultComponentUrl'
+      ,'@saveAndLockSuppleResultComponentUrl'
+    ,'@getGenerateSuppleResultByCourseIdUrl'
+     )">
+    <div ng-Hide="!HasError " class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky hide-on-print">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Manage Supple Course</span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="widget-caption form-inline">
+                    <span>Exam: </span>
+                    <select ng-model="SelectedExamId"
+                            ng-change="onChangeExam()"
+                            ng-options="option.Id as option.Name for option in ExamList" ng-init="" class="form-control input-xs"></select>
+                </span>
+            </div>
+            @*<div class="widget-buttons no-padding-left">
+                    <button ng-click="getSuppleCourseListByExamIdByProgramId()" class="btn btn-xs btn-success">
+                        <i class="fa fa-refresh"></i>
+                        Load Courses
+                    </button>
+                </div>*@
+        </div>
+
+        <div class="widget-body  no-padding">
+            <div class="tabbable" id="suppleCourseManagerTab">
+                <ul class="nav nav-tabs hide-on-print">
+
+                    <li class="tab-danger active">
+                        <a data-toggle="tab" href="#courseInfoList" aria-expanded="true">
+                            Course List
+                        </a>
+                    </li>
+                    <li class="tab-success">
+                        <a data-toggle="tab" href="#mark" aria-expanded="false">
+                            Mark
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <div class="tab-pane active" id="courseInfoList">
+                        <div ng-show="CourseList.length <= 0" class="alert alert-warning fade in radius-bordered alert-shadowed">
+                            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                            <i class="fa-fw fa fa-warning"></i>
+                            <strong>Attention Please!</strong> Please select a exam and program to above then press <b>Load Courses</b> button.
+                        </div>
+                        <div @*ng-show="CourseList.length > 0"*@>
+                            @Html.Partial("~/Areas/Employee/Views/FacultySuppleManager/Shared/_CourseList.cshtml")
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="mark">
+                        <div ng-show="CourseList.length <= 0" class="alert alert-warning fade in radius-bordered alert-shadowed">
+                            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                            <i class="fa-fw fa fa-warning"></i>
+                            <strong>Attention Please!</strong> Please select a exam and program to above then press <b>Load Courses</b> button.
+                        </div>
+                        <div @*ng-show="CourseList.length > 0"*@>
+                            @Html.Partial("~/Areas/Employee/Views/FacultySuppleManager/Shared/_Mark.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    .table-form td.fieldarea {
+        text-align: left !important;
+    }
+
+    .widget-select2 {
+        width: 500px;
+        display: inline-block;
+        float: left;
+        text-align: left;
+        margin-top: 4px;
+    }
+</style>

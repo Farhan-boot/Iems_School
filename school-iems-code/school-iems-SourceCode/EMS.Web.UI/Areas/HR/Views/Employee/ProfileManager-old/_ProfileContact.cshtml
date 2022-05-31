@@ -1,0 +1,246 @@
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+  <div class="form-title">
+    Contact Number
+</div>
+<div class="widget">
+    <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+        <i class="widget-icon fa fa-info-circle"></i>
+        <span  class="widget-caption">All Contact Numbers</span>
+    </div>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-sm-4" ng-repeat="row in Obj.ContactNumberList">
+                <div class="form-group">
+                    <label class="control-label">
+                        {{ContactNumberTypeEnumList[row.@User_ContactNumber.Property_ContactNumberTypeEnumId].Name}}
+                        <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)">
+                            (ex: 01XXXXXXXXX)
+                        </span>
+                        <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.HomePhone) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficePhone)">
+                            (ex: 02XXXXXXXXX)
+                        </span>
+                        <span  ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeIntercom) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.ArmyTelephone)">
+                            (4 digit)
+                        </span>
+                        <strong class="red" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile)"> * </strong>
+                    </label>
+                    <span  class="input-icon icon-right">
+                        <input type="text" ng-model="row.@User_ContactNumber.Property_ContactNumber" class="form-control" placeholder="Enter Contact Number" maxlength="100" required="" />
+                        <i class="glyphicon glyphicon-phone circular" ng-show="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+                        <i class="glyphicon glyphicon-earphone circular" ng-hide="row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.PersonalMobile) ||
+                                                       row.@User_ContactNumber.Property_ContactNumberTypeEnumId == @((int) User_ContactNumber.ContactNumberTypeEnum.OfficeMobile)"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-title">
+    Contact Email
+</div>
+<div class="row">
+    <div class="col-sm-12" ng-repeat="row in Obj.ContactEmailList">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span  class="widget-caption">
+                    {{ContactEmailTypeEnumList[row.@User_ContactEmail.Property_ContactEmailTypeEnumId].Name}}
+                </span>
+            </div>
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Contact Email <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                            <span  class="input-icon icon-right">
+                                <input type="email" ng-model="row.@User_ContactEmail.Property_ContactEmail" class="form-control" placeholder="Enter Contact Email" maxlength="100" required="" />
+                                <i class="fa fa-envelope circular"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label"> Contact Email Type</label>
+                        <select ng-disabled="true" ng-model="row.@User_ContactEmail.Property_ContactEmailTypeEnumId" ng-options="option.Id as option.Name for option in ContactEmailTypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label class="control-label"> Privacy</label>
+                        <select ng-model="row.@User_ContactEmail.Property_PrivacyEnumId" ng-options="option.Id as option.Name for option in PrivacyEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsValid" /> Is Primary
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsValid" /> Is Active
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsValid" /> Is Valid
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="checkbox">
+                            <input type="checkbox" ng-model="row.@User_ContactEmail.Property_IsValid" /> Is Mailing Contact
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-title">
+    Contact Address
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="red">
+            <label class="control-label">
+                <input type="checkbox" ng-change="chnageAddressMIST()" ng-model="IsPresentAddressMIST"> Check if <strong>Present Address</strong> is in @SiteSettings.Instance.InstituteShortName Residential Address.
+            </label>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="red">
+            <label class="control-label">
+                <input type="checkbox" ng-change="chnageAddress()" ng-model="IsSameAddress"> Check if <strong>Present and Permanent Address</strong> are same.
+            </label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6" ng-repeat="row in Obj.ContactAddressList">
+        <div class="widget">
+            <div class="widget-header bordered-bottom bordered-blue bg-blueberry">
+                <i class="widget-icon fa fa-info-circle"></i>
+                <span  class="widget-caption">{{ContactAddressTypeEnumList[row.@User_ContactAddress.Property_ContactAddressTypeEnumId].Name}} Address</span>
+            </div>
+            <div class="widget-body ">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label class="control-label">Care of (C/O)</label>
+                        @*<div class="input-group">
+                            <span  class="input-group-addon">C/O</span>
+                            <input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress." class="form-control" placeholder="Enter Care Of Person Name" maxlength="128" required="" />
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-user circular"></i></span>
+                        </div>*@
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Flat/Apartment No./Name</label>
+                            <span  class="input-icon icon-right">
+                                @*<input type="text" ng-change="chnageAddress()"
+                                       ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                       ng-model="row.@User_ContactAddress.Property_AppartmentNo"
+                                       class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />*@
+                                <i class="fa fa-building circular"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">House/Building No./Name</label>
+                        <span  class="input-icon icon-right">
+                            @*<input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_HouseNo"
+                                   class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />*@
+                            <i class="fa fa-building-o circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Road No./Name</label>
+                        <span  class="input-icon icon-right">
+                            @*<input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_RoadNo"
+                                   class="form-control" placeholder="Enter No./Name" maxlength="50" required="" />*@
+                            <i class="fa fa-road circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Area Name <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <span  class="input-icon icon-right">
+                            @*<input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_AreaInfo"
+                                   class="form-control" placeholder="Enter Area Name" maxlength="500" required="" />*@
+                            <i class="fa fa-map-marker circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Post Office <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <span  class="input-icon icon-right">
+                            <input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_PostOffice"
+                                   class="form-control" placeholder="Enter Post Office" maxlength="250" required="" />
+                            <i class="fa fa-bank circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Police Station <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <span  class="input-icon icon-right">
+                            <input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_PoliceStation"
+                                   class="form-control" placeholder="Enter Police Station" maxlength="250" required="" />
+                            <i class="fa fa-bank circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">District/State/City <span  class="red glyphicon glyphicon-asterisk"></span></label>
+                        <span  class="input-icon icon-right">
+                            <input type="text" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_District"
+                                   class="form-control" placeholder="Enter District/State/City" maxlength="250" required="" />
+                            <i class="fa fa-map-marker circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Post/Zip Code</label>
+                        <span  class="input-icon icon-right">
+                            @*<input type="number" ng-change="chnageAddress()"
+                                   ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                   ng-model="row.@User_ContactAddress.Property_PostCode" class="form-control" placeholder="Enter Post Code" />*@
+                            <i class="fa fa-location-arrow circular"></i>
+                        </span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Country</label>
+                        <select ng-change="chnageAddress()"
+                                ng-disabled="IsSameAddress && row.@User_ContactAddress.Property_ContactAddressTypeEnumId==@((int) User_ContactAddress.ContactAddressTypeEnum.Permanent)"
+                                ng-model="row.@User_ContactAddress.Property_CountryId" ng-options="option.Id as option.Name for option in CountryList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Contact Address Type</label>
+                        <select ng-disabled="true" ng-model="row.@User_ContactAddress.Property_ContactAddressTypeEnumId" ng-options="option.Id as option.Name for option in ContactAddressTypeEnumList " ng-init="" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Privacy</label>
+                        @*<select ng-model="row.@User_ContactAddress.Property_PrivacyEnumId" ng-options="option.Id as option.Name for option in PrivacyEnumList " ng-init="" class="form-control"></select>*@
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="control-label">Is Valid</label>
+                        <input type="checkbox" ng-model="row.@User_ContactAddress.Property_IsValid" class="form-control" placeholder="Enter Is Valid" />
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">Is Mailing Contact</label>
+                        @*<input type="checkbox" ng-model="row.@User_ContactAddress.Property_IsMailingContact" class="form-control" placeholder="Enter Is Mailing Contact" />*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

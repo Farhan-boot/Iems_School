@@ -1,0 +1,36 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Utils
+@using Microsoft.Ajax.Utilities
+@{
+    long parentId = 0;
+    var deptList = HttpUtil.DbContext.HR_Department.OrderBy(x => x.ParentDeptId).ToList();
+    var parentDeptList = deptList.Where(x => x.ParentDeptId == parentId);
+}
+@foreach (var dept in parentDeptList)
+{
+    parentId = dept.Id;
+    <ul>
+        <li>
+            @dept.Name <strong>@dept.ShortName</strong>
+            @BuildTree(deptList, parentId)
+        </li>
+    </ul>
+}
+
+
+@helper BuildTree(List<HR_Department> deptList, long parentId)
+{
+var parentDeptList = deptList.Where(x => x.ParentDeptId == parentId);
+foreach (var dept in parentDeptList)
+{
+        <ul>
+            <li>
+                @dept.Name <strong>@dept.ShortName</strong>
+                @if (deptList.Count(x => x.ParentDeptId == dept.Id) != 0)
+                {
+                    @BuildTree(deptList, dept.Id)
+                }
+            </li>
+        </ul>
+}
+}

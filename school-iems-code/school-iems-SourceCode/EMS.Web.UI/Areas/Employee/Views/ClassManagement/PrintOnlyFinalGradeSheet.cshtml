@@ -1,0 +1,329 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+
+@{
+    ViewBag.Title = "Generate Grade Book";
+    Layout = "~/Areas/Employee/Views/Shared/_LayoutEmployee.cshtml";
+
+    var id = Request.QueryString["classId"];//ViewContext.RouteData.Values["id"];
+
+    var classId = (string)id == null ? "0" : (string)id;
+    id = Request.QueryString["componentSettingsId"];
+
+    var examType = HttpUtil.GetQueryString("examType");
+
+    //WebApi link for single row
+
+    var getClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetClassResultByClassId", area = "Employee" });
+    var getGenerateClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetGenerateClassResultByClassId", area = "Employee" });
+    var getLockClassResultByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassResultManagerApi", action = "GetLockClassResultByClassId", area = "Employee" });
+
+
+
+    //var saveResultComponentListByClassId = "saveResultComponentListByClassId";
+    //var saveLockResultComponentListByClassId = "saveLockResultComponentListByClassId";
+    //print Url
+    //var printFinalExamMarkUrl = Url.Action("PrintFinalExamMark", "ClassResultComponent", new { area = "Employee" });
+
+    long output;
+    long ClassId = long.TryParse(classId.ToString(), out output) ? output : 0;
+    List<User_Account> facultylist = HttpUtil.DbContext.Aca_ClassTakenByEmployee
+        .Include("User_Employee")
+        .Include("User_Employee.User_Account")
+        .Where(x => x.ClassId == ClassId && x.RoleEnumId == (byte)Aca_ClassTakenByEmployee.RoleEnum.Faculty)
+        .Select(x => x.User_Employee.User_Account)
+        .ToList();
+}
+
+
+
+@section ScriptSection
+{
+<script>
+        window.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, false);
+
+</script>
+    <script src="~/Areas/Employee/Views/ClassManagement/GenerateClassResult.js?v=4"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>
+}
+<style>
+    .print-footer {
+        display: none !important;
+    }
+    /*.print-mark-sheet td, .print-mark-sheet th{
+        border: 1px solid black !important;
+        font-size: 12px;
+    }*/
+    @@media print {
+        .no-bordered, .no-border {
+            border: none !important;
+        }
+        #marks .table th,  #marks .table td {
+              border: .5px solid black !important;
+        }
+    }
+</style>
+
+<div ng-controller="ClassResultCtrl"
+     ng-init="Init(
+       '@classId'
+      ,'@examType'
+      , '@getClassResultByClassIdUrl'
+      , '@getGenerateClassResultByClassIdUrl'
+     ,'@getLockClassResultByClassIdUrl')">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky  no-print">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption "><b> Grade Book For  {{ClassResult.ExamName}} </b></span>
+
+            <div class="widget-buttons no-padding-left">
+                @*<button ng-click="" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>*@
+                @*<button ng-click="" class="btn btn-success btn-xs"><i class="fa fa-print"></i> Print Mark</button>*@
+                @*<button ng-click="" class="btn btn-success btn-xs"><i class="fa fa-download"></i> Download Excel Version</button>*@
+
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-success dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-download"></i> Download Marks
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-blue pull-left" aria-labelledby="dropdownMenu">
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV (.csv)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel (.xls)</a></li>
+                        <li><a href="#" onclick="$('#marks').tableExport({ fileName: 'StudentMarks', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word (.doc)</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="widget-body">
+        <div class="alert alert-danger" ng-show="ClassResult==null">
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention: </strong> <span>{{ErrorMsg}}</span>
+        </div>
+        <div class="row" ng-show="ClassResult!=null">
+            <!--text type-->
+            <div class="col-lg-12 col-sm-12 col-xs-12 form-group">
+                <div class="alert alert-danger" ng-show="HasError">
+                    <button type="button" class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-warning"></i>
+                    <strong>Attention: </strong> <span>{{ErrorMsg}}</span>
+                </div>
+                <br />
+                <div class="">
+                    <!-- Component start -->
+                    <style>
+                                 @*.print-footer {
+                                     display: none !important;
+                                 }
+                                 .print-mark-sheet td, .print-mark-sheet th{
+                                     border: 1px solid black !important;
+                                     font-size: 12px;
+                                 }
+                                ("@page") :first {margin-top: 0.5cm/* Top margin on first page 10cm */}
+                                @("@page") { size: portrait }
+                                @("@page") { size: landscape }
+                                @("@page") rotated { size: landscape }*@
+                                @("@page") { size: portrait }
+                                @("@page") rotated { size: portrait }
+                    </style>
+                    <div class="padding-bottom-10 hide-on-print" style="text-align: center">
+                        <div class="widget-footer no-print" style="color:black">
+                            <b style="color: red; text-decoration: underline">Attention Before Print: </b>
+                            <div>
+                                1.<span style="color: red;"> Only Before Final Submission, "<b style="color: red; font-weight: bold">Confirm & Lock</b>" All Component Marks To Remove Draft Water Mark.</span><br />
+                                2. Please set Paper Size as "<b style="color: red; font-weight: bold">A4</b>" and Orientation as "<b style="color: red; font-weight: bold">Portrait</b>" when print.<br />
+                                3. Use latest "<b style="color: red; font-weight: bold"><a href="https://www.google.com/chrome/browser/" title="click to dwonload" target="_blank">Chrome Browser</a></b>" for best performance.
+                            </div>
+                            @*<button onclick="window.print()" class="btn btn-darkorange btn-xs"><i class="fa fa-print"></i> Print Grade Sheet</button>
+                            <br />*@
+                        </div>
+
+                    </div>
+                    <div class="text-center hide-on-print">
+                        <table class="table table-striped table-bordered no-print" style="width: 300px; margin: 0 auto">
+                            <tr>
+                                <td>
+                                    <b>Status : </b>
+                                </td>
+                                <td>
+                                    <span ng-show="ClassResult.IsLocked" class="label label-danger graded"><i class="fa fa-lock"></i> Confirmed & Locked</span>
+                                    <span ng-hide="ClassResult.IsLocked" class="label label-success graded"><i class="fa fa-unlock"></i> Unlocked</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Step 1 : </b>
+                                </td>
+                                <td>
+                                    <button ng-disabled="ClassResult.IsLocked" style="width: 146px;" ng-click="getGenerateClassResultByClassId()" class="btn btn-xs btn-success"><i class="fa fa-refresh"></i> Generate 100% Result</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Step 2 : </b></td>
+                                <td>
+                                    <button ng-disabled="ClassResult.IsLocked" ng-click="getLockClassResultByClassId()" class="btn btn-xs btn-danger "><i class="fa fa-lock"></i> Confirm &amp; Lock Marks</button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Step 3 : </b></td>
+                                <td><a onclick="window.print()" style="width: 146px;" href="#" class="btn btn-xs btn-success"><i class="fa fa-print"></i> Print Final Grade Sheet</a></td>
+                            </tr>
+                        </table>
+                        <br />
+                    </div>
+                  
+                        <table class="" style="width: 100%">
+                            <tr>
+                                <td align="left" valign="top" style="width: 110px">
+
+                                    <img style="width: 100px" src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" />
+                                </td>
+                                <td style="">
+                                    <div class="margin-bottom-5" style="text-align: center">
+                                        <div style="font-size: 16px; font-weight: bold">@SiteSettings.Instance.InstituteName</div>
+                                        <div style="font-size: 14px">Program: {{ClassResult.DeptName}}</div>
+                                        <div style="font-size: 14px">Grade Sheet: {{ClassResult.ExamName}} @*(100% of Total)*@</div>
+                                        <div><span class="widget-caption margin-bottom-5"><b>Course Code, Title : {{ClassResult.Code}}, {{ClassResult.Name}} </b></span></div>
+                                        <div><span class="widget-caption ">Credit Hour: {{ClassResult.CreditLoad}}; {{ClassResult.Category}}; Total Student: {{ClassResult.StudentCount}}; {{ClassResult.SemesterName}}. </span></div>
+                                        <div style="font-size: 13px; font-weight: bold">
+                                            Course Teacher(s):
+                                            @foreach (var faculty in facultylist)
+                                            {
+                                                if (faculty.UserName != "psdeveloper")
+                                                {
+                                                    <span style="">@faculty.FullName.ToLower().ToTitleCase();</span>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                                <td valign="top" align="right" style="width: 110px; text-align: right; font-size: 10px">
+                                    @*Page: @pageInfo<br />*@
+                                        Total Absent: {{ClassResult.TotalAbsentInFinal}}<br />
+                                    Printed: @DateTime.Now.ToString("dd/MM/yyyy")
+
+                                </td>
+                            </tr>
+                        </table>
+                    <div ng-hide="ClassResult.IsLocked" style="font-size: 100px; position: absolute; opacity: .25; text-align: center; transform: rotate(45deg); top: 250px; left: 20%;">
+                        Draft Preview
+                    </div>
+                    <div id="marks">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center hidden-print">
+                                    <input type="checkbox" ng-click="selectAll($event)">
+                                </th>
+                                <th class="text-center">
+                                    Ser.
+                                </th>
+                                <th class="text-center" style="min-width: 180px">
+                                    Student Name
+                                </th>
+                                <th class="text-center">Student ID</th>
+                                @*<th class="text-center">Exam Roll</th>*@
+
+                                @*<th class="text-center" ng-repeat="component in ClassResult.DataBag.ComponetList">
+                                    {{component.Name }} ({{component.TotallMark}})
+                                </th>*@
+
+                                @*<th style="width: 150px" class="text-center"> Total Mark ({{ClassResult.TotallMark}})</th>
+                                <th style="width: 150px" class="text-center"> Mark in {{ClassResult.ConvertPercentage}}% </th>*@
+                                
+                                <th style="width: 150px" class="text-center"> Letter Grade</th>
+                                <th style="width: 150px" class="text-center"> Grade Point</th>
+                                @*<th style="width: 150px" class="text-center hidden-print"> Remark</th>*@
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                                
+                                    <tr ng-repeat="row in ClassResult.DataBag.StudentList " ng-class="{'hidden-print':row.@User_Student.Property_IsSelected==false}">
+                                        <td class="text-center hidden-print">
+                                            <input type="checkbox" ng-model="row.@User_Student.Property_IsSelected" />
+                                        </td>
+                                        <td class="text-center">
+                                            {{$index+1}}
+                                        </td>
+                                        <td hide="row.Aca_ResultComponentSettingJson.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                            {{row.Name}}
+                                        </td>
+                                        <td class="text-center" hide="row.Aca_ResultComponentSettingJson.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                            {{row.ClassRoll}}
+                                        </td>
+                                        @*<td class="text-center" show="row.Aca_ResultComponentSettingJson.@Aca_ResultComponentSetting.Property_TestTypeEnumId<=@((int) Aca_MarkDistributionPolicyComponent.TestTypeEnum.FinalTerm) ">
+                                            {{row.ExamRoll}}
+                                        </td>*@
+                                        @*<td ng-repeat="componentMark in row.DataBag.ComponentMarkList" class="text-center">
+                                            {{componentMark.Mark}}
+                                 
+                                        </td>*@
+                                        @*<td class="text-center">
+                                            {{row.DataBag.CourseMark.Mark}}
+                                           
+                                        </td>
+                                        <td class="text-center">
+                                            {{row.DataBag.CourseMark.ContributedMark}}
+                                         
+                                        </td>*@
+                                        @*<td class="text-center">{{row.DataBag.CourseMark.ContributedMark}}</td>*@
+
+                                        <td class="text-center">
+                                            {{row.DataBag.CourseMark.Grade}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{row.DataBag.CourseMark.GradePoint}}
+                                        </td>
+                                        @*<td class="text-center hidden-print">
+                                            {{row.DataBag.CourseMark.Remark}}
+                                        </td>*@
+                                    </tr>
+                             
+                            </tbody>
+                            <tfoot style="border: none !important;">
+                                <tr style="border: none !important;">
+                                    <td colspan="{{8+ClassResult.DataBag.ComponetList.length}}" style="border: none !important;">
+                                        <br />
+                                        <table class="table-no-bordered no-bordered" style="width: 100%; font-size: 11px; border: none !important;">
+                                            <tr>
+
+
+                                                <td class="no-bordered" rowspan="2" style="width: 33%; vertical-align: bottom; text-align: center; border: none !important;">
+                                                    ____________________________________<br />
+                                                    Date & Signature of Course Teacher
+                                                </td>
+                                                <td class="no-bordered" style="vertical-align: bottom; text-align: center; border: none !important;">
+                                                    ____________________________________<br />
+                                                    Date & Signature of Chairman
+                                                </td>
+                                                <td class="no-bordered" style="width: 33%; vertical-align: bottom; text-align: center; border: none !important;">
+                                                    ____________________________________<br />
+                                                    Date & Signature of Exam Controller
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

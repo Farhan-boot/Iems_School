@@ -1,0 +1,73 @@
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model List<User_Student>
+
+@{
+    ViewBag.Title = "Incomplete Registration Student List (" + Model.Count + ")";
+    var depts = HttpUtil.DbContext.HR_Department.Where(x => x.TypeEnumId == (byte) HR_Department.TypeEnum.AcademicDepartment);
+    var campuses = HttpUtil.DbContext.General_Campus.ToList();
+}
+
+@if (Model != null)
+{
+    foreach (var dept in depts)
+    {
+        if (Model.Count(x => x.User_Account.DepartmentId == dept.Id) != 0)
+        {
+            foreach (var campus in campuses)
+            {
+                if (Model.Count(x => x.User_Account.DepartmentId == dept.Id && x.User_Account.CampusId == campus.Id) != 0)
+                {
+                    var i = 0;
+                    <h3 class="text-center">Incomplete Registration Student List (@campus.Name Campus)</h3>
+                    <h4 class="text-center">@dept.Name (@dept.ShortName)</h4>
+                    <h5 class="text-center">@SiteSettings.Instance.EmsLink</h5>
+                    <table class="table table-bordered pb-after">
+                        <tr>
+                            <th class="text-center"><h4>Ser</h4></th>
+                            <th class="text-center"><h4>Name</h4></th>
+                            <th class="text-center"><h4>Username</h4></th>
+                            <th class="text-center"><h4>Level</h4></th>
+                            <th class="text-center"><h4>Status</h4></th>
+                            @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit))
+                            {
+                                <th class="text-center no-print"><h4>Action</h4></th>
+                            }
+                        </tr>
+                        @foreach (var student in Model.Where(x => x.User_Account.DepartmentId == dept.Id && x.User_Account.CampusId == campus.Id).ToList())
+                        {
+                            i++;
+                            <tr>
+                                <td class="text-center"><h5>@i.ToStringPadLeft(3, '0')</h5></td>
+                                <td><h5>@student.User_Account.FullName</h5></td>
+                                <td class="text-center"><h5>@student.User_Account.UserName</h5></td>
+                                <td class="text-center" style="width: 75px;"><h5>@student.Aca_StudyLevelTerm.Name</h5></td>
+                                <td class="text-center">
+                                    @if (student.User_Account.IsMigrate)
+                                    {
+                                        <h5>Incomplete</h5>
+                                    }
+                                    else
+                                    {
+                                        <h5>Complete</h5>
+                                    }
+                                </td>
+                                @if (PermissionUtil.HasPermission(PermissionCollection.AdmissionArea.StudentManager.Student.CanEdit))
+                                {
+                                    <td class="text-center no-print">
+                                        <a target="_blank" href="@Url.Action("StudentAddEdit", "Student", new { area = "Academic" })/?id=@student.Id" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+
+                }
+            }
+        }
+    }
+
+}

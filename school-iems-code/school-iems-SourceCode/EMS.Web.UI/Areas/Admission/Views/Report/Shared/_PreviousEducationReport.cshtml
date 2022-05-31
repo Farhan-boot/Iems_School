@@ -1,0 +1,165 @@
+﻿
+<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    var getPreviousEducationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PreviousEducationReportApi", action = "GetPreviousEducationDataExtra", area = "Admission" });
+    //WebApi link for List 
+    var getPreviousEducationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "PreviousEducationReportApi", action = "GetPagedPreviousEducation", area = "Admission" });
+
+    var editStudentByIdAcademicPageUrl = Url.Action("StudentAddEdit", "Student", new { area = "Academic" });
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="PreviousEducationCtrl"
+     ng-init="Init(
+     '@getPreviousEducationDataExtraUrl'
+     ,'@getPreviousEducationUrl'
+     )">
+    <div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false;ErrorMsg=''" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div>
+        <div class="widget">
+            <div class="widget-body no-padding" style="overflow: auto; background-color: #fff;">
+                <table class="table table-bordered educationHistory" style="font-size: 11px;">
+                    <thead class="show-on-print">
+                    <tr>
+                        <th style="text-align: center;" colspan="12"><strong>Report of Waiver On Full Package Summary</strong></th>
+                    </tr>
+                    <tr class="show-on-print">
+                        <th style="text-align: center;" colspan="12">
+                            <div>Program: <span ng-if="SelectedProgram==null">All Program</span>{{SelectedProgram.Name}} </div>
+                            <div>Semester: <span ng-if="SelectedSemester==null">All Semester</span>{{SelectedSemester.Name}}</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="hide-on-print">
+                    <tr>
+                        <td style="width: 25px;">Semester: </td>
+                        <td>
+                            <select ng-model="SelectedSemester"
+                                    ng-options="option as option.Name for option in SemesterList" title="Select Semester" class="form-control">
+                                <option value="" label="" class="">---Select Semester---</option>
+                            </select>
+                        </td>
+
+                        <td style="width: 50px;">Program:</td>
+                        <td style="">
+                            <select ng-model="SelectedProgram"
+                                    ng-options="option as option.Name for option in ProgramList | filter:{SemesterDurationEnumId:SelectedSemester.SemesterDurationEnumId}"
+                                    title="Select Program" class="form-control">
+                                <option value="" label="" class="">---All Program---</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="hide-on-print">
+                        <td style="text-align: center;" colspan="4">
+                            <button ng-disabled="SelectedSemester == null" class="btn btn-info" ng-click="getPreviousEducation()">
+                                View Report
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-show="StudentList.length>0"  style="margin-top: 10px;" class="border-black main-body">
+            <table class="table-bordered table-border" style="width: 100%; text-align: center;">
+                <thead>
+                <tr style="font-weight: bold; font-size: 14px;">
+                    <th>SN</th>
+                    <th>Student Id</th>
+                    <th style="width: 190px;">Name</th>
+                    <th style="width: 150px;">Program</th>
+                    <th>Batch</th>
+                    <th>SSC Group</th>
+                    <th>SSC GPA</th>
+                    <th>HSC Group</th>
+                    <th>HSC GPA</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="row in StudentList">
+                <tr style="font-weight: bold">
+                    <td>{{$index+1}}</td>
+                    <td>
+                        <a target="_blank" href="@(editStudentByIdAcademicPageUrl)/?id={{row.AccountId}}&stdId={{row.StudentId}}&un={{row.ClassRollNo}}"> {{row.ClassRollNo}}</a>
+                    </td>
+                    <td>{{row.Name}}</td>
+                    <td>{{row.ProgramName}}</td>
+                    <td>{{row.BatchName}}</td>
+                    <td>{{row.SscGroup}}</td>
+                    <td>
+                        <span ng-show="row.SscGpa!=0">{{row.SscGpa}}</span>
+                    </td>
+                    <td>{{row.HscGroup}}</td>
+                    <td>
+                        <span ng-show="row.HscGpa!=0">{{row.HscGpa}}</span>
+                    </td>
+                    
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /*td:first-child {
+        padding-left: 5px !important;
+    }*/
+
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+    .report-container tbody tr {
+        font-size: 13px !important;
+    }
+
+    .trans-name {
+        vertical-align: top; 
+    }
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+    .no-border tr  td {
+        border: none !important;
+    }
+</style>

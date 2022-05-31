@@ -1,0 +1,13 @@
+@using EMS.Framework.Settings
+@{
+    ViewBag.Title = SiteSettings.Instance.SuppleExamViewName +" Processing Profile of Student";
+    Layout = "~/Areas/ExamSection/Views/Shared/_LayoutExamSection.cshtml";
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/ExamSection/Views/SuppleManager/_Apply.js?v=2"></script>
+}
+
+
+@Html.Partial("~/Areas/ExamSection/Views/SuppleManager/_Apply.cshtml")

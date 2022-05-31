@@ -1,0 +1,330 @@
+﻿@using System.Data.Entity.Core.Common.CommandTrees
+@using EMS.Facade.AccountingArea
+@using EMS.Framework.Permissions
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+<div class="page-sidebar hidden-print" id="sidebar">
+    <ul class="nav sidebar-menu">
+        <!--Dashboard-->
+        <li>
+            <a href="@Url.Action("Index", "Dashboard", new {area = "Student"})">
+                <i class="menu-icon fa fa-home"></i>
+                <span  class="menu-text"> Dashboard </span>
+            </a>
+        </li>
+    <li>
+        <a href="@Url.Action("Index", "Profile", new {area = "Student"})">
+            <i class="menu-icon fa fa-user"></i>
+            <span  class="menu-text"> Profile </span>
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("ChangePassword", "CommonManager", new {area = ""})">
+            <i class="menu-icon fa fa-user-secret"></i>
+            <span class="menu-text">Change Password</span>
+        </a>
+    </li>
+    @*<li>
+            <a href="@Url.Action("ClassAttendanceSmsLog", "Course", new {area = "Student"})">
+                <i class="menu-icon fa fa-user"></i>
+                <span  class="menu-text"> SMS Log & Charge </span>
+            </a>
+        </li>*@
+    <li>
+        <a href="#" class="menu-dropdown">
+            <i class="menu-icon fa fa-university"></i>
+            <span  class="menu-text"> Academic </span>
+            <i class="menu-expand"></i>
+        </a>
+        <ul class="submenu">
+            @*<li>
+                    <a href="@Url.Action("Index", "Course", new {area = "Student"})">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span  class="menu-text">Course List</span>
+                    </a>
+                </li>*@
+            
+            @if (SiteSettings.Instance.Student.OnlineCourseRegistrationCanApply)
+            {
+                <li>
+                    <a href="@Url.Action("OnlineCourseRegistration", "Registration", new {area = "Student"})">
+                        <i class="menu-icon fa fa-paper-plane-o"></i>
+                        <span class="menu-text active-small-text">Online Registration</span>
+                    </a>
+                </li>
+            }
+            @if (SiteSettings.Instance.Student.CurriculumOrSyllabusCanView)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Curriculum", new {area = "Student"})">
+                        <i class="menu-icon fa fa-book"></i>
+                        <span class="menu-text active-small-text"> Curriculum/Syllabus</span>
+                    </a>
+                </li>
+            }
+                
+            @if (SiteSettings.Instance.Student.SemesterWiseRegistrationCanView)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Registration", new {area = "Student"})">
+                        <i class="menu-icon fa fa-paper-plane-o"></i>
+                        <span  class="menu-text"> Course Registration </span>
+                    </a>
+                </li>
+            }
+            @if (SiteSettings.Instance.Student.SemesterWiseRegistrationCanView)
+            {
+                <li>
+                    <a href="@Url.Action("RegisteredCourses", "Reports", new {area = "Student"})">
+                        <i class="menu-icon fa fa-paper-plane-o"></i>
+                        <span class="menu-text"> Registered Courses</span>
+                    </a>
+                </li>
+            }
+
+            @if (SiteSettings.Instance.Student.SuppleExamCanView)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "SuppleExam", new {area = "Student"})">
+                        <i class="menu-icon fa fa-paper-plane-o"></i>
+                        <span class="menu-text"> @SiteSettings.Instance.SuppleExamViewName Apply</span>
+                    </a>
+                </li>
+            }
+
+            @*<li>
+                    <a href="@Url.Action("Index", "Accounts", new {area = "Student"})">
+                        <i class="menu-icon fa fa-money"></i>
+                        <span  class="menu-text"> Financial Account </span>
+                    </a>
+                </li>*@
+
+            @*<li>
+                    <a href="@Url.Action("Index", "AcademicCalender", new {area = "Student"})">
+                        <i class="menu-icon fa fa-calendar"></i>
+                        <span  class="menu-text"> Academic Calender </span>
+                    </a>
+                </li>*@
+            @if (SiteSettings.Instance.Student.FacultyEvaluationCanView)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "FacultyEvaluation", new { area = "Student" })">
+                        <i class="menu-icon fa fa-balance-scale"></i>
+                        <span class="menu-text"> Faculty Evaluation </span>
+                    </a>
+                </li>
+            }
+                
+            @if (SiteSettings.Instance.Student.FullGradeReportOfAllSemesterCanView)
+            {
+                <li>
+                    <a href="@Url.Action("GradesBySemester", "Reports", new {area = "Student"})">
+                        <i class="menu-icon fa fa-file-text-o"></i>
+                        <span class="menu-text" style="font-size: 10px !important;">
+                            Grades Report By Semester
+                        </span>
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </li>
+    @if (SiteSettings.Instance.Student.ResultBySingleSemesterCanView)
+    {
+        <li>
+            <a href="@Url.Action("SemesterWiseResult", "Reports", new {area = "Student"})" target="_blank">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span class="menu-text"> Regular Exam Result </span>
+            </a>
+        </li>
+    }
+    @*//@DbInstance.*@
+    
+    @if (SiteSettings.Instance.Student.TransferredCourseResultCanView)
+    {
+        <li>
+            <a href="@Url.Action("TransferredCourseResult", "Reports", new {area = "Student"})" target="_blank">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span style="font-size: 10px" class="menu-text"> Transferred Course Result </span>
+            </a>
+        </li>
+    }
+    @if (SiteSettings.Instance.Student.SuppleResultCanView)
+    {
+        <li>
+            <a href="@Url.Action("SuppleResult", "Reports", new {area = "Student"})" target="_blank">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span class="menu-text"> @SiteSettings.Instance.SuppleExamViewName Result </span>
+            </a>
+        </li>
+    }
+
+    @if (SiteSettings.Instance.Student.AdmitCardCanView)
+    {
+        <li>
+            <a href="@Url.Action("AdmitCard", "Reports", new {area = "Student"})" target="_blank">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span class="menu-text">
+                    Admit Card Download
+                </span>
+                @*<span class="badge badge-success">new</span>*@
+            </a>
+        </li>
+    }
+    
+    @if (SiteSettings.StudentSiteSettings.IsOpenOnlinePaymentForStudentPanel)
+    {
+        <li>
+            <a href="@Url.Action("Index", "OnlinePayment", new {area = "Student"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text">Online Payment</span>
+            </a>
+        </li>
+    }
+    
+    @if (SiteSettings.Instance.IsPolytechnicInstitute)
+    {
+        <li>
+            <a href="@Url.Action("Index", "MonthlyOnlinePayment", new {area = "Student"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text">Monthly Online Payment</span>
+            </a>
+        </li>
+    }
+    
+
+    @if (SiteSettings.Instance.Student.DebitTransactionCanView || SiteSettings.Instance.Student.CreditTransactionCanView)
+    {
+        <li>
+            <a href="@Url.Action("Financial", "Reports", new {area = "Student"})">
+                <i class="menu-icon fa fa-money"></i>
+                <span class="menu-text">Due & Payments</span>
+            </a>
+        </li>
+    }
+
+    @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-file-text-o"></i>
+                <span  class="menu-text"> Reports </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+
+                $1$<li>
+                    <a href="@Url.Action("GradesByCurriculum", "Reports", new {area = "Student"})">
+                        <span  class="menu-text"> Grades by Curriculum </span>
+                    </a>
+                </li>#1#
+               
+                $1$<li>
+                    <a href="@Url.Action("Financial", "Reports", new {area = "Student"})">
+                        <span  class="menu-text"> Financial Record </span>
+                    </a>
+                </li>#1#
+            </ul>
+        </li>*@
+        @if (SiteSettings.Instance.Student.LibraryCanView)
+        {
+            <li>
+                <a href="#" class="menu-dropdown">
+                    <i class="menu-icon fa fa-book"></i>
+                    <span class="menu-text"> My Library </span>
+
+                    <i class="menu-expand"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        @*@Url.Action("Index", "Library", new { area = "Student" })*@
+                        <a href="#">
+                            <span class="menu-text"> Book Search </span>
+                        </a>
+                    </li>
+                    @*<li>
+                            <a href="@Url.Action("CurrentBorrows", "Library", new {area = "Student"})">
+                                <span  class="menu-text"> Current Borrows </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("BorrowHistory", "Library", new {area = "Student"})">
+                                <span  class="menu-text"> Borrowing History </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Reservation", "Library", new {area = "Student"})">
+                                <span  class="menu-text"> Online Reservation </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Financials", "Library", new {area = "Student"})">
+                                <span  class="menu-text"> Financial Account </span>
+                            </a>
+                        </li>*@
+                </ul>
+            </li>
+        }
+
+        @if (SiteSettings.InstituteKey.ToLower() == SiteSettings.InstituteKeyEnum.eub.ToString())
+        {
+            <li>
+                <a href="https://drive.google.com/drive/folders/12eBFWvIsLrszQgKGCEyamvINngSt92st?usp=sharing" target="_blank">
+                    <i class="menu-icon fa fa-book"></i>
+                    <span class="menu-text"> E-Library</span>
+                </a>
+            </li>
+        }
+
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-files-o"></i>
+                <span  class="menu-text"> Forms/Applications </span>
+
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Application", new {area = "Student"})">
+                        <span  class="menu-text"> Online Applications </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Agreement", new {area = "Student"})">
+                        <span  class="menu-text"> Agreement </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "OfficialForms", new {area = "Student"})">
+                        <span  class="menu-text"> Download Forms </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+        @*<li>
+            <a href="#" class="menu-dropdown">
+                <i class="menu-icon fa fa-wechat"></i>
+                <span  class="menu-text"> Communication </span>
+
+                <i class="menu-expand"></i>
+            </a>
+
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("Index", "Message", new {area = "Student"})">
+                        <span  class="menu-text"> Message </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Mail", new {area = "Student"})">
+                        <span  class="menu-text"> E-Mail </span>
+                    </a>
+                </li>
+            </ul>
+        </li>*@
+        <li>
+            <a target="_blank" href="@SiteSettings.CompanyWebsite" class="sky">
+                <strong class="menu-text">@SiteSettings.Copyright</strong>
+            </a>
+        </li>
+    </ul>
+</div>

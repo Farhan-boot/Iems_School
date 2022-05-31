@@ -1,0 +1,217 @@
+﻿
+<!--File:General_Room List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Room List";
+    
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var RoomId = (string) id == null?"0":(string)id;
+    
+    //WebApi link for single row 
+    var getRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomById", area = "Admin" });
+    var getRoomDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomDataExtra", area = "Admin" });
+    var saveRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoom", area = "Admin" });
+    var deleteRoomByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetDeleteRoomById", area = "Admin" });
+
+    //WebApi link for List
+    var getPagedRoomUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "RoomApi", action = "GetPagedRoom", area = "Admin"});
+    var getAllRoomUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetAllRoom", area = "Admin" });
+    var saveRoomListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "SaveRoomList", area = "Admin" });
+    var getRoomListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "RoomApi", action = "GetRoomListDataExtra", area = "Admin" });
+
+    var editRoomByIdPageUrl = Url.Action("RoomAddEdit", "Room", new { area = "Admin" });
+
+    //Angular Function Name
+    var getNewRoom = "getNewRoom";
+    var saveRoom = "saveRoom";
+    var deleteRoomById = "deleteRoomById";
+    var deleteRoomByObj = "deleteRoomByObj";
+    //for list
+    var searchRoomList = "searchRoomList";
+    var getPagedRoomList = "getPagedRoomList";
+    var getAllRoomList = "getAllRoomList";
+    var saveRoomList = "saveRoomList";
+    var getRoomListExtraData = "getRoomListExtraData";
+
+    var refreshPage = "loadPage()";
+    
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Room/RoomList.js"></script>
+}
+
+
+<div ng-controller="RoomListCtrl"
+     ng-init="Init(
+      '@getPagedRoomUrl'
+     ,'@deleteRoomByIdUrl'
+     ,'@getRoomListDataExtraUrl'
+     ,'@saveRoomListUrl'
+     ,'@getRoomByIdUrl'
+     ,'@getRoomDataExtraUrl'
+     ,'@saveRoomUrl'
+     )">
+    <div class="widget">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">Manage Room </span>
+              <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Building</span>*@
+                     <select ng-model="SelectedCampusId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.Name for option in CampusList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Campus---</option>
+                     </select>
+                </span>
+              </div>
+              <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Building</span>*@
+                     <select ng-model="SelectedBuildingId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.Name for option in BuildingList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Building---</option>
+                     </select>
+                </span>
+              </div>       
+              <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Floor</span>*@
+                     <select ng-model="SelectedFloorId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.Name for option in FloorList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Floor---</option>
+                     </select>
+                </span>
+              </div>       
+              <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Department</span>*@
+                     <select ng-model="SelectedDepartmentId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.ShortName for option in DepartmentList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Department---</option>
+                     </select>
+                </span>
+              </div>    
+              <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Building</span>*@
+                     <select ng-model="SelectedTypeEnumId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.Name for option in TypeEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select Type---</option>
+                     </select>
+                </span>
+              </div>
+              <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Building</span>*@
+                     <select ng-model="SelectedStatusEnumId" ng-change="@(searchRoomList)()" 
+                        ng-options="option.Id as option.Name for option in StatusEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select Status---</option>
+                     </select>
+                </span>
+              </div>   
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchRoomList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search Room No." style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editRoomByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <button ng-click="@(searchRoomList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    <th class="text-center" style="display:none">
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>
+                    <th class="text-center" style="">SN</th>
+                    <th class="text-center">Room</th>
+                    <th class="text-center" style="">Name</th>
+                    <th class="text-center" style="">Floor</th>
+                    <th class="text-center" style="">Capacity (Regular)</th>
+                    <th class="text-center" style="">Capacity (Exam)</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Dept</th>
+                    <th class="text-center">Shareable</th>
+                    <th class="text-center no-print" style="width: 100px;">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in RoomList">
+                    <td class="text-center" style="display:none">
+                        <input type="checkbox" ng-model="row.@General_Room.Property_IsSelected" /> 
+                    </td>
+                    <td class="text-center" style="vertical-align: middle;">{{$index+1}}</td>
+                    <td class="">
+                        <strong>{{row.@General_Room.Property_RoomNo}}</strong>@*-{{row.@General_Room.Property_Name}}<br/>*@
+                        @*<em>{{row.General_FloorJson.@General_Floor.Property_Name}}, {{row.General_BuildingJson.@General_Building.Property_ShortName}}, {{row.General_CampusJson.@General_Campus.Property_ShortName}}</em>*@
+                    </td>
+                    <td class="" style="vertical-align: middle;">{{row.@General_Room.Property_Name}}</td>
+                    <td class="text-center" style="vertical-align: middle;">{{row.General_FloorJson.@General_Floor.Property_Name}}</td>
+                    @*<td class="text-center" style="vertical-align: middle;">{{row.@General_Room.Property_OrderNo}}</td>*@
+                    <td class="text-center" style="vertical-align: middle;">{{row.@General_Room.Property_CapacityRegular}}</td>
+                    <td class="text-center" style="vertical-align: middle;">{{row.@General_Room.Property_CapacityAdmission}}</td>
+                    <td class="text-center" style="vertical-align: middle;">{{row.@General_Room.Property_Type}}</td>
+                    <td class="text-center" style="vertical-align: middle;">{{row.@General_Room.Property_Status}}</td>
+                    <td class="text-center" style="vertical-align: middle;">{{row.HR_DepartmentJson.@HR_Department.Property_ShortName}}</td>
+                    <td class="text-center" style="vertical-align: middle;">
+                        <span  ng-show="row.@General_Room.Property_IsShareable" class="badge badge-success">Yes</span>
+                        <span  ng-hide="row.@General_Room.Property_IsShareable" class="badge badge-danger">No</span>
+                    </td>
+                    <td class="text-center no-print">
+                        <a target="_blank" href="@(editRoomByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary btn-block"><i class="fa fa-edit"></i> Edit</a>
+                        <button ng-click="@(deleteRoomById)(row)" class="btn btn-xs btn-danger icon-only btn-block"><i class="fa fa-trash"></i></button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

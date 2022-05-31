@@ -1,0 +1,2246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E94DB73A-6507-49B3-816E-CCBC69B9CEFF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.Web.UI</RootNamespace>
+    <AssemblyName>EMS.Web.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort>58027</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+      </Objects>
+    </PublishDatabaseSettings>
+    <IncludeIisSettings>false</IncludeIisSettings>
+    <IncludeAppPool>true</IncludeAppPool>
+    <PublishDatabases>false</PublishDatabases>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BeyondThemes.Bootstrap">
+      <HintPath>..\packages\WebTheme\4.5\BeyondThemes.Bootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="BundleTransformer.Core, Version=1.9.69.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
+      <HintPath>..\packages\BundleTransformer.Core.1.9.69\lib\net40\BundleTransformer.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CaptchaMvc, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe46ad421dd3b0e6, processorArchitecture=MSIL">
+      <HintPath>..\packages\CaptchaMvc.Mvc5.1.5.0\lib\net45-full\CaptchaMvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.2, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.2\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JavaScriptEngineSwitcher.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
+      <HintPath>..\packages\JavaScriptEngineSwitcher.Core.1.2.0\lib\net40\JavaScriptEngineSwitcher.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.ActiveDirectory.GraphClient, Version=2.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.ActiveDirectory.GraphClient.2.1.1\lib\portable-net4+sl5+win+wpa+wp8\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=2.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.14.201151115\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms, Version=2.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.14.201151115\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office365.Discovery, Version=1.0.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office365.Discovery.1.0.22\lib\portable-net40+sl5+wp8+win8+MonoAndroid10+MonoTouch10+WindowsPhoneApp81\Microsoft.Office365.Discovery.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.ActiveDirectory, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.ActiveDirectory.3.0.1\lib\net45\Microsoft.Owin.Security.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Jwt, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.3.0.1\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider, Version=4.6.18.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.13\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider.WebActivator, Version=4.6.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.13\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\MIST\EMS\ProjectCode\EMS\Source\EMS\packages\Rotativa.1.6.4\lib\net40\Rotativa.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Channels" />
+    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Abstractions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Reporting, Version=9.1.15.624, Culture=neutral, PublicKeyToken=a9d7983dfcc261be">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Telerik.Reporting.Service, Version=9.1.15.624, Culture=neutral, PublicKeyToken=a9d7983dfcc261be">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Telerik.ReportViewer.WebForms, Version=9.1.15.624, Culture=neutral, PublicKeyToken=a9d7983dfcc261be">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Academic\AcademicAreaRegistration.cs" />
+    <Compile Include="Areas\Academic\Controllers\ClassManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\ClassResultManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CourseRegistrationController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CourseController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CurriculumController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CurriculumCourseController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CurriculumElectiveGroupController.cs" />
+    <Compile Include="Areas\Academic\Controllers\CurriculumManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Academic\Controllers\HomeWorkController.cs" />
+    <Compile Include="Areas\Academic\Controllers\HomeWorkSubmissionController.cs" />
+    <Compile Include="Areas\Academic\Controllers\ItemRequestManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\MarkDistributionPolicyBreakdownController.cs" />
+    <Compile Include="Areas\Academic\Controllers\OnlineClassController.cs" />
+    <Compile Include="Areas\Academic\Controllers\RegistrationReportController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\BulkCourseOfferingMangerApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\HomeWorkSubmissionApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ItemRequestManagerApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\OnlineClassApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NoticeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoomController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SiteSettingsManagerController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\NoticeApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\ReportController.cs" />
+    <Compile Include="Areas\Admission\Controllers\SemWiseScholarshipController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\PreviousEducationReportApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\RollAssignedReportApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\SiteSettingsManagerApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\AdvanceSearchApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\ProfileChangeAuditApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\CompanyAccountingAreaRegistration.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\BranchController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\CompanyAccountController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\LedgerController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\ReportController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\VoucherController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\VoucherTypeController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\BranchApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\ChartOfAccountsApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\CompanyAccountApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\TrialBalanceApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\ReceiptPaymentApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\DayBookApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\LedgerTransactionApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\LedgerApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\VoucherApiController.cs" />
+    <Compile Include="Areas\BasicAccounting\Controllers\WebApi\VoucherTypeApiController.cs" />
+    <Compile Include="Areas\Employee\Controllers\ReportController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\WebApi\BulkAdmitCardPrintApiController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\WebApi\ExamApiController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\WebApi\ClassWiseAttendancePrintApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\AttendanceController.cs" />
+    <Compile Include="Areas\HR\Controllers\CalendarYearController.cs" />
+    <Compile Include="Areas\HR\Controllers\EmpLeaveAllocationSettingsController.cs" />
+    <Compile Include="Areas\HR\Controllers\EmpLeaveAllocationSettingsDetailsController.cs" />
+    <Compile Include="Areas\HR\Controllers\EmpLeaveApplicationController.cs" />
+    <Compile Include="Areas\HR\Controllers\HolidaySettingsController.cs" />
+    <Compile Include="Areas\HR\Controllers\LeaveAllocationTemplateDetailsController.cs" />
+    <Compile Include="Areas\HR\Controllers\MonthlyPayslipController.cs" />
+    <Compile Include="Areas\HR\Controllers\MonthlyPayslipDetailsController.cs" />
+    <Compile Include="Areas\HR\Controllers\PayrollController.cs" />
+    <Compile Include="Areas\HR\Controllers\ManageEmployeeController.cs" />
+    <Compile Include="Areas\HR\Controllers\ReportController.cs" />
+    <Compile Include="Areas\HR\Controllers\SalarySettingsController.cs" />
+    <Compile Include="Areas\HR\Controllers\SalarySettingsDetailsController.cs" />
+    <Compile Include="Areas\HR\Controllers\SalaryTemplateController.cs" />
+    <Compile Include="Areas\HR\Controllers\SalaryTemplateDetailsController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\AddNewEmployeeApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\AttendanceApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\CalendarYearApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\EmpLeaveAllocationSettingsApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\EmpLeaveAllocationSettingsDetailsApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\EmpLeaveApplicationApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\HolidaySettingsApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\LeaveAllocationTemplateDetailsApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\ManageEmployeeApiController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\ExamController.cs" />
+    <Compile Include="Areas\Academic\Controllers\ReportController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\BulkCourseRegistrationApiController.cs" />
+    <Compile Include="Areas\Academic\Models\StudentPaySlipViewModel.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\GradingPolicyManagerController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\MarkDistributionPolicyController.cs" />
+    <Compile Include="Areas\Academic\Controllers\ProgramManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\SemesterManagerController.cs" />
+    <Compile Include="Areas\Academic\Controllers\StudentController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ClassRoutineApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ClassTakenByEmployeeApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ClassTakenByStudentApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\CourseApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\CurriculumElectiveGroupApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\GradingPolicyApiController.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\WebApi\GradingPolicyOptionApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ClassApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\CurriculumCourseApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\ProgramApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\SemesterApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\CurriculumApiController.cs" />
+    <Compile Include="Areas\Academic\Controllers\WebApi\StudentApiController.cs" />
+    <Compile Include="Areas\Academic\Models\ClassTestMarksViewModel.cs" />
+    <Compile Include="Areas\Academic\Models\ClassAttendanceViewModel.cs" />
+    <Compile Include="Areas\Accounts\AccountsAreaRegistration.cs" />
+    <Compile Include="Areas\Accounts\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\BankController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BuildingController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CampusController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CountryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DepartmentController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DistrictController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DivisionController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FloorController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LoginAuditController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OrganizationController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ParentsPrimaryJobTypeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PassResetController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PoliceStationController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PostOfficeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RelationshipController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StudentQuotaNameController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StudyLevelController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StudyTermController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\BankApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\BuildingApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\CampusApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\CountryApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\DepartmentApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\DistrictApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\DivisionApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\FloorApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\LoginAuditApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\OrganizationApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\ParentsPrimaryJobTypeApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\PassResetApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\PoliceStationApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\PostOfficeApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\RelationshipApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\RoomApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\StudentQuotaNameApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\StudyLevelApiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WebApi\StudyTermApiController.cs" />
+    <Compile Include="Areas\Admin\Views\Models\UserModel.cs" />
+    <Compile Include="Areas\Admission\AdmissionAreaRegistration.cs" />
+    <Compile Include="Areas\Admission\Controllers\AdmissionExamController.cs" />
+    <Compile Include="Areas\Admission\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admission\Controllers\DegreeCategoryController.cs" />
+    <Compile Include="Areas\Admission\Controllers\EducationBoardController.cs" />
+    <Compile Include="Areas\Admission\Controllers\ApplicantController.cs" />
+    <Compile Include="Areas\Admission\Controllers\AdmissionReportController.cs" />
+    <Compile Include="Areas\Admission\Controllers\StudentController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\AddNewApplicantApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\AdmissionReportApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\StudentProfileApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\AdmissionExamApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\DegreeCategoryApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\EducationApiController.cs" />
+    <Compile Include="Areas\Admission\Controllers\WebApi\EducationBoardApiController.cs" />
+    <Compile Include="Areas\Employee\Controllers\ClassManagementController.cs" />
+    <Compile Include="Areas\Employee\Controllers\ClassStudentController.cs" />
+    <Compile Include="Areas\Employee\Controllers\ApplicationController.cs" />
+    <Compile Include="Areas\Employee\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Employee\Controllers\LibraryController.cs" />
+    <Compile Include="Areas\Employee\Controllers\OfferedCoursesController.cs" />
+    <Compile Include="Areas\Employee\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Employee\Controllers\WebApi\ClassAttendanceApiController.cs" />
+    <Compile Include="Areas\Employee\Controllers\WebApi\ClassMaterialApiController.cs" />
+    <Compile Include="Areas\Employee\Controllers\WebApi\ClassNoticeApiController.cs" />
+    <Compile Include="Areas\Employee\Controllers\WebApi\DashboardApiController.cs" />
+    <Compile Include="Areas\Employee\EmployeeAreaRegistration.cs" />
+    <Compile Include="Areas\Employee\Models\ClassAttendanceViewModel.cs" />
+    <Compile Include="Areas\ExamSection\Controllers\DashBoardController.cs" />
+    <Compile Include="Areas\ExamSection\ExamSectionAreaRegistration.cs" />
+    <Compile Include="Areas\HR\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\HR\Controllers\PositionController.cs" />
+    <Compile Include="Areas\HR\Controllers\RankController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\EmployeeClassApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\EmployeeApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\PayrollApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\PositionApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\RankApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\MonthlySalaryReportApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WebApi\WorkWeekApiController.cs" />
+    <Compile Include="Areas\HR\Controllers\WorkWeekController.cs" />
+    <Compile Include="Areas\HR\HRAreaRegistration.cs" />
+    <Compile Include="Areas\Inventory\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\InventoryController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\InventoryDetailsController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\InventoryManagerController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ProductCategoryController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\RequisitionManagerController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemAllocationController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemDescriptionController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemMaintainanceController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemReturnController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemWarrentyDetailsController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\PurchaseRequisitionController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\PurchaseRequisitionDetailController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\RequisitionController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\RequisitionDetailsController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\ItemDeliveryController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\StoreController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\RequestedItemController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\SupplierController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\InventoryApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\InventoryDetailsApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\InventoryManagerApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ProductCategoryApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\RequestedItemApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\RequisitionManagerApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemAllocationApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemDescriptionApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemMaintainanceApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemReturnApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemWarrentyDetailsApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\PurchaseRequisitionApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\PurchaseRequisitionDetailApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\RequisitionApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\RequisitionDetailsApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\ItemDeliveryApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\StoreApiController.cs" />
+    <Compile Include="Areas\Inventory\Controllers\WebApi\SupplierApiController.cs" />
+    <Compile Include="Areas\Inventory\InventoryAreaRegistration.cs" />
+    <Compile Include="Areas\Student\Controllers\AcademicCalenderController.cs" />
+    <Compile Include="Areas\Student\Controllers\AccountsController.cs" />
+    <Compile Include="Areas\Student\Controllers\AgreementController.cs" />
+    <Compile Include="Areas\Student\Controllers\ApplicationController.cs" />
+    <Compile Include="Areas\Student\Controllers\CourseController.cs" />
+    <Compile Include="Areas\Student\Controllers\CurriculumController.cs" />
+    <Compile Include="Areas\Student\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Student\Controllers\FacultyEvaluationController.cs" />
+    <Compile Include="Areas\Student\Controllers\LibraryController.cs" />
+    <Compile Include="Areas\Student\Controllers\MailController.cs" />
+    <Compile Include="Areas\Student\Controllers\MessageController.cs" />
+    <Compile Include="Areas\Student\Controllers\OfferedCoursesController.cs" />
+    <Compile Include="Areas\Student\Controllers\OfficialFormsController.cs" />
+    <Compile Include="Areas\Student\Controllers\MonthlyOnlinePaymentController.cs" />
+    <Compile Include="Areas\Student\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Student\Controllers\WebApi\DashboardApiController.cs" />
+    <Compile Include="Areas\Student\Controllers\WebApi\ProfileApiController.cs" />
+    <Compile Include="Areas\Student\Models\CourseResultViewModel.cs" />
+    <Compile Include="Areas\Student\Models\CourseViewModel.cs" />
+    <Compile Include="Areas\Student\StudentAreaRegistration.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\CommonManagerController.cs" />
+    <Compile Include="Controllers\PayableDueController.cs" />
+    <Compile Include="Controllers\ParadeStateController.cs" />
+    <Compile Include="Controllers\OnlineResultController.cs" />
+    <Compile Include="Controllers\ResetController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ResetConfirmViewModel.cs" />
+    <Compile Include="Models\ChangePasswordViewModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
+    <Compile Include="Models\ResetViewModel.cs" />
+    <Compile Include="Models\VerifyOrChangeMobileModel.cs" />
+    <Compile Include="Models\VerifyOrChangeEmailModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Webhook.ashx.cs">
+      <DependentUpon>Webhook.ashx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Academic\Views\ClassManager\BulkCourseOfferingManger.js" />
+    <Content Include="Areas\Academic\Views\ClassManager\BulkClass.js" />
+    <Content Include="Areas\Academic\Views\ClassManager\ClassAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ClassAddEdit.js" />
+    <Content Include="Areas\Academic\Views\ClassManager\NonDeptClassList.js" />
+    <Content Include="Areas\Academic\Views\ClassManager\ClassList.js" />
+    <Content Include="Areas\Academic\Views\ClassManager\ReferredBacklogManager\_ReferredBacklogManager.js" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard\_MarksEditDashboard.js" />
+    <Content Include="Areas\Academic\Views\CourseRegistration\RepeaterCourseRegistration.js" />
+    <Content Include="Areas\Academic\Views\CourseRegistration\BulkCourseRegistration.js" />
+    <Content Include="Areas\Academic\Views\Course\CourseAddEdit.js" />
+    <Content Include="Areas\Academic\Views\Course\CourseList.js" />
+    <Content Include="Areas\Academic\Views\CurriculumCourse\CurriculumCourseAddEdit.js" />
+    <Content Include="Areas\Academic\Views\CurriculumCourse\CurriculumCourseList.js" />
+    <Content Include="Areas\Academic\Views\CurriculumElectiveGroup\CurriculumElectiveGroupAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\CurriculumElectiveGroup\CurriculumElectiveGroupAddEdit.js" />
+    <Content Include="Areas\Academic\Views\CurriculumElectiveGroup\CurriculumElectiveGroupList.cshtml" />
+    <Content Include="Areas\Academic\Views\CurriculumElectiveGroup\CurriculumElectiveGroupList.js" />
+    <Content Include="Areas\Academic\Views\CurriculumManager\Index.cshtml" />
+    <Content Include="Areas\Academic\Views\CurriculumManager\Index.js" />
+    <Content Include="Areas\Academic\Views\Curriculum\CurriculumAddEdit.js" />
+    <Content Include="Areas\Academic\Views\Curriculum\CurriculumList.js" />
+    <Content Include="Areas\Academic\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Academic\Views\HomeWorkSubmission\HomeWorkSubmissionAddEdit.js" />
+    <Content Include="Areas\Academic\Views\HomeWorkSubmission\HomeWorkSubmissionList.js" />
+    <Content Include="Areas\Academic\Views\HomeWork\HomeWorkAddEdit.js" />
+    <Content Include="Areas\Academic\Views\HomeWork\HomeWorkList.js" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\AcceptedItemList.js" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\AssginToParsonList.js" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\ItemRequestManager.js" />
+    <Content Include="Areas\Academic\Views\OnlineClass\OnlineClassAddEdit.js" />
+    <Content Include="Areas\Academic\Views\OnlineClass\OnlineClassList.js" />
+    <Content Include="Areas\Academic\Views\Student\CreditTransferManager\_PrintCreditTransferCourses.js" />
+    <Content Include="Areas\Accounts\Views\BankIntegration\PaymentExcelUpload.js" />
+    <Content Include="Areas\Accounts\Views\ExcelUploader\BillExcelUpload.js" />
+    <Content Include="Areas\Accounts\Views\PaymentGatewayProgramMap\PaymentGatewayProgramMapAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\PaymentGatewayProgramMap\PaymentGatewayProgramMapList.js" />
+    <Content Include="Areas\Accounts\Views\PaymentGateway\PaymentGatewayAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\PaymentGateway\PaymentGatewayList.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_FullPackageWaiverSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseWaiverDetailsReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseBillingDetailsReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseWaiverSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseCollectionDetailsReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseBillingSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentDueReportSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_IncomeForecastReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_VoucherWiseParticularSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentDueReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_BankWiseCollectionSummary.js" />
+    <Content Include="Areas\Academic\Views\Student\CreditTransferManager\_CreditTransferCourseAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\GlobalScholarshipAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\GlobalScholarshipList.js" />
+    <Content Include="Areas\Accounts\Views\StdOnlinePaySlip\StdOnlinePaySlipAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\StdOnlinePaySlip\StdOnlinePaySlipList.js" />
+    <Content Include="Areas\Accounts\Views\StdTransactionDetail\StdTransactionDetailAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransactionDetail\StdTransactionDetailAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\StdTransactionDetail\StdTransactionDetailList.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransactionDetail\StdTransactionDetailList.js" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\DebitTransactionList.js" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\WaiverOnFullPackageList.js" />
+    <Content Include="Areas\Accounts\Views\StudentPaySlip\StudentPaySlipAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\StudentPaySlip\StudentPaySlipList.js" />
+    <Content Include="Areas\Admin\Views\CreditTransferInstitute\CreditTransferInstituteAddEdit.js" />
+    <Content Include="Areas\Admin\Views\CreditTransferInstitute\CreditTransferInstituteList.js" />
+    <Content Include="Areas\Admission\Views\Report\ProfileChangeAuditReport.js" />
+    <Content Include="Areas\Admission\Views\Report\Shared\_PreviousEducationReport.js" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\SiteSettingsAddEdit.js" />
+    <Content Include="Areas\Admin\Views\User\RollAssignedReport.js" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\IndividualStudentSettingsList.js" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\IndividualStudentSettingsList2.js" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\ScholarshipEligibilityManager.js" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_UserLog.js" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_StdSemWiseScholarshipSettings.js" />
+    <Content Include="Areas\BasicAccounting\Views\Branch\BranchAddEdit.js" />
+    <Content Include="Areas\BasicAccounting\Views\Branch\BranchList.js" />
+    <Content Include="Areas\BasicAccounting\Views\CompanyAccount\CompanyAccountAddEdit.js" />
+    <Content Include="Areas\BasicAccounting\Views\CompanyAccount\CompanyAccountList.js" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerAddEdit.js" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerList.js" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerTransaction.js" />
+    <Content Include="Areas\BasicAccounting\Views\Report\TrialBalanceManager.js" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ReceiptPaymentManager.js" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_ChartOfAccounts.js" />
+    <Content Include="Areas\BasicAccounting\Views\Report\DayBookManager.js" />
+    <Content Include="Areas\BasicAccounting\Views\VoucherType\VoucherTypeAddEdit.js" />
+    <Content Include="Areas\BasicAccounting\Views\VoucherType\VoucherTypeList.js" />
+    <Content Include="Areas\BasicAccounting\Views\Voucher\VoucherAddEdit.js" />
+    <Content Include="Areas\BasicAccounting\Views\Voucher\VoucherList.js" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\SingleScreenMarkEntry.js" />
+    <Content Include="Areas\Employee\Views\Dashboard\index.js" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamAddEdit.js" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyList.js" />
+    <Content Include="Areas\ExamSection\Views\Report\BulkAdmitCardPrintManager.js" />
+    <Content Include="Areas\ExamSection\Views\Report\ProgramWiseDegreeCompleteManager.js" />
+    <Content Include="Areas\ExamSection\Views\Report\ClassWiseAttendancePrintManager.js" />
+    <Content Include="Areas\ExamSection\Views\Report\MarkChangeHistory.js" />
+    <Content Include="Areas\ExamSection\Views\Report\Shared\_ProgramWiseGradeSummarySheet.js" />
+    <Content Include="Areas\ExamSection\Views\Report\StudentEligibleReportManager.js" />
+    <Content Include="Areas\ExamSection\Views\ResultBlockUnblock\ResultBlockUnblockManager.js" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\_CourseList.js" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\_Apply.js" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\ManageBatchWiseTabulationSheet.js" />
+    <Content Include="Areas\HR\Views\Attendance\AttendanceAddEdit.js" />
+    <Content Include="Areas\HR\Views\Attendance\AttendanceList.js" />
+    <Content Include="Areas\HR\Views\CalendarYear\CalendarYearAddEdit.js" />
+    <Content Include="Areas\HR\Views\CalendarYear\CalendarYearList.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettingsDetails\EmpLeaveAllocationSettingsDetailsAddEdit.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettingsDetails\EmpLeaveAllocationSettingsDetailsList.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettings\EmpLeaveAllocationSettingsAddEdit.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettings\EmpLeaveAllocationSettingsList.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveApplication\EmpLeaveApplicationAddEdit.js" />
+    <Content Include="Areas\HR\Views\EmpLeaveApplication\EmpLeaveApplicationList.js" />
+    <Content Include="Areas\HR\Views\HolidaySettings\HolidaySettingsAddEdit.js" />
+    <Content Include="Areas\HR\Views\HolidaySettings\HolidaySettingsList.js" />
+    <Content Include="Areas\HR\Views\LeaveAllocationTemplateDetails\LeaveAllocationTemplateDetailsAddEdit.js" />
+    <Content Include="Areas\HR\Views\LeaveAllocationTemplateDetails\LeaveAllocationTemplateDetailsList.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\AddEmployee.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_ProfileManager.js" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamAddEdit-old.js" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamList.js" />
+    <Content Include="Areas\Academic\Views\Student\AccountManager\_AccountTransaction.js" />
+    <Content Include="Areas\Academic\Views\Student\RegistrationManager\_CourseList.js" />
+    <Content Include="Areas\ExamSection\Views\ResultManagement\ResultSubmissionReport.js" />
+    <Content Include="Areas\Accounts\Views\CollectionVoucher\CollectionVoucherAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\CollectionVoucher\CollectionVoucherList.js" />
+    <Content Include="Areas\Accounts\Views\FeeCode\FeeCodeList.js" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyAddEdit.js" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyList.js" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyOptionAddEdit.js" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyOptionList.js" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyListOld.js" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyAddEdit.js" />
+    <Content Include="Areas\Academic\Views\ProgramManager\Index.cshtml" />
+    <Content Include="Areas\Academic\Views\ProgramManager\Index.js" />
+    <Content Include="Areas\Academic\Views\SemesterManager\Index.cshtml" />
+    <Content Include="Areas\Academic\Views\SemesterManager\Index.js" />
+    <Content Include="Areas\Academic\Views\Shared\_LayoutAcademic.cshtml" />
+    <Content Include="Areas\Academic\Views\Shared\_PartialAcademicSidebar.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\IncompleteRegistrationStudentList.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\StudentAddEdit.js" />
+    <Content Include="Areas\Academic\Views\Student\StudentListEdit.js" />
+    <Content Include="Areas\Academic\Views\Student\_StudentList.js" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\ManageTabulationSheet.js" />
+    <Content Include="Areas\Academic\Views\web.config" />
+    <Content Include="Areas\Academic\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Accounts\Views\FeeCode\FeeCodeManager.js" />
+    <Content Include="Areas\Accounts\Views\OfficialBank\OfficialBankAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\OfficialBank\OfficialBankList.js" />
+    <Content Include="Areas\Accounts\Views\ParticularName\ParticularNameAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\ParticularName\ParticularNameList.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseCollectionSummary.js" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_VoucherWiseCollectionReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\StudentCollectionReport.js" />
+    <Content Include="Areas\Accounts\Views\Report\StudentPaymentSummeryList.js" />
+    <Content Include="Areas\Accounts\Views\ScholarshipType\ScholarshipTypeAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\ScholarshipType\ScholarshipTypeList.js" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\StdTransactionAddEdit.js" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\StdTransactionList.js" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_FastPaymentCollection.js" />
+    <Content Include="Areas\Admin\Views\Bank\BankAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Bank\BankList.js" />
+    <Content Include="Areas\Admin\Views\Building\BuildingAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Building\BuildingList.js" />
+    <Content Include="Areas\Admin\Views\Campus\CampusAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Campus\CampusList.js" />
+    <Content Include="Areas\Admin\Views\Country\CountryAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Country\CountryList.js" />
+    <Content Include="Areas\Admin\Views\Department\DepartmentAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Department\DepartmentList.js" />
+    <Content Include="Areas\Admin\Views\District\DistrictAddEdit.js" />
+    <Content Include="Areas\Admin\Views\District\DistrictList.js" />
+    <Content Include="Areas\Admin\Views\Division\DivisionAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Division\DivisionList.js" />
+    <Content Include="Areas\Admin\Views\Floor\FloorAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Floor\FloorList.js" />
+    <Content Include="Areas\Admin\Views\LoginAudit\LoginAuditList.js" />
+    <Content Include="Areas\Admin\Views\Organization\OrganizationAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Organization\OrganizationList.js" />
+    <Content Include="Areas\Admin\Views\ParentsPrimaryJobType\ParentsPrimaryJobTypeAddEdit.js" />
+    <Content Include="Areas\Admin\Views\ParentsPrimaryJobType\ParentsPrimaryJobTypeList.js" />
+    <Content Include="Areas\Admin\Views\PassReset\PassResetList.js" />
+    <Content Include="Areas\Admin\Views\PoliceStation\PoliceStationAddEdit.js" />
+    <Content Include="Areas\Admin\Views\PoliceStation\PoliceStationList.js" />
+    <Content Include="Areas\Admin\Views\PostOffice\PostOfficeAddEdit.js" />
+    <Content Include="Areas\Admin\Views\PostOffice\PostOfficeList.js" />
+    <Content Include="Areas\Admin\Views\Relationship\RelationshipAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Relationship\RelationshipList.js" />
+    <Content Include="Areas\Admin\Views\Room\RoomAddEdit.js" />
+    <Content Include="Areas\Admin\Views\Room\RoomStatus.js" />
+    <Content Include="Areas\Admin\Views\Room\RoomList.js" />
+    <Content Include="Areas\Admin\Views\StudentQuotaName\StudentQuotaNameAddEdit.js" />
+    <Content Include="Areas\Admin\Views\StudentQuotaName\StudentQuotaNameList.js" />
+    <Content Include="Areas\Admin\Views\StudyLevel\StudyLevelAddEdit.js" />
+    <Content Include="Areas\Admin\Views\StudyLevel\StudyLevelList.js" />
+    <Content Include="Areas\Admin\Views\StudyTerm\StudyTermAddEdit.js" />
+    <Content Include="Areas\Admin\Views\StudyTerm\StudyTermList.js" />
+    <Content Include="Areas\Admin\Views\User\Roles.js" />
+    <Content Include="Areas\Admission\Views\AdmissionExam\AdmissionExamAddEdit.js" />
+    <Content Include="Areas\Admission\Views\AdmissionExam\AdmissionExamList.js" />
+    <Content Include="Areas\Admission\Views\Applicant\AddNewApplicant.js" />
+    <Content Include="Areas\Admission\Views\DegreeCategory\DegreeCategoryAddEdit.js" />
+    <Content Include="Areas\Admission\Views\DegreeCategory\DegreeCategoryList.js" />
+    <Content Include="Areas\Admission\Views\EducationBoard\EducationBoardAddEdit.js" />
+    <Content Include="Areas\Admission\Views\EducationBoard\EducationBoardList.js" />
+    <Content Include="Areas\Admission\Views\AdmissionReport\Shared\_AdmissionSummary.js" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_ProfileManager.js" />
+    <Content Include="Areas\Admission\Views\Shared\_PartialSidebar.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\AddEditAttendance.js" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\AttendanceArchive.js" />
+    <Content Include="Areas\Employee\Views\ClassManagement\index.js" />
+    <Content Include="Areas\Employee\Views\ClassManagement\GenerateClassResult.js" />
+    <Content Include="Areas\Employee\Views\ClassResultBreakdown\SubmitResultBreakdown.js" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\Print30PercentTheoryExamMark.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\SubmitResultComponent.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\SubmitResultComponent.js" />
+    <Content Include="Areas\Employee\Views\Library\Index.js" />
+    <Content Include="Areas\Employee\Views\Profile\Index.js" />
+    <Content Include="Areas\HR\Views\Designation\DesignationAddEdit.js" />
+    <Content Include="Areas\HR\Views\Designation\DesignationList.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ClassManager\_ClassManager.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\EmployeeList.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_UserLog.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\Salary\_MonthlyPayslip.js" />
+    <Content Include="Areas\HR\Views\ManageEmployee\Salary\_SalarySettings.js" />
+    <Content Include="Areas\HR\Views\MonthlyPayslipDetails\MonthlyPayslipDetailsAddEdit.js" />
+    <Content Include="Areas\HR\Views\MonthlyPayslipDetails\MonthlyPayslipDetailsList.js" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipAddEdit.js" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipManager.js" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipList.js" />
+    <Content Include="Areas\HR\Views\Payroll\PayrollAddEdit.js" />
+    <Content Include="Areas\HR\Views\Payroll\PayrollList.js" />
+    <Content Include="Areas\HR\Views\Position\PositionAddEdit.js" />
+    <Content Include="Areas\HR\Views\Position\PositionList.js" />
+    <Content Include="Areas\HR\Views\Rank\RankAddEdit.js" />
+    <Content Include="Areas\HR\Views\Rank\RankList.js" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalaryReportWithBankDetails.js" />
+    <Content Include="Areas\HR\Views\Report\Shared\_YearlySalarySummary.js" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalarySummary.js" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalaryDetails.js" />
+    <Content Include="Areas\HR\Views\SalarySettingsDetails\SalarySettingsDetailsAddEdit.js" />
+    <Content Include="Areas\HR\Views\SalarySettingsDetails\SalarySettingsDetailsList.js" />
+    <Content Include="Areas\HR\Views\SalarySettings\SalarySettingsAddEdit.js" />
+    <Content Include="Areas\HR\Views\SalarySettings\SalarySettingsList.js" />
+    <Content Include="Areas\HR\Views\SalaryTemplateDetails\SalaryTemplateDetailsAddEdit.js" />
+    <Content Include="Areas\HR\Views\SalaryTemplateDetails\SalaryTemplateDetailsList.js" />
+    <Content Include="Areas\HR\Views\SalaryTemplate\SalaryTemplateAddEdit.js" />
+    <Content Include="Areas\HR\Views\SalaryTemplate\SalaryTemplateList.js" />
+    <Content Include="Areas\HR\Views\Shared\_PartialHRSidebar.cshtml" />
+    <Content Include="Areas\HR\Views\WorkWeek\WorkWeekAddEdit.js" />
+    <Content Include="Areas\HR\Views\WorkWeek\WorkWeekList.js" />
+    <Content Include="Areas\Inventory\Views\InventoryDetails\InventoryDetailsAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\InventoryDetails\InventoryDetailsList.js" />
+    <Content Include="Areas\Inventory\Views\InventoryManager\InventoryAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\InventoryManager\InventoryList.js" />
+    <Content Include="Areas\Inventory\Views\Inventory\InventoryAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\Inventory\InventoryList.js" />
+    <Content Include="Areas\Inventory\Views\ItemDelivery\ItemDeliveryAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemDelivery\ItemDeliveryList.js" />
+    <Content Include="Areas\Inventory\Views\ProductCategory\ProductCategoryAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ProductCategory\ProductCategoryList.js" />
+    <Content Include="Areas\Inventory\Views\RequestedItem\RequestedItemAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\RequestedItem\RequestedItemList.js" />
+    <Content Include="Areas\Inventory\Views\RequisitionManager\RequisitionAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemAllocation\ItemAllocationAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemAllocation\ItemAllocationList.js" />
+    <Content Include="Areas\Inventory\Views\ItemDescription\ItemDescriptionAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemDescription\ItemDescriptionList.js" />
+    <Content Include="Areas\Inventory\Views\ItemMaintainance\ItemMaintainanceAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemMaintainance\ItemMaintainanceList.js" />
+    <Content Include="Areas\Inventory\Views\ItemReturn\ItemReturnAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemReturn\ItemReturnList.js" />
+    <Content Include="Areas\Inventory\Views\ItemWarrentyDetails\ItemWarrentyDetailsAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\ItemWarrentyDetails\ItemWarrentyDetailsList.js" />
+    <Content Include="Areas\Inventory\Views\Item\ItemAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\Item\ItemList.js" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisitionDetail\PurchaseRequisitionDetailAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisitionDetail\PurchaseRequisitionDetailList.js" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisition\PurchaseRequisitionAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisition\PurchaseRequisitionList.js" />
+    <Content Include="Areas\Inventory\Views\RequisitionDetails\RequisitionDetailsAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\RequisitionDetails\RequisitionDetailsList.js" />
+    <Content Include="Areas\Inventory\Views\RequisitionManager\RequisitionList.js" />
+    <Content Include="Areas\Inventory\Views\Requisition\RequisitionAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\Requisition\RequisitionList.js" />
+    <Content Include="Areas\Inventory\Views\Shared\_LayoutInventory.cshtml" />
+    <Content Include="Areas\Inventory\Views\Shared\_LayoutInventoryReport.cshtml" />
+    <Content Include="Areas\Inventory\Views\Shared\_PartialSidebar.cshtml" />
+    <Content Include="Areas\Inventory\Views\Store\StoreAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\Store\StoreList.js" />
+    <Content Include="Areas\Inventory\Views\Supplier\SupplierAddEdit.js" />
+    <Content Include="Areas\Inventory\Views\Supplier\SupplierList.js" />
+    <Content Include="Areas\Student\Views\AcademicCalender\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Accounts\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Course\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassAttendanceSmsLog.js" />
+    <Content Include="Areas\Student\Views\Curriculum\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Curriculum\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Accounts\_bKashDemo.js" />
+    <Content Include="Areas\Student\Views\Dashboard\_MonthlyBillAndPayment.js" />
+    <Content Include="Areas\Student\Views\Dashboard\_BillAndPayment.js" />
+    <Content Include="Areas\Student\Views\Dashboard\_Confirmation.js" />
+    <Content Include="Areas\Student\Views\Dashboard\_CourseList.js" />
+    <Content Include="Areas\Student\Views\FacultyEvaluation\Index.cshtml" />
+    <Content Include="Areas\Student\Views\FacultyEvaluation\Index.js" />
+    <Content Include="Areas\Student\Views\Library\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Library\Index.js" />
+    <Content Include="Areas\Student\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Profile\Index.js" />
+    <Content Include="Areas\Student\Views\Profile\Edit.js" />
+    <Content Include="Areas\Student\Views\Registration\Index.js" />
+    <Content Include="Areas\Student\Views\Registration\IndexOld.js" />
+    <Content Include="Areas\Student\Views\Registration\IndexOld.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\OnlineCourseRegistrationOld.js" />
+    <Content Include="Areas\Student\Views\Registration\Shared\_OpenCreditRegistration.js" />
+    <Content Include="Areas\Student\Views\Reports\AdmitCard.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\AdmitCard-2.css" />
+    <Content Include="Areas\Student\Views\Reports\AdmitCard.js" />
+    <Content Include="Areas\Student\Views\Reports\Financial-Old.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\Financial.js" />
+    <Content Include="Areas\Student\Views\Reports\GradesByCurriculum.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\GradesBySemesterOld.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\TransferredCourseResult.js" />
+    <Content Include="Areas\Student\Views\Reports\Shared\_OnlinePaymentHistory.js" />
+    <Content Include="Areas\Student\Views\Reports\SuppleResult.js" />
+    <Content Include="Areas\Student\Views\Reports\SemesterWiseResult.js" />
+    <Content Include="Areas\Student\Views\Reports\Shared\_PaymentSummary.js" />
+    <Content Include="Areas\Student\Views\Shared\_LayoutStudent.cshtml" />
+    <Content Include="Areas\Student\Views\Shared\_PartialStudentSidebar.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\Shared\_CloseCreditRegistration.js" />
+    <Content Include="Areas\Student\Views\SuppleExam\Index.js" />
+    <Content Include="Areas\Student\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\Student\Views\_ViewStart.cshtml" />
+    <Content Include="assets\css\4095-rtl.css" />
+    <Content Include="assets\css\4095-rtl.css.map" />
+    <Content Include="assets\css\4095-rtl.min.css" />
+    <Content Include="assets\css\4095.css" />
+    <Content Include="assets\css\4095.css.map" />
+    <Content Include="assets\css\4095.min.css" />
+    <Content Include="assets\css\animate.css" />
+    <Content Include="assets\css\animate.min.css" />
+    <Content Include="assets\css\bootstrap-rtl.css" />
+    <Content Include="assets\css\bootstrap-rtl.css.map" />
+    <Content Include="assets\css\bootstrap-rtl.min.css" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\bootstrap.css.map" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\bootstrap.min.css.map" />
+    <Content Include="assets\css\dataTables.bootstrap.css" />
+    <Content Include="assets\css\demo.css" />
+    <Content Include="assets\css\demo.css.map" />
+    <Content Include="assets\css\demo.min.css" />
+    <Content Include="assets\css\font-awesome.css" />
+    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\fonts.googleapis.com.css" />
+    <Content Include="assets\css\skins\azure.css" />
+    <Content Include="assets\css\skins\azure.css.map" />
+    <Content Include="assets\css\skins\azure.min.css" />
+    <Content Include="assets\css\skins\black.css" />
+    <Content Include="assets\css\skins\black.css.map" />
+    <Content Include="assets\css\skins\black.min.css" />
+    <Content Include="assets\css\skins\blue.css" />
+    <Content Include="assets\css\skins\Blue.css.map" />
+    <Content Include="assets\css\skins\blue.min.css" />
+    <Content Include="assets\css\skins\darkblue.css" />
+    <Content Include="assets\css\skins\darkblue.css.map" />
+    <Content Include="assets\css\skins\darkblue.min.css" />
+    <Content Include="assets\css\skins\darkred.css" />
+    <Content Include="assets\css\skins\darkred.css.map" />
+    <Content Include="assets\css\skins\darkred.min.css" />
+    <Content Include="assets\css\skins\deepblue.css" />
+    <Content Include="assets\css\skins\deepblue.css.map" />
+    <Content Include="assets\css\skins\deepblue.min.css" />
+    <Content Include="assets\css\skins\gray.css" />
+    <Content Include="assets\css\skins\gray.css.map" />
+    <Content Include="assets\css\skins\gray.min.css" />
+    <Content Include="assets\css\skins\green.css" />
+    <Content Include="assets\css\skins\green.css.map" />
+    <Content Include="assets\css\skins\green.min.css" />
+    <Content Include="assets\css\skins\orange.css" />
+    <Content Include="assets\css\skins\orange.css.map" />
+    <Content Include="assets\css\skins\orange.min.css" />
+    <Content Include="assets\css\skins\pink.css" />
+    <Content Include="assets\css\skins\pink.css.map" />
+    <Content Include="assets\css\skins\pink.min.css" />
+    <Content Include="assets\css\skins\purple.css" />
+    <Content Include="assets\css\skins\purple.css.map" />
+    <Content Include="assets\css\skins\purple.min.css" />
+    <Content Include="assets\css\skins\skins-mixins.css" />
+    <Content Include="assets\css\skins\skins-mixins.css.map" />
+    <Content Include="assets\css\skins\skins-mixins.min.css" />
+    <Content Include="assets\css\skins\teal.css" />
+    <Content Include="assets\css\skins\teal.css.map" />
+    <Content Include="assets\css\skins\teal.min.css" />
+    <Content Include="assets\css\theme-rtl.css" />
+    <Content Include="assets\css\theme-rtl.css.map" />
+    <Content Include="assets\css\theme-rtl.min.css" />
+    <Content Include="assets\css\theme.css" />
+    <Content Include="assets\css\theme.css.map" />
+    <Content Include="assets\css\theme.min.css" />
+    <Content Include="assets\css\typicons.css" />
+    <Content Include="assets\css\typicons.min.css" />
+    <Content Include="assets\css\weather-icons.css" />
+    <Content Include="assets\css\weather-icons.min.css" />
+    <Content Include="assets\custom\css\PdfExport.css" />
+    <Content Include="assets\custom\css\print.css" />
+    <Content Include="assets\custom\css\site.css" />
+    <Content Include="assets\custom\js\site.js" />
+    <Content Include="assets\custom\js\wizard-ems.js" />
+    <Content Include="assets\custom\lib\angular\angular-bootstrap-datetimepicker\css\datetimepicker.css" />
+    <Content Include="assets\custom\lib\angular\angular-bootstrap-datetimepicker\js\datetimepicker.js" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\example\app.css" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\example\app.js" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\example\index.html" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\loading-bar.css" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\loading-bar.js" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\loading-bar.min.css" />
+    <Content Include="assets\custom\lib\angular\angular-loading-bar\loading-bar.min.js" />
+    <Content Include="assets\custom\lib\angular\angular.js" />
+    <Content Include="assets\custom\lib\angular\angular.min.js" />
+    <Content Include="assets\custom\lib\angular\angular.min.js.map" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\.versions" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\bower.json" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\FileAPI.flash.swf" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\FileAPI.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\FileAPI.min.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\LICENSE" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload-all.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload-all.min.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload-shim.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload-shim.min.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\ng-file-upload.min.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\package.js" />
+    <Content Include="assets\custom\lib\angular\ng-file-upload\README.md" />
+    <Content Include="assets\custom\lib\angular\ng-grid\ng-grid.css" />
+    <Content Include="assets\custom\lib\angular\ng-grid\ng-grid.min.js" />
+    <Content Include="assets\custom\lib\angular\ng-img-crop\ng-img-crop.css" />
+    <Content Include="assets\custom\lib\angular\ng-img-crop\ng-img-crop.js" />
+    <Content Include="assets\custom\lib\angular\ng-img-crop\ng-img-crop.min.css" />
+    <Content Include="assets\custom\lib\angular\ng-img-crop\ng-img-crop.min.js" />
+    <Content Include="assets\custom\lib\angular\smart-table\smart-table.js" />
+    <Content Include="assets\custom\lib\angular\smart-table\smart-table.min.js" />
+    <Content Include="assets\custom\lib\angular\smart-table\smart-table.min.js.map" />
+    <Content Include="assets\custom\lib\mojoLib\roughCode\common.js" />
+    <Content Include="assets\custom\lib\mojoLib\DynamicTab\mDynamicTab.css" />
+    <Content Include="assets\custom\lib\mojoLib\DynamicTab\mDynamicTab.js" />
+    <Content Include="assets\custom\lib\iframe\jquery.browser.js" />
+    <Content Include="assets\custom\lib\iframe\jquery.iframe-auto-height.plugin.1.9.3.js" />
+    <Content Include="assets\custom\lib\iframe\jquery.iframe-auto-height.plugin.1.9.3.min.js" />
+    <Content Include="assets\custom\lib\iframe\jquery.pavel.iframe-auto-height.plugin.js" />
+    <Content Include="assets\custom\lib\mojoLib\mModal.js" />
+    <Content Include="assets\custom\lib\mojoLib\DynamicTab\tabTempCode.js" />
+    <Content Include="assets\custom\lib\mojoLib\roughCode\widget.js" />
+    <Content Include="assets\custom\lib\moment\moment.min.js" />
+    <Content Include="assets\custom\lib\TableExport\html2canvas.js" />
+    <Content Include="assets\custom\lib\TableExport\jquery.base64.js" />
+    <Content Include="assets\custom\lib\TableExport\jspdf\base64.js" />
+    <Content Include="assets\custom\lib\TableExport\jspdf\jspdf.js" />
+    <Content Include="assets\custom\lib\TableExport\jspdf\sprintf.js" />
+    <Content Include="assets\custom\lib\TableExport\tableExport.js" />
+    <Content Include="assets\custom\lib\toastr\toastr.css" />
+    <Content Include="assets\custom\lib\toastr\toastr.js" />
+    <Content Include="assets\custom\lib\toastr\toastr.min.css" />
+    <Content Include="assets\custom\lib\toastr\toastr.min.js" />
+    <Content Include="assets\custom\lib\toastr\toastr.min.js.map" />
+    <Content Include="assets\custom\lib\TreeTable\jquery.treetable-3.0.0.js" />
+    <Content Include="assets\custom\lib\TreeTable\jquery.treetable-ajax-persist.js" />
+    <Content Include="assets\custom\lib\TreeTable\jquery.treetable.css" />
+    <Content Include="assets\custom\lib\TreeTable\persist-min.js" />
+    <Content Include="assets\custom\lib\TreeTable\toggle-collapse-dark.png" />
+    <Content Include="assets\custom\lib\TreeTable\toggle-expand-dark.png" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\angular-xdan-datetimepicker.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\date.format.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\angular.html" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\rm.txt" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\ui.date.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\datetime.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\index.html" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\example\jquery.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\jquery.datetimepicker.full.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\jquery.datetimepicker.full.min.js" />
+    <Content Include="assets\custom\lib\xdsoftDateTimePicker\jquery.datetimepicker.min.css" />
+    <Content Include="assets\fonts\BYekan.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="assets\fonts\FontAwesome.otf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="assets\fonts\google\fonts.googleapis.com.css" />
+    <Content Include="assets\fonts\typicons.eot" />
+    <Content Include="assets\fonts\typicons.svg" />
+    <Content Include="assets\fonts\typicons.ttf" />
+    <Content Include="assets\fonts\typicons.woff" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="assets\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="assets\fonts\WeatherIcons-Regular.otf" />
+    <Content Include="assets\fonts\YekanWeb-Bold.woff" />
+    <Content Include="assets\fonts\YekanWeb-Regular.woff" />
+    <Content Include="assets\img\angle-down.png" />
+    <Content Include="assets\img\app-45616.png" />
+    <Content Include="assets\img\app.png" />
+    <Content Include="assets\img\attach-blue.png" />
+    <Content Include="assets\img\attach-green.png" />
+    <Content Include="assets\img\attach-red.png" />
+    <Content Include="assets\img\attach-yellow.png" />
+    <Content Include="assets\img\avatars\bing.png" />
+    <Content Include="assets\img\avatars\BlankPerson.png" />
+    <Content Include="assets\img\favicon.png" />
+    <Content Include="assets\img\jquery.minicolors.png" />
+    <Content Include="assets\img\logo\barcode.png" />
+    <Content Include="assets\img\logo\baust\favicon.png" />
+    <Content Include="assets\img\logo\baust\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\baust\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\baust\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\baust\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\buhs\cropped-BUHS-logo-32x32.png" />
+    <Content Include="assets\img\logo\buhs\favicon.png" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\demo\barcode.png" />
+    <Content Include="assets\img\logo\demo\favicon.ico" />
+    <Content Include="assets\img\logo\demo\favicon.png" />
+    <Content Include="assets\img\logo\demo\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\demo\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\demo\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\demo\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\demo\logo1.png" />
+    <Content Include="assets\img\logo\demo\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\eub\barcode.png" />
+    <Content Include="assets\img\logo\eub\favicon.png" />
+    <Content Include="assets\img\logo\eub\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\eub\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\eub\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\eub\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\eub\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\eub\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\fu\favicon.png" />
+    <Content Include="assets\img\logo\fu\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\fu\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\fu\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\fu\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\fu\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\fu\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\ius\favicon.png" />
+    <Content Include="assets\img\logo\ius\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\ius\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\ius\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\ius\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\ius\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\ius\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\mist\barcode.png" />
+    <Content Include="assets\img\logo\mist\favicon.ico" />
+    <Content Include="assets\img\logo\mist\favicon.png" />
+    <Content Include="assets\img\logo\mist\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\mist\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\mist\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\mist\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\mist\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\mist\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\smuct\barcode.png" />
+    <Content Include="assets\img\logo\smuct\favicon.ico" />
+    <Content Include="assets\img\logo\smuct\favicon.png" />
+    <Content Include="assets\img\logo\smuct\InstituteLogoBlackWhiteSolo.png" />
+    <Content Include="assets\img\logo\smuct\InstituteLogoColorFull.png" />
+    <Content Include="assets\img\logo\smuct\InstituteLogoColorShort.png" />
+    <Content Include="assets\img\logo\smuct\InstituteLogoColorSolo.png" />
+    <Content Include="assets\img\logo\smuct\PipilikaSoftLogo.png" />
+    <Content Include="assets\img\logo\smuct\ScholarLogoFull.png" />
+    <Content Include="assets\img\logo\smuct\smuct-bkash.png" />
+    <Content Include="assets\img\paymentGateway\bkash.gif" />
+    <Content Include="assets\img\paymentGateway\dbbl-master.png" />
+    <Content Include="assets\img\paymentGateway\dbbl-mb.png" />
+    <Content Include="assets\img\paymentGateway\dbbl-nexus.png" />
+    <Content Include="assets\img\paymentGateway\dbbl-visa.png" />
+    <Content Include="assets\img\paymentGateway\EUB_bKashPaymentQR.jfif" />
+    <Content Include="assets\img\paymentGateway\EUB_bKash_Payment_Flow.png" />
+    <Content Include="assets\img\paymentGateway\master.png" />
+    <Content Include="assets\img\paymentGateway\nagad-logo.png" />
+    <Content Include="assets\img\paymentGateway\visa.png" />
+    <Content Include="assets\img\profile\hkpavel.jpg" />
+    <Content Include="assets\img\profile\mohitosh.jpg" />
+    <Content Include="assets\img\sample_sign.jpg" />
+    <Content Include="assets\img\sort_asc.png" />
+    <Content Include="assets\img\sort_asc_disabled.png" />
+    <Content Include="assets\img\sort_both.png" />
+    <Content Include="assets\img\sort_desc.png" />
+    <Content Include="assets\img\sort_desc_disabled.png" />
+    <Content Include="assets\img\tree-icons.png" />
+    <Content Include="assets\js\angular\angular-animate\angular-animate.js" />
+    <Content Include="assets\js\angular\angular-aria\angular-aria.js" />
+    <Content Include="assets\js\angular\angular-breadcrumb\angular-breadcrumb.js" />
+    <Content Include="assets\js\angular\angular-cookies\angular-cookies.js" />
+    <Content Include="assets\js\angular\angular-loader\angular-loader.js" />
+    <Content Include="assets\js\angular\angular-message\angular-messages.js" />
+    <Content Include="assets\js\angular\angular-mocks\angular-mocks.js" />
+    <Content Include="assets\js\angular\angular-ngStorage\ngStorage.js" />
+    <Content Include="assets\js\angular\angular-ocLazyLoad\ocLazyLoad.js" />
+    <Content Include="assets\js\angular\angular-resource\angular-resource.js" />
+    <Content Include="assets\js\angular\angular-route\angular-route.js" />
+    <Content Include="assets\js\angular\angular-sanitize\angular-sanitize.js" />
+    <Content Include="assets\js\angular\angular-scenario\angular-scenario.js" />
+    <Content Include="assets\js\angular\angular-touch\angular-touch.js" />
+    <Content Include="assets\js\angular\angular-ui-bootstrap\ui-bootstrap.js" />
+    <Content Include="assets\js\angular\angular-ui-router\angular-ui-router.js" />
+    <Content Include="assets\js\angular\angular-ui-select\select.css" />
+    <Content Include="assets\js\angular\angular-ui-select\select2.css" />
+    <Content Include="assets\js\angular\angular-ui-select\select.js" />
+    <Content Include="assets\js\angular\angular-ui-select\select.min.css" />
+    <Content Include="assets\js\angular\angular-ui-select\select.min.js" />
+    <Content Include="assets\js\angular\angular-ui-select\select2.png" />
+    <Content Include="assets\js\angular\angular-ui-select\select2x2.png" />
+    <Content Include="assets\js\angular\angular-ui-utils\angular-ui-utils.js" />
+    <Content Include="assets\js\angular\angular.js" />
+    <Content Include="assets\js\bootbox\bootbox.js" />
+    <Content Include="assets\js\bootbox\bootbox.min.js" />
+    <Content Include="assets\js\bootbox\bootbox.min.js.map" />
+    <Content Include="assets\js\bootstrap.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.js" />
+    <Content Include="assets\js\charts\chartjs\Chart.min.js" />
+    <Content Include="assets\js\charts\chartjs\chartjs-init.js" />
+    <Content Include="assets\js\charts\easypiechart\easypiechart-init.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js" />
+    <Content Include="assets\js\charts\easypiechart\jquery.easypiechart.min.js.map" />
+    <Content Include="assets\js\charts\flot\flot-init.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.axislabels.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.categories.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.min.js.map" />
+    <Content Include="assets\js\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.pie.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.resize.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.selection.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.stack.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.time.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="assets\js\charts\flot\jquery.flot.tooltip.min.js.map" />
+    <Content Include="assets\js\charts\morris\morris-init.js" />
+    <Content Include="assets\js\charts\morris\morris.js" />
+    <Content Include="assets\js\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="assets\js\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="assets\js\charts\sparkline\sparkline-init.js" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.js" />
+    <Content Include="assets\js\colorpicker\jquery.minicolors.min.js" />
+    <Content Include="assets\js\datatable\datatables-init.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\datatable\dataTables.bootstrap.min.js.map" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js" />
+    <Content Include="assets\js\datatable\dataTables.tableTools.min.js.map">
+      <DependentUpon>dataTables.tableTools.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\datatable\jquery.dataTables.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js" />
+    <Content Include="assets\js\datatable\jquery.dataTables.min.js.map" />
+    <Content Include="assets\js\datatable\ZeroClipboard.js" />
+    <Content Include="assets\js\datetime\bootstrap-datepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js" />
+    <Content Include="assets\js\datetime\bootstrap-timepicker.min.js.map" />
+    <Content Include="assets\js\datetime\daterangepicker.js" />
+    <Content Include="assets\js\datetime\moment.js" />
+    <Content Include="assets\js\datetime\moment.min.js" />
+    <Content Include="assets\js\dropzone\dropzone.js" />
+    <Content Include="assets\js\dropzone\dropzone.min.js" />
+    <Content Include="assets\js\editors\summernote\summernote.js" />
+    <Content Include="assets\js\editors\summernote\summernote.min.js" />
+    <Content Include="assets\js\editors\wysiwyg\bootstrap-wysiwyg.js" />
+    <Content Include="assets\js\editors\wysiwyg\jquery.hotkeys.js" />
+    <Content Include="assets\js\editors\wysiwyg\prettify.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js" />
+    <Content Include="assets\js\fuelux\spinbox\fuelux.spinbox.min.js.map" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js" />
+    <Content Include="assets\js\fuelux\treeview\tree-custom.min.js.map" />
+    <Content Include="assets\js\fuelux\treeview\treeview-init.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js" />
+    <Content Include="assets\js\fuelux\wizard\wizard-custom.min.js.map" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.js" />
+    <Content Include="assets\js\fullcalendar\fullcalendar.min.js" />
+    <Content Include="assets\js\fullcalendar\jquery-ui.custom.min.js" />
+    <Content Include="assets\js\fullcalendar\moment.min.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.js" />
+    <Content Include="assets\js\inputmask\jasny-bootstrap.min.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.js" />
+    <Content Include="assets\js\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.min.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.js" />
+    <Content Include="assets\js\jqueryval\jquery.validate.unobtrusive.min.js" />
+    <Content Include="assets\js\knob\jquery.knob.js" />
+    <Content Include="assets\js\nestable\jquery.nestable.min.js" />
+    <Content Include="assets\js\select2\select2.full.js" />
+    <Content Include="assets\js\select2\select2.full.min.js" />
+    <Content Include="assets\js\select2\select2.js" />
+    <Content Include="assets\js\select2\select2.min.js" />
+    <Content Include="assets\js\skins.js" />
+    <Content Include="assets\js\skins.min.js" />
+    <Content Include="assets\js\skins.min.js.map" />
+    <Content Include="assets\js\slider\jQRangeSlider\jQAllRangeSliders-withRuler-min.js" />
+    <Content Include="assets\js\slider\jQRangeSlider\jquery.mousewheel.min.js" />
+    <Content Include="assets\js\slider\jquery.nouislider.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="assets\js\slimscroll\jquery.slimscroll.min.js.map" />
+    <Content Include="assets\js\tabdrop\bootstrap-tabdrop.js" />
+    <Content Include="assets\js\tabdrop\tabdrop.css" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js" />
+    <Content Include="assets\js\tagsinput\bootstrap-tagsinput.min.js.map" />
+    <Content Include="assets\js\textarea\jquery.autosize.js" />
+    <Content Include="assets\js\textarea\jquery.autosize.min.js" />
+    <Content Include="assets\js\theme.js" />
+    <Content Include="assets\js\theme.min.js" />
+    <Content Include="assets\js\theme.min.js.map" />
+    <Content Include="assets\js\toastr\toastr.js" />
+    <Content Include="assets\js\toastr\toastr.min.js" />
+    <Content Include="assets\js\toastr\toastr.min.js.map" />
+    <Content Include="assets\js\validation\bootstrapValidator.js" />
+    <Content Include="assets\js\validation\bootstrapValidator.min.js" />
+    <Content Include="assets\js\validation\bootstrapValidator.min.js.map" />
+    <Content Include="assets\sound\alert.mp3" />
+    <Content Include="assets\swf\copy_csv_xls.swf" />
+    <Content Include="assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="favicon.ico" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+    <Content Include="Uploads\SampleFiles\BillExcelUploadFileFormat.xlsx" />
+    <Content Include="Uploads\SampleFiles\ExamRoolSheet-T1-June-2016.csv" />
+    <Content Include="Uploads\SampleFiles\MarkExcelUploadFileFormat.xlsx" />
+    <Content Include="Uploads\SampleFiles\PaymentExcelUploadFileFormat.xlsx" />
+    <Content Include="Views\CommonManager\PasswordValidation.css" />
+    <Content Include="Views\CommonManager\PasswordValidation.js" />
+    <Content Include="Views\OnlineResult\Public.js" />
+    <Content Include="Views\OnlineResult\Index.js" />
+    <Content Include="Views\OnlineResult\Public2.js" />
+    <Content Include="Views\PayableDue\Index.js" />
+    <Content Include="Views\Shared\Area\_LayoutAdminCore.cshtml" />
+    <Content Include="Views\Shared\_LayoutBootstrap.cshtml" />
+    <Content Include="Views\Shared\_LayoutCore.cshtml" />
+    <Content Include="Views\Shared\_LayoutThemeCore.cshtml" />
+    <Content Include="Views\Shared\_PartialReportViewer.aspx" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Roles.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\User\RoleUpdate.cshtml" />
+    <Content Include="Areas\Admin\Views\User\View.cshtml" />
+    <Content Include="Areas\Admin\Views\User\RoleList.cshtml" />
+    <Content Include="Areas\Admission\Views\web.config" />
+    <Content Include="Areas\Admission\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Employee\Views\web.config" />
+    <Content Include="Areas\HR\Views\web.config" />
+    <Content Include="Areas\Employee\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\HR\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Employee\Views\Shared\_LayoutEmployee.cshtml" />
+    <Content Include="Views\Shared\Area\_PartialAdminHeader.cshtml" />
+    <Content Include="Views\Shared\Area\_PartialAdminPageFooter.cshtml" />
+    <Content Include="Views\Shared\Area\_PartialAdminPageHeader.cshtml" />
+    <Content Include="Areas\Employee\Views\Shared\_PartialEmployeeSidebar.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_PartialAdminSidebar.cshtml" />
+    <Content Include="Areas\Admission\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\HR\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admission\Views\Shared\_LayoutAdmission.cshtml" />
+    <Content Include="Areas\HR\Views\Shared\_LayoutHR.cshtml" />
+    <Content Include="Content\Controllers\MainController.js" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\typicons.svg" />
+    <Content Include="fonts\weathericons-regular-webfont.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="fonts\BYekan.woff" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\typicons.eot" />
+    <Content Include="fonts\typicons.ttf" />
+    <Content Include="fonts\typicons.woff" />
+    <Content Include="fonts\weathericons-regular-webfont.eot" />
+    <Content Include="fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="fonts\weathericons-regular-webfont.woff" />
+    <Content Include="fonts\WeatherIcons-Regular.otf" />
+    <Content Include="fonts\YekanWeb-Bold.woff" />
+    <Content Include="fonts\YekanWeb-Regular.woff" />
+    <Content Include="Mvc.sitemap" />
+    <Content Include="assets\custom\lib\angular\angular-bootstrap-datetimepicker\css\datetimepicker.css.map" />
+    <Content Include="Areas\Student\Views\Library\Financials.cshtml" />
+    <Content Include="Areas\Student\Views\Library\BorrowHistory.cshtml" />
+    <Content Include="Areas\Student\Views\Library\CurrentBorrows.cshtml" />
+    <Content Include="Areas\Student\Views\Library\Reservation.cshtml" />
+    <Content Include="Areas\Student\Views\Application\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Agreement\Index.cshtml" />
+    <Content Include="Areas\Student\Views\OfficialForms\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Message\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Message\VeiwMessage.cshtml" />
+    <Content Include="Areas\Student\Views\Message\ComposeMessage.cshtml" />
+    <Content Include="Areas\Student\Views\Mail\Index.cshtml" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyAddEdit.cshtml" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyListOld.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\EmployeeList.cshtml" />
+    <Content Include="Areas\HR\Views\Designation\DesignationAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\Designation\DesignationList.cshtml" />
+    <Content Include="Areas\HR\Views\Rank\RankAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\Rank\RankList.cshtml" />
+    <Content Include="Areas\HR\Views\Position\PositionAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\Position\PositionList.cshtml" />
+    <Content Include="Areas\Employee\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultBreakdown\SubmitResultBreakdown.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamAddEdit-old.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamList.cshtml" />
+    <Content Include="Areas\Admin\Views\LoginAudit\LoginAuditList.cshtml" />
+    <Content Include="Areas\Admin\Views\PassReset\PassResetList.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\StudentAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\_StudentList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyAddEdit.cshtml" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyOptionAddEdit.cshtml" />
+    <Content Include="Areas\ExamSection\Views\GradingPolicyManager\GradingPolicyOptionList.cshtml" />
+    <Content Include="Areas\Academic\Views\CurriculumCourse\CurriculumCourseAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\CurriculumCourse\CurriculumCourseList.cshtml" />
+    <Content Include="Areas\Academic\Views\Curriculum\CurriculumAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\Curriculum\CurriculumList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\ManageTabulationSheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\PrintTabulationSheet.cshtml" />
+    <Content Include="Areas\Academic\Views\Course\CourseAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\Course\CourseList.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\DepartmentAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\DepartmentList.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialClassTeacherManager.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialClassStudentManager.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ClassList.cshtml" />
+    <Content Include="Areas\Academic\Views\Curriculum\CurriculumPrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\PrintTabulationSheet1.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\_TabulationHeader.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\_TabulationResult.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\_TabulationFooter.cshtml" />
+    <Content Include="Areas\Employee\Views\Profile\LoginHistory.cshtml" />
+    <Content Include="Areas\Employee\Views\Library\BorrowHistory.cshtml" />
+    <Content Include="Areas\Employee\Views\Library\CurrentBorrows.cshtml" />
+    <Content Include="Areas\Employee\Views\Library\Financials.cshtml" />
+    <Content Include="Areas\Employee\Views\Library\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\Library\Reservation.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\AddEditAttendance.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\AttendanceArchive.cshtml" />
+    <Content Include="Areas\Student\Views\Profile\Edit.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\BulkClass.cshtml" />
+    <Content Include="Areas\Employee\Views\OfferedCourses\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\Apply.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\OnlineCourseRegistrationOld.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\_StudentList.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\Result\_BacklogResultSettings.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\_ClassMaterials.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\Result\_ReferredResultSettings.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\Result\_RegularResultSettings.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\GenerateClassResult.cshtml" />
+    <Content Include="Areas\Student\Views\OfferedCourses\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\Dashboard\Contacts.cshtml" />
+    <Content Include="Areas\HR\Views\Dashboard\Contacts.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\NonDeptClassList.cshtml" />
+    <Content Include="Areas\Admin\Views\User\RoleUser.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\Print70PercentTheoryExamMark.cshtml" />
+    <Content Include="App_Browsers\qt.browser" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialClassRoutine.cshtml" />
+    <Content Include="Areas\Admin\Views\Building\BuildingAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Building\BuildingList.cshtml" />
+    <Content Include="Areas\Admin\Views\Campus\CampusAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Campus\CampusList.cshtml" />
+    <Content Include="Areas\Admin\Views\Floor\FloorAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Floor\FloorList.cshtml" />
+    <Content Include="Areas\Admin\Views\Room\RoomAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Room\RoomList.cshtml" />
+    <Content Include="Areas\Admin\Views\Room\RoomStatus.cshtml" />
+    <Content Include="Areas\Academic\Views\Dashboard\OfferedCourseStatistics.cshtml" />
+    <Content Include="Areas\Academic\Views\Dashboard\StudentProfileRegistrationStatistics.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\StudentListEdit.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\_AttendanceList.cshtml" />
+    <Content Include="Areas\Employee\Views\Application\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\Application\NewIdCardDemandForm.cshtml" />
+    <Content Include="Areas\Student\Views\Course\CoursePane.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassAttendance.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassResults.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassMaterials.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassNotices.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\_ClassNotices.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\PrintAllAttendance.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\PrintAllAttendance.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ClassTestMarks.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ClassManager\_ClassManager.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ClassManager\_ClassAssign.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\AddEditClassStudent\_RegularStudent.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\AddEditClassStudent\_ReferredStudent.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\AddEditClassStudent\_BacklogStudent.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\AddEditClassStudent\_WaiverStudent.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\_PartialPrintDisCollegiateAttendance.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\_PartialPrintNonCollegiateAttendance.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\_PartialPrintAllAttendance.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\_PartialPrintAttendanceByFaculty.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialPrintNonCollegiateAttendance.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialPrintDisCollegiateAttendance.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\_PartialPrintAllAttendance.cshtml" />
+    <Content Include="Areas\Student\Views\Course\ClassAttendanceSmsLog.cshtml" />
+    <Content Include="Areas\Student\Views\Dashboard\_CourseList.cshtml" />
+    <Content Include="Areas\Employee\Views\Dashboard\_CourseList.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\ComponentMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\Scrutinization.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\BreakdownMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\FinalClassMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\Print100PercentMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\Print30PercentTheoryMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\Print70PercentTheoryMarks.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard\_MarksEditDashboard.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard\_BacklogResultSettings.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard\_ReferredResultSettings.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassResultManager\MarksEditDashboard\_RegularResultSettings.cshtml" />
+    <Content Include="Areas\Accounts\Views\FeeCode\FeeCodeList.cshtml" />
+    <Content Include="Areas\Accounts\Views\web.config" />
+    <Content Include="Areas\Accounts\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Accounts\Views\Shared\_LayoutAccounts.cshtml" />
+    <Content Include="Areas\Accounts\Views\Shared\_PartialSidebar.cshtml" />
+    <Content Include="Areas\Accounts\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\AccountManager\_AccountTransaction.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\AccountManager\_AccountManager.cshtml" />
+    <Content Include="Areas\Accounts\Views\ScholarshipType\ScholarshipTypeAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\ScholarshipType\ScholarshipTypeList.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\PrintCourseRegistration.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\PrintPaySlip.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\RegistrationManager\_RegistrationManager.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\RegistrationManager\_CourseList.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\_GradesBySemester.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\GradesBySemester.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentMoneyReceipt.cshtml" />
+    <Content Include="Areas\Admission\Views\Applicant\AddNewApplicant.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_PreviousEducation.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_PackageAndDiscount.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_Personal.cshtml" />
+    <Content Include="Areas\Admin\Views\District\DistrictAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\District\DistrictList.cshtml" />
+    <Content Include="Areas\Admin\Views\PoliceStation\PoliceStationAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\PoliceStation\PoliceStationList.cshtml" />
+    <Content Include="Areas\Admin\Views\PostOffice\PostOfficeAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\PostOffice\PostOfficeList.cshtml" />
+    <Content Include="Areas\Admin\Views\Bank\BankAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Bank\BankList.cshtml" />
+    <Content Include="Areas\Admission\Views\AdmissionExam\AdmissionExamAddEdit.cshtml" />
+    <Content Include="Areas\Admission\Views\AdmissionExam\AdmissionExamList.cshtml" />
+    <Content Include="Areas\Accounts\Views\FeeCode\FeeCodeManager.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_ProfileManager.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\_Summary.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\StudentList.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\StudentList.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\StudentProfile.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_UserCredential.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_Academic.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\PrintAdmissionForm.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\_PrintAdmissionForm.cshtml" />
+    <Content Include="Areas\Accounts\Views\OfficialBank\OfficialBankAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\OfficialBank\OfficialBankList.cshtml" />
+    <Content Include="Areas\Accounts\Views\ParticularName\ParticularNameAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\ParticularName\ParticularNameList.cshtml" />
+    <Content Include="Areas\Admin\Views\Country\CountryAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Country\CountryList.cshtml" />
+    <Content Include="Areas\Admin\Views\Division\DivisionAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Division\DivisionList.cshtml" />
+    <Content Include="Areas\Admin\Views\Organization\OrganizationAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Organization\OrganizationList.cshtml" />
+    <Content Include="Areas\Admin\Views\ParentsPrimaryJobType\ParentsPrimaryJobTypeAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ParentsPrimaryJobType\ParentsPrimaryJobTypeList.cshtml" />
+    <Content Include="Areas\Admin\Views\StudentQuotaName\StudentQuotaNameAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\StudentQuotaName\StudentQuotaNameList.cshtml" />
+    <Content Include="Areas\Admin\Views\StudyLevel\StudyLevelAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\StudyLevel\StudyLevelList.cshtml" />
+    <Content Include="Areas\Admin\Views\StudyTerm\StudyTermAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\StudyTerm\StudyTermList.cshtml" />
+    <Content Include="Areas\Admission\Views\DegreeCategory\DegreeCategoryAddEdit.cshtml" />
+    <Content Include="Areas\Admission\Views\DegreeCategory\DegreeCategoryList.cshtml" />
+    <Content Include="Areas\Admission\Views\EducationBoard\EducationBoardAddEdit.cshtml" />
+    <Content Include="Areas\Admission\Views\EducationBoard\EducationBoardList.cshtml" />
+    <Content Include="Areas\Admission\Views\Applicant\Print\_AdmissionPaymentSlip.cshtml" />
+    <Content Include="Areas\Admission\Views\Applicant\AdmissionPaymentSlip.cshtml" />
+    <Content Include="Areas\Admission\Views\AdmissionReport\Shared\_AdmissionSummary.cshtml" />
+    <Content Include="Areas\Admission\Views\Shared\_LayoutAdmissionReport.cshtml" />
+    <Content Include="Areas\Admission\Views\AdmissionReport\AdmissionSummary.cshtml" />
+    <Content Include="Areas\Admission\Views\Dashboard\Shared\_CommonStudentSummary.cshtml" />
+    <Content Include="Areas\Admission\Views\Dashboard\Shared\DemoDashboard.cshtml" />
+    <Content Include="Areas\Academic\Views\Shared\_LayoutAcademicReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Relationship\RelationshipAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Relationship\RelationshipList.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentPaymentSummeryList.cshtml" />
+    <Content Include="Areas\Accounts\Views\CollectionVoucher\CollectionVoucherAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\CollectionVoucher\CollectionVoucherList.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\StdTransactionAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\StdTransactionList.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_FastPaymentCollection.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentSemesterBill.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentCollectionReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_SemesterBills.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_PackageDiscount.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_WelcomeMessages.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_ProfileInfo.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_DebitTransaction.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_CreditTransaction.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_TrashTransaction.cshtml" />
+    <Content Include="Areas\Accounts\Views\Student\FastPaymentCollection\_Collection.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentMoneyReceipt.cshtml" />
+    <Content Include="Areas\Academic\Views\CourseRegistration\BulkCourseRegistration.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseCollectionSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseCollectionSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Shared\_LayoutAccountsReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\VoucherWiseCollectionReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_VoucherWiseCollectionReport.cshtml" />
+    <Content Include="assets\img\eub-certificate\fonts\OldEnglishD.ttf" />
+    <Content Include="assets\img\eub-certificate\fonts\NimbusSanL-Bol.otf" />
+    <Content Include="assets\img\eub-certificate\fonts\svenings.ttf" />
+    <Content Include="assets\img\eub-certificate\fonts\Verah.ttf" />
+    <Content Include="Areas\ExamSection\Views\ResultManagement\ResultSubmissionReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_PaymentLedger.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\PaymentLedger.cshtml" />
+    <Content Include="Areas\ExamSection\Views\web.config" />
+    <Content Include="Areas\ExamSection\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Shared\_LayoutExamSection.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Shared\_PartialSidebar.cshtml" />
+    <Content Include="Areas\ExamSection\Views\DashBoard\Index.cshtml" />
+    <Content Include="Areas\Academic\Views\Dashboard\_PartialDashboard.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\BankWiseCollectionSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_BankWiseCollectionSummary.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\AddEmployee.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\UpdateEmployee.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_Personal.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_PreviousEducation.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_ProfileManager.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_UserCredential.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_OfficialInformation.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\_Summary.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\ResultManager\_ResultManagement.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\PrintMidtermResult.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\_PrintMidtermResult.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentDueReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentDueReport.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\ClassWiseAttendancePrintManager.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\ClassWiseAttendancePrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\BulkAdmitCardPrintManager.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\BulkAdmitCardPrint.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\CreditTransferManager\_CreditTransferCourseAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\CreditTransferInstitute\CreditTransferInstituteAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\CreditTransferInstitute\CreditTransferInstituteList.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\VoucherWiseParticularSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_VoucherWiseParticularSummary.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\MarkChangeHistory.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\ProgramWiseDegreeCompleteManager.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\ProgramWiseDegreeCompletePrint.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseCollectionDetailsReport.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\Financial.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseCollectionDetailsReport.cshtml" />
+    <Content Include="Areas\Academic\Views\Student\CreditTransferManager\_PrintCreditTransferCourses.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\web.config" />
+    <Content Include="Areas\BasicAccounting\Views\Shared\_LayoutBasicAccounting.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Shared\_LayoutBasicAccountingReport.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Shared\_PartialSidebar.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerAddEdit.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Branch\BranchAddEdit.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Branch\BranchList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\CompanyAccount\CompanyAccountAddEdit.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\CompanyAccount\CompanyAccountList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Voucher\VoucherAddEdit.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Voucher\VoucherList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\VoucherType\VoucherTypeAddEdit.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\VoucherType\VoucherTypeList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerTransaction.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\VoucherPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_VoucherPrint.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassAttendanceManager\PrintManualAttendanceSheet.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassManagement\PrintOnlyFinalGradeSheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\ProgramWiseGradeSummarySheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\Shared\_ProgramWiseGradeSummarySheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Shared\_LayoutExamSectionReport.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ChartOfAccounts.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_ChartOfAccounts.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\LedgerAccountReport.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_LedgerAccountReport.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\DayBookPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\BalanceSheet.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_DayBookPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\DayBookManager.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ReceiptPaymentPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_ReceiptPaymentPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ReceiptPaymentManager.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\LedgerAccountReport2.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_LedgerAccountReport2.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\TrialBalanceManager.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\TrialBalancePrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_TrialBalancePrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_TrialBalancePrintForUGC.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\_Apply.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Apply.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\CourseList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_Details.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_Applicant.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_CourseInfoList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_Dashboard.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_Print.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\BulkSuppleAdmitCardPrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\CourseWiseSuppleAttendancePrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\_CourseList.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_Examiner.cshtml" />
+    <Content Include="Areas\ExamSection\Views\SuppleManager\Shared\CourseList\_ManageApplicantAndExaminer.cshtml" />
+    <Content Include="Areas\Employee\Views\FacultySuppleManager\Index.cshtml" />
+    <Content Include="Areas\Employee\Views\FacultySuppleManager\Shared\_Index.cshtml" />
+    <Content Include="Areas\Employee\Views\FacultySuppleManager\Shared\_Index.js" />
+    <Content Include="Areas\Employee\Views\FacultySuppleManager\Shared\_CourseList.cshtml" />
+    <Content Include="Areas\Employee\Views\FacultySuppleManager\Shared\_Mark.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\SemesterWiseResult.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\Shared\_SemesterBills.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\RegisteredCourses.cshtml" />
+    <Content Include="Areas\Student\Views\Shared\_LayoutStudentReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\BankIntegration\PaymentExcelUpload.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\StudentEligibleReportManager.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\StudentEligibleReportPrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\Shared\_StudentEligibleReportPrint.cshtml" />
+    <Content Include="Areas\Student\Views\OnlinePayment\Index.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\Shared\_PaymentSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\GlobalScholarshipAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\GlobalScholarshipList.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentDueReportSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentDueReportSummary.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\AdmitCard-2.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\Shared\_BulkAdmitCardPrint.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\AdmitCardPrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Exam\ExamAddEdit.cshtml" />
+    <Content Include="Areas\Student\Views\SuppleExam\Index.cshtml" />
+    <Content Include="Areas\Student\Views\SuppleExam\Index-Old.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\SuppleAdmitCardPrint.cshtml" />
+    <Content Include="Areas\ExamSection\Views\Report\Shared\_BulkSuppleAdmitCardPrint.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\OnlineCourseRegistration.cshtml" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoBlackWhiteSolo.psd" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoColorFull.psd" />
+    <Content Include="assets\img\logo\buhs\InstituteLogoColorSolo.psd" />
+    <Content Include="Areas\ExamSection\Views\MarkDistributionPolicy\MarkDistributionPolicyList.cshtml" />
+    <Content Include="Areas\Student\Views\Accounts\_bKashDemo.cshtml" />
+    <Content Include="Areas\HR\Views\Shared\test.cshtml" />
+    <Content Include="Areas\Accounts\Views\ExcelUploader\BillExcelUpload.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ReferredBacklogManager\_ReferredBacklogManager.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ReferredBacklogManager\_ReferredBacklogStudent.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\ReferredBacklogManager\_ReferredBacklogTeacher.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\_FinalTabulationResult.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\PrintFinalTabulationSheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\ManageBatchWiseTabulationSheet.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\PrintTabulationSheetBatchWise.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\BatchWiseTabulation\_BatchWiseTabulationFooter.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\BatchWiseTabulation\_BatchWiseTabulationHeader.cshtml" />
+    <Content Include="Areas\ExamSection\Views\TabulationManager\BatchWiseTabulation\_BatchWiseTabulationResult.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\SingleScreenMarkEntry.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\SuppleResult.cshtml" />
+    <Content Include="Areas\ExamSection\Views\ResultBlockUnblock\ResultBlockUnblockManager.cshtml" />
+    <Content Include="Areas\Student\Views\OnlinePayment\Confirmation.cshtml" />
+    <Content Include="Areas\Student\Views\Dashboard\_Confirmation.cshtml" />
+    <Content Include="Areas\Accounts\Views\PaymentGateway\PaymentGatewayAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\PaymentGateway\PaymentGatewayList.cshtml" />
+    <Content Include="Areas\Accounts\Views\PaymentGatewayProgramMap\PaymentGatewayProgramMapAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\PaymentGatewayProgramMap\PaymentGatewayProgramMapList.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdOnlinePaySlip\StdOnlinePaySlipAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdOnlinePaySlip\StdOnlinePaySlipList.cshtml" />
+    <Content Include="Areas\Accounts\Views\StudentPaySlip\StudentPaySlipAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\StudentPaySlip\StudentPaySlipList.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\Shared\_OnlinePaymentHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\SiteSettingsAddEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_GeneralSettings.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_StudentSettings.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_CompanySettings.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_DefaultSettings.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_UniversitySettings.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_EmailNotificationSettings.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\StatementOf17_18.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\StatementOf18_19.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\StatementOf16_17.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\StatementOf19_20.cshtml" />
+    <Content Include="Areas\Employee\Views\Report\AdmissionReportOf20.cshtml" />
+    <Content Include="Areas\Employee\Views\Report\AdmissionReportOf19.cshtml" />
+    <Content Include="Areas\Employee\Views\Report\AdmissionReportOf17.cshtml" />
+    <Content Include="Areas\Employee\Views\Report\AdmissionReportOf18.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\DebitVoucher.cshtml" />
+    <Content Include="Areas\Student\Views\Dashboard\_BillAndPayment.cshtml" />
+    <Content Include="Areas\Employee\Views\Dashboard\index.cshtml" />
+    <Content Include="Areas\Student\Views\Dashboard\_MonthlyBillAndPayment.cshtml" />
+    <Content Include="Areas\Student\Views\MonthlyOnlinePayment\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SiteSettingsManager\PartialSiteSettings\_AddNewApplicantFormSettings.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\IncomeForecastReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_IncomeForecastReport.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_StdSemWiseScholarshipSettings.cshtml" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\Shared\_IndividualStudentScholarshipAddEdit.cshtml" />
+    <Content Include="Areas\Accounts\Views\SemWiseScholarship\Shared\_IndividualStudentScholarshipViewDetails.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\DebitTransactionList.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseBillingSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseBillingSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseWaiverSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseWaiverSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseBillingDetailsReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseBillingDetailsReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\ParticularWiseWaiverDetailsReport.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_ParticularWiseWaiverDetailsReport.cshtml" />
+    <Content Include="Areas\Student\Views\Reports\TransferredCourseResult.cshtml" />
+    <Content Include="Areas\Admission\Views\Student\ProfileManager\_UserLog.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\ProfileManager\_UserLog.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_FullPackageWaiverSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\FullPackageWaiverSummary.cshtml" />
+    <Content Include="Areas\Accounts\Views\StdTransaction\WaiverOnFullPackageList.cshtml" />
+    <Content Include="Areas\Academic\Views\ClassManager\BulkCourseOfferingManger.cshtml" />
+    <Content Include="Areas\Academic\Views\CourseRegistration\RepeaterCourseRegistration.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Ledger\LedgerListDownloadManager.cshtml" />
+    <Content Include="Areas\Admin\Views\User\RollAssignedReport.cshtml" />
+    <Content Include="Areas\Admission\Views\Report\PreviousEducationReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutAdminReport.cshtml" />
+    <Content Include="Areas\Admission\Views\Report\Shared\_PreviousEducationReport.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\Shared\_CloseCreditRegistration.cshtml" />
+    <Content Include="Areas\Student\Views\Registration\Shared\_OpenCreditRegistration.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslipDetails\MonthlyPayslipDetailsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslipDetails\MonthlyPayslipDetailsList.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipList.cshtml" />
+    <Content Include="Areas\HR\Views\SalarySettingsDetails\SalarySettingsDetailsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\SalarySettingsDetails\SalarySettingsDetailsList.cshtml" />
+    <Content Include="Areas\HR\Views\SalarySettings\SalarySettingsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\SalarySettings\SalarySettingsList.cshtml" />
+    <Content Include="Areas\HR\Views\SalaryTemplateDetails\SalaryTemplateDetailsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\SalaryTemplateDetails\SalaryTemplateDetailsList.cshtml" />
+    <Content Include="Areas\HR\Views\SalaryTemplate\SalaryTemplateAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\SalaryTemplate\SalaryTemplateList.cshtml" />
+    <Content Include="Areas\HR\Views\Payroll\PayrollAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\Payroll\PayrollList.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\Salary\_SalarySettings.cshtml" />
+    <Content Include="Areas\HR\Views\ManageEmployee\Salary\_MonthlyPayslip.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\MonthlyPayslipManager.cshtml" />
+    <Content Include="Areas\HR\Views\MonthlyPayslip\Payslip\_Payslip.cshtml" />
+    <Content Include="Areas\HR\Views\Shared\_LayoutHRReport.cshtml" />
+    <Content Include="Areas\HR\Views\Report\MonthlySalaryDetails.cshtml" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalaryDetails.cshtml" />
+    <Content Include="Areas\HR\Views\Report\MonthlySalarySummary.cshtml" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalarySummary.cshtml" />
+    <Content Include="Areas\HR\Views\Report\MonthlySalaryPrint.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\Shared\_StudentDueReportSummary2.cshtml" />
+    <Content Include="Areas\Accounts\Views\Report\StudentDueReportSummary2.cshtml" />
+    <Content Include="Areas\HR\Views\Report\MonthlySalaryReportWithBankDetails.cshtml" />
+    <Content Include="Areas\HR\Views\Report\Shared\_MonthlySalaryReportWithBankDetails.cshtml" />
+    <Content Include="Areas\HR\Views\Attendance\AttendanceAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\Attendance\AttendanceList.cshtml" />
+    <Content Include="Areas\HR\Views\CalendarYear\CalendarYearAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\CalendarYear\CalendarYearList.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettingsDetails\EmpLeaveAllocationSettingsDetailsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettingsDetails\EmpLeaveAllocationSettingsDetailsList.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettings\EmpLeaveAllocationSettingsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveAllocationSettings\EmpLeaveAllocationSettingsList.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveApplication\EmpLeaveApplicationAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\EmpLeaveApplication\EmpLeaveApplicationList.cshtml" />
+    <Content Include="Areas\HR\Views\HolidaySettings\HolidaySettingsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\HolidaySettings\HolidaySettingsList.cshtml" />
+    <Content Include="Areas\HR\Views\LeaveAllocationTemplateDetails\LeaveAllocationTemplateDetailsAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\LeaveAllocationTemplateDetails\LeaveAllocationTemplateDetailsList.cshtml" />
+    <Content Include="Areas\HR\Views\WorkWeek\WorkWeekAddEdit.cshtml" />
+    <Content Include="Areas\HR\Views\WorkWeek\WorkWeekList.cshtml" />
+    <Content Include="Areas\Admission\Views\Report\ProfileChangeAuditReport.cshtml" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\IndividualStudentSettingsList.cshtml" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\IndividualStudentSettingsList2.cshtml" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\ScholarshipEligibilityManager.cshtml" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\Shared\_IndividualStudentScholarshipAddEdit.cshtml" />
+    <Content Include="Areas\Admission\Views\SemWiseScholarship\Shared\_IndividualStudentScholarshipViewDetails.cshtml" />
+    <Content Include="Areas\HR\Views\Report\YearlySalarySummary.cshtml" />
+    <Content Include="Areas\HR\Views\Report\Shared\_YearlySalarySummary.cshtml" />
+    <Content Include="Areas\Academic\Views\HomeWork\HomeWorkAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\HomeWork\HomeWorkList.cshtml" />
+    <Content Include="Areas\Academic\Views\HomeWorkSubmission\HomeWorkSubmissionAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\HomeWorkSubmission\HomeWorkSubmissionList.cshtml" />
+    <Content Include="Areas\Academic\Views\OnlineClass\OnlineClassAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\OnlineClass\OnlineClassList.cshtml" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\AcceptedItemList.cshtml" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\AssginToParsonList.cshtml" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\ItemRequestAddEdit.cshtml" />
+    <Content Include="Areas\Academic\Views\ItemRequestManager\ItemRequestList.cshtml" />
+    <Content Include="Areas\Inventory\Views\web.config" />
+    <Content Include="Areas\Inventory\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Inventory\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ProductPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_PurchasePrint.cshtml" />
+    <Content Include="Areas\Inventory\Views\Store\StoreAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\Store\StoreList.cshtml" />
+    <Content Include="Areas\Inventory\Views\Supplier\SupplierAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\Supplier\SupplierList.cshtml" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisitionDetail\PurchaseRequisitionDetailAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisitionDetail\PurchaseRequisitionDetailList.cshtml" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisition\PurchaseRequisitionAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\PurchaseRequisition\PurchaseRequisitionList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemDescription\ItemDescriptionAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemDescription\ItemDescriptionList.cshtml" />
+    <Content Include="Areas\Inventory\Views\Item\ItemAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\Item\ItemList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemWarrentyDetails\ItemWarrentyDetailsAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemWarrentyDetails\ItemWarrentyDetailsList.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequisitionDetails\RequisitionDetailsAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequisitionDetails\RequisitionDetailsList.cshtml" />
+    <Content Include="Areas\Inventory\Views\Requisition\RequisitionAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\Requisition\RequisitionList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemAllocation\ItemAllocationAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemAllocation\ItemAllocationList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemReturn\ItemReturnAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemReturn\ItemReturnList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemMaintainance\ItemMaintainanceAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemMaintainance\ItemMaintainanceList.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequisitionManager\RequisitionAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequisitionManager\RequisitionList.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\InventoryPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_InventoryPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\RequisitionPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_RequisitionPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\ProductCategoryPrint.cshtml" />
+    <Content Include="Areas\BasicAccounting\Views\Report\Shared\_ProductCategoryPrint.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequestedItem\RequestedItemAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\RequestedItem\RequestedItemList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemDelivery\ItemDeliveryAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ItemDelivery\ItemDeliveryList.cshtml" />
+    <Content Include="Areas\Inventory\Views\ProductCategory\ProductCategoryAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\ProductCategory\ProductCategoryList.cshtml" />
+    <Content Include="Areas\Inventory\Views\Inventory\InventoryAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\Inventory\InventoryList.cshtml" />
+    <Content Include="Areas\Inventory\Views\InventoryDetails\InventoryDetailsAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\InventoryDetails\InventoryDetailsList.cshtml" />
+    <Content Include="Areas\Inventory\Views\InventoryManager\InventoryAddEdit.cshtml" />
+    <Content Include="Areas\Inventory\Views\InventoryManager\InventoryList.cshtml" />
+    <None Include="assets\js\jqueryval\jquery.validate-vsdoc.js" />
+    <Content Include="assets\js\tabdrop\tabdrop.less" />
+    <Content Include="Content\GatewayConfigaration\BkashConfig.json" />
+    <Content Include="Content\GatewayConfigaration\NagadConfig.json" />
+    <Content Include="Content\SiteSettings\baust\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\buhs\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\eub\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\fu\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\ius\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\mist\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\smuct\SiteSettings.json" />
+    <Content Include="Content\SiteSettings\demo\SiteSettings.json" />
+    <None Include="Properties\PublishProfiles\Mohitosh_Eub_Ems3.pubxml" />
+    <None Include="Properties\PublishProfiles\Pavel_Eub_Ems3.pubxml" />
+    <Content Include="Views\Shared\_PartialUnderConstructionMessage.cshtml" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\ResultComponentExcelUpload.js" />
+    <Content Include="Areas\Employee\Views\ClassResultComponent\ResultComponentExcelUpload.cshtml" />
+    <None Include="Properties\PublishProfiles\Mohitosh_Eub_Ems4_Server.pubxml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_PartialLoader.cshtml" />
+    <Content Include="Views\Shared\_PartialBreadcrumb.cshtml" />
+    <Content Include="Views\Shared\Area\_PartialAdminChatBar.cshtml" />
+    <Content Include="Views\Home\Error404.cshtml" />
+    <Content Include="Views\Home\Error500.cshtml" />
+    <Content Include="Views\Home\Error403.cshtml" />
+    <Content Include="Views\Shared\_PartialMessageForIE.cshtml" />
+    <Content Include="Views\Shared\_PartialModalTemplates.cshtml" />
+    <Content Include="Views\Shared\Area\_PartialAdminSearch.cshtml" />
+    <Content Include="Views\Reset\Index.cshtml" />
+    <Content Include="Views\Reset\Password.cshtml" />
+    <Content Include="Views\Reset\Confirm.cshtml" />
+    <Content Include="Views\Shared\_PartialOrzanogram.cshtml" />
+    <Content Include="Views\CommonManager\ChangePassword.cshtml" />
+    <Content Include="Service References\AzureAD\ConnectedService.json" />
+    <Content Include="Service References\Office365\ConnectedService.json" />
+    <Content Include="Views\ParadeState\Index.cshtml" />
+    <Content Include="Views\ParadeState\Student.cshtml" />
+    <Content Include="Views\Shared\_PartialCopyright.cshtml" />
+    <Content Include="Views\Home\PermissionDenied.cshtml" />
+    <Content Include="Views\Shared\_PartialLoginFooter.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Shared\_LayoutHtmlCore.cshtml" />
+    <Content Include="Views\Shared\Report\_ReportHeader.cshtml" />
+    <Content Include="Views\Shared\Report\_ReportFooter.cshtml" />
+    <Content Include="Views\Shared\Report\_LayoutReportCore.cshtml" />
+    <Content Include="Views\PayableDue\Index.cshtml" />
+    <Content Include="Views\CommonManager\EmailVerify.cshtml" />
+    <Content Include="Views\CommonManager\EmailVerifyConfirm.cshtml" />
+    <Content Include="Views\CommonManager\MobileVerify.cshtml" />
+    <Content Include="Views\OnlineResult\Index.cshtml" />
+    <Content Include="Views\OnlineResult\Public.cshtml" />
+    <Content Include="Views\OnlineResult\Public2.cshtml" />
+    <Content Include="Uploads\StaticReports\eub\accountReports\3-statements-16-17.pdf" />
+    <Content Include="Uploads\StaticReports\eub\accountReports\3-statements-17-18.pdf" />
+    <Content Include="Uploads\StaticReports\eub\accountReports\3-statements-18-19.pdf" />
+    <Content Include="Uploads\StaticReports\eub\accountReports\3-statements-19-20.pdf" />
+    <Content Include="Uploads\StaticReports\eub\admissionReports\2017_admission_report.pdf" />
+    <Content Include="Uploads\StaticReports\eub\admissionReports\2018_admission_report.pdf" />
+    <Content Include="Uploads\StaticReports\eub\admissionReports\2019_admission_report.pdf" />
+    <Content Include="Uploads\StaticReports\eub\admissionReports\2020_admission_report.pdf" />
+    <Content Include="Uploads\StaticReports\eub\accountReports\debitVoucher.pdf" />
+    <Content Include="Webhook.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\Admission\" />
+    <Folder Include="Areas\Academic\Views\ClassManager\ClassTeacher\" />
+    <Folder Include="Areas\Academic\Views\Report\" />
+    <Folder Include="Areas\Accounts\Controllers\WebApi\" />
+    <Folder Include="Areas\Accounts\Models\" />
+    <Folder Include="Areas\Accounts\Views\ScholarshipEligibilityManagerApi\" />
+    <Folder Include="Areas\Admission\Models\" />
+    <Folder Include="Areas\Admission\Views\ExamCenter\" />
+    <Folder Include="Areas\Admission\Views\ExamSetting\" />
+    <Folder Include="Areas\BasicAccounting\Models\" />
+    <Folder Include="Areas\ExamSection\Models\" />
+    <Folder Include="Areas\HR\Models\" />
+    <Folder Include="Areas\Inventory\Models\" />
+    <Folder Include="assets\custom\lib\TreeTable\example\" />
+    <Folder Include="Content\GitHook\" />
+    <Folder Include="Controllers\WebApi\" />
+    <Folder Include="Uploads\Admission\PhotoByRule\" />
+    <Folder Include="Uploads\Admission\Photo\" />
+    <Folder Include="Uploads\ProfilePictures\Employee\" />
+    <Folder Include="Uploads\ProfilePictures\Gaurdian\" />
+    <Folder Include="Uploads\ProfilePictures\Student\Admission\" />
+    <Folder Include="Uploads\ProfilePictures\Student\Official\2016\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.Communication\EMS.Communication.csproj">
+      <Project>{1764C63E-06B0-4BBF-9CE4-32D9DE7CD9E9}</Project>
+      <Name>EMS.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{c943ac10-d3e5-4bf4-9519-e3083dcd5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Project>{772bf7ce-f2a1-466d-883d-cd3d19af8ae4}</Project>
+      <Name>EMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataService\EMS.DataService.csproj">
+      <Project>{79b042a7-73b0-4ec8-a528-e540380b5508}</Project>
+      <Name>EMS.DataService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Project>{ab834801-ee9a-44a7-873a-9c9f123c02ce}</Project>
+      <Name>EMS.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.OnlinePaymentProxy\EMS.OnlinePaymentProxy.csproj">
+      <Project>{29c9abe8-29a3-4f22-9d1c-9dceed0dc3e3}</Project>
+      <Name>EMS.OnlinePaymentProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.ReportFacade\EMS.ReportFacade.csproj">
+      <Project>{15D6F7EF-9BF9-4BE6-8623-F8B143BA24AF}</Project>
+      <Name>EMS.ReportFacade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Reporting\EMS.Reporting.csproj">
+      <Project>{8CF5B10D-31EA-4FD5-9C5C-EF051D5151D3}</Project>
+      <Name>EMS.Reporting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.Framework\EMS.Web.Framework.csproj">
+      <Project>{baf344bc-deda-43d5-abde-41acf5a86019}</Project>
+      <Name>EMS.Web.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Name>EMS.CoreLibrary</Name>
+      <Project>{c943ac10-d3e5-4bf4-9519-e3083dcd5035}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Name>EMS.DataAccess</Name>
+      <Project>{772bf7ce-f2a1-466d-883d-cd3d19af8ae4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Facade\EMS.Facade.csproj">
+      <Name>EMS.Facade</Name>
+      <Project>{DA0DB7B3-290B-4DBC-A198-641BCC7249FA}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Name>EMS.Framework</Name>
+      <Project>{ab834801-ee9a-44a7-873a-9c9f123c02ce}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Reporting\EMS.Reporting.csproj">
+      <Name>EMS.Reporting</Name>
+      <Project>{8CF5B10D-31EA-4FD5-9C5C-EF051D5151D3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.Framework\EMS.Web.Framework.csproj">
+      <Name>EMS.Web.Framework</Name>
+      <Project>{baf344bc-deda-43d5-abde-41acf5a86019}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Web.Jsons\EMS.Web.Jsons.csproj">
+      <Project>{9757a87b-0ae2-4de7-bf29-0d0eb3a3a6bf}</Project>
+      <Name>EMS.Web.Jsons</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>58027</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:8060</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

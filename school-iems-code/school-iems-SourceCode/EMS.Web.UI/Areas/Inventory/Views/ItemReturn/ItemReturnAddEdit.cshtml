@@ -1,0 +1,143 @@
+﻿
+<!--File:Inv_ItemReturn Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Item Return";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemReturnId = (string) id == null?"0":(string)id;
+    
+    //Inv_ItemReturn WebApi Single Row link   
+    var getItemReturnByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "GetItemReturnById", area = "Inventory" });
+    var getItemReturnDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "GetItemReturnDataExtra", area = "Inventory" });
+    var saveItemReturnUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "SaveItemReturn", area = "Inventory" });
+    var deleteItemReturnByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "GetDeleteItemReturnById", area = "Inventory" });
+
+    //Inv_ItemReturn WebApi List link 
+    var getPagedItemReturnUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ItemReturnApi", action = "GetPagedItemReturn", area = "Inventory"});
+    var getAllItemReturnUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "GetAllItemReturn", area = "Inventory" });
+    var saveItemReturnListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "SaveItemReturnList", area = "Inventory" });
+    var getItemReturnListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemReturnApi", action = "GetItemReturnListDataExtra", area = "Inventory" });
+
+    var editItemReturnByIdPageUrl = Url.Action("ItemReturnAddEdit", "ItemReturn", new { area = "Inventory" });
+    var listItemReturnPageUrl = Url.Action("ItemReturnList", "ItemReturn", new { area = "Inventory" });
+    
+    //Inv_ItemReturn Angular Functions
+    string getItemReturnById="getItemReturnById";
+    var saveItemReturn = "saveItemReturn";
+    var getNewItemReturn = "getNewItemReturn";
+    var refreshPage = "loadPage()";
+    string deleteItemReturnById="deleteItemReturnById";
+    string loadItemReturnExtraData="loadItemReturnExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ItemReturn/ItemReturnAddEdit.js"></script>
+}
+
+<div id="ItemReturnAddEdit" class="row" ng-controller="ItemReturnAddEditCtrl" ng-init="Init(
+      '@ItemReturnId'
+      ,'@getItemReturnByIdUrl'
+      ,'@getItemReturnDataExtraUrl'
+      ,'@saveItemReturnUrl'
+      ,'@deleteItemReturnByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="ItemReturn.@Inv_ItemReturn.Property_Name!=''">{{(ItemReturn.@Inv_ItemReturn.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ItemReturnId" ng-Enter="@(getItemReturnById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewItemReturn)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listItemReturnPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Item Id </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ItemReturn.@Inv_ItemReturn.Property_ItemId" class="form-control" placeholder="Enter Item Id" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Return Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="ItemReturn.@Inv_ItemReturn.Property_ReturnDate" class="form-control date-picker" placeholder="Enter Return Date" datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Return Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Received By </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemReturn.@Inv_ItemReturn.Property_ReceivedBy" class="form-control" placeholder="Enter Received By"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Received By." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">To Store </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemReturn.@Inv_ItemReturn.Property_ToStore" class="form-control" placeholder="Enter To Store"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter To Store." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Return Status </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemReturn.@Inv_ItemReturn.Property_ReturnStatus" class="form-control" placeholder="Enter Return Status"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Return Status." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="ItemReturn.@Inv_ItemReturn.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveItemReturn)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

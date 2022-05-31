@@ -1,0 +1,157 @@
+﻿
+<!--File:Inv_ItemMaintainance Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Inventory: Add/Edit Item Maintainance";
+    Layout = "~/Areas/Inventory/Views/Shared/_LayoutInventory.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var ItemMaintainanceId = (string) id == null?"0":(string)id;
+    
+    //Inv_ItemMaintainance WebApi Single Row link   
+    var getItemMaintainanceByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "GetItemMaintainanceById", area = "Inventory" });
+    var getItemMaintainanceDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "GetItemMaintainanceDataExtra", area = "Inventory" });
+    var saveItemMaintainanceUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "SaveItemMaintainance", area = "Inventory" });
+    var deleteItemMaintainanceByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "GetDeleteItemMaintainanceById", area = "Inventory" });
+
+    //Inv_ItemMaintainance WebApi List link 
+    var getPagedItemMaintainanceUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "ItemMaintainanceApi", action = "GetPagedItemMaintainance", area = "Inventory"});
+    var getAllItemMaintainanceUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "GetAllItemMaintainance", area = "Inventory" });
+    var saveItemMaintainanceListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "SaveItemMaintainanceList", area = "Inventory" });
+    var getItemMaintainanceListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ItemMaintainanceApi", action = "GetItemMaintainanceListDataExtra", area = "Inventory" });
+
+    var editItemMaintainanceByIdPageUrl = Url.Action("ItemMaintainanceAddEdit", "ItemMaintainance", new { area = "Inventory" });
+    var listItemMaintainancePageUrl = Url.Action("ItemMaintainanceList", "ItemMaintainance", new { area = "Inventory" });
+    
+    //Inv_ItemMaintainance Angular Functions
+    string getItemMaintainanceById="getItemMaintainanceById";
+    var saveItemMaintainance = "saveItemMaintainance";
+    var getNewItemMaintainance = "getNewItemMaintainance";
+    var refreshPage = "loadPage()";
+    string deleteItemMaintainanceById="deleteItemMaintainanceById";
+    string loadItemMaintainanceExtraData="loadItemMaintainanceExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Inventory/Views/ItemMaintainance/ItemMaintainanceAddEdit.js"></script>
+}
+
+<div id="ItemMaintainanceAddEdit" class="row" ng-controller="ItemMaintainanceAddEditCtrl" ng-init="Init(
+      '@ItemMaintainanceId'
+      ,'@getItemMaintainanceByIdUrl'
+      ,'@getItemMaintainanceDataExtraUrl'
+      ,'@saveItemMaintainanceUrl'
+      ,'@deleteItemMaintainanceByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="ItemMaintainance.@Inv_ItemMaintainance.Property_Name!=''">{{(ItemMaintainance.@Inv_ItemMaintainance.Property_Name)}}</strong*@>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="ItemMaintainanceId" ng-Enter="@(getItemMaintainanceById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewItemMaintainance)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listItemMaintainancePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Item Id </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_ItemId" class="form-control" placeholder="Enter Item Id" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Id." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">From User </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_FromUser" class="form-control" placeholder="Enter From User"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter From User." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Reason </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_Reason" class="form-control" placeholder="Enter Reason" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Reason." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Remarks </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_Remarks" class="form-control" placeholder="Enter Remarks" maxlength="50"  />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remarks." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Receive Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_ReceiveDate" class="form-control date-picker" placeholder="Enter Receive Date" datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Receive Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Return Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_ReturnDate" class="form-control date-picker" placeholder="Enter Return Date" datetime="dd/MM/yyyy" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Return Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Item Status </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_ItemStatus" class="form-control" placeholder="Enter Item Status"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Item Status." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             @*<tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="ItemMaintainance.@Inv_ItemMaintainance.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveItemMaintainance)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

@@ -1,0 +1,390 @@
+@using System.Data.Entity
+@using EMS.CoreLibrary
+@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@model dynamic
+
+@{
+    ViewBag.Title = "Profile";
+
+    User_Employee employee = HttpUtil.DbContext.User_Employee
+        .Include(x=> x.User_Account)
+        .SingleOrDefault(x => x.Id == HttpUtil.Profile.EmployeeId);
+
+    User_Account user = HttpUtil.DbContext.User_Account
+.Find(HttpUtil.Profile.UserId);
+    //User_Employee employee = HttpUtil.DbContext.User_Employee
+    //    .Single(x => x.UserId == user.Id);
+    List<HR_AppointmentHistory> appointments = HttpUtil.DbContext.HR_AppointmentHistory
+        .Include("HR_Position")
+        .Include("HR_Department")
+        .Where(x => x.EmployeeId == employee.Id).ToList();
+    List<User_ContactAddress> addresses = HttpUtil.DbContext.User_ContactAddress.Where(x => x.UserId == user.Id).ToList();
+    List<User_Education> educations = HttpUtil.DbContext.User_Education.Where(x => x.UserId == user.Id).ToList();
+    HR_Department dept = HttpUtil.DbContext.HR_Department.Find(user.DepartmentId);
+
+
+    string emailChangeOrVerifyUrl = Url.Action("EmailVerify", "CommonManager", new { area = "" });
+
+    string mobileChangeOrVerifyUrl = Url.Action("MobileVerify", "CommonManager", new { area = "" });
+
+    General_Campus campus = HttpUtil.DbContext.General_Campus.Find(user.CampusId);
+    HR_Position position = null;
+
+    if (employee.PositionId != null)
+    {
+        position = HttpUtil.DbContext.HR_Position.Find(employee.PositionId);
+    }
+
+
+}
+
+@section ScriptSection
+{
+    <script src="~/Areas/employee/Views/Profile/Index.js"></script>
+}
+
+<div class="row employee-area-profile">
+    <div class="col-md-12">
+        <div class="profile-container">
+            <div class="profile-header row">
+                <div class="col-md-2 text-center">
+                    @if (employee.User_Account.ProfilePictureImageUrl.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        <img src="@Url.Content(HttpUtil.GetProfilePictureUrl())" alt="@HttpUtil.Profile.Name" class="header-avatar">
+                    }
+                    else
+                    {
+                        <img src="@HttpUtil.GetBase64String(employee.User_Account.ProfilePictureImageUrl)" alt="@HttpUtil.Profile.Name" class="header-avatar">
+                    }
+                </div>
+                <div class="col-md-5 profile-info">
+                    <div class="header-fullname">@user.FullName</div>
+                    <div>
+                        <span class="text-bold">@user.UserName</span>
+                    </div>
+                    <div>
+                       
+                    </div>
+                </div>
+                @if (SiteSettings.Instance.Student.Profile.CGPACanView || SiteSettings.Instance.Student.Profile.CompletedCreditsCanView || SiteSettings.Instance.Student.Profile.CompletedCreditsCanView)
+                {
+                    <div class="col-md-5 profile-stats mobile-hide">
+                        <div class="row">
+                            
+                           
+
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-12">
+                <div class="widget">
+                    <div class="widget-body no-padding">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTab9">
+                                <li class="active"><a data-toggle="tab" href="#Personal-Information" aria-expanded="true">Personal</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#Education-Information" aria-expanded="true">Education</a></li>
+                                <li class="tab-red"><a data-toggle="tab" href="#Academic" aria-expanded="true">Academic</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="Personal-Information" class="tab-pane  active">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-title">
+                                                Contact Information
+                                            </div>
+                                            <table class="table table-hover table-border">
+                                                <tr>
+                                                    <td class="text-bold" style="width: 150px;">Mobile:</td>
+                                                    <td>
+                                                        @user.UserMobile
+                                                        <a href="@mobileChangeOrVerifyUrl"
+                                                           target="_blank"
+                                                           class="btn btn-default btn-success btn-xs" style="margin-left: 5px;">Change Mobile</a>
+                                                        <i style="font-size: 11px;"> [*Used for Send Important Notification]</i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Email:</td>
+                                                    <td>
+                                                        @user.UserEmail
+                                                        @if (!user.IsVerifiedUserEmaill)
+                                                        {
+                                                            <a href="@emailChangeOrVerifyUrl"
+                                                               target="_blank"
+                                                               class="btn btn-default btn-warning btn-xs" style="margin-left: 5px;">Verify</a>
+                                                        }
+                                                        <a href="@emailChangeOrVerifyUrl"
+                                                           target="_blank"
+                                                           class="btn btn-default btn-success btn-xs" style="margin-left: 5px;">Change Email</a>
+
+                                                        <i style="font-size: 11px; margin-left: 5px;"> [*Used for Recover EMS Password & Send Important Notification/Alert]</i>
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="text-bold">Present Address:</td>
+                                                    <td>
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Permanent Address:</td>
+                                                    <td>
+                                                        
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-title" style="margin-top: 10px;">
+                                                Personal Information
+                                            </div>
+                                            <table class="table table-hover table-border">
+                                                <tr>
+                                                    <td class="text-bold" style="width: 120px;">Full Name:</td>
+                                                    <td>@user.FullName</td>
+                                                </tr>
+                                                @*<tr>
+                                                        <td class="text-bold" >Student ID:</td>
+                                                        <td>@user.UserName</td>
+                                                    </tr>*@
+                                                <tr>
+                                                    <td class="text-bold">Date of Birth:</td>
+                                                    <td>@user.DateOfBirth.ToString("D")</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="text-bold">Gender:</td>
+                                                    <td>@user.Gender</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Blood:</td>
+                                                    <td>@user.BloodGroup.ToString().AddBloodGroupSignToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Nationality:</td>
+                                                    <td>@user.Nationality</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Marital Status:</td>
+                                                    <td>@user.MaritalStatus.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Religion:</td>
+                                                    <td>@user.Religion.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr class="text-bold">
+                                                    <td>Spouse Name:</td>
+                                                    <td>@user.SpouseName</td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="form-title" style="margin-top: 10px;">
+                                                Parents Information
+                                            </div>
+                                            <table class="table table-hover table-border">
+                                                <tr>
+                                                    <td class="text-bold" style="width: 200px;">Father's Name:</td>
+                                                    <td>@user.FatherName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Mother's Name:</td>
+                                                    <td>@user.MotherName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Emergency Contact Name:</td>
+                                                    <td>@user.EmergencyContactPersonName</td>
+                                                </tr>
+                                                <tr style="color: red">
+                                                    <td class="text-bold">Emergency Contact Mobile:</td>
+                                                    <td class="text-bold">
+                                                        @user.EmergencyMobile
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Emergency Contact Address:</td>
+                                                    <td>
+                                                        @user.EmergencyContactAdress
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <div class="form-title" style="margin-top: 10px;">
+                                                TIN & Bank Information
+                                            </div>
+                                            <table class="table table-hover table-border">
+                                                <tr>
+                                                    <td class="text-bold">e-TIN / TIN No.:</td>
+                                                    <td>@employee.TinNumber</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Bank Account:</td>
+                                                    <td>
+                                                        @user.BankName
+                                                        
+                                                        @if (user.BankAccountNo.IsValid())
+                                                        {
+                                                            <span>(@user.BankAccountNo)</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Education-Information" class="tab-pane" style="overflow: auto;">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th style="min-width: 230px;">Degree Title</th>
+                                            <th>Board</th>
+                                            <th>Result</th>
+                                            <th>Year</th>
+                                            <th style="min-width: 300px;">Institution Name</th>
+                                            <th>Session</th>
+                                        </tr>
+                                        @foreach (var edu in educations)
+                                        {
+                                            <tr>
+                                                <td>@edu.DegreeTitle.AddSpacesToSentence()</td>
+                                                <td>@*@edu.Adm_EducationBoard.FullName.AddSpacesToSentence()*@</td>
+                                                <td>@edu.ObtainedGpaOrMarks</td>
+                                                <td>@edu.YearOfPassing</td>
+                                                <td>@edu.InstitutionName</td>
+                                                <td>@edu.YearOfPassing</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                                <div id="Academic" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <table class="table table-hover table-border">
+                                                <tr>
+                                                    <td class="text-bold">Campus:</td>
+                                                    <td>@campus.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Rank/Designation:</td>
+                                                    <td>
+
+
+                                                        @if (position != null)
+                                                        {
+                                                            <em>@position.Name</em><br />
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                @{
+                                                    HR_Department joiningDept = HttpUtil.DbContext.HR_Department.Find(employee.JoiningDepartmentId);
+                                                }
+                                                <tr>
+                                                    <td class="text-bold">Joining Department:</td>
+                                                    <td>
+                                                        @if (joiningDept != null)
+                                                        {
+                                                            <span>@joiningDept.Name (@joiningDept.ShortName)</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                @{
+                                                    HR_Department currentDept = HttpUtil.DbContext.HR_Department.Find(user.DepartmentId);
+                                                }
+                                                <tr>
+                                                    <td class="text-bold">Current Department:</td>
+                                                    <td>
+                                                        @if (currentDept != null)
+                                                        {
+                                                            <span>@currentDept.Name (@currentDept.ShortName)</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Employee Category:</td>
+                                                    <td>@employee.EmployeeCategory.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <table class="table table-hover table-border">
+
+                                                <tr>
+                                                    <td class="text-bold">Employee Type:</td>
+                                                    <td>@employee.EmployeeType.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Job Class:</td>
+                                                    <td>@employee.JobClass.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Job Type:</td>
+                                                    <td>@employee.JobType.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Working Status:</td>
+                                                    <td>@employee.WorkingStatus.ToString().AddSpacesToSentence()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Date of Joining:</td>
+                                                    <td>@user.JoiningDate.ToString("MMMM dd, yyyy")</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Widget Body end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .employee-area-profile .nav > li > a {
+        padding: 5px 5px;
+    }
+
+    .table-border {
+        border: 3px solid #e2e7e9 !important;
+    }
+
+    .form-title {
+        font-size: 15px;
+        margin-bottom: 5px;
+        padding: 2px 0;
+    }
+
+
+    @@media (max-width: 992px) {
+        .mobile-hide {
+            display: none !important;
+        }
+
+        .profile-container .profile-header .profile-info {
+            min-height: 125px;
+            padding: 0 5px;
+            text-align: center;
+        }
+
+        .profile-container .profile-header .header-avatar {
+            margin-bottom: 0px !important;
+        }
+
+        .profile-container .profile-header .profile-info .header-fullname {
+            margin-top: 15px;
+        }
+    }
+</style>

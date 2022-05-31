@@ -1,0 +1,193 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    var getOnlinePaymentHistoryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FinancialReportApi", action = "GetOnlinePaymentHistory", area = "Student" });
+    var getRecheckPaymentStatusByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "OnlinePaymentManagerApi", action = "GetRecheckPaymentStatusById", area = "Student" });
+    var paymentConfirmationUrl = Url.Action("Confirmation", "OnlinePayment", new { area = "Student" });
+    var recheckPaymentStatus = "recheckPaymentStatus";
+    string loadOnlinePaymentHistory = "loadOnlinePaymentHistory";
+}
+
+<div class="row"
+     ng-controller="OnlinePaymentHistoryCtrl"
+     ng-init="Init(
+     '@getOnlinePaymentHistoryUrl'
+    ,'@getRecheckPaymentStatusByIdUrl'
+     )">
+    
+    <div ng-hide="LoadOnlinePaymentHisotry" class="text-center margin-10">
+        <button ng-click="@(loadOnlinePaymentHistory)()" class="btn btn-info"><i class="fa fa-refresh"></i> Load Online Payment History </button>
+    </div>
+    <div ng-show="LoadOnlinePaymentHisotry">
+        <div class="main-body" style="padding: 10px; padding-right: 25px; padding-left: 25px; overflow-y: hidden">
+            <table style="width: 100%" class="table-bordered table-border">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center" style="display:none">
+                            <input type="checkbox" ng-click="selectAll($event)">
+                        </th>
+                        <th class="text-center">SN</th>
+                        <th class="text-center">Particular Name</th>
+                        @*<th class="text-center">Student Id</th>*@
+                        <th class="text-center">Semester </th>
+                        <th class="text-center">Amount</th>
+                        @*<th class="text-center">Gateway Charge</th>*@
+                        <!--th class="text-center">Bank Id</th-->
+                        <!--th class="text-center">Std Transection Id</th-->
+                        <th class="text-center">Is Paid</th>
+                        <th class="text-center">Remark</th>
+                        @*<th class="text-center">Create From Ip</th>
+                <th class="text-center">Std Transection Detail Json</th>*@
+                        <th class="text-center">Payment Gateway</th>
+                        @*<th class="text-center">Unique Order No</th>
+                <th class="text-center">Gateway Trans No</th>
+                <th class="text-center">Id For Rechek Gateway Payment Status</th>
+                <th class="text-center">Response Json</th>
+                <th class="text-center">Response Time</th>*@
+
+                        <th class="text-center">Initiate Time</th>
+                        <!--th class="text-center">Trans Status Enum Id</th-->
+                        <th class="text-center">Trans Status</th>
+                        @*<th class="text-center">Voucher Prefix</th>
+                <th class="text-center">Is Deleted</th>*@
+                        <th class="text-center no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="row in StdOnlinePaySlipList" ng-class='{red : !row.IsPaid, black: row.IsPaid}'>
+                        <td class="text-center" style="display:none">
+                            <input type="checkbox" ng-model="row.@Acnt_StdOnlinePaySlip.Property_IsSelected" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_ParticularName}}</td>
+                        @*<td class="">{{row.@Acnt_StdOnlinePaySlip.Property_StudentId}}</td>*@
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_SemesterName}}</td>
+                        <td class=""><span class="pull-right">{{row.@Acnt_StdOnlinePaySlip.Property_Amount}}</span></td>
+                        @*<td class="">{{row.@Acnt_StdOnlinePaySlip.Property_GatewayCharge}}</td>*@
+                        <!--td class="">{{row.@Acnt_StdOnlinePaySlip.Property_BankId}}</td-->
+                        <!--td class="">{{row.@Acnt_StdOnlinePaySlip.Property_StdTransectionId}}</td-->
+                        <td class="text-center">
+                            <span ng-show="row.@Acnt_StdOnlinePaySlip.Property_IsPaid">Yes</span>
+                            <span ng-hide="row.@Acnt_StdOnlinePaySlip.Property_IsPaid">No</span>
+                        </td>
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_Remark}}</td>
+                        @*
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_CreateFromIp}}</td>
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_StdTransectionDetailJson}}</td>*@
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_GatewayName}}</td>
+                        @*<td class="">{{row.@Acnt_StdOnlinePaySlip.Property_UniqueOrderNo}}</td>
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_GatewayTransNo}}</td>
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_IdForRechekGatewayPaymentStatus}}</td>
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_ResponseJson}}</td>
+                </td>*@
+                        @*<td class="">{{row.@Acnt_StdOnlinePaySlip.Property_ResponseTime }}</td>*@
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_InitiateTime | date:'medium'}}</td>
+                        <!--td class="">{{row.@Acnt_StdOnlinePaySlip.Property_TransStatusEnumId}}</td-->
+                        <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_TransStatus}}</td>
+                        @*<td class="">{{row.@Acnt_StdOnlinePaySlip.Property_VoucherPrefix}}</td>
+                <td class="">{{row.@Acnt_StdOnlinePaySlip.Property_IsDeleted}}</td>*@
+                        <td class="text-center no-print">
+                            @*<button ng-click="@(deleteStdOnlinePaySlipById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>*@
+                            <button ng-show="row.@Acnt_StdOnlinePaySlip.Property_TransStatusEnumId == @((int)Acnt_StdOnlinePaySlip.TransStatusEnum.Initiated)" ng-click="@(recheckPaymentStatus)(row)" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i></button>
+                            <a target="_blank" href="@(paymentConfirmationUrl)/?id={{row.Id}}" ng-show="row.@Acnt_StdOnlinePaySlip.Property_TransStatusEnumId == @((int)Acnt_StdOnlinePaySlip.TransStatusEnum.Success)" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> Payslip </a>
+                            @*|| row.@Acnt_StdOnlinePaySlip.Property_TransStatusEnumId == @((int)Acnt_StdOnlinePaySlip.TransStatusEnum.RecheckFailed*@
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .logo-size {
+        max-width: 55px;
+    }
+
+    .table-border td, .table-border th {
+        border: 1px solid black;
+        padding: 0px 5px;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+    }
+
+    .main-body {
+        /*width: 7.27in;*/
+        margin: 0 auto;
+    }
+
+    .trans-name div {
+        margin-left: 15px;
+        font-size: 11px;
+        font-weight: normal;
+    }
+
+    .bg-gray {
+        background-color: lightgray !important;
+    }
+    .red {
+        color: red;
+    }
+
+    .black {
+        color: black;
+    }
+    .text-bold {
+        font-weight: bold;
+    }
+
+    table thead tr th {
+        text-align: center;
+    }
+
+    .text-top {
+        vertical-align: text-top;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .divider {
+        border-bottom: 1.5px dotted black;
+        margin: 20px 0px !important;
+        padding: 0px !important;
+    }
+
+    .excludedPackage-table, .excludedPackage-table tr, .excludedPackage-table td {
+        border: none !important;
+    }
+
+    .balance-calculation-td {
+        width: 125px !important;
+        border: none !important;
+        vertical-align: top;
+    }
+
+    .thead-bg-gray {
+        background: lightgray !important;
+    }
+
+    @@media print {
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td,
+        .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: 1px solid #615c5c !important;
+        }
+
+
+        .excludedPackage-table > thead > tr > th, .table-bordered > tbody > tr > th,
+        .excludedPackage-table > tfoot > tr > th, .table-bordered > thead > tr > td,
+        .excludedPackage-table > tbody > tr > td, .table-bordered > tfoot > tr > td {
+            border: none !important;
+        }
+    }
+</style>

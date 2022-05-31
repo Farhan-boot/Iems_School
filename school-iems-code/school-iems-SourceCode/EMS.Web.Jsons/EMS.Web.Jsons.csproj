@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9757A87B-0AE2-4DE7-BF29-0D0EB3A3A6BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EMS.Web.Jsons</RootNamespace>
+    <AssemblyName>EMS.Web.Jsons</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CaptchaMvc, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe46ad421dd3b0e6, processorArchitecture=MSIL">
+      <HintPath>..\packages\CaptchaMvc.Mvc5.1.5.0\lib\net45-full\CaptchaMvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Custom\Academic\ClassEmployeesJson.cs" />
+    <Compile Include="Custom\Academic\StudentCourseRegistrationJson.cs" />
+    <Compile Include="Custom\Academic\ClassInfoJson.cs" />
+    <Compile Include="Custom\Academic\StudentBasicInfoJson.cs" />
+    <Compile Include="Custom\Academic\ClassStudentsJson.cs" />
+    <Compile Include="Custom\Academic\AcademicStudentJson.cs" />
+    <Compile Include="Custom\Academic\ResultModel\StudentResultJson.cs" />
+    <Compile Include="Custom\Academic\ResultModel\TabulationModel.cs" />
+    <Compile Include="Custom\Academic\StudentPaymentCollectionJson.cs" />
+    <Compile Include="Custom\Academic\StudentSemesterWiseResultJson.cs" />
+    <Compile Include="Custom\Admission\AdmissionExam\DefaultSettingsJson.cs" />
+    <Compile Include="Custom\Admission\Applicant\AddNewStudentStep1Json.cs" />
+    <Compile Include="Custom\Admission\Applicant\UpdateStudentJson.cs" />
+    <Compile Include="Custom\Admission\Report\AdmissionSummaryJson.cs" />
+    <Compile Include="Custom\BasicAccounting\LedgerTransactionJson.cs" />
+    <Compile Include="Custom\EmployeeJson.cs" />
+    <Compile Include="Custom\HR\Employee\AddNewEmployeeStep1Json.cs" />
+    <Compile Include="Custom\HR\Employee\UpdateEmployeeJson.cs" />
+    <Compile Include="Custom\HR\HREmployeeJson.cs" />
+    <Compile Include="Custom\Registration\BulkStudentRegistrationJson.cs" />
+    <Compile Include="Custom\Registration\CourseListForRegistrationJson.cs" />
+    <Compile Include="Custom\Registration\RegistrationCourseBase.cs" />
+    <Compile Include="Custom\Student\StudentParadeStateModel.cs" />
+    <Compile Include="Custom\Student\TPEJson.cs" />
+    <Compile Include="Models\Aca_ClassAttendanceJson.cs" />
+    <Compile Include="Models\Aca_ClassAttendanceSettingJson.cs" />
+    <Compile Include="Models\Aca_ClassAttendanceSmsLogJson.cs" />
+    <Compile Include="Models\Aca_ClassMaterialFileMapJson.cs" />
+    <Compile Include="Models\Aca_ClassNoticeJson.cs" />
+    <Compile Include="Models\Aca_ClassRoutineJson.cs" />
+    <Compile Include="Models\Aca_ClassSectionJson.cs" />
+    <Compile Include="Models\Aca_ClassWaiverStudentJson.cs" />
+    <Compile Include="Models\Aca_CoursePrerequisiteMapJson.cs" />
+    <Compile Include="Models\Aca_CreditTransferCoursesJson.cs" />
+    <Compile Include="Models\Aca_CreditTransferInstituteJson.cs" />
+    <Compile Include="Models\Aca_CreditTransferJson.cs" />
+    <Compile Include="Models\Aca_ExamSuppleJson.cs" />
+    <Compile Include="Models\Aca_HomeWorkSubmissionJson.cs" />
+    <Compile Include="Models\Aca_OnlineClassJson.cs" />
+    <Compile Include="Models\Aca_StudentRegistrationJson.cs" />
+    <Compile Include="Models\Adm_AdmissionExamJson.cs" />
+    <Compile Include="Models\Adm_DegreeCategoryJson.cs" />
+    <Compile Include="Models\Adm_EducationBoardJson.cs" />
+    <Compile Include="Models\Adm_ParentsPrimaryJobTypeJson.cs" />
+    <Compile Include="Models\Adm_StudentQuotaNameJson.cs" />
+    <Compile Include="Models\BAcnt_BranchJson.cs" />
+    <Compile Include="Models\BAcnt_CompanyAccountJson.cs" />
+    <Compile Include="Models\BAcnt_LedgerJson.cs" />
+    <Compile Include="Models\BAcnt_VoucherDetailJson.cs" />
+    <Compile Include="Models\BAcnt_VoucherJson.cs" />
+    <Compile Include="Models\BAcnt_VoucherTypeJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassAttendanceJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassAttendanceSettingJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassAttendanceSmsLogJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassMaterialFileMapJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassNoticeJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassRoutineJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassSectionJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassWaiverStudentJson.cs" />
+    <Compile Include="Models\Bases\Aca_CoursePrerequisiteMapJson.cs" />
+    <Compile Include="Models\Bases\Aca_CreditTransferCoursesJson.cs" />
+    <Compile Include="Models\Bases\Aca_CreditTransferInstituteJson.cs" />
+    <Compile Include="Models\Bases\Aca_CreditTransferJson.cs" />
+    <Compile Include="Models\Bases\Aca_ExamSuppleJson.cs" />
+    <Compile Include="Models\Bases\Aca_HomeWorkSubmissionJson.cs" />
+    <Compile Include="Models\Bases\Aca_OnlineClassJson.cs" />
+    <Compile Include="Models\Bases\Aca_StudentRegistrationJson.cs" />
+    <Compile Include="Models\Bases\Adm_AdmissionExamJson.cs" />
+    <Compile Include="Models\Bases\Adm_DegreeCategoryJson.cs" />
+    <Compile Include="Models\Bases\Adm_EducationBoardJson.cs" />
+    <Compile Include="Models\Bases\Adm_ParentsPrimaryJobTypeJson.cs" />
+    <Compile Include="Models\Bases\Adm_StudentQuotaNameJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_BranchJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_CompanyAccountJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_LedgerJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_VoucherDetailJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_VoucherJson.cs" />
+    <Compile Include="Models\Bases\BAcnt_VoucherTypeJson.cs" />
+    <Compile Include="Models\Bases\General_DistrictJson.cs" />
+    <Compile Include="Models\Bases\General_DivisionJson.cs" />
+    <Compile Include="Models\Bases\General_FileJson.cs" />
+    <Compile Include="Models\Bases\General_FloorJson.cs" />
+    <Compile Include="Models\Bases\General_NoticeJson.cs" />
+    <Compile Include="Models\Bases\General_PoliceStationJson.cs" />
+    <Compile Include="Models\Bases\General_PostOfficeJson.cs" />
+    <Compile Include="Models\Bases\HR_AttendanceJson.cs" />
+    <Compile Include="Models\Bases\HR_CalendarYearJson.cs" />
+    <Compile Include="Models\Bases\HR_EmpLeaveAllocationSettingsDetailsJson.cs" />
+    <Compile Include="Models\Bases\HR_EmpLeaveAllocationSettingsJson.cs" />
+    <Compile Include="Models\Bases\HR_EmpLeaveApplicationJson.cs" />
+    <Compile Include="Models\Bases\HR_HolidaySettingsJson.cs" />
+    <Compile Include="Models\Bases\HR_LeaveAllocationTemplateDetailsJson.cs" />
+    <Compile Include="Models\Bases\HR_MonthlyPayslipDetailsJson.cs" />
+    <Compile Include="Models\Bases\HR_MonthlyPayslipJson.cs" />
+    <Compile Include="Models\Bases\HR_PayrollJson.cs" />
+    <Compile Include="Models\Bases\HR_SalarySettingsDetailsJson.cs" />
+    <Compile Include="Models\Bases\HR_SalarySettingsJson.cs" />
+    <Compile Include="Models\Bases\HR_SalaryTemplateDetailsJson.cs" />
+    <Compile Include="Models\Bases\HR_SalaryTemplateJson.cs" />
+    <Compile Include="Models\Bases\HR_WorkWeekJson.cs" />
+    <Compile Include="Models\Bases\Invt_EquipmentDetailITJson.cs" />
+    <Compile Include="Models\Bases\Inv_InventoryDetailsJson.cs" />
+    <Compile Include="Models\Bases\Inv_InventoryJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemAllocationJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemDescriptionJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemMaintainanceJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemReturnJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemWarrentyDetailsJson.cs" />
+    <Compile Include="Models\Bases\Inv_ProductCategoryJson.cs" />
+    <Compile Include="Models\Bases\Inv_PurchaseRequisitionDetailJson.cs" />
+    <Compile Include="Models\Bases\Inv_PurchaseRequisitionJson.cs" />
+    <Compile Include="Models\Bases\Inv_RequisitionDetailsJson.cs" />
+    <Compile Include="Models\Bases\Inv_RequisitionJson.cs" />
+    <Compile Include="Models\Bases\Inv_ItemDeliveryJson.cs" />
+    <Compile Include="Models\Bases\Inv_StoreJson.cs" />
+    <Compile Include="Models\Bases\Inv_RequestedItemJson.cs" />
+    <Compile Include="Models\Bases\Inv_SupplierJson.cs" />
+    <Compile Include="Models\Bases\Lib_BranchJson.cs" />
+    <Compile Include="Models\Bases\Lib_SupplierJson.cs" />
+    <Compile Include="Models\Bases\UAC_VerificationAuditJson.cs" />
+    <Compile Include="Models\Bases\User_ProfileChangeAuditJson.cs" />
+    <Compile Include="Models\Bases\User_RelationshipJson.cs" />
+    <Compile Include="Models\General_DistrictJson.cs" />
+    <Compile Include="Models\General_DivisionJson.cs" />
+    <Compile Include="Models\General_FileJson.cs" />
+    <Compile Include="Models\General_FloorJson.cs" />
+    <Compile Include="Models\General_NoticeJson.cs" />
+    <Compile Include="Models\General_PoliceStationJson.cs" />
+    <Compile Include="Models\General_PostOfficeJson.cs" />
+    <Compile Include="Models\HR_AttendanceJson.cs" />
+    <Compile Include="Models\HR_CalendarYearJson.cs" />
+    <Compile Include="Models\HR_EmpLeaveAllocationSettingsDetailsJson.cs" />
+    <Compile Include="Models\HR_EmpLeaveAllocationSettingsJson.cs" />
+    <Compile Include="Models\HR_EmpLeaveApplicationJson.cs" />
+    <Compile Include="Models\HR_HolidaySettingsJson.cs" />
+    <Compile Include="Models\HR_LeaveAllocationTemplateDetailsJson.cs" />
+    <Compile Include="Models\HR_MonthlyPayslipDetailsJson.cs" />
+    <Compile Include="Models\HR_MonthlyPayslipJson.cs" />
+    <Compile Include="Models\HR_PayrollJson.cs" />
+    <Compile Include="Models\HR_SalarySettingsDetailsJson.cs" />
+    <Compile Include="Models\HR_SalarySettingsJson.cs" />
+    <Compile Include="Models\HR_SalaryTemplateDetailsJson.cs" />
+    <Compile Include="Models\HR_SalaryTemplateJson.cs" />
+    <Compile Include="Models\HR_WorkWeekJson.cs" />
+    <Compile Include="Models\Invt_EquipmentDetailITJson.cs" />
+    <Compile Include="Models\Inv_InventoryDetailsJson.cs" />
+    <Compile Include="Models\Inv_InventoryJson.cs" />
+    <Compile Include="Models\Inv_ItemAllocationJson.cs" />
+    <Compile Include="Models\Inv_ItemDescriptionJson.cs" />
+    <Compile Include="Models\Inv_ItemJson.cs" />
+    <Compile Include="Models\Inv_ItemMaintainanceJson.cs" />
+    <Compile Include="Models\Inv_ItemReturnJson.cs" />
+    <Compile Include="Models\Inv_ItemWarrentyDetailsJson.cs" />
+    <Compile Include="Models\Inv_ProductCategoryJson.cs" />
+    <Compile Include="Models\Inv_PurchaseRequisitionDetailJson.cs" />
+    <Compile Include="Models\Inv_PurchaseRequisitionJson.cs" />
+    <Compile Include="Models\Inv_RequestedItemJson.cs" />
+    <Compile Include="Models\Inv_RequisitionDetailsJson.cs" />
+    <Compile Include="Models\Inv_RequisitionJson.cs" />
+    <Compile Include="Models\Inv_ItemDeliveryJson.cs" />
+    <Compile Include="Models\Inv_StoreJson.cs" />
+    <Compile Include="Models\Inv_SupplierJson.cs" />
+    <Compile Include="Models\Lib_SupplierJson.cs" />
+    <Compile Include="Models\Aca_ClassTakenByEmployeeJson.cs" />
+    <Compile Include="Models\Aca_ClassJson.cs" />
+    <Compile Include="Models\Aca_ClassTakenByStudentJson.cs" />
+    <Compile Include="Models\Aca_CourseJson.cs" />
+    <Compile Include="Models\Aca_CurriculumCourseJson.cs" />
+    <Compile Include="Models\Aca_CurriculumElectiveGroupJson.cs" />
+    <Compile Include="Models\Aca_CurriculumJson.cs" />
+    <Compile Include="Models\Aca_CurriculumStudentMapJson.cs" />
+    <Compile Include="Models\Aca_CurriculumStudentMapMapper.cs" />
+    <Compile Include="Models\Aca_DeptBatchJson.cs" />
+    <Compile Include="Models\Aca_ExamJson.cs" />
+    <Compile Include="Models\Aca_ExamMapper.cs" />
+    <Compile Include="Models\Aca_ExamRollJson.cs" />
+    <Compile Include="Models\Aca_GradingPolicyJson.cs" />
+    <Compile Include="Models\Aca_GradingPolicyOptionJson.cs" />
+    <Compile Include="Models\Aca_MarkDistributionPolicyBreakdownJson.cs" />
+    <Compile Include="Models\Aca_MarkDistributionPolicyComponentJson.cs" />
+    <Compile Include="Models\Aca_MarkDistributionPolicyJson.cs" />
+    <Compile Include="Models\Aca_ProgramJson.cs" />
+    <Compile Include="Models\Aca_ProgramMapper.cs" />
+    <Compile Include="Models\Aca_SemesterJson.cs" />
+    <Compile Include="Models\Aca_SemesterMapper.cs" />
+    <Compile Include="Models\Aca_StudyLevelJson.cs" />
+    <Compile Include="Models\Aca_StudyLevelTermJson.cs" />
+    <Compile Include="Models\Aca_StudyTermJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassTakenByEmployeeJson.cs" />
+    <Compile Include="Models\Bases\Aca_ClassTakenByStudentJson.cs" />
+    <Compile Include="Models\Bases\Aca_CourseJson.cs" />
+    <Compile Include="Models\Bases\Aca_CurriculumCourseJson.cs" />
+    <Compile Include="Models\Bases\Aca_CurriculumElectiveGroupJson.cs" />
+    <Compile Include="Models\Bases\Aca_CurriculumJson.cs" />
+    <Compile Include="Models\Bases\Aca_CurriculumStudentMapJson.cs" />
+    <Compile Include="Models\Bases\Aca_DeptBatchJson.cs" />
+    <Compile Include="Models\Bases\Aca_ExamJson.cs" />
+    <Compile Include="Models\Bases\Aca_ExamRollJson.cs" />
+    <Compile Include="Models\Bases\Aca_GradingPolicyJson.cs" />
+    <Compile Include="Models\Bases\Aca_GradingPolicyOptionJson.cs" />
+    <Compile Include="Models\Bases\Aca_MarkDistributionPolicyBreakdownJson.cs" />
+    <Compile Include="Models\Bases\Aca_MarkDistributionPolicyComponentJson.cs" />
+    <Compile Include="Models\Bases\Aca_MarkDistributionPolicyJson.cs" />
+    <Compile Include="Models\Bases\Aca_ProgramJson.cs" />
+    <Compile Include="Models\Bases\Aca_SemesterJson.cs" />
+    <Compile Include="Models\Bases\Aca_StudyLevelJson.cs" />
+    <Compile Include="Models\Bases\Aca_StudyLevelTermJson.cs" />
+    <Compile Include="Models\Bases\Aca_StudyTermJson.cs" />
+    <Compile Include="Models\Bases\General_BankJson.cs" />
+    <Compile Include="Models\Bases\General_BuildingJson.cs" />
+    <Compile Include="Models\Bases\General_CampusJson.cs" />
+    <Compile Include="Models\Bases\General_CountryJson.cs" />
+    <Compile Include="Models\Bases\General_LanguageJson.cs" />
+    <Compile Include="Models\Bases\General_RoomJson.cs" />
+    <Compile Include="Models\Bases\HR_AppointmentHistoryJson.cs" />
+    <Compile Include="Models\Bases\HR_DepartmentJson.cs" />
+    <Compile Include="Models\Bases\HR_EmployementHistoryJson.cs" />
+    <Compile Include="Models\Bases\HR_OrganizationJson.cs" />
+    <Compile Include="Models\Bases\HR_PositionJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookAuthorJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookAuthorMapJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookCopyJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookCopyTransactionJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookDeptMapJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookSubjectJson.cs" />
+    <Compile Include="Models\Bases\Lib_BookSubjectMapJson.cs" />
+    <Compile Include="Models\Bases\Lib_BorrowerJson.cs" />
+    <Compile Include="Models\Bases\UAC_LoginAuditJson.cs" />
+    <Compile Include="Models\Bases\UAC_PassResetJson.cs" />
+    <Compile Include="Models\Bases\UAC_RoleJson.cs" />
+    <Compile Include="Models\Bases\UAC_RolePremissionMapJson.cs" />
+    <Compile Include="Models\Bases\UAC_RoleUserMapJson.cs" />
+    <Compile Include="Models\Bases\User_AccountJson.cs" />
+    <Compile Include="Models\Bases\User_ContactAddressJson.cs" />
+    <Compile Include="Models\Bases\User_ContactEmailJson.cs" />
+    <Compile Include="Models\Bases\User_ContactNumberJson.cs" />
+    <Compile Include="Models\Bases\User_EducationJson.cs" />
+    <Compile Include="Models\Bases\User_EmployeeJson.cs" />
+    <Compile Include="Models\Bases\User_ExperienceJson.cs" />
+    <Compile Include="Models\Bases\User_ImageJson.cs" />
+    <Compile Include="Models\Bases\User_RankHistoryJson.cs" />
+    <Compile Include="Models\Bases\User_RankJson.cs" />
+    <Compile Include="Models\Bases\User_StudentJson.cs" />
+    <Compile Include="Models\General_BankJson.cs" />
+    <Compile Include="Models\General_BankMapper.cs" />
+    <Compile Include="Models\General_BuildingJson.cs" />
+    <Compile Include="Models\General_CampusJson.cs" />
+    <Compile Include="Models\General_CountryJson.cs" />
+    <Compile Include="Models\General_CountryMapper.cs" />
+    <Compile Include="Models\General_LanguageJson.cs" />
+    <Compile Include="Models\General_LanguageMapper.cs" />
+    <Compile Include="Models\General_RoomJson.cs" />
+    <Compile Include="Models\HR_AppointmentHistoryJson.cs" />
+    <Compile Include="Models\HR_AppointmentHistoryMapper.cs" />
+    <Compile Include="Models\HR_DepartmentMapper.cs" />
+    <Compile Include="Models\HR_EmployementHistoryJson.cs" />
+    <Compile Include="Models\HR_DepartmentJson.cs" />
+    <Compile Include="Models\HR_EmployementHistoryMapper.cs" />
+    <Compile Include="Models\HR_OrganizationJson.cs" />
+    <Compile Include="Models\HR_OrganizationMapper.cs" />
+    <Compile Include="Models\HR_PositionJson.cs" />
+    <Compile Include="Models\HR_PositionMapper.cs" />
+    <Compile Include="Models\Lib_BookAuthorJson.cs" />
+    <Compile Include="Models\Lib_BookAuthorMapJson.cs" />
+    <Compile Include="Models\Lib_BookAuthorMapMapper.cs" />
+    <Compile Include="Models\Lib_BookAuthorMapper.cs" />
+    <Compile Include="Models\Lib_BookCopyJson.cs" />
+    <Compile Include="Models\Lib_BookCopyTransactionJson.cs" />
+    <Compile Include="Models\Lib_BookDeptMapJson.cs" />
+    <Compile Include="Models\Lib_BookDeptMapMapper.cs" />
+    <Compile Include="Models\Lib_BookJson.cs" />
+    <Compile Include="Models\Lib_BookSubjectJson.cs" />
+    <Compile Include="Models\Lib_BookSubjectMapJson.cs" />
+    <Compile Include="Models\Lib_BookSubjectMapMapper.cs" />
+    <Compile Include="Models\Lib_BookSubjectMapper.cs" />
+    <Compile Include="Models\Lib_BorrowerJson.cs" />
+    <Compile Include="Models\Lib_BranchJson.cs" />
+    <Compile Include="Models\UAC_LoginAuditJson.cs" />
+    <Compile Include="Models\UAC_LoginAuditMapper.cs" />
+    <Compile Include="Models\UAC_PassResetJson.cs" />
+    <Compile Include="Models\UAC_PassResetMapper.cs" />
+    <Compile Include="Models\UAC_RoleJson.cs" />
+    <Compile Include="Models\UAC_RoleMapper.cs" />
+    <Compile Include="Models\UAC_RolePremissionMapJson.cs" />
+    <Compile Include="Models\UAC_RolePremissionMapMapper.cs" />
+    <Compile Include="Models\UAC_RoleUserMapJson.cs" />
+    <Compile Include="Models\UAC_RoleUserMapMapper.cs" />
+    <Compile Include="Models\UAC_VerificationAuditJson.cs" />
+    <Compile Include="Models\User_AccountJson.cs" />
+    <Compile Include="Models\User_AccountMapper.cs" />
+    <Compile Include="Models\User_ContactAddressJson.cs" />
+    <Compile Include="Models\User_ContactEmailJson.cs" />
+    <Compile Include="Models\User_ContactNumberJson.cs" />
+    <Compile Include="Models\User_ContactNumberMapper.cs" />
+    <Compile Include="Models\User_EducationJson.cs" />
+    <Compile Include="Models\User_EducationMapper.cs" />
+    <Compile Include="Models\User_EmployeeJson.cs" />
+    <Compile Include="Models\User_ExperienceJson.cs" />
+    <Compile Include="Models\User_ExperienceMapper.cs" />
+    <Compile Include="Models\User_ImageJson.cs" />
+    <Compile Include="Models\User_ImageMapper.cs" />
+    <Compile Include="Models\User_ProfileChangeAuditJson.cs" />
+    <Compile Include="Models\User_RankHistoryMapper.cs" />
+    <Compile Include="Models\User_RankJson.cs" />
+    <Compile Include="Models\User_RankMapper.cs" />
+    <Compile Include="Models\User_RelationshipJson.cs" />
+    <Compile Include="Models\User_StudentJson.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EMS.Communication\EMS.Communication.csproj">
+      <Project>{1764C63E-06B0-4BBF-9CE4-32D9DE7CD9E9}</Project>
+      <Name>EMS.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.CoreLibrary\EMS.CoreLibrary.csproj">
+      <Project>{C943AC10-D3E5-4BF4-9519-E3083DCD5035}</Project>
+      <Name>EMS.CoreLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.DataAccess\EMS.DataAccess.csproj">
+      <Project>{772bf7ce-f2a1-466d-883d-cd3d19af8ae4}</Project>
+      <Name>EMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.Framework\EMS.Framework.csproj">
+      <Project>{ab834801-ee9a-44a7-873a-9c9f123c02ce}</Project>
+      <Name>EMS.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EMS.OnlinePaymentProxy\EMS.OnlinePaymentProxy.csproj">
+      <Project>{29C9ABE8-29A3-4F22-9D1C-9DCEED0DC3E3}</Project>
+      <Name>EMS.OnlinePaymentProxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

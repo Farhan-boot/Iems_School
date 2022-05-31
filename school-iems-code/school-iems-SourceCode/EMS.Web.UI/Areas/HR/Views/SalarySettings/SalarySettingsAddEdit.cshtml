@@ -1,0 +1,170 @@
+﻿
+<!--File:HR_SalarySettings Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "HR: Add/Edit Salary Settings";
+    Layout = "~/Areas/HR/Views/Shared/_LayoutHR.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var SalarySettingsId = (string) id == null?"0":(string)id;
+    
+    //HR_SalarySettings WebApi Single Row link   
+    var getSalarySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "GetSalarySettingsById", area = "HR" });
+    var getSalarySettingsDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "GetSalarySettingsDataExtra", area = "HR" });
+    var saveSalarySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "SaveSalarySettings", area = "HR" });
+    var deleteSalarySettingsByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "GetDeleteSalarySettingsById", area = "HR" });
+
+    //HR_SalarySettings WebApi List link 
+    var getPagedSalarySettingsUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "SalarySettingsApi", action = "GetPagedSalarySettings", area = "HR"});
+    var getAllSalarySettingsUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "GetAllSalarySettings", area = "HR" });
+    var saveSalarySettingsListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "SaveSalarySettingsList", area = "HR" });
+    var getSalarySettingsListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "SalarySettingsApi", action = "GetSalarySettingsListDataExtra", area = "HR" });
+
+    var editSalarySettingsByIdPageUrl = Url.Action("SalarySettingsAddEdit", "SalarySettings", new { area = "HR" });
+    var listSalarySettingsPageUrl = Url.Action("SalarySettingsList", "SalarySettings", new { area = "HR" });
+    
+    //HR_SalarySettings Angular Functions
+    string getSalarySettingsById="getSalarySettingsById";
+    var saveSalarySettings = "saveSalarySettings";
+    var getNewSalarySettings = "getNewSalarySettings";
+    var refreshPage = "loadPage()";
+    string deleteSalarySettingsById="deleteSalarySettingsById";
+    string loadSalarySettingsExtraData="loadSalarySettingsExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/HR/Views/SalarySettings/SalarySettingsAddEdit.js"></script>
+}
+
+<div id="SalarySettingsAddEdit" class="row" ng-controller="SalarySettingsAddEditCtrl" ng-init="Init(
+      '@SalarySettingsId'
+      ,'@getSalarySettingsByIdUrl'
+      ,'@getSalarySettingsDataExtraUrl'
+      ,'@saveSalarySettingsUrl'
+      ,'@deleteSalarySettingsByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="SalarySettings.@HR_SalarySettings.Property_Name!=''">{{(SalarySettings.@HR_SalarySettings.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="SalarySettingsId" ng-Enter="@(getSalarySettingsById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewSalarySettings)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listSalarySettingsPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="SalarySettings.@HR_SalarySettings.Property_Name" class="form-control" placeholder="Enter Name" maxlength="150" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Salary Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="SalarySettings.@HR_SalarySettings.Property_SalaryTypeEnumId" ng-options="option.Id as option.Name for option in SalaryTypeEnumList" title="Select Salary Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Salary Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Effective From </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="SalarySettings.@HR_SalarySettings.Property_EffectiveFrom" class="form-control" placeholder="Enter Effective From"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Effective From." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Current </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="SalarySettings.@HR_SalarySettings.Property_IsCurrent"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Current if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Excluded From Auto Generation </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="SalarySettings.@HR_SalarySettings.Property_IsExcludedFromAutoGeneration"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Excluded From Auto Generation if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">History </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="SalarySettings.@HR_SalarySettings.Property_History" class="form-control" placeholder="Enter History"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter History." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="SalarySettings.@HR_SalarySettings.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+                         <tr>
+                            <td class="fieldlabel">Employee </td>
+                            <td class="fieldarea">
+                                <select ng-model="SalarySettings.@HR_SalarySettings.Property_EmployeeId"
+                                        ng-options="option.Id as option.Name for option in EmployeeList " ng-init="" class="form-control select-inline">
+                                    <option value="" label="" class="">---Select One---</option>
+                                </select>
+                            </td>
+                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Employee." data-toggle="tooltip"></i></span></td>
+                        </tr>
+                  
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveSalarySettings)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

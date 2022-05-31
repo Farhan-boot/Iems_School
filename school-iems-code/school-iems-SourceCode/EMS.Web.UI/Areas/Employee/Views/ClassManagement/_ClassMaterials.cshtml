@@ -1,0 +1,152 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+@{
+    //WebApi link for List
+    var getPagedClassMaterialFileMapUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMaterialApi", action = "GetPagedClassMaterialFileMap", area = "Employee" });
+}
+
+<div class="row">
+<div class="col-md-7">
+    
+    <div class="alert alert-danger fade in radius-bordered alert-shadowed" ng-show="ClassMaterialList.length<=0">
+        <i class="fa-fw fa fa-book"></i>
+        <strong>Please upload Course Materials for student!</strong> There is no Course Material uploaded in this Course.
+    </div>
+    <table class="table table-bordered" ng-show="ClassMaterialList.length>0">
+        <thead>
+        <tr>
+            <th style="width: 5%;">Ser</th>
+            <th style="">Title</th>
+            <th class="text-center" style="width: 30%;">Upload Date</th>
+            <th class="text-center" style="width: 20%;">Size</th>
+            <th class="text-center" style="width: 5%;">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="row in ClassMaterialList">
+            <td class="text-center" style="font-weight: bold">{{ClassMaterialList.length-$index}}.@*<i class="glyphicon glyphicon-file"></i>*@</td>
+            <td>
+                <p style="max-width: 250px; word-wrap: break-word; text-align: left">
+                    <a href="@Url.Action("DownloadClassMaterial", "ClassManagement", new {area = "Employee"})?id={{row.Id}}"
+                       title="click to download (Size: {{row.General_FileJson.@General_File.Property_SizeInByte| filesize:2 }})">
+                        <i class="fa fa-download"></i> {{row.General_FileJson.@General_File.Property_Name}}
+                    </a>
+                </p>
+            </td>
+            <td class="text-center">
+                {{row.General_FileJson.@General_File.Property_CreateDate| date:'dd/MM/yyyy HH:mm'}}
+                <br/> <span  title="uploaded by: {{row.UploaderName}}" style="word-wrap: break-word; font-size: 11px;">
+                    ({{row.UploaderName}})
+                </span>
+            </td>
+            <td class="text-center" style="font-size: 11px;">{{row.General_FileJson.@General_File.Property_SizeInByte| filesize:2 }}</td>
+
+            <td class="text-center">
+
+                <button title="click to delete" ng-click="deleteClassMaterialById(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> </button>
+            </td>
+        </tr>
+ </tbody>
+    </table>
+</div>
+    <div class="col-md-5">
+        <div class="widget">
+            <div class="widget-header  bordered-sky bordered-bottom"><span  class="widget-caption" style="font-weight: bold!important">Select files to upload</span></div>
+            <div class="widget-body   ">
+
+                <div class="widget-footer " style="color: black; text-align: left">
+                    <b style="color: red">Upload Instructions: </b>
+                    <div>
+                        <ul style="list-style-type: decimal; padding-left: 17px; text-align: left">
+                            <li>
+                                Only .zip, .rar, .7zip, .ppt, .pptx, .doc, .docx, .xls, .xlsx, .pdf, .jpg, .png, .txt, .csv files allowed to upload
+                            </li>
+                            <li>
+                                You can upload <b>Unlimited</b> Files but each File size must be below <span  class="label label-warning">15 MB</span>
+                            </li>
+                            <li>
+                                Please select maximum <span  class="label label-warning">10 Files</span> at a time
+                            </li>
+                            <li>
+                                Please avoid using special characters in file name
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="text-left" g-show="Obj.Account.IsMigrate">
+                        <button type="file" class="btn btn-primary shiny"
+                                ngf-drop ng-model="myFiles" name="photoImage"
+                                ngf-pattern="'.zip,.rar,.7zip,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.pdf,.jpg,.png,.txt,.csv'"
+                                ngf-accept="'.zip,.rar,.7zip,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.pdf,.jpg,.png,.txt,.csv'"
+                                accept=".zip,.rar,.7zip,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.pdf,.jpg,.png,.txt,.csv"
+                                ngf-max-files="10"
+                                ngf-multiple="true"
+                                ngf-max-size="15MB"
+                                ngf-select="progress=0;">
+                            <i class="fa fa-file-excel-o"></i><span >Select Files</span>
+                        </button>
+                    </div>
+
+                </div>
+                <br />
+                <form enctype="multipart/form-data" method="post">
+                    <table class="table table-bordered" ng-show="myFiles.length>0">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;"></th>
+                                <th style="width: 150px; max-width: 150px;">Title</th>
+                                <th style="width: 20%;">Size</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="file in myFiles" style="font: smaller">
+                                <td>{{$index+1}}</td>
+                                <td style="width: 150px; max-width: 150px;">
+                                    <span  style="word-wrap: break-word;">
+                                        <a href="#"><i class="glyphicon glyphicon-file"></i> {{file.name}}</a>
+                                    </span>
+                                </td>
+                                <td>{{file.size| filesize:2 }} </td>
+                                <td align="center">
+                                    <a class="" style="color: red" href="#" title="remove" ng-click="removeFromWaitList(file)"><i class="fa fa-close"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-left">
+                                        <button disabled="disabled" ng-disabled="myFiles.length<=0" ng-click="uploadClassMaterial()" class="btn btn-md btn-success"><span  class="fa fa-upload"></span> Upload</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+
+                </form>
+                <br />
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+    function getFileSize(bytes, decimals) {
+        alert(bytes)
+        if (bytes == 0) return '0 Byte';
+        var k = 1000; // or 1024 for binary
+        var dm = decimals + 1 || 3;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+</script>

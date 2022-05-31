@@ -1,0 +1,533 @@
+﻿<!--File:Acnt_FeeCode Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Accounts: Add/Edit Fee Code";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var FeeCodeId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getFeeCodeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetFeeCodeById", area = "Accounts" });
+    var getFeeCodeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetFeeCodeDataExtra", area = "Accounts" });
+    var saveFeeCodeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "SaveFeeCode", area = "Accounts" });
+    var deleteFeeCodeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetDeleteFeeCodeById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedFeeCodeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetPagedFeeCode", area = "Accounts" });
+    var getAllFeeCodeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetAllFeeCode", area = "Accounts" });
+    var saveFeeCodeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "SaveFeeCodeList", area = "Accounts" });
+    var getFeeCodeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodeApi", action = "GetFeeCodeListDataExtra", area = "Accounts" });
+
+    var editFeeCodeByIdPageUrl = Url.Action("FeeCodeAddEdit", "FeeCode", new { area = "Accounts" });
+    var listFeeCodePageUrl = Url.Action("FeeCodeList", "FeeCode", new { area = "Accounts" });
+
+    // WebApi For FeeCodePolicy List
+    var getFeeCodePolicyListByFeeCodeIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "GetFeeCodePolicyListByFeeCodeId", area = "Accounts" });
+    var saveFeeCodePolicyListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "SaveFeeCodePolicyList", area = "Accounts" });
+    var getFeeCodePolicyListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "GetFeeCodePolicyListDataExtra", area = "Accounts" });
+
+    //WebApi link for FeeCodePolicy single row
+    var getFeeCodePolicyByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "GetFeeCodePolicyById", area = "Accounts" });
+    //var getFeeCodePolicyDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "GetFeeCodePolicyDataExtra", area = "Accounts" });
+    var saveFeeCodePolicyUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "SaveFeeCodePolicy", area = "Accounts" });
+    var deleteFeeCodePolicyByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FeeCodePolicyApi", action = "GetDeleteFeeCodePolicyById", area = "Accounts" });
+
+
+    var editFeeCodePolicyByIdPageUrl = Url.Action("FeeCodePolicyAddEdit", "FeeCodePolicy", new { area = "Accounts" });
+
+
+    // Angular Functions
+    string getFeeCodeById = "getFeeCodeById";
+    var saveFeeCode = "saveFeeCode";
+    var getNewFeeCode = "getNewFeeCode";
+    var refreshPage = "loadPage()";
+    string deleteFeeCodeById = "deleteFeeCodeById";
+    string loadFeeCodeExtraData = "loadFeeCodeExtraData";
+
+    // Angular Functions FeeCodePolicy
+    var getNewFeeCodePolicyModal = "getNewFeeCodePolicyModal";
+    var getFeeCodePolicyByIdModal = "getFeeCodePolicyByIdModal";
+    var saveFeeCodePolicy = "saveFeeCodePolicy";
+    var deleteFeeCodePolicyById = "deleteFeeCodePolicyById";
+    var deleteFeeCodePolicyByObj = "deleteFeeCodePolicyByObj";
+    //for list
+    //var searchFeeCodePolicyList = "searchFeeCodePolicyList";
+    var getPagedFeeCodePolicyList = "getPagedFeeCodePolicyList";
+    var getAllFeeCodePolicyList = "getFeeCodePolicyList";
+    var saveFeeCodePolicyList = "saveFeeCodePolicyList";
+    var getFeeCodePolicyListExtraData = "getFeeCodePolicyListExtraData";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/FeeCode/FeeCodeManager.js?v=2.1"></script>
+}
+
+<div id="FeeCodeAddEdit" class="row" ng-controller="FeeCodeAddEditCtrl" ng-init="Init(
+       '@FeeCodeId'
+      ,'@getFeeCodeByIdUrl'
+      ,'@getFeeCodeDataExtraUrl'
+      ,'@saveFeeCodeUrl'
+      ,'@deleteFeeCodeByIdUrl'
+      ,'@getFeeCodePolicyListByFeeCodeIdUrl'
+      ,'@getFeeCodePolicyListDataExtraUrl'
+      ,'@getFeeCodePolicyByIdUrl'
+      ,'@saveFeeCodePolicyUrl'
+      ,'@deleteFeeCodePolicyByIdUrl'
+     )">
+
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+        <div  ng-show="HasViewPermission">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-edit bold  "></i>
+                    <span class="widget-caption ">
+                        Add/Edit
+                        <strong ng-show="FeeCode.@Acnt_FeeCode.Property_Name!=''">{{(FeeCode.@Acnt_FeeCode.Property_Name)}}</strong>
+                    </span>
+                    <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                        <span class="input-icon">
+                            <input type="text" ng-model="FeeCodeId" ng-Enter="@(getFeeCodeById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search">
+                            <i class="glyphicon glyphicon-search blue"></i>
+                        </span>
+
+                    </div>
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewFeeCode)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                        <a href="@(listFeeCodePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                        <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div><!--Widget Header end-->
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    @*<tr>
+                                            <td class="fieldlabel">Id </td>
+                                            <td class="fieldarea">
+                                                <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_Id" class="form-control" placeholder="Enter Id"   />
+                                            </td>
+                                            <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Id." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+
+                                    <tr>
+                                        <td class="fieldlabel">Program </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="FeeCode.@Acnt_FeeCode.Property_ProgramId"
+                                                    ng-change="makeName()"
+                                                    ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                <tr>
+                                    <td class="fieldlabel">Start Semester </td>
+                                    <td class="fieldarea">
+                                        <select ng-model="FeeCode.@Acnt_FeeCode.Property_StartSemesterId"
+                                                ng-change="makeName(FeeCode.@Acnt_FeeCode.Property_StartSemesterId)"
+                                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">End Semester </td>
+                                    <td class="fieldarea">
+                                        <select ng-model="FeeCode.@Acnt_FeeCode.Property_EndSemesterId"
+                                                ng-change="makeName(FeeCode.@Acnt_FeeCode.Property_StartSemesterId)"
+                                                ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                            <option value="" label="" class="">---Select One---</option>
+                                        </select>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                        <td class="fieldlabel">Fee Code Name <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <input type="text" ng-disabled="true" ng-model="FeeCode.@Acnt_FeeCode.Property_Name" class="form-control" placeholder="Fee Code Name" maxlength="256" required="" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Name." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Order No </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                <tr>
+                                    <td class="fieldlabel">Note</td>
+                                    <td class="fieldarea">
+                                        <textarea type="text" ng-model="FeeCode.@Acnt_FeeCode.Property_Remark" class="form-control" placeholder="Enter Remark"></textarea>
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Waive Over Fixed Cost Semester Count </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_WaiveOverFixedCostSemesterCount" class="form-control" placeholder="Enter Waive Over Fixed Cost Semester Count" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Waive Over Fixed Cost Semester Count." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">Month Count </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_MonthCount" class="form-control" placeholder="Enter Month Count" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Month Count." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">Course Count </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_CourseCount" class="form-control" placeholder="Enter Course Count" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Course Count." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="fieldlabel"> Is Add Course Fee From Syllabus </td>
+                                    <td class="fieldarea">
+                                        <input type="radio" ng-model="FeeCode.@Acnt_FeeCode.Property_IsAddCourseFeeFromSyllabus" class="form-control radio-inline"  ng-value="true"/> Yes
+                                        <input type="radio" ng-model="FeeCode.@Acnt_FeeCode.Property_IsAddCourseFeeFromSyllabus" class="form-control radio-inline"  ng-value="false"/> No
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Is Add Course Fee From Syllabus." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel">Exam Fee Per Course </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_ExamFeePerCourse" class="form-control" placeholder="Enter Exam Fee Per Course" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Exam Fee Per Course." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="fieldlabel"> Retake Exam Fee Per Course </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeExamFeePerCourse" class="form-control" placeholder="Enter Retake Exam Fee Per Course" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Exam Fee Per Course." data-toggle="tooltip"></i></span></td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                        <div class="col-md-6 table-form">
+                            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Total Credit </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-change="calculatePackage()" ng-model="FeeCode.@Acnt_FeeCode.Property_TotalCredit" class="form-control" placeholder="Enter Total Credit" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Credit." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Total Semester </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-change="calculatePackage()" ng-model="FeeCode.@Acnt_FeeCode.Property_TotalSemester" class="form-control" placeholder="Enter Total Semester" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Semester." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Total Year </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-change="calculatePackage()" ng-model="FeeCode.@Acnt_FeeCode.Property_TotalYear" class="form-control" placeholder="Enter Total Year" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Year." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Total Package Amount </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_TotalPackageAmount" class="form-control" placeholder="Enter Total Package Amount" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Total Package Amount." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <!--dropdown option for EnumList-->
+                                    <tr>
+                                        <td class="fieldlabel">Status </td>
+                                        <td class="fieldarea">
+                                            <select ng-model="FeeCode.@Acnt_FeeCode.Property_StatusEnumId" ng-options="option.Id as option.Name for option in StatusEnumList" title="Select Status" ng-init="" class="form-control">
+                                                <option value="" label="" class="">---Select One---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Status." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+
+                                @*<tr>
+                                           <td class="fieldlabel">Is Deleted </td>
+                                           <td class="fieldarea">
+                                               <label class="checkbox-inline">
+                                               <input type="checkbox" ng-model="FeeCode.@Acnt_FeeCode.Property_IsDeleted"  />
+                                               </label>
+                                           </td>
+                                           <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                                        </tr>*@
+                                
+                                <tr>
+                                    <td class="fieldlabel"> Exam Fee Per Credit </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_ExamFeePerCredit" class="form-control" placeholder="Enter  Exam Fee Per Credit" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter  Exam Fee Per Credit." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Retake Exam Fee Per Credit </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeExamFeePerCredit" class="form-control" placeholder="Enter Retake Exam Fee Per Credit" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Exam Fee Per Credit." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Retake Tution Fee Per Course </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeTutionFeePerCourse" class="form-control" placeholder="Enter Retake Tution Fee Per Course" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Tution Fee Per Course." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel"> Retake Tution Fee Per Credit</td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeTutionFeePerCredit" class="form-control" placeholder="Enter Retake Tution Fee Per Credit " />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Tution Fee Per Credit" data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fieldlabel">Retake Lab Fee Per Course </td>
+                                    <td class="fieldarea">
+                                        <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeLabFeePerCourse" class="form-control" placeholder="Enter Retake Lab Fee Per Course" />
+                                    </td>
+                                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Lab Fee Per Course." data-toggle="tooltip"></i></span></td>
+                                </tr>
+                                    <tr>
+                                        <td class="fieldlabel"> Retake Lab Fee Per Credit </td>
+                                        <td class="fieldarea">
+                                            <input type="number" ng-model="FeeCode.@Acnt_FeeCode.Property_RetakeLabFeePerCredit" class="form-control" placeholder="Enter Retake Lab Fee Per Credit" />
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Retake Lab Fee Per Credit." data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!--Col end-->
+                    </div><!--Row end-->
+                </div><!--Widget Body end-->
+                <div class="widget-footer text-center">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button ng-click="@(saveFeeCode)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Fee Code Policy Start*@
+        <div class="alert alert-danger fade in radius-bordered alert-shadowed"
+             ng-if="FeeCode.@Acnt_FeeCode.Property_Id !=0"
+             ng-hide="(TotalAmount|number:2)==(FeeCode.@Acnt_FeeCode.Property_TotalPackageAmount|number:2)">
+                <i class="fa-fw fa fa-warning"></i>
+                <strong>Total Package Amount Mismatch!</strong> Total Package Amount({{FeeCode.@Acnt_FeeCode.Property_TotalPackageAmount|number:2}}) & Calculated Total Amount({{TotalAmount|number:2}}) Not Same Please Check!
+            </div>
+
+            <div class="widget" ng-if="FeeCode.@Acnt_FeeCode.Property_Id !=0">
+                <div class="widget-header bordered-bottom bordered-sky ">
+                    <i class="widget-icon fa fa-list bold  "></i>
+                    <span class="widget-caption ">
+                        Manage Fee Code Policy (<span class="bold-text">
+                            Calculated Amount To Pay:
+                            <label class="label label-purple">{{FeeCodePolicyList|total:'Total'|number:2 }}</label>
+                        </span>)
+                    </span>
+
+
+                    <div class="widget-buttons no-padding-left">
+                        <button ng-click="@(getNewFeeCodePolicyModal)()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</button>
+                        <button ng-click="@(getAllFeeCodePolicyList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                </div>
+                <div class="widget-body no-padding" style="overflow: auto">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="bordered-blue">
+                            <tr>
+                                <th class="text-center" style="display: none">
+                                    <input type="checkbox" ng-click="selectAll($event)">
+                                </th>
+                                <th class="text-center">SN</th>
+                                <th class="text-center">Name</th>
+                                <!--th class="text-center">Fee Code Id</th-->
+                                <!--th class="text-center">Particular Type Id</th-->
+                                <!--th class="text-center">Particular Type Enum Id</th-->
+                                <th class="text-center">Particular Type</th>
+                                <!--th class="text-center">Fee Generate Term Enum Id</th-->
+
+                                <th class="text-center">Auto Generate</th>
+
+                                <th class="text-center">Order No</th>
+                                <th class="text-center">Fee Generate Term</th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">Equation</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center no-print">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="row in FeeCodePolicyList">
+                                <td class="text-center" style="display: none">
+                                    <input type="checkbox" ng-model="row.@Acnt_FeeCodePolicy.Property_IsSelected" />
+                                </td>
+                                <td class="text-center">{{$index+1}}</td>
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_ParticularTypeName}}</td>
+                                <!--td class="">{{row.@Acnt_FeeCodePolicy.Property_FeeCodeId}}</td-->
+                                <!--td class="">{{row.@Acnt_FeeCodePolicy.Property_ParticularNameId}}</td-->
+                                <!--td class="">{{row.@Acnt_FeeCodePolicy.Property_ParticularTypeEnumId}}</td-->
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_ParticularType}}</td>
+                                <!--td class="">{{row.@Acnt_FeeCodePolicy.Property_FeeGenerateTermEnumId}}</td-->
+
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_IsAutoGenerateOnceOnCourseAdd}}</td>
+                                @*<td class="">{{row.@Acnt_FeeCodePolicy.Property_Remark}}</td>*@
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_OrderNo}}</td>
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_FeeGenerateTerm}}</td>
+                                @*<td class="">{{row.@Acnt_FeeCodePolicy.Property_IsAmountInPercentage}}</td>*@
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_Amount}}</td>
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_EquationTxt}}</td>
+                                <td class="">{{row.@Acnt_FeeCodePolicy.Property_Total|number:2}}</td>
+
+                                <td class="text-center no-print">
+                                    <button ng-click="@(getFeeCodePolicyByIdModal)(row.Id)" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</button>
+                                    <button ng-click="@(deleteFeeCodePolicyById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot class="table-footer ">
+                            <tr>
+                                <td colspan="8" class="text-right bold-text">Calculated Amount To Pay</td>
+                                <td colspan="2" class="bold-text">{{FeeCodePolicyList|total:'Total'|number:2 }}</td>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <!--Component Modal -->
+            <div class="modal fade" id="FeeCodePolicyModal" tabindex="-1" role="dialog" aria-labelledby="FeeCodePolicyModal">
+                <div class="modal-dialog modal-m" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="">Add/Edit Fee Code Policy</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 table-form">
+                                    <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 200px" class="fieldlabel">Fee Code </td>
+                                                <td class="fieldarea">
+                                                    <select disabled ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_FeeCodeId"
+                                                            ng-options="option.Id as option.Name for option in FeeCodeList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Fee Code." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Particular Name </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_ParticularNameId"
+                                                            ng-options="option.Id as option.Name for option in ParticularNameList " ng-init="" class="form-control select-inline">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Particular Type </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_ParticularTypeEnumId" ng-options="option.Id as option.Name for option in ParticularTypeEnumList" title="Select Particular Type" ng-init="" class="form-control">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Type." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Fee Generate Term </td>
+                                                <td class="fieldarea">
+                                                    <select ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_FeeGenerateTermEnumId" ng-options="option.Id as option.Name for option in FeeGenerateTermEnumList" title="Select Fee Generate Term" ng-init="" class="form-control">
+                                                        <option value="" label="" class="">---Select One---</option>
+                                                    </select>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Fee Generate Term." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Amount </td>
+                                                <td class="fieldarea">
+                                                    <input type="text" ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_Amount" class="form-control" placeholder="Enter Amount" />
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Auto Generate Once On Course Add </td>
+                                                <td class="fieldarea">
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_IsAutoGenerateOnceOnCourseAdd" />
+                                                    </label>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Auto Generate Once On Course Add if required." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="fieldlabel">Order No </td>
+                                                <td class="fieldarea">
+                                                    <input type="number" ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_OrderNo" class="form-control" placeholder="Enter Order No" />
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fieldlabel">Remark </td>
+                                                <td class="fieldarea">
+                                                    <textarea type="text" ng-model="FeeCodePolicy.@Acnt_FeeCodePolicy.Property_Remark" class="form-control" placeholder="Enter Remark"></textarea>
+                                                </td>
+                                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div><!--Col end-->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button ng-click="@(saveFeeCodePolicy)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Component Modal End -->
+        </div>
+    </div>
+</div>
+
+
+
+
+

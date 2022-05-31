@@ -1,0 +1,98 @@
+﻿@using EMS.DataAccess.Data
+@model dynamic
+
+@{
+    var id = Request.QueryString["id"];
+    var classId = (string)id == null ? "0" : (string)id;
+    var getResultSettingsByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetResultSettingsByClassId", area = "Academic" });
+    var getDefaultMarkDistributionByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetGenerateClassDefaultMarkDistributionByClassId", area = "Academic" });
+
+    //Mark Settings api
+    var getLockUnlockClassResultSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetLockUnlockClassResultSettingById", area = "Academic" });
+    var getLockUnlockComponentSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetLockUnlockComponentSettingById", area = "Academic" });
+    var getLockUnlockComponentScrutinizergByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetLockUnlockComponentScrutinizergById", area = "Academic" });
+    var getLockUnlockBreakdownSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetLockUnlockBreakdownSettingById", area = "Academic" });
+    var getDeleteAllClassResultByResultClassSettingIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteAllClassResultByResultClassSettingId", area = "Academic" });
+    var getDeleteResultClassSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteResultClassSettingById", area = "Academic" });
+    var getDeleteAllMarksByComponentSettingIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteAllMarksByComponentSettingId", area = "Academic" });
+    var getDeleteComponentSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteComponentSettingById", area = "Academic" });
+    var getDeleteAllMarksByBreakdownSettingIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteAllMarksByBreakdownSettingId", area = "Academic" });
+    var getDeleteBreakdownSettingByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteBreakdownSettingById", area = "Academic" });
+    var getDeleteAllGradeComponentBreakdownMarksByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteAllGradeComponentBreakdownMarksByClassId", area = "Academic" });
+    var getDeleteAllMarkDistributionByClassIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "ClassMarksManageDashboardApi", action = "GetDeleteAllMarkDistributionByClassId", area = "Academic" });
+
+    var printFinalExamMarkUrl = Url.Action("Print70PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var print30PercentTheoryExamMarkUrl = Url.Action("Print30PercentTheoryExamMark", "ClassResultComponent", new { area = "Employee" });
+    var classTestMarksByClassIdPageUrl = Url.Action("ClassTestMarks", "ClassManager", new { area = "Academic" });
+
+    var print100ClassResult = Url.Action("GenerateClassResult", "ClassManagement", new { area = "Employee" });
+
+
+    
+}
+
+
+<div ng-controller="MarksEditDashboardCtrl"
+     ng-init="Init(
+         '@classId'
+        ,'@getResultSettingsByClassIdUrl'
+        ,'@(getDefaultMarkDistributionByClassIdUrl)'
+        ,'@(getLockUnlockComponentSettingByIdUrl)'
+         ,'@(getLockUnlockBreakdownSettingByIdUrl)'
+         ,'@(getLockUnlockComponentScrutinizergByIdUrl)'
+         ,'@(getLockUnlockClassResultSettingByIdUrl)'
+        ,'@(getDeleteAllClassResultByResultClassSettingIdUrl)'
+        ,'@(getDeleteResultClassSettingByIdUrl)'
+     ,'@(getDeleteAllMarksByComponentSettingIdUrl)'
+    ,'@(getDeleteComponentSettingByIdUrl)'
+    ,'@(getDeleteAllMarksByBreakdownSettingIdUrl)'
+     ,'@(getDeleteBreakdownSettingByIdUrl)'
+    ,'@(getDeleteAllGradeComponentBreakdownMarksByClassIdUrl)'
+    ,'@(getDeleteAllMarkDistributionByClassIdUrl)'
+     )">
+    <div class="widget-header bordered-bottom bordered-sky">
+        <i class="widget-icon fa fa-user-secret"></i>
+        <span  class="widget-caption">Marks Pane</span>
+        <div class="widget-buttons">
+            <div>
+
+                <a  ng-show="IsUgTheory && RegularSectionAB.length>=0"target="_blank" href="@(classTestMarksByClassIdPageUrl)/?classId={{ClassId}}" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> View CT Marks</a>
+                <button ng-click="getDefaultMarkDistributionByClassId()" class="btn btn-xs btn-success"><i class="fa fa-gear"></i> Generate Default Mark Distribution</button>
+
+
+            </div>
+          </div>
+        <div class="widget-buttons buttons-bordered">
+            <button ng-click="refresh()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+        </div>
+    </div>
+    <div class="tabbable">
+        <div class="alert alert-danger" ng-show="HasErrorMarksPane">
+            <button type="button" class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention: </strong> <span >{{ErrorMsgMarksPane}}</span>
+        </div>
+        <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+        </div>
+ 
+        <ul class="nav nav-tabs no-print">
+            <li class="active tab-danger"><a data-toggle="tab" href="#RegularExam">Regular Exam </a></li>
+            @*<li class="tab-success"><a data-toggle="tab" href="#ReferredExam">Referred Exam </a></li>
+            <li class="tab-info"><a data-toggle="tab" href="#BacklogExam">Backlog Exam</a></li>*@
+        </ul>
+        <div class="tab-content  no-padding">
+
+            <div class="tab-pane active " id="RegularExam">
+                @Html.Partial("~/Areas/Academic/Views/ClassResultManager/MarksEditDashboard/_RegularResultSettings.cshtml")
+            </div>
+            @*<div class="tab-pane" id="ReferredExam">
+                @Html.Partial("~/Areas/Academic/Views/ClassResultManager/MarksEditDashboard/_ReferredResultSettings.cshtml")
+            </div>
+            <div class="tab-pane" id="BacklogExam">
+                @Html.Partial("~/Areas/Academic/Views/ClassResultManager/MarksEditDashboard/_BacklogResultSettings.cshtml")
+            </div>*@
+        </div>
+    </div>
+</div>

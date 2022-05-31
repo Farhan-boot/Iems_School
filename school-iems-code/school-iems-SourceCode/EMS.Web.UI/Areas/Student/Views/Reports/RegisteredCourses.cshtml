@@ -1,0 +1,22 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@model EMS.Framework.Objects.MvcModelResult<User_Student>
+@{
+    ViewBag.Title = "Course Registration By Semester";
+    Layout = "~/Areas/Student/Views/Shared/_LayoutStudentReport.cshtml";
+
+}
+
+
+@section ReportHeaderSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportHeader.cshtml")
+}
+
+@Html.Partial("~/Areas/Academic/Views/TranscriptAndCertificate/Shared/_CourseRegistrationBySemester.cshtml", Model)
+
+@section ReportFooterSection
+{
+    @Html.Partial("~/Views/Shared/Report/_ReportFooter.cshtml")
+}
+

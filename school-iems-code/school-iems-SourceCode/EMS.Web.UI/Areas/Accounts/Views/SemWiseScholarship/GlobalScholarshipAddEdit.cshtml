@@ -1,0 +1,225 @@
+﻿
+<!--File:Acnt_SemWiseScholarship Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Semester Wise Global Scholarship Settings";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var SemWiseScholarshipId = (string) id == null?"0":(string)id;
+    
+    //Acnt_SemWiseScholarship WebApi Single Row link   
+    var getSemWiseScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "GetSemWiseScholarshipById", area = "Accounts" });
+    var getSemWiseScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "GetSemWiseScholarshipDataExtra", area = "Accounts" });
+    var saveSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "SaveSemWiseScholarship", area = "Accounts" });
+    var deleteSemWiseScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "GetDeleteSemWiseScholarshipById", area = "Accounts" });
+
+    //Acnt_SemWiseScholarship WebApi List link 
+    var getPagedSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "GlobalScholarshipApi", action = "GetPagedSemWiseScholarship", area = "Accounts"});
+    var getAllSemWiseScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "GetAllSemWiseScholarship", area = "Accounts" });
+    var saveSemWiseScholarshipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "SaveSemWiseScholarshipList", area = "Accounts" });
+    var getSemWiseScholarshipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "GlobalScholarshipApi", action = "GetSemWiseScholarshipListDataExtra", area = "Accounts" });
+
+    var editSemWiseScholarshipByIdPageUrl = Url.Action("GlobalScholarshipAddEdit", "SemWiseScholarship", new { area = "Accounts" });
+    var listSemWiseScholarshipPageUrl = Url.Action("GlobalScholarshipList", "SemWiseScholarship", new { area = "Accounts" });
+    
+    //Acnt_SemWiseScholarship Angular Functions
+    string getSemWiseScholarshipById="getSemWiseScholarshipById";
+    var saveSemWiseScholarship = "saveSemWiseScholarship";
+    var getNewSemWiseScholarship = "getNewSemWiseScholarship";
+    var refreshPage = "loadPage()";
+    string deleteSemWiseScholarshipById="deleteSemWiseScholarshipById";
+    string loadSemWiseScholarshipExtraData="loadSemWiseScholarshipExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/SemWiseScholarship/GlobalScholarshipAddEdit.js"></script>
+}
+
+<div id="SemWiseScholarshipAddEdit" class="row" ng-controller="SemWiseScholarshipAddEditCtrl" ng-init="Init(
+      '@SemWiseScholarshipId'
+      ,'@getSemWiseScholarshipByIdUrl'
+      ,'@getSemWiseScholarshipDataExtraUrl'
+      ,'@saveSemWiseScholarshipUrl'
+      ,'@deleteSemWiseScholarshipByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    @*<strong ng-show="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_Name!=''">{{(SemWiseScholarship.@Acnt_SemWiseScholarship.Property_Name)}}</strong>*@
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="SemWiseScholarshipId" ng-Enter="@(getSemWiseScholarshipById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewSemWiseScholarship)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listSemWiseScholarshipPageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                         <tbody>
+                         <tr>
+                             <td class="fieldlabel" style="width: 175px;">Scholarship Name </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_NameParticularId"
+                                         ng-options="option.Id as option.Name for option in ScholarshipParticularNameList " ng-init="" class="form-control select-inline">
+                                     <option value="" label="" class="">---Select One---</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                         <tr>
+                             <td class="fieldlabel">Scholarship Category </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId" ng-options="option.Id as option.Name for option in DiscountCategoryEnumList" title="Select Discount Category" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Discount Category." data-toggle="tooltip"></i></span></td> 
+                         </tr>
+
+                         <tr ng-show="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_DiscountCategoryEnumId==@((byte)Acnt_SemWiseScholarship.DiscountCategoryEnum.DiscountOnSpecificParticular)">
+                             <td class="fieldlabel">Specific Particular Name </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_DependOnParticularId"
+                                         ng-options="option.Id as option.Name for option in ParticularNameList " ng-init="" class="form-control select-inline">
+                                     <option value="" label="" class="">---Select One---</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Particular Name." data-toggle="tooltip"></i></span></td>
+                         </tr>
+
+
+                         @*<tr>
+                                <td class="fieldlabel">Is Global Discount </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_IsGlobalDiscount"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Global Discount if required." data-toggle="tooltip"></i></span></td>
+                             </tr>*@
+                        
+                             <tr>
+                                <td class="fieldlabel">Is Percent Amount </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_IsPercentAmount"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Percent Amount if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                             <tr>
+                                <td class="fieldlabel">Amount </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_Amount" class="form-control" placeholder="Enter Amount"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Amount." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+
+                         <tr>
+                             <td class="fieldlabel">Start Semester </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_StartSemesterId"
+                                         ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                     <option value="" label="" class="">---Select One---</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                         
+                         <tr>
+                             <td class="fieldlabel">End Semester </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_EndSemesterId"
+                                         ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control select-inline">
+                                     <option value="" label="" class="">Continuing</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                         <tr>
+                             <td class="fieldlabel">Program </td>
+                             <td class="fieldarea">
+                                 <select ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_ProgramId"
+                                         ng-options="option.Id as option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                     <option value="" label="" class="">All Program</option>
+                                 </select>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                         <tr>
+                             <td class="fieldlabel">Remark </td>
+                             <td class="fieldarea">
+                                 <textarea type="text" ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_Remark" class="form-control" placeholder="Enter Remark"   />
+                                 </textarea> 
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Remark if you need." data-toggle="tooltip"></i></span></td>
+                         </tr>
+                         
+                         @*<tr>
+                             <td class="fieldlabel">Is Deleted </td>
+                             <td class="fieldarea">
+                                 <label class="checkbox-inline">
+                                     <input type="checkbox" ng-model="SemWiseScholarship.@Acnt_SemWiseScholarship.Property_IsDeleted"  />
+                                 </label>
+                             </td>
+                             <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                         </tr>*@
+
+                            </tbody>
+                        </table>
+                  </div><!--Col end-->
+                    
+                    <div class="col-md-12 table-form">
+                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                            <tbody>
+
+                                <tr>
+                                    <td class="fieldlabel" style="width: 80px;">History </td>
+                                    <td class="fieldarea">
+                                        <div ng-bind-html="renderHtml(SemWiseScholarship.@Acnt_SemWiseScholarship.Property_History)"></div>
+                                    </td>
+                                    <td class="fieldarea-tooltip">
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveSemWiseScholarship)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

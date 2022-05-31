@@ -1,0 +1,66 @@
+﻿@using EMS.CoreLibrary.Helpers
+@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@using JavaScriptEngineSwitcher.Core
+@model  EMS.Framework.Objects.MvcModelListResult<User_Student>
+@{
+    
+    ViewBag.Title = Model.DataBag.Title;//"Print Admit Card";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+
+
+    //string Error = ViewBag.Error;
+    var exportPdf = HttpUtil.GetQueryString("exportPdf");//Html.Raw(ViewBag.IncludePdfExportCSS)
+
+}
+@{
+    if (exportPdf.IsValid())
+    {
+        <style>
+            * {
+                box-shadow: none !important;
+            }
+        </style>
+    }
+}
+@section ScriptSection
+{
+    <script>
+        $(document).ready(function () {
+            window.print();
+        });
+
+        window.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, false);
+
+    </script>
+    @*<script src="~/assets/custom/lib/TableExport/tableExport.js?v=1"></script>*@
+}
+<style>
+    .admit-container {
+        max-width: 100% !important;
+        display: none;
+    }
+    .admit-box {
+        min-height: 7.29in;
+    }
+    @*("@page") :first {margin-top: 0.5cm/* Top margin on first page 10cm */}
+         @("@page") { size: 5.85in 8.6in; }
+                                @("@page") { size: portrait }
+                                @("@page") { size: landscape }
+                                @("@page") rotated { size: landscape }*@
+                                @("@page") { size: portrait }
+                                @("@page") rotated { size: portrait }
+
+                                @("@page") { margin: 0.5in 0.5in 0.5in 0.5in; }
+        @@media print {
+          .admit-container {
+                                    max-width: 100%!important;
+                                    display: block!important;
+                                }
+    }
+</style>
+@Html.Partial("~/Areas/ExamSection/Views/Report/Shared/_BulkAdmitCardPrint.cshtml", Model)
+

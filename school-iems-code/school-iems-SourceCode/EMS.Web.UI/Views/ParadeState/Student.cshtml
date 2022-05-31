@@ -1,0 +1,110 @@
+﻿@model List<EMS.Web.Jsons.Custom.Student.StudentParadeStateModel>
+
+@{
+    ViewBag.Title = "Student Parade State";
+    Layout = "~/Views/Shared/Area/_LayoutAdminCore.cshtml";
+    Response.AppendHeader("Refresh", "120");
+}
+<div class="text-center">
+    <table class="table table-no-bordered">
+        <tr>
+            <td style="width: 135px;">
+                <img src="@(EMS.Framework.Settings.SiteSettings.Instance.InstituteLogoBlackWhiteSolo)" style="width: 135px;">
+            </td>
+            <td>
+                <h2 class="text-center no-margin-top">@EMS.Framework.Settings.SiteSettings.Instance.InstituteName (@EMS.Framework.Settings.SiteSettings.Instance.InstituteShortName)</h2>
+                <h3 class="text-center text-uppercase">
+                    <u>Students’ Parade State</u>
+                </h3>
+                <h4 class="text-center text-uppercase">@DateTime.Now.ToString("MMMM dd, yyyy dddd hh:mm:ss tt")</h4>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<table class="table table-hover table-striped table-bordered">
+    <tr>
+        <th class="text-center" rowspan="2" style="vertical-align: middle;">Dept</th>
+        <th class="text-center" rowspan="2" style="vertical-align: middle;">Level</th>
+        <th class="text-center" colspan="3">Total Student</th>
+        <th class="text-center" colspan="3">Present</th>
+        <th class="text-center" colspan="8">Absent</th>
+    </tr>
+    <tr>
+        <th class="text-center">Military</th>
+        <th class="text-center">Civil</th>
+        <th class="text-center">Total</th>
+        <th class="text-center">Military</th>
+        <th class="text-center">Civil</th>
+        <th class="text-center success">Total</th>
+        <th class="text-center">Military</th>
+        <th class="text-center">Civil</th>
+        <th class="text-centerr danger">Total</th>
+        <th class="text-center">SIQ</th>
+        <th class="text-center">CMH</th>
+        <th class="text-center">R/Sick</th>
+        <th class="text-center">Leave</th>
+        <th class="text-center danger">Unknown</th>
+    </tr>
+    @foreach (var row in Model)
+    {
+        <tr>
+            <td class="text-center">@row.Department</td>
+            <td class="text-center">@row.Level</td>
+            <td class="text-center">@row.TotalMilitary</td>
+            <td class="text-center">@row.TotalCivil</td>
+            <td class="text-center "><strong>@(row.TotalMilitary + row.TotalCivil)</strong></td>
+            <td class="text-center">@row.PresentMilitary</td>
+            <td class="text-center">@row.PresentCivil</td>
+            @if ((row.PresentMilitary + row.PresentCivil) > 0)
+            {
+                <td class="text-center success"><strong>@(row.PresentMilitary + row.PresentCivil)</strong></td>
+            }
+            else
+            {
+                <td class="text-center"><strong>@(row.PresentMilitary + row.PresentCivil)</strong></td>
+            }
+            <td class="text-center">@row.AbsentMilitary</td>
+            <td class="text-center">@row.AbsentCivil</td>
+            @if ((row.AbsentMilitary + row.AbsentCivil) > 0)
+            {
+                <td class="text-center danger"><strong>@(row.AbsentMilitary + row.AbsentCivil)</strong></td>
+            }
+            else
+            {
+                <td class="text-center"><strong>@(row.AbsentMilitary + row.AbsentCivil)</strong></td>
+            }
+            <td class="text-center">@row.AbsentSIQ</td>
+            <td class="text-center">@row.AbsentCMH</td>
+            <td class="text-center">@row.AbsentRSick</td>
+            <td class="text-center">@row.AbsentLeave</td>
+            @if (row.AbsentUnknown > 0)
+            {
+                <td class="text-center danger">@row.AbsentUnknown</td>
+            }
+            else
+            {
+                <td class="text-center">@row.AbsentUnknown</td>
+            }
+        </tr>
+    }
+    <tr>
+        <th class="text-center" colspan="2">Total</th>
+        <th class="text-center">@Model.Sum(x => x.TotalMilitary)</th>
+        <th class="text-center">@Model.Sum(x => x.TotalCivil)</th>
+        <th class="text-center">@(Model.Sum(x => x.TotalMilitary) + Model.Sum(x => x.TotalCivil))</th>
+        <th class="text-center">@Model.Sum(x => x.PresentMilitary)</th>
+        <th class="text-center">@Model.Sum(x => x.PresentCivil)</th>
+        <th class="text-center success">@(Model.Sum(x => x.PresentMilitary) + Model.Sum(x => x.PresentCivil))</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentMilitary)</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentCivil)</th>
+        <th class="text-center danger">@(Model.Sum(x => x.AbsentMilitary) + Model.Sum(x => x.AbsentCivil))</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentSIQ)</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentCMH)</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentRSick)</th>
+        <th class="text-center">@Model.Sum(x => x.AbsentLeave)</th>
+        <th class="text-center danger">@Model.Sum(x => x.AbsentUnknown)</th>
+    </tr>
+</table>
+
+@Html.Partial("~/Views/Shared/_PartialCopyright.cshtml")

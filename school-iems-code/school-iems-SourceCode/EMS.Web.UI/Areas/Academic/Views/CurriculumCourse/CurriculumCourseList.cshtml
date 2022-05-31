@@ -1,0 +1,200 @@
+﻿<!--File:Aca_CurriculumCourse List View-->
+@using EMS.DataAccess.Data;
+@using EMS.Web.Jsons.Models
+@{
+    ViewBag.Title = "Course Curriculum Mgt.";
+    Layout = "~/Areas/Academic/Views/Shared/_LayoutAcademic.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var CurriculumCourseId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getCurriculumCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseById", area = "Academic" });
+    var getCurriculumCourseDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseDataExtra", area = "Academic" });
+    var saveCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "SaveCurriculumCourse", area = "Academic" });
+    var deleteCurriculumCourseByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetDeleteCurriculumCourseById", area = "Academic" });
+
+    //WebApi link for List
+    var getPagedCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetPagedCurriculumCourse", area = "Academic" });
+    var getAllCurriculumCourseUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetAllCurriculumCourse", area = "Academic" });
+    var saveCurriculumCourseListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "SaveCurriculumCourseList", area = "Academic" });
+    var getCurriculumCourseListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "CurriculumCourseApi", action = "GetCurriculumCourseListDataExtra", area = "Academic" });
+
+    var editCurriculumCourseByIdPageUrl = Url.Action("CurriculumCourseAddEdit", "CurriculumCourse", new { area = "Academic" });
+    var printCurriculumUrl = Url.Action("CurriculumPrint", "Curriculum", new { area = "Academic" });
+
+    //Angular Function Name
+    var getNewCurriculumCourse = "getNewCurriculumCourse";
+    var saveCurriculumCourse = "saveCurriculumCourse";
+    var deleteCurriculumCourseById = "deleteCurriculumCourseById";
+    var deleteCurriculumCourseByObj = "deleteCurriculumCourseByObj";
+    //for list
+    var searchCurriculumCourseList = "searchCurriculumCourseList";
+    var getPagedCurriculumCourseList = "getPagedCurriculumCourseList";
+    var getAllCurriculumCourseList = "getAllCurriculumCourseList";
+    var saveCurriculumCourseList = "saveCurriculumCourseList";
+    var getCurriculumCourseListExtraData = "getCurriculumCourseListExtraData";
+
+    var refreshPage = "searchCurriculumCourseList()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Academic/Views/CurriculumCourse/CurriculumCourseList.js?v=2"></script>
+}
+
+<div ng-controller="CurriculumCourseListCtrl"
+     ng-init="Init(
+      '@getPagedCurriculumCourseUrl'
+     ,'@deleteCurriculumCourseByIdUrl'
+     ,'@getCurriculumCourseListDataExtraUrl'
+     ,'@saveCurriculumCourseListUrl'
+     ,'@getCurriculumCourseByIdUrl'
+     ,'@getCurriculumCourseDataExtraUrl'
+     ,'@saveCurriculumCourseUrl'
+     )">
+    <div class="widget">
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span  class="widget-caption ">
+                Curriculum Course List
+            </span>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Grading Policy</span>*@
+                    <select ng-model="SelectedCreditTypeEnumId" ng-change="@(searchCurriculumCourseList)()" 
+                            ng-options="option.Id as option.Name for option in CreditTypeEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Credit Type---</option>
+                    </select>
+                </span>
+            </div>  
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Curriculum</span>*@
+                    <select ng-model="SelectedCurriculumId" ng-change="@(searchCurriculumCourseList)()"
+                            ng-options="option.Id as option.ShortName for option in CurriculumList " ng-init="" class="form-control input-xs "></select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Elective Group</span>*@
+                    <select ng-model="SelectedElectiveGroupId" ng-change="@(searchCurriculumCourseList)()"
+                            ng-options="option.Id as option.Name for option in CurriculumElectiveGroupList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Elective Group---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Study Level Term</span>*@
+                    <select ng-model="SelectedStudyLevelTermId" ng-change="@(searchCurriculumCourseList)()"
+                            ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Level Term---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" style="display:none">
+                <span  class="widget-caption form-inline">
+                    @*<span >Select Offered By Department</span>*@
+                    <select ng-model="SelectedOfferedByDepartmentId" ng-change="@(searchCurriculumCourseList)()"
+                            ng-options="option.Id as option.Name for option in DepartmentList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Offered By Department---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span  class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchCurriculumCourseList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                <a target="_blank" href="@editCurriculumCourseByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>
+                <a target="_blank" href="@printCurriculumUrl?id={{SelectedCurriculumId}}" class="btn btn-xs btn-primary"><i class="fa fa-print"></i> Print this Curriculum</a>
+                <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding" style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                    <tr>
+                        <th class="text-center" style="display:none">
+                            <input type="checkbox" ng-click="selectAll($event)">
+                        </th>
+                        <th class="text-center">Ser</th>
+                        <th class="" style="width: 110px;">Course Code</th>
+                        <th class="">Course Title</th>
+                        <th class="text-center" style="width: 56px;">Credit Hour</th>
+                        <th class="text-center" style="width: 66px;">Contact Hour</th>
+                        <th class="text-center"style="width: 122px;">Category</th>
+                        <th class="text-center"style="width: 90px;">Type</th>
+                        <th class="text-center" style="width: 110px;">Level Term</th>
+                        <th class="text-center" style="width: 48px;">Is Dept</th>
+                        <th class="text-center" style="width: 48px;">Taken Dept</th>
+                        <th class="text-center no-print" style="width: 95px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="row in CurriculumCourseList">
+                        <td class="text-center" style="display:none">
+                            <input type="checkbox" ng-model="row.@Aca_CurriculumCourse.Property_IsSelected" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="">{{row.@Aca_CurriculumCourse.Property_Code}}</td>
+                        <td class="">{{row.@Aca_CurriculumCourse.Property_Name}}</td>
+                        <td class="text-center">{{row.@Aca_CurriculumCourse.Property_CreditLoad | number:2}}</td>
+                        <td class="text-center">{{row.@Aca_CurriculumCourse.Property_CreditHour | number:2}}</td>
+                        <td class="text-center">{{row.@Aca_CurriculumCourse.Property_CourseCategory}}</td>
+                        <td class="text-center">{{row.@Aca_CurriculumCourse.Property_CourseType}}</td>
+                        <td class="text-center">{{row.LevelTermName}}</td>
+                        <td class="text-center">
+                            <span  ng-show="row.@Aca_CurriculumCourse.Property_IsDepartmental">Yes</span>
+                            <span  ng-hide="row.@Aca_CurriculumCourse.Property_IsDepartmental">No</span>
+                        </td>
+                        <td class="text-center">{{row.OfferedByDepartmentShortName}}</td>
+                        <td class="text-center no-print">
+                            <a target="_blank" href="@(editCurriculumCourseByIdPageUrl)/?id={{row.Id}}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                            <button ng-click="@(deleteCurriculumCourseById)(row)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-4">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">(Showing {{totalServerItems*(PageNo-1)+1}}-{{totalServerItems*PageNo}} of {{totalItems}})</label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input ng-model="PageSize" ng-enter="changePageSize()" class="form-control input-opt" autocomplete="on" placeholder="Page Size" type="number" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

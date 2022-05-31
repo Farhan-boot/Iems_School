@@ -1,0 +1,159 @@
+﻿@using EMS.Framework.Settings
+  @{
+      var getPaymentSummaryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FinancialReportApi", action = "GetPaymentSummaryDataExtra", area = "Student" });
+
+      var getPaymentSummaryBySemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FinancialReportApi", action = "GetPaymentSummaryBySemesterId", area = "Student" });
+
+  }
+
+  <div class="row"
+       ng-controller="PaymentSummaryCtrl"
+       ng-init="Init(
+     '@getPaymentSummaryDataExtraUrl'
+,'@getPaymentSummaryBySemesterIdUrl'
+     )">
+      
+      @if (SiteSettings.Instance.Student.SemesterPaymentSummaryCanView)
+      {
+        <div class="col-md-6 col-sm-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky" style="text-align: left;">
+                    <i class="widget-icon fa fa-files-o"></i>
+                    <span class="widget-caption "><b>Payment Summary for </b></span>
+                    <div class="widget-buttons">
+                        <select ng-model="SelectedSemester"
+                                ng-change="onChangeSemester()"
+                                ng-options="option.Name for option in SemesterList"
+                                ng-init="" class="form-control input-sm" style="margin-top: 3px;"></select>
+                    </div>
+                    <div class="widget-buttons">
+                        <button ng-click="refreshResult()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+
+                </div><!--Widget Header-->
+
+                <div class="widget-body">
+                    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention Please!</strong> {{ErrorMsg}}
+                    </div>
+                    <div>
+                        <table class="table table-no-bordered" style="font-size: 13px; border: none !important;">
+                            <tbody>
+                            <tr>
+                                <td class="text-bold" style="width: 230px;">
+                                    Previous <span ng-bind="SemesterBill.PreviousBalance>0?'Due':'Advance'"></span>:
+                                </td>
+                                <td class="text-center">
+                                    <span ng-bind="SemesterBill.PreviousBalance>0?(SemesterBill.PreviousBalance |number: 2):((SemesterBill.PreviousBalance*-1) |number: 2)"></span>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="text-bold">This Semester Bill:</td>
+                                    <td class="text-center">{{SemesterBill.SemesterBill |number: 2}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">
+                                        Midterm <span ng-bind="SemesterBill.MidDueWithPrevBalance>0?'Due':'Advance'"></span>:
+                                    </td>
+                                    <td class="text-center">
+                                        <kbd ng-if="SemesterBill.MidDueWithPrevBalance > 0"
+                                             style="background-color: red">
+                                            {{SemesterBill.MidDueWithPrevBalance |number: 2}}
+                                        </kbd>
+                                        <span ng-if="SemesterBill.MidDueWithPrevBalance <= 0">
+                                            {{(SemesterBill.MidDueWithPrevBalance*-1) |number: 2}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">
+                                        Final Term <span ng-bind="SemesterBill.FinalTermDueWithPrevBalance>0?'Due':'Advance'"></span>:
+                                    </td>
+                                    <td class="text-center">
+                                        <kbd ng-if="SemesterBill.FinalTermDueWithPrevBalance > 0" style="background-color: red">
+                                            {{SemesterBill.FinalTermDueWithPrevBalance |number: 2}}
+                                        </kbd>
+                                        <span ng-if="SemesterBill.FinalTermDueWithPrevBalance <= 0">
+                                            {{(SemesterBill.FinalTermDueWithPrevBalance*-1) |number: 2}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div style="border: 1px dotted black">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">This Semester Paid:</td>
+                                    <td class="text-center">{{SemesterBill.SemesterPaid |number: 2}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">
+                                        This Semester <span ng-bind="SemesterBill.SemesterDue>0?'Due':'Advance'"></span>:
+                                    </td>
+                                    <td class="text-center">
+                                        <span ng-bind="SemesterBill.SemesterDue>0?(SemesterBill.SemesterDue |number: 2):((SemesterBill.SemesterDue*-1) |number: 2)"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      }
+      @if (SiteSettings.Instance.Student.OverallPaymentSummaryCanView)
+      {
+        <div class="col-md-6 col-sm-12">
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-sky">
+                    <i class="widget-icon fa fa-files-o"></i>
+                    <span class="widget-caption ">
+                        <b>Over all Summery</b>
+                    </span>
+                </div>
+                <!--Widget Header-->
+                <div class="widget-body" style="min-height: 167px;">
+                    <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+                        <i class="fa-fw fa fa-warning"></i>
+                        <strong>Attention Please!</strong> {{ErrorMsg}}
+                    </div>
+                    <div>
+                        <table class="table table-no-bordered" style="font-size: 13px; border: none !important;">
+                            <tbody>
+                                <tr>
+                                    <td class="text-bold" style="width: 230px;">Total Bill (Debit):</td>
+                                    <td class="text-center">{{SemesterBill.TotalBill |number: 2}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Total Paid (Credit):</td>
+                                    <td class="text-center">{{SemesterBill.TotalPaid |number: 2}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">
+                                         Over All <span ng-bind="SemesterBill.OverAllDue>0?'Due':'Advance'"></span> on Bill:
+                                    </td>
+                                    <td class="text-center">
+
+                                        <kbd ng-if="SemesterBill.OverAllDue > 0" style="background-color: red">
+                                            {{SemesterBill.OverAllDue |number: 2}}
+                                        </kbd>
+                                        <span ng-if="SemesterBill.OverAllDue <= 0">
+                                            {{(SemesterBill.OverAllDue*-1) |number: 2}}
+                                        </span>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      }
+      
+  </div>

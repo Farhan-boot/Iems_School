@@ -1,0 +1,472 @@
+﻿@using EMS.DataAccess.Data
+@using EMS.Framework.Settings
+@using EMS.Framework.Utils
+@{
+    // Angular Properties
+    var stdId = Request.QueryString["stdId"];//ViewContext.RouteData.Values["id"];
+    var StudentId = (string)stdId == null ? "0" : (string)stdId;
+
+    //WebApi link for single row
+    
+    
+    // Angular Functions
+    string getRecalculateDropForRetakeByStdId = "getRecalculateDropForRetakeByStdId";
+    string getRecalculateCGPAByStdId = "getRecalculateCGPAByStdId";
+}
+
+
+<div class="tab-content" style="padding: 6px 12px;">
+    <div class="form-title">
+        Academic Information
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="form admission-form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel">
+                            Student ID
+                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" value="{{Account.@User_Account.Property_UserName}}"
+                                   ng-disabled="true"
+                                   class="form-control  " placeholder="Enter User Id/Roll No/Reg. No" maxlength="256" required="">
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Id/Roll No/Reg. No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                    </tr>
+
+                    <tr>
+                        <td class="fieldlabel">
+                            Full Name
+                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Account.Property_FullName"
+                                   ng-disabled="true"
+                                   class="form-control " placeholder="Enter Full Name" maxlength="256" required="">
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                    </tr>
+                <tr>
+                    <td class="fieldlabel">CGPA</td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="Account.@User_Student.Property_CGPA"
+                               ng-disabled="true"
+                               class="form-control" placeholder="Enter CGPA" />
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter C G P A." data-toggle="tooltip"></i></span></td>*@
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Is Required CGPA Recalculation</td>
+                    <td class="fieldarea">
+                        <span ng-show="Account.@User_Student.Property_CGPA" style="color: red">Yes</span>
+                        <span ng-hide="Account.@User_Student.Property_CGPA" style="color: green">No</span>
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter C G P A." data-toggle="tooltip"></i></span></td>*@
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="form admission-form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel">Credit Completed </td>
+                        <td class="fieldarea">
+                            <input type="number" ng-model="Account.@User_Student.Property_CreditCompleted"
+                                   ng-disabled="true"
+                                   class="form-control" placeholder="Enter Credit Completed" />
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Completed." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Course Completed </td>
+                        <td class="fieldarea">
+                            <input type="number" ng-model="Account.@User_Student.Property_CourseCompleted"
+                                   ng-disabled="true"
+                                   class="form-control" placeholder="Enter Course Completed" />
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Course Completed." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                <tr>
+                    <td class="fieldlabel">Incomplete Credits </td>
+                    <td class="fieldarea">
+                        <input type="number" ng-model="Account.@User_Student.Property_IncompleteCredits"
+                               ng-disabled="true"
+                               class="form-control" placeholder="Enter Incomplete Credits" />
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Incomplete Credits." data-toggle="tooltip"></i></span></td>*@
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Last CGPA Sync Time </td>
+                    <td class="fieldarea">
+                        <span>{{Account.@User_Student.Property_LastCGPASyncTime | date:'dd-MM-yy H:ss'}}</span>
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Incomplete Credits." data-toggle="tooltip"></i></span></td>*@
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="form admission-form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="fieldlabel">
+                            Program
+                        </td>
+                        <td class="fieldarea" style="padding-bottom: 5px;">
+                            <select ng-model="SelectedProgram"
+                                    ng-disabled="true"
+                                    ng-change="onChangeProgram()"
+                                    ng-options="option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">
+                            Core Curriculum
+                        </td>
+                        <td class="fieldarea" style="padding-bottom: 5px;">
+                            <select ng-model="Account.@User_Student.Property_CurriculumId"
+                                    ng-disabled="true"
+                                    ng-change="filterSelectedCurriculum()"
+                                    ng-options="option.Id as option.ShortName for option in CurriculumList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Curriculum." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Dept Batch </td>
+                        <td class="fieldarea" style="padding-bottom: 5px;">
+                            <select ng-model="Account.@User_Student.Property_ContinuingBatchId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in DeptBatchList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Dept Batch." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Study Level Term</td>
+                        <td class="fieldarea">
+                            <select ng-model="Account.@User_Student.Property_LevelTermId"
+                                    ng-disabled="true"
+                                    ng-options="option.Id as option.Name for option in StudyLevelTermList " ng-init="" class="form-control select-inline">
+                                <option value="" label="" class="">---Select One---</option>
+                            </select>
+                        </td>
+                        @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Study Level Term." data-toggle="tooltip"></i></span></td>*@
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 table-form ">
+            <div class="form-title">
+                Certificate Information
+            </div>
+            <table class="form admission-form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+
+                    <tr>
+                        <td class="fieldlabel">Credit Transfer</td>
+                        <td class="fieldarea">
+                            <input type="number" ng-model="Account.@User_Student.Property_CreditTransfer"
+                                   class="form-control " value="" tabindex="2">
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Transfer" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Overwrite Credit Waiver</td>
+                        <td class="fieldarea">
+                            <input type="number" ng-model="Account.@User_Student.Property_CreditWaiver"
+                                   class="form-control " value="" tabindex="2">
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Credit Waiver" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                <tr>
+                    <td class="fieldlabel">Is Graduated?</td>
+                    <td class="fieldarea">
+                        <div class="checkbox">
+                            <label>
+                                <input ng-model="Account.IsGraduated" 
+                                       ng-disabled="!(Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Continuing)
+                    ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Graduating)
+                    ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Graduated))"
+                                       class="checkbox-slider yesno slider-icon colored-purple" name="form-field-checkbox" type="checkbox" value="true">
+
+                                <input  ng-disabled="!(Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Continuing)
+                    ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Graduating)
+                    ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte)User_Student.EnrollmentStatusEnum.Graduated))"
+                                    name="form-field-checkbox" type="hidden" value="false"><span class="text"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Graduated" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+
+                <tr ng-show="Account.IsGraduated">
+                    <td class="fieldlabel">
+                        Date Graduated<span class="red glyphicon glyphicon-asterisk"></span>
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Account.Property_LeavingDate" class="form-control date-picker" placeholder="Enter Date Graduated" datetime="dd/MM/yyyy" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Date Graduated." data-toggle="tooltip"></i></span></td>
+                </tr>
+                
+                <tr ng-show="Account.IsGraduated">
+                    <td class="fieldlabel">
+                        Graduation Semester<span class="red glyphicon glyphicon-asterisk"></span>
+                    </td>
+                    <td class="fieldarea">
+                        <select ng-model="Account.@User_Student.Property_GraduationSemesterId"
+                                ng-options="option.Id as option.Name for option in SemesterList" title="Select Graduation Semester" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Graduation Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+                <tr ng-show="!Account.IsGraduated">
+                    <td class="fieldlabel">
+                        Enrollment Status<span class="red glyphicon glyphicon-asterisk"></span>
+                    </td>
+                    <td class="fieldarea">
+                        <div style="padding-bottom: 5px;">You can select only '@User_Student.EnrollmentStatusEnum.Continuing.ToString()' or '@User_Student.EnrollmentStatusEnum.Graduating.ToString()'</div>
+                        <select ng-model="Account.@User_Student.Property_EnrollmentStatusEnumId"
+                                ng-options="option.Id as option.Name for option in EnrollmentStatusEnumList" title="Select Graduation Semester" ng-init="" class="form-control">
+                            <option value="" label="" class="">---Select One---</option>
+                        </select>
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Graduation Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+
+                    <tr>
+                        <td class="fieldlabel">
+                            Degree Obtained
+                        </td>
+                        <td class="fieldarea">
+                            <div style="padding-bottom: 5px;">{{SelectedProgram.OfficialCertificateTitle}}</div>
+                            <input type="text" ng-model="Account.@User_Student.Property_DegreeOptained" class="form-control  " placeholder="Overwrite Original Degree Name" maxlength="256" required="">
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Degree Optained" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">
+                            Major Minor Degree Text
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Student.Property_MajorMinorDegreeText" class="form-control  " placeholder="Enter Major Minor Degree Text" maxlength="256" required="">
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Major Minor Degree Text" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">Certificate Registration No </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Student.Property_CertificateRegistrationNo" class="form-control" placeholder="Enter Certificate Registration No" maxlength="50" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Certificate Registration No." data-toggle="tooltip"></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel" style="width: 200px;">
+                            Provisional Certificate Issue Date
+                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Student.Property_ProvisionalCertificateIssueDate" class="form-control date-picker" placeholder="Enter Provisional Certificate Issue Date" maxlength="128" required="" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Provisional Certificate Issue Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">
+                            Original Certificate Issue Date
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Student.Property_OriginalCertificateIssueDate" class="form-control date-picker" placeholder="Original Certificate Issue Date" maxlength="50" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Original Certificate Issue Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+                    <tr>
+                        <td class="fieldlabel">
+                            Original Transcript Issue Date
+                            @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                        </td>
+                        <td class="fieldarea">
+                            <input type="text" ng-model="Account.@User_Student.Property_OriginalTranscriptIssueDate" class="form-control date-picker" placeholder="Enter Original Transcript Issue Date" maxlength="128" required="" />
+                        </td>
+                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Original Transcript Issue Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                    </tr>
+
+                <tr>
+                    <td class="fieldlabel">
+                        Transcript Serial No
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_TranscriptSerialNo" class="form-control" placeholder="Enter Transcript Serial No" maxlength="128" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Transcript Serial No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">
+                        Original Certificate Serial No
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_OriginalCertificateSerialNo" class="form-control" placeholder="Enter Original Certificate Serial No" maxlength="128" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Original Certificate Serial No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr><tr>
+                    <td class="fieldlabel">
+                        Original Certificate Verify No
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_OriginalCertificateVerifyNo" class="form-control" placeholder="Enter Original Certificate Verify No" maxlength="128" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Ente Original Certificate Verify No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">
+                        Provisional Certificate Serial No
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_ProvisionalCertificateSerialNo" class="form-control" placeholder="Enter Provisional Certificate Serial No" maxlength="128" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Provisional Certificate Serial No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">
+                        Provisional Certificate Verify No
+                    </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="Account.@User_Student.Property_ProvisionalCertificateVerifyNo" class="form-control" placeholder="Enter Provisional Certificate Verify No" maxlength="128" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Provisional Certificate Verify No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4 table-form ">
+            <div class="form-title">
+                Actions
+            </div>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <a class="btn btn-info btn-size" ng-click="@getRecalculateCGPAByStdId ()"><i class="fa fa-cog"></i>Recalculate CGPA</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <a class="btn btn-info btn-size" ng-click="@getRecalculateDropForRetakeByStdId ()"><i class="fa fa-cog"></i>Recalculate DropForRetake</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-title">
+                Print Reports
+            </div>
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                <tr>
+                    <td class="text-center">
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-info " style="width: 216px;" href="#">Grade Report By Semester</a>
+                                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeReportBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Grade Report By Semester</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeReportBySemesterWithSupple", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Grade Report By Semester 2</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-info " style="width: 216px;" href="#">Grade Detail Report By Semester</a>
+                                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeDetailReportBySemester", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Grade Detail Report By Semester</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("GradeDetailReportBySemesterWithSupple", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Grade Detail Report By Semester 2</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <a class="btn btn-info btn-size" target="_blank" href="@Url.Action("FullCertificate", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-print"></i>Full Certificate <span style="font-size: 11px; color: red;">(Not Editable)</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <a class="btn btn-info btn-size" target="_blank" href="@Url.Action("PartialCertificate", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-print"></i>Provisional Certificate <span style="font-size: 11px; color: yellow;">(Editable)</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-info " style="width: 216px;" href="#">Official Transcript</a>
+                                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("OfficialTranscript", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Print 1 (With Semester)</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("OfficialTranscriptWithoutSemesterGroup", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> Print 2 (Without Semester)</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <div class="widget-buttons">
+                            <div class="btn-group">
+                                <a class="btn btn-info " style="width: 216px;" href="#">UnOfficial Transcript</a>
+                                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu dropdown-blue pull-left">
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("UnOfficialTranscript", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> UnOfficial Transcript</a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" href="@Url.Action("UnOfficialTranscriptWithSupple", "TranscriptAndCertificate", new {area = "Academic"})?stdId={{StudentId}}"><i class="fa fa-eye"></i> UnOfficial Transcript 2</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="widget-footer text-center">
+        <button ng-click="saveCertificateInformation()" class="btn btn-md btn-success"><span class="fa fa-save"></span>Save Certificate Information</button>
+    </div>
+</div>
+<style>
+    .btn-size {
+        width: 240px;
+    }
+</style>

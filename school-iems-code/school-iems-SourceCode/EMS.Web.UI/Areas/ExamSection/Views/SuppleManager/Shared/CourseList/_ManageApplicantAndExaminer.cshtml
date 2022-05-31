@@ -1,0 +1,102 @@
+﻿<div class="show-on-print text-center" style="margin-bottom: 15px;">
+    <b>Exam: </b>{{SelectedExam.Name}}
+    <br />
+    <b>Program: </b>{{SelectedProgram.ShortTitle}}
+    <br />
+    <b>Course: </b> {{SelectedBaseCourse.Code+': '+SelectedBaseCourse.Name+' [Cr:'+SelectedBaseCourse.CreditHour+']'}}
+
+</div>
+
+<div class="widget-header bordered-bottom bordered-sky hide-on-print">
+    <span class="widget-caption buttons-bordered"
+          style="font-weight: bold !important; margin-right: 5px;">
+        Course:
+    </span>
+    <div class="widget-select2">
+        <ui-select ng-model="SelectedBaseCourse"
+                   ng-change="onChangeBaseCourse($select.selected)"
+                   theme="select2" style="width: 100%;">
+            <ui-select-match class="text-bold">{{$select.selected.Code}}: {{$select.selected.Name}}</ui-select-match>
+            <ui-select-choices repeat="option as option in CourseList| orFilter: {Name: $select.search, Code: $select.search}">
+                <div ng-bind-html="option.Code+': '+option.Name | highlight: $select.search"></div>
+                <small>
+                    Cr.Hr: <span ng-bind-html="''+option.CreditHour"></span>
+                    ,  {{option.CourseCategory}}
+                </small>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    
+    
+    <div ng-show="SelectedBaseCourseId >0" class="widget-buttons buttons-bordered">
+        <button ng-click="loadCourseData()" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Refresh</button>
+    </div>
+</div>
+
+<div ng-show="SuppleCourse == null" class="alert alert-warning fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> Please select a <b>Course</b> to above.
+</div>
+<div ng-show="SuppleCourse !=null">
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr style="font-weight: bold;">
+            <td>Total Batch: {{SuppleCourse.TotalBatch}}</td>
+            <td>Total Semester: {{SuppleCourse.TotalSemester}}</td>
+            <td>Total Class: {{SuppleCourse.TotalClass}}</td>
+            <td>Total Examiner: {{SuppleCourse.TotalExaminer}}</td>
+            <td>Total Referred: {{SuppleCourse.TotalReferred}}</td>
+            <td>Total Backlog: {{SuppleCourse.TotalBacklog}}</td>
+            <td>
+                <span class="badge badge-success">
+                    Approved: {{SuppleCourse.TotalApproved}}
+                </span>
+            </td>
+            <td>
+                <span class="badge badge-warning">
+                    Pending: {{SuppleCourse.TotalPending}}
+                </span>
+            </td>
+            <td>
+                <span class="badge badge-danger">
+                    Disapproved: {{SuppleCourse.TotalDisapproved}}
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="tabbable">
+        <ul class="nav nav-tabs hide-on-print">
+
+            <li class="tab-success active">
+                <a data-toggle="tab" href="#applicant" aria-expanded="false">
+                    Applicant ({{SuppleCourse.TotalApproved}}/{{SuppleCourse.ApplicantList.length}})
+                </a>
+            </li>
+            <li class="tab-success">
+                <a data-toggle="tab" href="#examiner" aria-expanded="false">
+                    Examiner ({{SuppleCourse.TotalExaminer}}/{{SuppleCourse.ExaminerList.length}})
+                </a>
+            </li>
+            <li class="tab-success">
+                <a data-toggle="tab" href="#details" aria-expanded="false">
+                    Details
+                </a>
+            </li>
+
+        </ul>
+        <div class="tab-content no-padding ">
+            <div class="tab-pane active" id="applicant">
+                @Html.Partial("~/Areas/ExamSection/Views/SuppleManager/Shared/CourseList/_Applicant.cshtml")
+            </div>
+            <div class="tab-pane" id="examiner">
+                @Html.Partial("~/Areas/ExamSection/Views/SuppleManager/Shared/CourseList/_Examiner.cshtml")
+            </div>
+            <div class="tab-pane" id="details">
+                @Html.Partial("~/Areas/ExamSection/Views/SuppleManager/Shared/CourseList/_Details.cshtml")
+            </div>
+
+        </div>
+    </div>
+</div>

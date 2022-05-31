@@ -1,0 +1,301 @@
+﻿
+<!--File:Acnt_StdScholarship List View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Waiver on Full Package Details Report";
+    Layout = "~/Areas/Accounts/Views/Shared/_LayoutAccounts.cshtml";
+
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var StdScholarshipId = (string) id == null?"0":(string)id;
+
+    //WebApi link for single row 
+    var getStdScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetStdScholarshipById", area = "Accounts" });
+    var getStdScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetStdScholarshipDataExtra", area = "Accounts" });
+    var saveStdScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "SaveStdScholarship", area = "Accounts" });
+    var deleteStdScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetDeleteStdScholarshipById", area = "Accounts" });
+
+    //WebApi link for List
+    var getPagedStdScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "FullPackageWaiverReportApi", action = "GetPagedStdScholarship", area = "Accounts"});
+    var getAllStdScholarshipUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetAllStdScholarship", area = "Accounts" });
+    var saveStdScholarshipListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "SaveStdScholarshipList", area = "Accounts" });
+    var getStdScholarshipListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "FullPackageWaiverReportApi", action = "GetStdScholarshipListDataExtra", area = "Accounts" });
+
+    //var editStdScholarshipByIdPageUrl = Url.Action("StdScholarshipAddEdit", "StdScholarship", new { area = "Accounts" });
+
+
+    var fastPaymentCollectionUrl = Url.Action("FastPaymentCollection", "Student", new { area = "Accounts" });
+
+    //Angular Function Name
+    var getNewStdScholarship = "getNewStdScholarship";
+    var saveStdScholarship = "saveStdScholarship";
+    var deleteStdScholarshipById = "deleteStdScholarshipById";
+    var deleteStdScholarshipByObj = "deleteStdScholarshipByObj";
+    //for list
+    var searchStdScholarshipList = "searchStdScholarshipList";
+    var getPagedStdScholarshipList = "getPagedStdScholarshipList";
+    var getAllStdScholarshipList = "getAllStdScholarshipList";
+    var saveStdScholarshipList = "saveStdScholarshipList";
+    var getStdScholarshipListExtraData = "getStdScholarshipListExtraData";
+    var openHistoryModal = "openHistoryModal";
+
+    var refreshPage = "loadPage()";
+
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Accounts/Views/StdTransaction/WaiverOnFullPackageList.js"></script>
+    <script src="~/assets/custom/lib/TableExport/tableExport.js"></script>
+
+    <script>
+            $(document).ready(function () {
+                //console.log("ready!");
+                collapseSidebar();
+            });
+    </script>
+}
+
+
+<div ng-controller="StdScholarshipListCtrl"
+     ng-init="Init(
+      '@getPagedStdScholarshipUrl'
+     ,'@deleteStdScholarshipByIdUrl'
+     ,'@getStdScholarshipListDataExtraUrl'
+     ,'@saveStdScholarshipListUrl'
+     ,'@getStdScholarshipByIdUrl'
+     ,'@getStdScholarshipDataExtraUrl'
+     ,'@saveStdScholarshipUrl'
+     )">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+     </div>
+    <div class="widget" ng-show="HasViewPermission">
+
+        <div class="widget-header bordered-bottom bordered-sky ">
+            <i class="widget-icon fa fa-list bold  "></i>
+            <span class="widget-caption ">Waiver On Full Package </span>
+              <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    @*<span>Select Semester</span>*@
+                     <select ng-model="SelectedSemesterId" ng-change="@(searchStdScholarshipList)()" 
+                        ng-options="option.Id as option.Name for option in SemesterList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Semester---</option>
+                     </select>
+                </span>
+              </div>       
+              <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    @*<span>Select Scholarship Type</span>*@
+                     <select ng-model="SelectedScholarshipTypeId" ng-change="@(searchStdScholarshipList)()" 
+                        ng-options="option.Id as option.Name for option in ScholarshipTypeList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Scholarship Type---</option>
+                     </select>
+                </span>
+              </div>       
+            <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    @*<span>Select Scholarship Type</span>*@
+                    <select ng-model="SelectedValidPeriodEnumId" ng-change="@(searchStdScholarshipList)()" 
+                            ng-options="option.Id as option.Name for option in ValidPeriodEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Valid Period---</option>
+                    </select>
+                </span>
+            </div>   
+            <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    @*<span>Select Scholarship Type</span>*@
+                    <select ng-model="SelectedAmountTypeEnumId" ng-change="@(searchStdScholarshipList)()" 
+                            ng-options="option.Id as option.Name for option in AmountTypeEnumList " ng-init="" class="form-control input-xs ">
+                        <option value="" label="" class="">---Select All Amount Type---</option>
+                    </select>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    <span>Min Percent Amount</span>
+                    <input class="form-control input-xs " ng-model="MinPercentageAmount" placeholder="Enter Minimum Percent Amount"/>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right" >
+                <span class="widget-caption form-inline">
+                    <span>Max Percent Amount</span>
+                    <input class="form-control input-xs " ng-model="MaxPercentageAmount" placeholder="Enter Maximum Percent Amount"/>
+                </span>
+            </div>
+            <div class="widget-buttons buttons-bordered no-padding-right">
+                <span class="input-icon">
+                    <input type="text" ng-model="SearchText" ng-Enter="@(searchStdScholarshipList)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" style="">
+                    <i class="glyphicon glyphicon-search blue"></i>
+                </span>
+            </div>
+            <div class="widget-buttons no-padding-left">
+                @*<a target="_blank" href="@editStdScholarshipByIdPageUrl?id=0" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add New</a>*@
+                <button ng-click="@(searchStdScholarshipList)()" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+            </div>
+        </div>
+        <div class="widget-body no-padding"  style="overflow:auto">
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+            <div class="dropdown form-group margin-right-10">
+                <button class="btn btn-xs btn-danger dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-download"></i> Download List
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <li><a href="#" onclick="$('#WaiverOnFullPackageDetailReport').tableExport({ fileName: 'WaiverOnFullPackageDetailReport', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As Excel(.xls)</a></li>
+                    <li><a href="#" onclick="$('#WaiverOnFullPackageDetailReport').tableExport({ fileName: 'WaiverOnFullPackageDetailReport', type: 'doc', escape: 'false' });"><i class="fa fa-file-word-o"></i> As Word(.doc)</a></li>
+                    <li><a href="#" onclick="$('#WaiverOnFullPackageDetailReport').tableExport({ fileName: 'WaiverOnFullPackageDetailReport', type: 'csv', escape: 'false' });"><i class="fa fa-file-excel-o"></i> As CSV(.csv)</a></li>
+                </ul>
+            </div>
+            <table id="WaiverOnFullPackageDetailReport" class="table table-striped table-bordered table-hover">
+                <thead class="bordered-blue">
+                <tr>
+                    @*<th class="text-center" >
+                        <input type="checkbox" ng-click="selectAll($event)">
+                    </th>*@
+                    <th class="text-center">SN</th>
+                    <th class="text-center">Student Id</th>
+                    <th class="text-center">Is Percent</th>
+                    <th class="text-center">Percent Amount</th>
+                    <th class="text-center">Real Amount</th>
+                    <!--th class="text-center">Scholarship Type Id</th-->
+                    <!--th class="text-center">Amount Type Enum Id</th-->
+                    <th class="text-center">Amount Type</th>
+                    <!--th class="text-center">Valid Period Enum Id</th-->
+                    <th class="text-center">Valid Period</th>
+                    <!--th class="text-center">Semester Id</th-->
+                    @*<th class="text-center">Order No</th>*@
+                    <th class="text-center">Is Locked</th>
+                    <th class="text-center">Remark</th>
+                    <!--th class="text-center">Locked By</th-->
+                    <!--th class="text-center">Unlocked By</th-->
+                    @*<th class="text-center">Is Deleted</th>*@
+                    <th class="text-center no-print">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+    
+                <tr ng-repeat="row in StdScholarshipList">
+                    @*<td class="text-center" >
+                        <input type="checkbox" ng-model="row.@Acnt_StdScholarship.Property_IsSelected" /> 
+                    </td>*@
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">
+                        <a target="_blank" href="@(fastPaymentCollectionUrl)?sid={{row.ClassRollNo}}">{{row.ClassRollNo}}</a>
+                    </td>
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_StudentId}}</td-->
+                    <td class="">
+                        <span ng-show="row.@Acnt_StdScholarship.Property_IsPercentAmount">Yes</span>
+                        <span ng-hide="row.@Acnt_StdScholarship.Property_IsPercentAmount">No</span>
+                       
+                    </td>
+                    <td class="">{{row.@Acnt_StdScholarship.Property_PercentAmount}}%</td>
+                    <td class="">{{row.@Acnt_StdScholarship.Property_RealAmount}}</td>
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_ScholarshipTypeId}}</td-->
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_AmountTypeEnumId}}</td-->
+                    <td class="">{{row.@Acnt_StdScholarship.Property_AmountType}}</td>
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_ValidPeriodEnumId}}</td-->
+                    <td class="">{{row.@Acnt_StdScholarship.Property_ValidPeriod}}</td>
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_SemesterId}}</td-->
+                    @*<td class="">{{row.@Acnt_StdScholarship.Property_OrderNo}}</td>*@
+                    <td class="">
+                        <span ng-show="row.@Acnt_StdScholarship.Property_IsLocked">Yes</span>
+                        <span ng-hide="row.@Acnt_StdScholarship.Property_IsLocked">No</span>
+                    </td>
+                    <td class="">{{row.@Acnt_StdScholarship.Property_Remark}}</td>
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_LockedBy}}</td-->
+                    <!--td class="">{{row.@Acnt_StdScholarship.Property_UnlockedBy}}</td-->
+                    @*<td class="">{{row.@Acnt_StdScholarship.Property_IsDeleted}}</td>*@
+                    <td class="text-center no-print">
+                        <button ng-click="@(openHistoryModal)(row.@Acnt_StdScholarship.Property_History)" target="_blank" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> Show History</button>
+                     
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            
+            <div class="modal fade bd-example-modal-lg" id="HistoryModal" tabindex="-1" role="dialog" aria-labelledby="HistoryModal" area-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"> History of all the action Performed in this Transaction.</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                                <div class="row">
+                                    <div class="col-md-12 table-form">
+                                        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                            <tbody>
+                                            <tr>
+                                                <td style="text-align: left;padding: 5px !important;" ng-bind-html="renderHtml(HistoryMsg)"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="text-align: center">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-footer no-print">
+                @OptionControl()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper  OptionControl()
+{
+    <div class="row no-print">
+        <div class="col-sm-12">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label ng-hide="totalServerItems==0">Showing {{totalServerItems*(PageNo-1)+1}} to {{totalServerItems*PageNo}} of {{totalItems}} </label>
+                    <label ng-show="totalServerItems==0" class="text-danger">No Data Found!</label>
+                    <label style="margin-left: 30px;">
+                        <input ng-model="IsShowTrashedItems"
+                               ng-change="searchStdScholarshipList()"
+                               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;" />
+                        <span style="color: #e74b37;">Show Deleted Waiver Only</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-inline pull-right">
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <select style="min-width: 60px;" ng-change="changePageSize()" ng-model="PageSize" class="form-control input-opt">
+                        <option value="100">100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                        <option value="1500">1500</option>
+                        <option value="2000">2000</option>
+                        <option value="2500">2500</option>
+                        <option value="3000">3000</option>
+                        <option value="4000">4000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Page No.</label>
+                    <input ng-model="PageNo" ng-enter="changePageNo()" class="form-control input-opt" autocomplete="on" placeholder="Page No" type="number" min="1">
+                    <label>of {{totalItems/PageSize| number:0}}</label>
+                </div>
+                <div class="form-group">
+                    <button ng-click="prev()" ng-hide="totalItems == 0 || PageNo <= 1" class="btn btn-info btn-opt" type="button"><i class="fa fa-angle-double-left"></i>Previous&nbsp;</button>
+                    <button ng-click="next()" ng-hide="totalItems == 0 || PageNo >= totalPage" class="btn btn-info btn-opt" type="button">&nbsp;Next&nbsp;<i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

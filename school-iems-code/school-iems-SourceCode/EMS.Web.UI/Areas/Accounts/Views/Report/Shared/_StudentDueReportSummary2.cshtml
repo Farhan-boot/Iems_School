@@ -1,0 +1,208 @@
+﻿<!--File:Acnt_FeeCode List View-->
+@using EMS.DataAccess.Data;
+@{
+
+    //WebApi link for List
+    var getStudentDueReportSummaryUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentDueReportSummaryApi", action = "GetStudentDueReportSummary2", area = "Accounts" });
+    var getStudentDueReportSummaryDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentDueReportSummaryApi", action = "GetStudentDueReportSummaryDataExtra", area = "Accounts" });
+
+    //Angular Function Name
+    var refreshPage = "loadPage()";
+
+}
+<div ng-controller="StudentDueReportSummaryCtrl"
+     ng-init="Init(
+     '@getStudentDueReportSummaryDataExtraUrl',
+     '@getStudentDueReportSummaryUrl'
+     )">
+    <div ng-show="HasError || ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+        <button ng-click="HasError=false;ErrorMsg=''" class="close" data-dismiss1="alert">×</button>
+        <i class="fa-fw fa fa-warning"></i>
+        <strong>Attention Please!</strong> {{ErrorMsg}}
+    </div>
+    <div @*ng-show="HasViewPermission"*@ class="main-body">
+        <div class="widget" style="border:1px solid #bfbebe; padding: 0px 5px;">
+            <div class="widget-body no-padding">
+                <table class="table  educationHistory" style="font-size: 11px;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;" colspan="6">
+                            <strong>Report of Student Due Report Summary</strong>
+                            <button class="btn btn-default btn-xs pull-right" onclick="location.reload();return false;"><i class="glyphicon glyphicon-refresh"></i>Refresh</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-bold" style="width: 70px; font-size: 13px;">Semester:</td>
+                        <td style="width: auto;">
+                            <select ng-model="SelectedSemesterId"
+                                    ng-options="option.Id as option.Name for option in SemesterList"
+                                    title="Select Semester" class="form-control" style="font-weight: normal;"></select>
+                        </td>
+
+                        <td class="text-bold" style="width: 120px; font-size: 13px; text-align: right;">Program:</td>
+                        <td style="width: auto;">
+                            <select ng-model="SelectedProgramId"
+                                    ng-options="option.Id as option.ShortTitle for option in ProgramList"
+                                    title="Select Program" class="form-control" style="font-weight: normal; width: 220px;">
+                                <option value="" label="" class="">All Program</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                            <td class="text-bold" style="width: 75px; font-size: 13px;">Start Date:</td>
+                            <td style="width: auto;">
+                                <input ng-change="ReportSummaryList=[]" ng-model="StartDate" style="font-weight: normal;" type="text" class="form-control date-picker" />
+                            </td>
+
+                            <td class="text-bold" style="width: 120px; font-size: 13px; text-align: right;">End Date:</td>
+                            <td style="width: auto;">
+                                <input ng-change="ReportSummaryList=[]" ng-model="EndDate" style="font-weight: normal; width: 220px;" type="text" class="form-control date-picker" />
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+        
+        <div class="widget no-print" style="border:1px solid #bfbebe; padding: 0px 5px;">
+            <div class="widget-body no-padding">
+                <table class="table  educationHistory" style="font-size: 11px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" colspan="6">
+                                <button class="btn btn-default" ng-click="@refreshPage">Load Student Due Report Summary</button>
+                                <button ng-show="ReportSummaryList!=null" class="btn btn-warning" onclick="window.print();return false;">
+                                    <i class="fa fa-print"></i>Print
+                                </button>
+                                <button ng-show="ReportSummaryList!=null" class="btn btn-danger" onclick="$('#StudentDueReportSummary').tableExport({ fileName: 'StudentDueReportSummary2', type: 'xls', worksheetName: 'Worksheet', escape: 'false' });">
+                                    <i class="fa fa-file-excel-o"></i>Download As Excel(.xls)
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                
+            </div>
+        </div>
+
+        <div id="StudentDueReportSummary" ng-show="ReportSummaryList.length>0" style="margin-top: 10px;" class="border-black">
+            <table  style="width: 100%; text-align: center;">
+                <thead>
+                    <tr style="font-weight: bold">
+                        <th style="width: 90px" class="text-center">
+                            <span style="">Dept. Name</span>
+                        </th>
+                        <th class="text-center">Total Student</th>
+                        <th class="text-center">Semester Fees Dues Student</th>
+                        <th class="text-center">
+                            Receivable<br/>
+                            <em style="font-size: 8px">[Semester Bill - (PreviousBalance + Waiver)]</em>
+                        </th>
+                        <th class="text-center">Received</th>
+                        <th class="text-center">Dues</th>
+                        <th class="text-center">Received %</th>
+                        <th class="text-center">Due %</th>
+                        <th ng-show="StartDate !=null && EndDate!=null" class="text-center">
+                            Received<br />
+                            (<span ng-bind="formatDate(StartDate) |  date:'dd MMM yy'"></span> - <span ng-bind="formatDate(EndDate) |  date:'dd MMM yy'"></span>)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <tr ng-repeat="reportSummary in ReportSummaryList">
+                    <td style="text-align: left;">
+                        <span> {{reportSummary.ProgramName}} </span>
+                    </td>
+                    <td> <span>{{reportSummary.TotalStudent}}</span> </td>
+                    <td> <span>{{reportSummary.SemesterFeeDueStudent}}</span> </td>
+                    <td> <span>{{reportSummary.DebitAmount}}</span> </td>
+                    <td> <span>{{reportSummary.CreditAmount}}</span> </td>
+                    <td>{{reportSummary.Balance}}</td>
+                    <td>
+                        <span>{{(reportSummary.CreditAmount / reportSummary.DebitAmount)*100 | number:2}}%</span>
+                    </td>
+                    <td>
+                        <span ng-show="reportSummary.Balance>0">{{(reportSummary.Balance / reportSummary.DebitAmount)*100 | number:2}}%</span>
+                        <span ng-hide="reportSummary.Balance>0">0.00%</span>
+                    </td>
+                    <td ng-show="StartDate !=null && EndDate!=null">{{reportSummary.CreditUpToGivenDate}}</td>
+                </tr>
+                    
+                </tbody>
+                <tbody>
+                <tr style="font-size: 13px; font-weight: bold;">
+                    <td style="text-align: right;">Total: </td>
+                    <td>{{GrantTotal.TotalStudent}}</td>
+                    <td>{{GrantTotal.SemesterFeeDueStudent}}</td>
+                    <td>{{GrantTotal.DebitAmount}}</td>
+                    <td>{{GrantTotal.CreditAmount}}</td>
+                    <td>{{GrantTotal.Balance}}</td>
+                    <td>{{(GrantTotal.CreditAmount / GrantTotal.DebitAmount)*100 | number:2}}%</td>
+                    <td>{{(GrantTotal.Balance / GrantTotal.DebitAmount)*100 | number:2}}%</td>
+                    <td ng-show="StartDate !=null && EndDate!=null">{{GrantTotal.CreditUpToGivenDate}}</td>
+                </tr>
+                </tbody>
+                <tbody>
+                <tr style="font-size: 13px; font-weight: bold;">
+                    <td colspan="3" style="text-align: left;">
+                        EFTN <input style="width: 55px" class="hide-on-print" type="number" ng-model="eftn" />
+                        <span class="show-on-print">({{eftn}})</span>
+                        & Bkash <input style="width: 55px" class="hide-on-print" type="number" ng-model="bKash" />
+                        <span class="show-on-print">({{bKash}})</span>= {{eftn + bKash}}
+                    </td>
+                    <td>0</td>
+                    <td>
+                        <input style="width: 100px" class="hide-on-print hidden-print" type="number" ng-model="eftnAndbKashRecived"/>
+                        <span class="show-on-print">{{eftnAndbKashRecived}}</span>
+                    </td>
+                    <td>
+                        -{{eftnAndbKashRecived}}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td ng-show="StartDate !=null && EndDate!=null"></td>
+                </tr>
+                </tbody>
+                <tbody>
+                    <tr style="font-size: 13px; font-weight: bold;">
+                        <td colspan="3" style="text-align: left;">Grand Total: </td>
+                        <td>{{GrantTotal.DebitAmount}}</td>
+                        <td>{{GrantTotal.CreditAmount + eftnAndbKashRecived}}</td>
+                        <td>{{GrantTotal.Balance - eftnAndbKashRecived}}</td>
+                        <td>{{((GrantTotal.CreditAmount +eftnAndbKashRecived)  / GrantTotal.DebitAmount)*100 | number:2}}%</td>
+                        <td>{{((GrantTotal.Balance -eftnAndbKashRecived)  / GrantTotal.DebitAmount)*100 | number:2}}%</td>
+                        <td ng-show="StartDate !=null && EndDate!=null">{{GrantTotal.CreditUpToGivenDate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-body {
+        width: 7.27in;
+        margin: 0 auto;
+    }
+
+    .border-black td,.border-black th {
+        border: 1px solid #717070 !important;
+        border-collapse: collapse;
+    }
+
+    .table > tbody > tr > td {
+        border: none;
+    }
+  /*  
+    @@media print {
+    .show-on-print {
+        Display: none;
+    }
+    }*/
+</style>

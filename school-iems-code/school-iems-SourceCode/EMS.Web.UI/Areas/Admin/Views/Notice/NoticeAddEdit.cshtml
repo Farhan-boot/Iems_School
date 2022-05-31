@@ -1,0 +1,160 @@
+﻿
+<!--File:General_Notice Add/Edit View-->
+@using EMS.DataAccess.Data;
+@{
+    ViewBag.Title = "Admin: Add/Edit Notice";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var NoticeId = (string) id == null?"0":(string)id;
+    
+    //General_Notice WebApi Single Row link   
+    var getNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeById", area = "Admin" });
+    var getNoticeDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeDataExtra", area = "Admin" });
+    var saveNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "SaveNotice", area = "Admin" });
+    var deleteNoticeByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetDeleteNoticeById", area = "Admin" });
+
+    //General_Notice WebApi List link 
+    var getPagedNoticeUrl = Url.HttpRouteUrl("DefaultApi", new {controller = "NoticeApi", action = "GetPagedNotice", area = "Admin"});
+    var getAllNoticeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetAllNotice", area = "Admin" });
+    var saveNoticeListUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "SaveNoticeList", area = "Admin" });
+    var getNoticeListDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "NoticeApi", action = "GetNoticeListDataExtra", area = "Admin" });
+
+    var editNoticeByIdPageUrl = Url.Action("NoticeAddEdit", "Notice", new { area = "Admin" });
+    var listNoticePageUrl = Url.Action("NoticeList", "Notice", new { area = "Admin" });
+    
+    //General_Notice Angular Functions
+    string getNoticeById="getNoticeById";
+    var saveNotice = "saveNotice";
+    var getNewNotice = "getNewNotice";
+    var refreshPage = "loadPage()";
+    string deleteNoticeById="deleteNoticeById";
+    string loadNoticeExtraData="loadNoticeExtraData";
+}
+@section ScriptSection
+{
+    <script src="~/Areas/Admin/Views/Notice/NoticeAddEdit.js"></script>
+}
+
+<div id="NoticeAddEdit" class="row" ng-controller="NoticeAddEditCtrl" ng-init="Init(
+      '@NoticeId'
+      ,'@getNoticeByIdUrl'
+      ,'@getNoticeDataExtraUrl'
+      ,'@saveNoticeUrl'
+      ,'@deleteNoticeByIdUrl')">
+      
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+     <div ng-Hide="!HasError ||ErrorMsg==''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+            <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+            <i class="fa-fw fa fa-warning"></i>
+            <strong>Attention Please!</strong> {{ErrorMsg}}
+      </div>
+      <div ng-show="HasViewPermission">
+        <div class="widget" >
+            <div class="widget-header bordered-bottom bordered-sky ">
+                <i class="widget-icon fa fa-edit bold  "></i>
+                <span class="widget-caption ">
+                    Add/Edit
+                    <strong ng-show="Notice.@General_Notice.Property_Name!=''">{{(Notice.@General_Notice.Property_Name)}}</strong>
+                </span>
+                <div class="widget-buttons buttons-bordered no-padding-right" style="display: none">
+                    <span class="input-icon">
+                        <input type="text" ng-model="NoticeId" ng-Enter="@(getNoticeById)()" class="form-control input-xs " id="glyphicon-search" placeholder="Search" >
+                        <i class="glyphicon glyphicon-search blue"></i>
+                    </span>
+                  
+                </div>
+                <div class="widget-buttons no-padding-left">
+                    <button ng-click="@(getNewNotice)()" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Add New</button>
+                    <a href="@(listNoticePageUrl)" class="btn btn-blue btn-xs"><i class="fa fa-arrow-left" target="_blank"></i> Back To List</a>
+                    <button ng-click="@refreshPage" class="btn btn-info btn-xs"><i class="fa fa-refresh"></i> Refresh</button>
+                </div>
+            </div><!--Widget Header end-->
+            <div class="widget-body">
+                <div class="row">
+                  <div class="col-md-6 table-form">
+                     <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                        <tbody>
+                             <tr>
+                                <td class="fieldlabel">Title <span class="red glyphicon glyphicon-asterisk"></span></td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Notice.@General_Notice.Property_Title" class="form-control" placeholder="Enter Title" maxlength="200" required="" />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Title." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Description </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Notice.@General_Notice.Property_Description" class="form-control" placeholder="Enter Description"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Description." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">File Path </td>
+                                <td class="fieldarea">
+                                    <input type="text" ng-model="Notice.@General_Notice.Property_FilePath" class="form-control" placeholder="Enter File Path"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter File Path." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Order No </td>
+                                <td class="fieldarea">
+                                    <input type="number" ng-model="Notice.@General_Notice.Property_OrderNo" class="form-control" placeholder="Enter Order No"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Order No." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                        <!--dropdown option for EnumList-->
+                            <tr>
+                                 <td class="fieldlabel">Visibility Type </td>
+                                 <td class="fieldarea">
+                                    <select ng-model="Notice.@General_Notice.Property_VisibilityTypeEnumId" ng-options="option.Id as option.Name for option in VisibilityTypeEnumList" title="Select Visibility Type" ng-init="" class="form-control" >
+                                     <option value="" label="" class="">---Select One---</option>   
+                                    </select>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Visibility Type." data-toggle="tooltip"></i></span></td> 
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Publish Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="Notice.@General_Notice.Property_PublishDate" class="form-control" placeholder="Enter Publish Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Publish Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Expiry Date </td>
+                                <td class="fieldarea">
+                                    <input type="datetime" ng-model="Notice.@General_Notice.Property_ExpiryDate" class="form-control" placeholder="Enter Expiry Date"   />
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Expiry Date." data-toggle="tooltip"></i></span></td>
+                            </tr>
+                             <tr>
+                                <td class="fieldlabel">Is Deleted </td>
+                                <td class="fieldarea">
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" ng-model="Notice.@General_Notice.Property_IsDeleted"  />
+                                    </label>
+                                </td>
+                                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Check Is Deleted if required." data-toggle="tooltip"></i></span></td>
+                             </tr>
+                        
+                   
+
+                            </tbody>
+                        </table>
+                    </div><!--Col end-->
+                </div><!--Row end-->
+            </div><!--Widget Body end-->
+            <div class="widget-footer text-center">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button ng-click="@(saveNotice)()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+      </div><!--view permission end-->
+    </div>
+</div><!--controller end-->
+
+
+

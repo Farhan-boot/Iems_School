@@ -1,0 +1,696 @@
+﻿@using EMS.DataAccess.Data;
+@using EMS.Framework.Permissions
+@using EMS.Framework.Utils
+
+@{
+    //ViewBag.Title = "Admin: Add/Edit Account";
+    //Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Angular Properties
+    var id = Request.QueryString["id"];//ViewContext.RouteData.Values["id"];
+    var AccountId = (string)id == null ? "0" : (string)id;
+
+    //WebApi link for single row
+    var getAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetStudentById", area = "Admission" });
+    var getAccountDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetstudentDataExtra", area = "Admission" });
+    var saveAccountUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveStudent", area = "Admission" });
+    var deleteAccountByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetDeleteAccountById", area = "Admin" });
+
+    var getDataExtraOnChangeProgramUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetDataExtraOnChangeProgram", area = "Admission" });
+    var getDataExtraOnChangeAdmissionExamUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetDataExtraOnChangeAdmissionExam", area = "Admission" });
+
+    var getEducationDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "EducationApi", action = "GetEducationDataExtra", area = "Admission" });
+    var getNewEducationByUserIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetNewEducationByUserId", area = "Admission" });
+    var getDeleteEducationByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetDeleteEducationById", area = "Admission" });
+    var getAllEducationByUserIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetAllEducationByUserId", area = "Admission" });
+
+    var getConfirmOrCancelAdmissionByUserIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetConfirmOrCancelAdmissionByUserId", area = "Admission" });
+
+    var saveUpdateUserNameGroupUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveUpdateUserNameGroup", area = "Admission" });
+    var saveUpdateStudentNameGroupUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveUpdateStudentNameGroup", area = "Admission" });
+    var saveUpdateAcademicInfoGroupUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveUpdateAcademicInfoGroup", area = "Admission" });
+
+    var saveResetAndSendPasswordUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveResetAndSendPassword", area = "Admission" });
+    var saveSendPasswordUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveSendPassword", area = "Admission" });
+
+    var removePhotoOrSignatureByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetRemoveProfilePictureById", area = "Admission" });
+    var uploadProfilePictureUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "UploadProfilePicture", area = "Admission" });
+
+    var getRecalculateStudentPerCreditFeeUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetRecalculateStudentPerCreditFee", area = "Admission" });
+    var getRegenerateStudentBillByStdIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetRegenerateStudentBillByStdId2", area = "Admission" });
+
+    var saveCertificateInformationUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TranscriptAndCertificateApi", action = "SaveCertificateInformation", area = "Academic" });
+    var getRecalculateCGPAByStdIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "TranscriptAndCertificateApi", action = "GetRecalculateCGPAByStdId", area = "Academic" });
+
+    var editAccountByIdPageUrl = Url.Action("AccountAddEdit", "Account", new { area = "Admin" });
+    var listAccountPageUrl = Url.Action("AccountList", "Account", new { area = "Admin" });
+
+    var individualStudentScholarshipSettingsUrl = Url.Action("IndividualStudentSettingsList2", "SemWiseScholarship", new {area = "Admission"});
+
+    // Angular Functions
+            string getAccountById = "getAccountById";
+    var saveAccount = "saveAccountsaveAccount";
+    var getNewAccount = "getNewAccount";
+    var refreshPage = "loadPage()";
+    string deleteAccountById = "deleteAccountById";
+    string loadAccountExtraData = "loadAccountExtraData";
+
+    string getEducationDataExtra = "getEducationDataExtra";
+
+    string getCurriculumByProgramId = "getCurriculumByProgramId";
+    string getConfirmOrCancelAdmissionByUserId = "getConfirmOrCancelAdmissionByUserId";
+    string openHistoryModal = "openHistoryModal";
+
+
+    //============= Start Package & Discount ===========
+    var saveScholarshipListByStudentUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "SaveScholarshipListByStudent", area = "Admission" });
+    var getNewScholarshipByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetNewScholarshipByStudentId", area = "Admission" });
+    var getLockOrUnlockScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetLockOrUnlockScholarshipById", area = "Admission" });
+    var getStdScholarshipDataExtraUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StdScholarshipApi", action = "GetStdScholarshipDataExtra", area = "Accounts" });
+    var getAllScholarshipByStudentIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetAllScholarshipByStudentId", area = "Admission" });
+    var getTrashScholarshipByIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetTrashScholarshipById", area = "Admission" });
+
+    //taken for calculate discount on this semester only
+    var getSemesterBillByStudentIdSemesterIdUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "StudentProfileApi", action = "GetSemesterBillByStudentIdSemesterId", area = "Admission" });
+
+    bool isDiscountTabShow = PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanView)
+                             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanAdd)
+                             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanEdit)
+                             || PermissionUtil.HasPermission(PermissionCollection.AccountingArea.StudentDiscountAndScholarship.CanDelete);
+
+
+    //============= End Package & Discount ===========
+
+}
+
+<div class="row">
+<div class="col-lg-12 col-sm-12 col-xs-12"
+     ng-init="Init(
+        '@AccountId'
+        ,'@getAccountByIdUrl'
+        ,'@getAccountDataExtraUrl'
+        ,'@saveAccountUrl'
+        ,'@deleteAccountByIdUrl'
+        ,'@getEducationDataExtraUrl'
+        ,'@getDataExtraOnChangeProgramUrl'
+        ,'@getNewEducationByUserIdUrl'
+        ,'@getDeleteEducationByIdUrl'
+        ,'@getNewScholarshipByStudentIdUrl'
+        ,'@getStdScholarshipDataExtraUrl'
+        ,'@getLockOrUnlockScholarshipByIdUrl'
+        ,'@getAllScholarshipByStudentIdUrl'
+        ,'@getAllEducationByUserIdUrl'
+        ,'@getConfirmOrCancelAdmissionByUserIdUrl'
+        ,'@getSemesterBillByStudentIdSemesterIdUrl'
+        ,'@saveCertificateInformationUrl'
+        ,'@saveUpdateUserNameGroupUrl'
+         ,'@saveUpdateAcademicInfoGroupUrl'
+         ,'@saveResetAndSendPasswordUrl'
+         ,'@saveSendPasswordUrl'
+         ,'@saveScholarshipListByStudentUrl'
+        ,'@getTrashScholarshipByIdUrl'
+        ,'@getRecalculateStudentPerCreditFeeUrl'
+        ,'@getRegenerateStudentBillByStdIdUrl'
+        ,'@getRecalculateCGPAByStdIdUrl'
+        ,'@uploadProfilePictureUrl'
+        ,'@removePhotoOrSignatureByIdUrl'
+        ,'@saveUpdateStudentNameGroupUrl'
+     )">
+
+<div ng-show="HasError ||ErrorMsg!=''" class="alert alert-danger fade in radius-bordered alert-shadowed">
+    <button ng-click="HasError=false" class="close" data-dismiss1="alert">×</button>
+    <i class="fa-fw fa fa-warning"></i>
+    <strong>Attention Please!</strong> {{ErrorMsg}}
+</div>
+<div ng-show="HasViewPermission">
+<div class="widget">
+<div class="widget-body no-padding">
+<div class="widget-main admission-form">
+<div class="tabbable">
+<ul class="nav nav-tabs" id="myTab9">
+    <li class=""><a data-toggle="tab" href="#ProfileSummary" aria-expanded="true">Summary</a></li>
+    <li class="active"><a data-toggle="tab" href="#Personal-Information" aria-expanded="true">Personal</a></li>
+    <li class="tab-red"><a data-toggle="tab" href="#Education-Information" aria-expanded="true">Previous Education</a></li>
+    @if (isDiscountTabShow)
+    {
+        <li class="tab-red"><a data-toggle="tab" href="#Package-Information" aria-expanded="true">Package & Discount</a></li>
+    }
+    <li class="tab-red"><a data-toggle="tab" href="#Scholarship-Settings" aria-expanded="true">Scholarship/Waiver</a></li>
+
+    @*ng-show="@AccountId!=0"*@
+    <li class="tab-red"><a data-toggle="tab" href="#Academic" aria-expanded="true">Academic</a></li>
+    @*ng-show="@AccountId!=0"*@
+    <li class="tab-red"><a data-toggle="tab" href="#User-Credential" aria-expanded="true">User Credential</a></li>
+    <li class="tab-red"><a data-toggle="tab" href="#userLog" aria-expanded="true">Log</a></li>
+    @*<li class="tab-red" style="float: right; border: none !important;">
+                                        <div class="widget-buttons">
+                                            <a href="#" data-toggle="maximize">
+                                                <i class="fa fa-expand"></i>
+                                            </a>
+                                        </div>
+                                    </li>*@
+</ul>
+<div class="tab-content" style="padding: 6px 12px;">
+
+<div class="row admission-form-common-section">
+    <div class="col-md-12 table-form" style="margin-bottom: 6px;">
+        <table class="table table-bordered admission-discount-table text-center" style="width: 100%">
+            <thead>
+            <tr>
+                <th style="width: 103px;">Active Status:</th>
+                <th>
+                    <span ng-class="Account.@User_Account.Property_UserStatusEnumId==@((byte) User_Account.UserStatusEnum.Active) ? 'badge-success': 'badge-danger'" class="badge"> {{Account.@User_Account.Property_UserStatus}} </span>
+                </th>
+                <th style="width: 70px;">Profile :</th>
+                <th>
+                    <span ng-show="Account.@User_Account.Property_IsApproved" class="badge badge-success"> Approved </span>
+                    <span ng-hide="Account.@User_Account.Property_IsApproved" class="badge badge-danger"> Disapproved </span>
+
+                    <span ng-show="Account.@User_Account.Property_IsProfileCompleted" class="badge badge-success"> Completed </span>
+                    <span ng-hide="Account.@User_Account.Property_IsProfileCompleted" class="badge badge-danger"> Incomplete </span>
+                </th>
+                
+                @*<th style="width: 85px;">Unverified:</th>
+                                                        <th>
+                                                            <span ng-hide="Account.@User_Account.Property_IsVerifiedUserEmaill" class="badge badge-danger">Email</span>
+                                                            <span ng-hide="Account.@User_Account.Property_IsVerifiedUserMobile" class="badge badge-danger"> Mobile </span>
+                                                        </th>
+
+                                                        <th style="width: 125px;">Admission Fee:</th>
+                                                        <th>
+                                                            <span ng-show="Account.@User_Student.Property_IsAdmissionFeePaid" class="badge badge-success"> Paid </span>
+                                                            <span ng-hide="Account.@User_Student.Property_IsAdmissionFeePaid" class="badge badge-danger"> Unpaid </span>
+                                                        </th>*@
+            </tr>
+
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td class="fieldlabel">
+                    Student ID
+                    @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                </td>
+                <td class="fieldarea">
+                    <input type="text" value="{{Account.@User_Account.Property_UserName}}"
+                           ng-disabled="true"
+                           class="form-control  " placeholder="Enter User Id/Roll No/Reg. No" maxlength="256" required="">
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter User Id/Roll No/Reg. No" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            @*<tr>
+                                                        <td class="fieldlabel"></td>
+                                                        <td class="fieldarea" style="text-align: left;">
+                                                            <label class="checkbox-inline" style="margin-top: -13px;">
+                                                                <input type="checkbox" ng-model="Account.IsAutoUserName"
+                                                                        ng-disabled="true"
+                                                                        > Auto Generate Student Id
+                                                            </label>
+                                                        </td>
+                                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Is Auto Generate Student Id" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                                    </tr>*@
+            @*<tr>
+                                                        <td class="fieldlabel" style="width: 80px;">Full Name</td>
+                                                        <td class="fieldarea">
+                                                            <input type="text" ng-model="Account.@User_Account.Property_FullName"
+                                                                    ng-disabled="true"
+                                                                    class="form-control " placeholder="Enter Full Name" maxlength="256" required="">
+                                                        </td>
+                                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                                    </tr>*@
+            <tr>
+                <td class="fieldlabel">
+                    Full Name
+                    @*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Account.Property_FullName"
+                           ng-disabled="true"
+                           class="form-control " placeholder="Enter Full Name" maxlength="256" required="">
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Full Name" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            @*<tr>
+                                                        <td class="fieldlabel" width="100px">Admission Semester<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                                        <td class="fieldarea">
+                                                            <select ng-model="Account.@User_Account.Property_JoiningSemesterId"
+                                                                    ng-options="option.Id as option.Name for option in SemesterList" ng-init="" class="form-control select-inline">
+                                                                <option value="" label="" class="">---Select One---</option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>
+                                                    </tr>*@
+
+            <tr>
+                <td class="fieldlabel text-bold" width="100px" style="min-width: 120px;">
+                    Admission Exam
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <select ng-model="SelectedAdmissionExam"
+                            ng-change="onChangeAdmissionExam()"
+                            @*ng-disabled="true"*@
+                            ng-options="option.Name for option in AdmissionExamList" ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Semester" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            <tr>
+                <td class="fieldlabel">
+                    Program@*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                </td>
+                <td class="fieldarea">
+                    <select ng-model="SelectedProgram"
+                            ng-change="onChangeProgram()"
+                            ng-disabled="true"
+                            ng-options="option.Name for option in ProgramList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Program" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            <tr>
+                <td class="fieldlabel">
+                    Core Curriculum@*<span class="red glyphicon glyphicon-asterisk"></span>*@
+                </td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_CurriculumId"
+                            ng-change="filterSelectedCurriculum()"
+                            ng-disabled="true"
+                            ng-options="option.Id as option.ShortName for option in CurriculumList"
+                            ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Curriculum" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                <td class="fieldlabel text-bold" style="min-width: 120px;">
+                    Admission Date
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <input type="text" ng-model="Account.@User_Account.Property_JoiningDate"
+                           @*ng-disabled="true"*@
+                           class="form-control date-picker" placeholder="Enter Admission Date" />
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Admission Date" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            <tr>
+                <td class="fieldlabel text-bold" style="min-width: 120px;">
+                    Enrollment Type
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_EnrollmentTypeEnumId"
+                            @*ng-disabled="true"*@
+                            ng-options="option.Id as option.Name for option in EnrolmentTypeEnumList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Enrollment Type" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            <tr>
+                <td class="fieldlabel text-bold" style="min-width: 120px;">
+                    Admission Status
+                    <span class="red glyphicon glyphicon-asterisk"></span>
+                </td>
+                <td class="fieldarea">
+                    <select ng-model="Account.@User_Student.Property_AdmissionStatusEnumId"
+                            @*ng-disabled="true"*@
+                            ng-options="option.Id as option.Name for option in AdmissionStatusEnumList " ng-init="" class="form-control select-inline">
+                        <option value="" label="" class="">---Select One---</option>
+                    </select>
+                </td>
+                @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Admission Status" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="ProfileSummary" class="tab-pane  ">
+    @Html.Partial("~/Areas/Admission/Views/Student/_Summary.cshtml")
+</div>
+<div id="Personal-Information" class="tab-pane  active">
+    @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_Personal.cshtml")
+
+</div>
+<div id="Education-Information" class="tab-pane">
+    @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_PreviousEducation.cshtml")
+</div>
+@if (isDiscountTabShow)
+{
+    <div id="Package-Information" class="tab-pane">
+        @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_PackageAndDiscount.cshtml")
+    </div>
+}
+<div id="Scholarship-Settings" class="tab-pane">
+    <div class="text-center" style="min-height: 100px; padding-top: 35px;">
+        <a class="btn btn-azure"
+           target="_blank"
+           href="@(individualStudentScholarshipSettingsUrl)?un={{Account.@User_Account.Property_UserName}}">
+            <i class="fa fa-arrow-circle-right"></i>
+            Go To Semester Wise Scholarship
+        </a>
+    </div>
+    
+    @*@Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_StdSemWiseScholarshipSettings.cshtml")*@
+</div>
+
+<div id="Academic" class="tab-pane">
+    @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_Academic.cshtml")
+</div>
+<div id="User-Credential" class="tab-pane">
+    @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_UserCredential.cshtml")
+</div>
+
+<div id="userLog" class="tab-pane">
+    @Html.Partial("~/Areas/Admission/Views/Student/ProfileManager/_UserLog.cshtml")
+</div>
+
+<div class="widget-footer" style="margin: 15px 0px;">
+    <div class="row admission-form-common-section">
+        <div class="col-md-4">
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+
+                <tr>
+                    <td class="fieldlabel">Form Number</td>
+                    <td class="fieldarea">
+                        <input ng-model="Account.@User_Student.Property_AdmissionFormNo"
+                               type="text" class="form-control " placeholder="Enter Form Number" maxlength="256" required="">
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Form Number" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-8">
+            <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                <tbody>
+                <tr>
+                    <td class="fieldlabel" style="width: 115px;">Profile Remark</td>
+                    <td class="fieldarea">
+                        <input ng-model="Account.@User_Student.Property_AdmissionRemark"
+                               type="text" class="form-control " placeholder="Enter Admission Remark" maxlength="256" required="">
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Form Number" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Payment Remark</td>
+                    <td class="fieldarea">
+                        <input ng-model="Account.@User_Account.Property_Remarks"
+                               type="text" class="form-control " placeholder="Enter Accounts Remark" maxlength="256" required="">
+                    </td>
+                    @*<td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Form Number" data-toggle="tooltip" data-original-title="" title=""></i></span></td>*@
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="widget-footer text-center">
+    <button ng-click="saveAccount()" class="btn btn-md btn-success"><span class="fa fa-save"></span> Save</button>
+
+    <button ng-click="@(getConfirmOrCancelAdmissionByUserId)(true)" ng-show="Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.Applicant)
+                                            ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.AdmissionCancelled)
+            ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.DepartmentChanged)
+            " class="btn btn-md btn-info">
+        <span class="fa fa-check-circle-o"></span> Confirm Admission
+    </button>
+    <label ng-show="(Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.Applicant)
+                                            ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.AdmissionCancelled)
+            ||Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.DepartmentChanged)) && Account.@User_Account.Property_Password!=''
+           " style="margin-left: 10px;margin-right: 10px;margin-bottom: 0px">
+        <input ng-model="IsSendEmail"
+               ng-change="CheckUserEmail()"
+               type="checkbox" style="margin-top: 0px !important; vertical-align: middle; width: 18px;"/>
+        <span class="text-danger">Send Confirmation Email</span>
+    </label>
+    <button ng-click="cancelAdmissionModalModelOpen()" ng-show="Account.@User_Student.Property_EnrollmentStatusEnumId==@((byte) User_Student.EnrollmentStatusEnum.Continuing)"
+            class="btn btn-md btn-danger">
+        <span class="fa fa-ban"></span> Cancel Admission
+    </button>
+
+
+    @*<button  ng-show="!Account.@User_Account.Property_IsProfileCompleted" class="btn btn-md btn-success"><span class="fa fa-save"></span> Mark As Paid</button>
+                                        <button  ng-show="Account.@User_Account.Property_IsProfileCompleted" class="btn btn-md btn-danger"><span class="fa fa-save"></span> Mark As Unpaid</button>
+                                        <button  ng-hide="Account.@User_Account.Property_UserStatusEnumId==@((byte)User_Account.UserStatusEnum.Active)" class="btn btn-md btn-success"><span class="fa fa-save"></span> Unlock Account</button>
+                                        <button  ng-show="Account.@User_Account.Property_UserStatusEnumId==@((byte)User_Account.UserStatusEnum.Active)" class="btn btn-md btn-danger"><span class="fa fa-save"></span> Lock Account</button>*@
+    
+    <div class="widget-buttons">
+        <div class="btn-group">
+            <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fa fa-print"></i> Print </a>
+            <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+            <ul class="dropdown-menu dropdown-blue pull-left">
+                <li>
+                    <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("AdmissionPaymentSlip", "Applicant", new {area = "Admission"})/?id={{Account.@User_Account.Property_Id}}" target="_blank"><span class="fa fa-print"></span> Print Admission Slip </a>
+                </li>
+                <li>
+                    <a ng-show="Account.@User_Account.Property_Id!=0" href="@Url.Action("Print1stSemesterCourseRegistration", "Student", new {area = "Academic"})/?studentId={{Account.@User_Account.Property_Id}}" target="_blank"><span class="fa fa-print"></span> Print 1st Sem. Reg. </a>
+                </li>
+                <li>
+                    <a ng-show="@AccountId!=0" href="@Url.Action("PrintAdmissionForm", "Student", new {area = "Admission"})/?id=@AccountId" target="_blank"><span class="fa fa-print"></span> Print Admission Form </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @*<button ng-click="@(openHistoryModal)()" class="btn btn-info"><span class="fa fa-history"></span> Show History</button>*@
+</div>
+</div>
+</div>
+</div><!--Widget Body end-->
+</div>
+</div>
+</div>
+
+</div>
+    
+    <div class="modal fade bd-example-modal-lg" id="HistoryModal" tabindex="-1" role="dialog" aria-labelledby="HistoryModal" area-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> History Of all the action Performed in this profile.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-12 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: left;padding: 5px !important;" ng-bind-html="renderHtml(Account.@User_Account.Property_History)"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade" id="CancelAdmissionModal" tabindex="-1" role="dialog" aria-labelledby="CancelAdmissionModal">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> Are you sure want to Cancel Admission?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="show-assesment well with-header" style="padding-top: 0px !important;">
+                        <div class="row">
+
+                            <div class="col-md-12 table-form">
+                                <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="fieldlabel">Cancel Admission Reason<span class="red glyphicon glyphicon-asterisk"></span></td>
+                                        <td class="fieldarea">
+                                            <select ng-model="CancelAdmissionReasonEnumId"
+                                                    ng-options="option.Id as option.Name for option in CancelAdmissionReasonEnumList" class="form-control select-inline">
+                                                <option value="" label="" class="">---Select Reason---</option>
+                                            </select>
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Select Admission Reason" data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fieldlabel">Profile Remark</td>
+                                        <td class="fieldarea">
+                                            <input ng-model="Account.@User_Student.Property_AdmissionRemark"
+                                                   type="text" class="form-control " placeholder="Enter Profile Remark" maxlength="256" required="">
+                                        </td>
+                                        <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Profile Remark" data-toggle="tooltip"></i></span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button ng-click="@(getConfirmOrCancelAdmissionByUserId)(false)"
+                            ng-disabled="CancelAdmissionReasonEnumId==null || CancelAdmissionReasonEnumId<0"
+                            type="button" class="btn btn-danger">
+                        <span class="fa fa-save"></span> Confirm
+                    </button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<style>
+    .admission-form .form-title {
+        padding: 3px 0;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .educationHistory select {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .educationHistory thead > tr > th {
+        font-size: 11px;
+    }
+
+    .educationHistory input[type="text"],
+    .admission-discount-table input[type="text"] {
+        width: 100%;
+        font-size: 12px;
+        padding-left: 3px;
+        margin-bottom: 3px;
+    }
+
+    .educationHistory .glyphicon.glyphicon-asterisk {
+        font-size: 7px;
+    }
+
+    .educationHistory input[type="text"]:focus {
+        box-shadow: 0 0 1px 0.5px #3391c9;
+    }
+
+    .educationHistory label {
+        font-size: 9px;
+        margin-bottom: 0px;
+    }
+
+    .admission-form input,
+    .admission-form optgroup,
+    .admission-form select,
+    .admission-form textarea {
+        height: 25px !important;
+        font-size: 12px;
+    }
+
+    .admission-form td.fieldlabel {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .admission-form .glyphicon {
+        font-size: 7px !important;
+    }
+
+    .admission-form-common-section td {
+        padding-bottom: 5px;
+    }
+
+    .admission-form-common-section td.fieldlabel {
+        width: 105px;
+    }
+
+    .admission-form .checkbox-inline {
+        font-size: 10px;
+    }
+
+    .admission-form .checkbox-inline input {
+        height: 15px !important;
+    }
+
+    .admission-form .table-form td {
+        padding: 3px 3px;
+    }
+
+    .admission-discount-table tr td:first-child,
+    .bold-text {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    .text-dropdown-toggle .dropdown-menu li a:hover {
+        background: #1884e6;
+        color: #fff;
+    }
+
+    .text-dropdown {
+        max-height: 115px;
+        overflow-y: auto;
+        font-size: 13px;
+        padding: 6px 12px;
+        width: 100%;
+        line-height: 1.42857143;
+        background-image: none;
+    }
+
+    .text-dropdown-toggle ul {
+        max-height: 115px !important;
+        padding: 0px !important;
+        overflow-x: hidden !important;
+    }
+
+    .text-dropdown-toggle ul li a {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding: 2px 10px !important;
+    }
+
+    .admission-form-common-section tr td {
+        text-align: right;
+        padding-right: 5px;
+    }
+
+    .admission-form .form-title {
+        font-weight: 600 !important;
+        font-size: 15px;
+    }
+
+    .fieldarea .checkbox {
+        margin-top: 3px !important;
+        margin-bottom: -4px !important;
+    }
+
+    .padding-l-10 {
+        padding-left: 10px;
+    }
+</style>

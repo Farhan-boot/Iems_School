@@ -1,0 +1,78 @@
+@using EMS.Framework.Settings
+
+<div class="row">
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+                <tr>
+                    <td class="fieldlabel">Domain Name </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.SystemEmail.DomainName" class="form-control" placeholder="Enter Domain Name" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Domain Name." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Email_SMTP_Server </td>
+                    <td class="fieldarea">
+                        <input  type="text" ng-model="SiteSettings.SystemEmail.Email_SMTP_Server" class="form-control" placeholder="Enter Email_SMTP_Server" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_SMTP_Server." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Email_SMTP_Port </td>
+                    <td class="fieldarea">
+                        <input  type="text" ng-model="SiteSettings.SystemEmail.Email_SMTP_Port" class="form-control" placeholder="Enter Email_SMTP_Port" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_SMTP_Port." data-toggle="tooltip"></i></span></td>
+                </tr>
+            <tr>
+                <td class="fieldlabel">Email_DisplayName </td>
+                <td class="fieldarea">
+                    <input  type="text" ng-model="SiteSettings.SystemEmail.Email_DisplayName" class="form-control" placeholder="Enter Email_DisplayName" maxlength="256" required="" />
+                </td>
+                <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_DisplayName." data-toggle="tooltip"></i></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+    <!--Col start-->
+    <div class="col-md-6 table-form">
+        <table class="form" width="100%" border="0" cellspacing="2" cellpadding="3">
+            <tbody>
+            <tr>
+                    <td class="fieldlabel">Email_Address </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.SystemEmail.Email_Address" class="form-control" placeholder="Enter Email_Address" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_Address." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Email_UserName </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.SystemEmail.Email_UserName" class="form-control" placeholder="Enter Email_UserName" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_UserName." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Email_Password </td>
+                    <td class="fieldarea">
+                        <input type="text" ng-model="SiteSettings.SystemEmail.Email_Password" class="form-control" placeholder="Enter Email_Password" required="" />
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Email_Password." data-toggle="tooltip"></i></span></td>
+                </tr>
+                <tr>
+                    <td class="fieldlabel">Email_EnableSSL</td>
+                    <td class="fieldarea">
+                        <input type="radio" ng-model="SiteSettings.SystemEmail.Email_EnableSSL" class="radio-inline" ng-value="true"/> Yes
+                        <input type="radio" ng-model="SiteSettings.SystemEmail.Email_EnableSSL" class="radio-inline" ng-value="false"/> No
+                    </td>
+                    <td class="fieldarea-tooltip"><span><i class="fa fa-question-circle" data-title="Enter Product Full Name." data-toggle="tooltip"></i></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!--Col end-->
+
+
+</div>
+
